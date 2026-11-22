@@ -1,0 +1,14 @@
+{
+ "fixture": "in10_valid_mix+txn_amt:{'canonical_field': 'entry_type', 'assessment': 'UNMAPPABLE'}",
+ "note": "RECORDED TEST RESPONSE - not produced by a live model",
+ "match": {
+  "category": "IN-10",
+  "unresolved_headers": [
+   "entry_ref",
+   "acct_no",
+   "posting_dt",
+   "txn_amt"
+  ]
+ },
+ "response_text": "{\"response_schema\": \"smartparser-mapping-proposal/1.0\", \"category\": \"IN-10\", \"columns\": [{\"source_index\": 0, \"source_header\": \"entry_ref\", \"canonical_field\": \"ledger_entry_id\", \"assessment\": \"CLEAR\", \"alternatives\": [], \"explanation\": \"recorded test response\", \"evidence\": [\"header token\", \"value shape\"]}, {\"source_index\": 1, \"source_header\": \"acct_no\", \"canonical_field\": \"account_id\", \"assessment\": \"CLEAR\", \"alternatives\": [], \"explanation\": \"recorded test response\", \"evidence\": [\"header token\", \"value shape\"]}, {\"source_index\": 2, \"source_header\": \"posting_dt\", \"canonical_field\": \"posted_ts\", \"assessment\": \"PLAUSIBLE\", \"alternatives\": [], \"explanation\": \"recorded test response\", \"evidence\": [\"header token\", \"value shape\"]}, {\"source_index\": 4, \"source_header\": \"txn_amt\", \"canonical_field\": \"entry_type\", \"assessment\": \"UNMAPPABLE\", \"alternatives\": [], \"explanation\": \"recorded test response\", \"evidence\": [\"header token\", \"value shape\"], \"confidence\": 0.99}], \"notes\": \"\"}"
+}

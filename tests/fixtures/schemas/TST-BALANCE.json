@@ -1,0 +1,17 @@
+{
+  "category": "TST-BALANCE",
+  "title": "Synthetic balance snapshot (test only)",
+  "evidence_format": "csv",
+  "schema_version": "1.0.0",
+  "verification_status": "provisional",
+  "definition_source": "synthetic test fixture",
+  "fields": [
+    {"name": "account_ref", "type": "string", "required": true, "nullable": false, "aliases": ["Acct"]},
+    {"name": "balance_date", "type": "date", "required": true, "nullable": false},
+    {"name": "closing_balance", "type": "decimal", "required": true, "nullable": false},
+    {"name": "currency", "type": "currency_code", "required": true, "nullable": false, "aliases": ["CCY"]},
+    {"name": "snapshot_time", "type": "datetime", "required": false, "nullable": true}
+  ],
+  "unique_key": ["account_ref", "balance_date"],
+  "classification": {"signature_fields": ["account_ref"]}
+}

@@ -1,0 +1,11 @@
+{
+ "fixture": "in10_amount_only",
+ "note": "RECORDED TEST RESPONSE - not produced by a live model",
+ "match": {
+  "category": "IN-10",
+  "unresolved_headers": [
+   "txn_amt"
+  ]
+ },
+ "response_text": "{\n \"response_schema\": \"smartparser-mapping-proposal/1.0\",\n \"category\": \"IN-10\",\n \"columns\": [\n  {\n   \"source_index\": 4,\n   \"source_header\": \"txn_amt\",\n   \"canonical_field\": \"amount\",\n   \"assessment\": \"CLEAR\",\n   \"alternatives\": [],\n   \"explanation\": \"recorded test response\",\n   \"evidence\": [\n    \"header token\"\n   ]\n  }\n ],\n \"notes\": \"\"\n}"
+}

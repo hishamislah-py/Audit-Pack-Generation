@@ -1,0 +1,24 @@
+{
+  "policy": {
+    "allow_reorder": true,
+    "trim_whitespace": true,
+    "case_insensitive": true,
+    "unexpected_columns": "reject"
+  },
+  "aliases": [
+    {
+      "alias_id": "AA-IN-09-REFERENCE-BANKREF",
+      "category": "IN-09",
+      "canonical_field": "bank_reference",
+      "alias": "Reference",
+      "proposal_id": "AP-IN-09-REFERENCE-BANKREF"
+    },
+    {
+      "alias_id": "AA-IN-09-REFERENCE-E2E",
+      "category": "IN-09",
+      "canonical_field": "end_to_end_ref",
+      "alias": "Reference",
+      "proposal_id": "AP-IN-09-REFERENCE-E2E"
+    }
+  ]
+}

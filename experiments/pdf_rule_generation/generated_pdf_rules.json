@@ -1,0 +1,726 @@
+{
+ "configuration": {
+  "consequence_by_function": {
+   "_pdf_details": "PARSE: label extraction",
+   "_resolve_letters": "IDENTIFICATION: letter slot chosen by IN-02 acknowledgement_letter_ref",
+   "analyse_pdf": "INTAKE WARNING: ingest.analysis WRONG_PERIOD message",
+   "check_checklist": "CONTROL: C16-GOVERNANCE / C16-RETURN result",
+   "check_designation": "CONTROL: C10-DESIGNATION result",
+   "check_policy_and_points": "CONTROL: C03-POLICY result",
+   "load_pdf": "PARSE: label extraction (V01-PDF)",
+   "prepare_case": "IDENTIFICATION: letter slot chosen by IN-02 acknowledgement_letter_ref",
+   "recognise": "PARSE: policy.recognise refuses the document as a policy (POLICY_NOT_RECOGNISED)",
+   "setup": "PARSE: Validator.setup marks IN-17 unusable (V01-PDF FAIL) or drops it"
+  },
+  "group_by_pattern": {
+   "ASSIGNED": "D",
+   "COMPUTED_EQUALS": "E",
+   "CONST_EQUALS": "E",
+   "CROSS_DOC_EQUALS": "E",
+   "DATE_PARSE": "C",
+   "LOOKUP_KEY": "A",
+   "NON_EMPTY": "E",
+   "READ_ONLY": "-",
+   "REGEX_MATCH": "B",
+   "REGISTRY_EQUALS": "A",
+   "TIMESTAMP_PARSE": "C"
+  }
+ },
+ "generator_version": "pdf-rule-generation/0.1-experiment",
+ "helpers": {
+  "_date_or_none": {
+   "file": "uc042lib/validate.py",
+   "line": 86,
+   "source": "def _date_or_none(text):\n    try:\n        return date.fromisoformat(text[:10]) if text else None\n    except ValueError:\n        return None",
+   "source_sha256": "0ec9eb39ea7fc3fa888f4f4ad317866cb9e8881f8f9c8686553f5aea20111c46"
+  },
+  "parse_ts": {
+   "file": "uc042lib/structure.py",
+   "line": 35,
+   "source": "def parse_ts(text):\n    dt = datetime.fromisoformat(text)\n    if dt.tzinfo is None:\n        raise ValueError(\"timestamp without offset\")\n    return dt",
+   "source_sha256": "8c101c94ee047fd42f50baabacdc3a10685e340e83fca35919b6b325da16a98e"
+  }
+ },
+ "labels_without_consumer": [
+  "Frequency",
+  "Institution",
+  "Return",
+  "Role",
+  "Safeguarding method",
+  "Submission reference"
+ ],
+ "letter_slots": {
+  "source": {
+   "file": "uc042lib/schema.py",
+   "line": 277
+  },
+  "value": {
+   "SGA-EUR-01": "IN-16",
+   "SGA-GBP-01": "IN-15"
+  }
+ },
+ "needs_manual_resolution": [
+  {
+   "label": "Document version",
+   "reason": "value assigned to a variable; its use is not visible syntactically (no data-flow analysis)",
+   "sites": [
+    "uc042lib/policy.py:71"
+   ]
+  }
+ ],
+ "pdf_categories": {
+  "IN-15": {
+   "labels": [
+    "Letter reference",
+    "Institution",
+    "Account name",
+    "Account number",
+    "Currency",
+    "Letter date"
+   ],
+   "requirement": "REQUIRED",
+   "source": {
+    "file": "uc042lib/schema.py",
+    "line": 200
+   }
+  },
+  "IN-16": {
+   "labels": [
+    "Letter reference",
+    "Institution",
+    "Account name",
+    "Account number",
+    "Currency",
+    "Letter date"
+   ],
+   "requirement": "REQUIRED",
+   "source": {
+    "file": "uc042lib/schema.py",
+    "line": 202
+   }
+  },
+  "IN-17": {
+   "labels": [
+    "Document version",
+    "Effective date",
+    "Safeguarding method",
+    "Reconciliation method",
+    "Reconciliation point",
+    "Frequency",
+    "Internal reconciliation basis"
+   ],
+   "requirement": "REQUIRED",
+   "source": {
+    "file": "uc042lib/schema.py",
+    "line": 204
+   }
+  },
+  "IN-18": {
+   "labels": [
+    "Accountable person",
+    "Role",
+    "Allocated from"
+   ],
+   "requirement": "OPTIONAL",
+   "source": {
+    "file": "uc042lib/schema.py",
+    "line": 207
+   }
+  },
+  "IN-19": {
+   "labels": [
+    "Return",
+    "Period",
+    "Due date",
+    "Submitted at",
+    "Submission reference"
+   ],
+   "requirement": "OPTIONAL",
+   "source": {
+    "file": "uc042lib/schema.py",
+    "line": 209
+   }
+  }
+ },
+ "policy_versions": [
+  {
+   "classification": "ILLUSTRATIVE_SYNTHETIC",
+   "effective": "2025-10-01",
+   "required_markings": [
+    "ILLUSTRATIVE SYNTHETIC DOCUMENT",
+    "NOT AN OFFICIAL RECORD",
+    "Illustrative predecessor of policy v1.2"
+   ],
+   "source": {
+    "file": "uc042lib/policy.py",
+    "line": 40
+   },
+   "version": "1.1"
+  },
+  {
+   "classification": "SYNTHETIC_PROJECT_DOCUMENT",
+   "effective": "2026-05-07",
+   "required_markings": [
+    "SYNTHETIC DOCUMENT - UC-042 POC"
+   ],
+   "source": {
+    "file": "uc042lib/policy.py",
+    "line": 45
+   },
+   "version": "1.2"
+  }
+ ],
+ "sites": [
+  {
+   "categories": [
+    "IN-19"
+   ],
+   "consequence": "INTAKE WARNING: ingest.analysis WRONG_PERIOD message",
+   "extraction_use": false,
+   "file": "uc042app/ingest/analysis.py",
+   "function": "analyse_pdf",
+   "group": "E",
+   "label": "Period",
+   "line": 241,
+   "parameters": {
+    "expr": "expected",
+    "op": "NotEq"
+   },
+   "pattern": "COMPUTED_EQUALS",
+   "source_line": "if details.get(\"Period\") != expected:"
+  },
+  {
+   "categories": [
+    "IN-19"
+   ],
+   "consequence": "INTAKE WARNING: ingest.analysis WRONG_PERIOD message",
+   "extraction_use": false,
+   "file": "uc042app/ingest/analysis.py",
+   "function": "analyse_pdf",
+   "group": "-",
+   "label": "Period",
+   "line": 242,
+   "parameters": {
+    "use": "FormattedValue"
+   },
+   "pattern": "READ_ONLY",
+   "source_line": "messages.append(_msg(\"WRONG_PERIOD\", \"WARNING\", f\"the return receipt is for {details.get('Period') or 'an unknown period'}; \""
+  },
+  {
+   "categories": [
+    "IN-17"
+   ],
+   "consequence": "",
+   "extraction_use": false,
+   "file": "uc042app/ingest/analysis.py",
+   "function": "policy_version",
+   "group": "-",
+   "label": "Document version",
+   "line": 320,
+   "parameters": {
+    "use": "returned to the caller"
+   },
+   "pattern": "READ_ONLY",
+   "source_line": "return (checks.get(\"policy\") or {}).get(\"version\") or (checks.get(\"key_details\") or {}).get(\"Document version\") or None"
+  },
+  {
+   "categories": [
+    "IN-17"
+   ],
+   "consequence": "PARSE: policy.recognise refuses the document as a policy (POLICY_NOT_RECOGNISED)",
+   "extraction_use": false,
+   "file": "uc042lib/policy.py",
+   "function": "recognise",
+   "group": "D",
+   "label": "Document version",
+   "line": 71,
+   "parameters": {
+    "variable": "version"
+   },
+   "pattern": "ASSIGNED",
+   "source_line": "version = (details.get(\"Document version\") or \"\").strip()"
+  },
+  {
+   "categories": [
+    "IN-17"
+   ],
+   "consequence": "PARSE: policy.recognise refuses the document as a policy (POLICY_NOT_RECOGNISED)",
+   "extraction_use": true,
+   "file": "uc042lib/policy.py",
+   "function": "recognise",
+   "group": "A",
+   "label": "Effective date",
+   "line": 76,
+   "parameters": {
+    "registry_expr": "reg.effective.isoformat()"
+   },
+   "pattern": "REGISTRY_EQUALS",
+   "source_line": "if (details.get(\"Effective date\") or \"\").strip() != reg.effective.isoformat():"
+  },
+  {
+   "categories": [
+    "IN-17"
+   ],
+   "consequence": "PARSE: policy.recognise refuses the document as a policy (POLICY_NOT_RECOGNISED)",
+   "extraction_use": false,
+   "file": "uc042lib/policy.py",
+   "function": "recognise",
+   "group": "-",
+   "label": "Effective date",
+   "line": 77,
+   "parameters": {
+    "use": "FormattedValue"
+   },
+   "pattern": "READ_ONLY",
+   "source_line": "problems.append(f\"policy v{version} states effective date {details.get('Effective date') or '(none)'}, \""
+  },
+  {
+   "categories": [
+    "IN-15",
+    "IN-16"
+   ],
+   "consequence": "IDENTIFICATION: letter slot chosen by IN-02 acknowledgement_letter_ref",
+   "extraction_use": true,
+   "file": "uc042lib/prepare.py",
+   "function": "prepare_case",
+   "group": "A",
+   "label": "Letter reference",
+   "line": 166,
+   "parameters": {
+    "lookup": "letter_ref_to_slot"
+   },
+   "pattern": "LOOKUP_KEY",
+   "source_line": "slot = letter_ref_to_slot.get(details.get(\"Letter reference\", \"\"))"
+  },
+  {
+   "categories": [
+    "IN-17"
+   ],
+   "consequence": "PARSE: Validator.setup marks IN-17 unusable (V01-PDF FAIL) or drops it",
+   "extraction_use": true,
+   "file": "uc042lib/validate.py",
+   "function": "setup",
+   "group": "B",
+   "label": "Reconciliation point",
+   "line": 472,
+   "parameters": {
+    "regex": "^(\\d{2}):(\\d{2}) Europe/London$"
+   },
+   "pattern": "REGEX_MATCH",
+   "source_line": "mt = re.match(r\"^(\\d{2}):(\\d{2}) Europe/London$\", pol.get(\"Reconciliation point\", \"\"))"
+  },
+  {
+   "categories": [
+    "IN-17"
+   ],
+   "consequence": "PARSE: Validator.setup marks IN-17 unusable (V01-PDF FAIL) or drops it",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "setup",
+   "group": "-",
+   "label": "Reconciliation point",
+   "line": 477,
+   "parameters": {
+    "use": "result evidence (self.add)"
+   },
+   "pattern": "READ_ONLY",
+   "source_line": "self.add(\"V01-PDF\", \"DQ\", \"IN-17\", FAIL, pol.get(\"Reconciliation point\", \"\"), evidence=[self.ref(\"IN-17\")],"
+  },
+  {
+   "categories": [
+    "IN-17"
+   ],
+   "consequence": "PARSE: Validator.setup marks IN-17 unusable (V01-PDF FAIL) or drops it",
+   "extraction_use": true,
+   "file": "uc042lib/validate.py",
+   "function": "setup",
+   "group": "C",
+   "label": "Effective date",
+   "line": 479,
+   "parameters": {
+    "helper": "uc042lib.validate._date_or_none"
+   },
+   "pattern": "DATE_PARSE",
+   "source_line": "effective = _date_or_none(pol.get(\"Effective date\", \"\"))"
+  },
+  {
+   "categories": [
+    "IN-17"
+   ],
+   "consequence": "CONTROL: C03-POLICY result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_policy_and_points",
+   "group": "E",
+   "label": "Internal reconciliation basis",
+   "line": 494,
+   "parameters": {
+    "op": "Eq",
+    "value": "Per currency"
+   },
+   "pattern": "CONST_EQUALS",
+   "source_line": "self.add(\"C03-POLICY\", \"C03\", \"period\", PASS if pol.get(\"Reconciliation method\") == \"STANDARD\" and pol.get(\"Internal reconciliation basis\") == \"Per currency\" else FAIL,"
+  },
+  {
+   "categories": [
+    "IN-17"
+   ],
+   "consequence": "CONTROL: C03-POLICY result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_policy_and_points",
+   "group": "E",
+   "label": "Reconciliation method",
+   "line": 494,
+   "parameters": {
+    "op": "Eq",
+    "value": "STANDARD"
+   },
+   "pattern": "CONST_EQUALS",
+   "source_line": "self.add(\"C03-POLICY\", \"C03\", \"period\", PASS if pol.get(\"Reconciliation method\") == \"STANDARD\" and pol.get(\"Internal reconciliation basis\") == \"Per currency\" else FAIL,"
+  },
+  {
+   "categories": [
+    "IN-17"
+   ],
+   "consequence": "CONTROL: C03-POLICY result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_policy_and_points",
+   "group": "-",
+   "label": "Internal reconciliation basis",
+   "line": 495,
+   "parameters": {
+    "use": "FormattedValue"
+   },
+   "pattern": "READ_ONLY",
+   "source_line": "f\"point {self.point_time:%H:%M}; method {pol.get('Reconciliation method')}; basis {pol.get('Internal reconciliation basis')}\","
+  },
+  {
+   "categories": [
+    "IN-17"
+   ],
+   "consequence": "CONTROL: C03-POLICY result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_policy_and_points",
+   "group": "-",
+   "label": "Reconciliation method",
+   "line": 495,
+   "parameters": {
+    "use": "FormattedValue"
+   },
+   "pattern": "READ_ONLY",
+   "source_line": "f\"point {self.point_time:%H:%M}; method {pol.get('Reconciliation method')}; basis {pol.get('Internal reconciliation basis')}\","
+  },
+  {
+   "categories": [
+    "IN-15",
+    "IN-16"
+   ],
+   "consequence": "CONTROL: C10-DESIGNATION result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_designation",
+   "group": "E",
+   "label": "Account number",
+   "line": 1179,
+   "parameters": {
+    "column": "account_number_masked",
+    "other": "inv['account_number_masked']"
+   },
+   "pattern": "CROSS_DOC_EQUALS",
+   "source_line": "ok = (p.get(\"Letter reference\") == inv[\"acknowledgement_letter_ref\"] and p.get(\"Account number\") == inv[\"account_number_masked\"]"
+  },
+  {
+   "categories": [
+    "IN-15",
+    "IN-16"
+   ],
+   "consequence": "CONTROL: C10-DESIGNATION result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_designation",
+   "group": "E",
+   "label": "Letter reference",
+   "line": 1179,
+   "parameters": {
+    "column": "acknowledgement_letter_ref",
+    "other": "inv['acknowledgement_letter_ref']"
+   },
+   "pattern": "CROSS_DOC_EQUALS",
+   "source_line": "ok = (p.get(\"Letter reference\") == inv[\"acknowledgement_letter_ref\"] and p.get(\"Account number\") == inv[\"account_number_masked\"]"
+  },
+  {
+   "categories": [
+    "IN-15",
+    "IN-16"
+   ],
+   "consequence": "CONTROL: C10-DESIGNATION result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_designation",
+   "group": "E",
+   "label": "Account name",
+   "line": 1180,
+   "parameters": {
+    "column": "designation_name",
+    "other": "inv['designation_name']"
+   },
+   "pattern": "CROSS_DOC_EQUALS",
+   "source_line": "and p.get(\"Currency\") == inv[\"currency\"] and p.get(\"Account name\") == inv[\"designation_name\"]"
+  },
+  {
+   "categories": [
+    "IN-15",
+    "IN-16"
+   ],
+   "consequence": "CONTROL: C10-DESIGNATION result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_designation",
+   "group": "E",
+   "label": "Currency",
+   "line": 1180,
+   "parameters": {
+    "column": "currency",
+    "other": "inv['currency']"
+   },
+   "pattern": "CROSS_DOC_EQUALS",
+   "source_line": "and p.get(\"Currency\") == inv[\"currency\"] and p.get(\"Account name\") == inv[\"designation_name\"]"
+  },
+  {
+   "categories": [
+    "IN-15",
+    "IN-16"
+   ],
+   "consequence": "CONTROL: C10-DESIGNATION result",
+   "extraction_use": true,
+   "file": "uc042lib/validate.py",
+   "function": "check_designation",
+   "group": "C",
+   "label": "Letter date",
+   "line": 1183,
+   "parameters": {
+    "helper": "uc042lib.validate._date_or_none"
+   },
+   "pattern": "DATE_PARSE",
+   "source_line": "issued = _date_or_none(p.get(\"Letter date\", \"\"))"
+  },
+  {
+   "categories": [
+    "IN-15",
+    "IN-16"
+   ],
+   "consequence": "CONTROL: C10-DESIGNATION result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_designation",
+   "group": "-",
+   "label": "Letter reference",
+   "line": 1187,
+   "parameters": {
+    "use": "result evidence (self.add)"
+   },
+   "pattern": "READ_ONLY",
+   "source_line": "self.add(\"C10-DESIGNATION\", \"C10\", acct, PASS if ok else FAIL, p.get(\"Letter reference\", \"\"), inv[\"acknowledgement_letter_ref\"],"
+  },
+  {
+   "categories": [
+    "IN-18"
+   ],
+   "consequence": "CONTROL: C16-GOVERNANCE / C16-RETURN result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_checklist",
+   "group": "E",
+   "label": "Accountable person",
+   "line": 1197,
+   "parameters": {},
+   "pattern": "NON_EMPTY",
+   "source_line": "ok = bool(self.pdf[\"IN-18\"].get(\"Accountable person\"))"
+  },
+  {
+   "categories": [
+    "IN-18"
+   ],
+   "consequence": "CONTROL: C16-GOVERNANCE / C16-RETURN result",
+   "extraction_use": true,
+   "file": "uc042lib/validate.py",
+   "function": "check_checklist",
+   "group": "C",
+   "label": "Allocated from",
+   "line": 1198,
+   "parameters": {
+    "helper": "uc042lib.validate._date_or_none"
+   },
+   "pattern": "DATE_PARSE",
+   "source_line": "since = _date_or_none(self.pdf[\"IN-18\"].get(\"Allocated from\", \"\"))"
+  },
+  {
+   "categories": [
+    "IN-18"
+   ],
+   "consequence": "CONTROL: C16-GOVERNANCE / C16-RETURN result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_checklist",
+   "group": "-",
+   "label": "Accountable person",
+   "line": 1200,
+   "parameters": {
+    "use": "result evidence (self.add)"
+   },
+   "pattern": "READ_ONLY",
+   "source_line": "self.add(\"C16-GOVERNANCE\", \"C16\", \"period\", FAIL, self.pdf[\"IN-18\"].get(\"Accountable person\", \"\"), evidence=[self.ref(\"IN-18\")],"
+  },
+  {
+   "categories": [
+    "IN-18"
+   ],
+   "consequence": "CONTROL: C16-GOVERNANCE / C16-RETURN result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_checklist",
+   "group": "-",
+   "label": "Accountable person",
+   "line": 1203,
+   "parameters": {
+    "use": "result evidence (self.add)"
+   },
+   "pattern": "READ_ONLY",
+   "source_line": "self.add(\"C16-GOVERNANCE\", \"C16\", \"period\", PASS if ok else FAIL, self.pdf[\"IN-18\"].get(\"Accountable person\", \"\"), evidence=[self.ref(\"IN-18\")])"
+  },
+  {
+   "categories": [
+    "IN-19"
+   ],
+   "consequence": "CONTROL: C16-GOVERNANCE / C16-RETURN result",
+   "extraction_use": true,
+   "file": "uc042lib/validate.py",
+   "function": "check_checklist",
+   "group": "C",
+   "label": "Submitted at",
+   "line": 1211,
+   "parameters": {
+    "helper": "uc042lib.structure.parse_ts"
+   },
+   "pattern": "TIMESTAMP_PARSE",
+   "source_line": "submitted = parse_ts(p.get(\"Submitted at\", \"\")).date()"
+  },
+  {
+   "categories": [
+    "IN-19"
+   ],
+   "consequence": "CONTROL: C16-GOVERNANCE / C16-RETURN result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_checklist",
+   "group": "-",
+   "label": "Period",
+   "line": 1213,
+   "parameters": {
+    "use": "result evidence (self.add)"
+   },
+   "pattern": "READ_ONLY",
+   "source_line": "self.add(\"C16-RETURN\", \"C16\", p.get(\"Period\", \"\"), FAIL, evidence=[self.ref(\"IN-19\")], note=\"submission timestamp not readable\")"
+  },
+  {
+   "categories": [
+    "IN-19"
+   ],
+   "consequence": "CONTROL: C16-GOVERNANCE / C16-RETURN result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_checklist",
+   "group": "E",
+   "label": "Period",
+   "line": 1215,
+   "parameters": {
+    "expr": "self.period.previous.token",
+    "op": "Eq"
+   },
+   "pattern": "COMPUTED_EQUALS",
+   "source_line": "right_period = p.get(\"Period\", \"\") == self.period.previous.token"
+  },
+  {
+   "categories": [
+    "IN-19"
+   ],
+   "consequence": "CONTROL: C16-GOVERNANCE / C16-RETURN result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_checklist",
+   "group": "-",
+   "label": "Period",
+   "line": 1216,
+   "parameters": {
+    "use": "result evidence (self.add)"
+   },
+   "pattern": "READ_ONLY",
+   "source_line": "self.add(\"C16-RETURN\", \"C16\", p.get(\"Period\", \"\"),"
+  },
+  {
+   "categories": [
+    "IN-19"
+   ],
+   "consequence": "CONTROL: C16-GOVERNANCE / C16-RETURN result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_checklist",
+   "group": "E",
+   "label": "Due date",
+   "line": 1217,
+   "parameters": {
+    "expr": "due.isoformat()",
+    "op": "Eq"
+   },
+   "pattern": "COMPUTED_EQUALS",
+   "source_line": "PASS if right_period and submitted <= due and p.get(\"Due date\") == due.isoformat() else FAIL,"
+  },
+  {
+   "categories": [
+    "IN-19"
+   ],
+   "consequence": "CONTROL: C16-GOVERNANCE / C16-RETURN result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_checklist",
+   "group": "-",
+   "label": "Due date",
+   "line": 1218,
+   "parameters": {
+    "use": "FormattedValue"
+   },
+   "pattern": "READ_ONLY",
+   "source_line": "f\"due {due} (15 business days, SUP 16.14A.3R)\", f\"submitted {submitted}; stated due {p.get('Due date')}\", [self.ref(\"IN-19\")],"
+  },
+  {
+   "categories": [
+    "IN-19"
+   ],
+   "consequence": "CONTROL: C16-GOVERNANCE / C16-RETURN result",
+   "extraction_use": false,
+   "file": "uc042lib/validate.py",
+   "function": "check_checklist",
+   "group": "-",
+   "label": "Period",
+   "line": 1219,
+   "parameters": {
+    "use": "FormattedValue"
+   },
+   "pattern": "READ_ONLY",
+   "source_line": "\"\" if right_period else f\"receipt is for {p.get('Period') or 'an unstated period'}; the return due in this period is \""
+  }
+ ],
+ "source_sha256": {
+  "uc042app/ingest/analysis.py": "3a700367bd2d7c4f2392af7cc3fbfd010ad3a2ce5762dfcfcc096e927d9025e9",
+  "uc042lib/policy.py": "528cf7f1587894246e280684e62e7d63b71e3948f96ae3336786fe75130a6e5c",
+  "uc042lib/prepare.py": "886d8b97acde34a5531331c27e40b9bb6bc8ecc45c31590591f3dacd30b93185",
+  "uc042lib/schema.py": "03f76843a27d0de1da7a5f4602e0e6c9071e4f396e8786f5e8000a2b67b9690d",
+  "uc042lib/structure.py": "b2f641b9dd7314b5203ea9db17e6fbe6b5b08ad9d87e93b756c4bb1afb4b326d",
+  "uc042lib/validate.py": "ce308e6fdd6640d6ddeff4a69c98bbdfb23158a747301d2e0ca32f84ac71dd11"
+ },
+ "status": "EXPERIMENTAL - not used by Smart Parser",
+ "unrecognised": []
+}

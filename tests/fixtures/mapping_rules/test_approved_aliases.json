@@ -1,0 +1,109 @@
+{
+  "rules": "TEST FIXTURE active rules",
+  "policy": {
+    "allow_reorder": true,
+    "trim_whitespace": true,
+    "case_insensitive": true,
+    "unexpected_columns": "reject"
+  },
+  "aliases": [
+    {
+      "alias_id": "AA-IN-01-PK-TITLE",
+      "category": "IN-01",
+      "canonical_field": "calendar_date",
+      "alias": "Calendar Date",
+      "proposal_id": "AP-IN-01-PK-TITLE"
+    },
+    {
+      "alias_id": "AA-IN-02-PK-TITLE",
+      "category": "IN-02",
+      "canonical_field": "account_id",
+      "alias": "Account ID",
+      "proposal_id": "AP-IN-02-PK-TITLE"
+    },
+    {
+      "alias_id": "AA-IN-03-PK-TITLE",
+      "category": "IN-03",
+      "canonical_field": "snapshot_id",
+      "alias": "Snapshot ID",
+      "proposal_id": "AP-IN-03-PK-TITLE"
+    },
+    {
+      "alias_id": "AA-IN-04-PK-TITLE",
+      "category": "IN-04",
+      "canonical_field": "receipt_id",
+      "alias": "Receipt ID",
+      "proposal_id": "AP-IN-04-PK-TITLE"
+    },
+    {
+      "alias_id": "AA-IN-05-PK-TITLE",
+      "category": "IN-05",
+      "canonical_field": "recon_run_id",
+      "alias": "Recon Run ID",
+      "proposal_id": "AP-IN-05-PK-TITLE"
+    },
+    {
+      "alias_id": "AA-IN-06-PK-TITLE",
+      "category": "IN-06",
+      "canonical_field": "ext_recon_id",
+      "alias": "Ext Recon ID",
+      "proposal_id": "AP-IN-06-PK-TITLE"
+    },
+    {
+      "alias_id": "AA-IN-07-PK-TITLE",
+      "category": "IN-07",
+      "canonical_field": "statement_id",
+      "alias": "Statement ID",
+      "proposal_id": "AP-IN-07-PK-TITLE"
+    },
+    {
+      "alias_id": "AA-IN-08-PK-TITLE",
+      "category": "IN-08",
+      "canonical_field": "statement_id",
+      "alias": "Statement ID",
+      "proposal_id": "AP-IN-08-PK-TITLE"
+    },
+    {
+      "alias_id": "AA-IN-09-PK-TITLE",
+      "category": "IN-09",
+      "canonical_field": "bank_entry_id",
+      "alias": "Bank Entry ID",
+      "proposal_id": "AP-IN-09-PK-TITLE"
+    },
+    {
+      "alias_id": "AA-IN-10-PK-TITLE",
+      "category": "IN-10",
+      "canonical_field": "ledger_entry_id",
+      "alias": "Ledger Entry ID",
+      "proposal_id": "AP-IN-10-PK-TITLE"
+    },
+    {
+      "alias_id": "AA-IN-11-PK-TITLE",
+      "category": "IN-11",
+      "canonical_field": "txn_id",
+      "alias": "Txn ID",
+      "proposal_id": "AP-IN-11-PK-TITLE"
+    },
+    {
+      "alias_id": "AA-IN-12-PK-TITLE",
+      "category": "IN-12",
+      "canonical_field": "batch_id",
+      "alias": "Batch ID",
+      "proposal_id": "AP-IN-12-PK-TITLE"
+    },
+    {
+      "alias_id": "AA-IN-13-PK-TITLE",
+      "category": "IN-13",
+      "canonical_field": "line_id",
+      "alias": "Line ID",
+      "proposal_id": "AP-IN-13-PK-TITLE"
+    },
+    {
+      "alias_id": "AA-IN-14-PK-TITLE",
+      "category": "IN-14",
+      "canonical_field": "discrepancy_id",
+      "alias": "Discrepancy ID",
+      "proposal_id": "AP-IN-14-PK-TITLE"
+    }
+  ]
+}

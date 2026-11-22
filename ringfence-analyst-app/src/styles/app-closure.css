@@ -1,0 +1,68 @@
+/* Closure: outcome summary, exception workspace (A/B/C), Closing & Audit Pack, and the queue's demo section.
+   Local classes only (rfe-*, as-demo*); everything else reuses ringfence.css. */
+.rfe-badge { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line-strong); font-size: 11px; line-height: 16px; color: var(--ink-secondary); background: var(--surface); }
+.rfe-badge--det { border-color: var(--line-strong); color: var(--ink-secondary); }
+.rfe-badge--ai { border-style: dashed; color: var(--ink-secondary); background: var(--surface-muted); }
+.rfe-small { font-size: 12px; line-height: 16px; }
+.rfe-list { margin: 0; padding-left: 18px; font-size: 13px; line-height: 20px; }
+.rfe-list li + li { margin-top: 2px; }
+.rfe-kvrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-4); }
+.rfe-num { display: flex; flex-direction: column; gap: 2px; }
+.rfe-num b { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--ink); }
+.rfe-num span { font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+.rfe-packline { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; line-height: 18px; color: var(--ink-secondary); }
+.rfe-packline.is-ok { color: var(--success-fg); }
+.rfe-packline.is-bad { color: var(--danger-fg); }
+
+/* Exception workspace: full width; three columns on wide screens, stacked on narrow ones. */
+.rfe-ws { display: flex; flex-direction: column; gap: var(--space-4); min-width: 0; }
+.rfe-ws__nav { display: flex; align-items: center; gap: 8px; }
+.rfe-ws__head { display: flex; flex-direction: column; gap: 6px; }
+.rfe-cols { display: grid; gap: var(--space-4); align-items: start; }
+.rfe-cols--3 { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, .85fr); }
+.rfe-cols--1 { grid-template-columns: minmax(0, 1fr); }
+@media (max-width: 1400px) { .rfe-cols--3 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .rfe-cols--3 > .rfe-sec--dec { grid-column: 1 / -1; } }
+@media (max-width: 960px) { .rfe-cols--3 { grid-template-columns: minmax(0, 1fr); } }
+.rfe-sec { border: 1px solid var(--line-subtle); border-radius: var(--radius-lg); background: var(--surface); min-width: 0; }
+.rfe-sec--ai { border-style: dashed; border-color: var(--line-strong); }
+.rfe-sec__head { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--line-subtle); }
+.rfe-sec__tag { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; background: var(--surface-muted); font-size: 12px; font-weight: 600; color: var(--ink-secondary); flex: none; }
+.rfe-sec--ai .rfe-sec__tag { border: 1px dashed var(--line-strong); }
+.rfe-sec__title { margin: 0; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--ink); }
+.rfe-sec__sub { margin-top: 2px; font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+.rfe-sec__body { display: flex; flex-direction: column; gap: var(--space-4); padding: 14px; min-width: 0; }
+.rfe-sub__title { margin: 0 0 8px; font-size: 13px; line-height: 18px; font-weight: 600; color: var(--ink); }
+.rfe-cards { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.rfe-cards > li { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border: 1px solid var(--line-subtle); border-radius: var(--radius-md); font-size: 13px; line-height: 18px; }
+.rfe-cards--hyp > li { border-style: dashed; background: var(--surface-muted); color: var(--ink-secondary); }
+.rfe-hyp { align-self: flex-start; font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--attention-fg); }
+.rfe-cite { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface); font-family: var(--font-mono); font-size: 11px; line-height: 18px; color: var(--ink-secondary); cursor: pointer; }
+button.rfe-cite:hover { background: var(--surface-hover); color: var(--ink); }
+button.rfe-cite:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+.rfe-cite.is-unresolved { cursor: default; border-style: dashed; color: var(--danger-fg); }
+.rfe-current { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.rfe-events { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.rfe-events li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+
+/* Closing & Audit Pack */
+.rfe-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: var(--space-5); align-items: start; }
+@media (max-width: 1200px) { .rfe-grid { grid-template-columns: minmax(0, 1fr); } }
+.rfe-check { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.rfe-check li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 13px; line-height: 18px; }
+.rfe-check li.is-ok { color: var(--success-fg); }
+.rfe-check li.is-bad { color: var(--danger-fg); }
+.rfe-check li.is-warn, .rfe-check li.is-open { color: var(--ink-secondary); }
+.rfe-frame { width: 100%; height: 70vh; min-height: 420px; border: 1px solid var(--line-subtle); border-radius: var(--radius-md); background: var(--surface); }
+.rfe-acks { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border: 1px solid var(--line-subtle); border-radius: var(--radius-md); background: var(--surface-muted); }
+.rfe-ack { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; line-height: 18px; }
+.rfe-ack input { margin-top: 2px; }
+.rfe-verified { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; background: var(--success-bg); color: var(--success-fg); font-size: 12px; line-height: 18px; font-weight: 600; }
+.rfe-downloads { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line-subtle); border-radius: var(--radius-lg); }
+.rfe-downloads li { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-top: 1px solid var(--line-subtle); font-size: 13px; }
+.rfe-downloads li:first-child { border-top: 0; }
+
+/* Work queue · demo scenarios section (visually separate from the case list) */
+.as-demo-wrap { margin-top: var(--space-4); padding-top: var(--space-5); border-top: 1px dashed var(--line-strong); }
+.as-demo .rf-panel__title { display: inline-flex; align-items: center; gap: 6px; }
+.as-demo__detail { padding: 12px 16px; border-top: 1px solid var(--line-subtle); }
+.as-demo__note { padding: 8px 16px 12px; }

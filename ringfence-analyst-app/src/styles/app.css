@@ -1,0 +1,20 @@
+/* App-level additions (toasts, data-service bar, fixed dialog layer). Tokens from tokens.css. */
+.rf-layer > .rf-scrim { position: fixed; z-index: 60; }
+.rf-toasts { position: fixed; right: 16px; bottom: 44px; z-index: 80; display: flex; flex-direction: column; gap: 8px; width: 380px; max-width: calc(100vw - 32px); pointer-events: none; }
+.rf-toast { pointer-events: auto; display: grid; grid-template-columns: 16px minmax(0, 1fr) 20px; gap: 8px; align-items: start; padding: 10px 10px 10px 12px; border-radius: var(--radius-md); border: 1px solid var(--line); border-left-width: 3px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow-popover); font-size: 13px; line-height: 18px; }
+.rf-toast--success { border-left-color: var(--success-mark); } .rf-toast--success > .rf-icon { color: var(--success-fg); }
+.rf-toast--danger { border-left-color: var(--danger-mark); } .rf-toast--danger > .rf-icon { color: var(--danger-fg); }
+.rf-toast--attention { border-left-color: var(--attention-mark); } .rf-toast--attention > .rf-icon { color: var(--attention-fg); }
+.rf-toast--info { border-left-color: var(--line-strong); } .rf-toast--info > .rf-icon { color: var(--ink-muted); }
+.rf-toast > .rf-icon { margin-top: 2px; }
+.rf-toast__close { border: 0; background: transparent; color: var(--ink-muted); cursor: pointer; padding: 2px; border-radius: var(--radius-sm); }
+.rf-toast__close:hover { background: var(--surface-hover); color: var(--ink); }
+.rf-svcbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; display: flex; align-items: center; gap: 10px; min-height: 28px; padding: 4px 16px; background: var(--attention-bg); border-top: 1px solid var(--attention-line); color: var(--attention-fg); font-size: 12px; line-height: 16px; }
+.rf-svcbar b { font-weight: 600; letter-spacing: .04em; }
+.rf-svcbar > span { color: var(--ink-secondary); }
+.rf-svcbar--http { background: var(--surface-muted); border-top-color: var(--line); color: var(--ink-secondary); }
+.rf-svcbar__btn { margin-left: auto; border: 1px solid var(--attention-line); background: var(--surface); color: var(--ink); border-radius: var(--radius-sm); padding: 2px 8px; font: inherit; cursor: pointer; }
+.rf-svcbar__menu .rf-svcbar__btn { margin-left: 0; }
+.rf-svcbar__menu { position: absolute; right: 16px; bottom: 34px; display: flex; flex-direction: column; gap: 8px; padding: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); box-shadow: var(--shadow-popover); color: var(--ink); font-size: 13px; }
+.rf-svcbar__menu label { display: flex; gap: 8px; align-items: center; white-space: nowrap; }
+.rf-app--mock .rf-main, .rf-app.rf-app--mock { padding-bottom: 32px; }

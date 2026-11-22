@@ -1,0 +1,23 @@
+{
+  "name": "ringfence-analyst-app",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:backend": "vite --mode backend",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:card": "node scripts/build-card.mjs",
+    "build:backend": "vite build --mode backend"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.7.0",
+    "esbuild": "0.21.5",
+    "vite": "5.4.21"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "policy_id": "TEST-FIXTURE poc-auto-accept (enabled for tests only)",
+  "status": "POC_TEST_ONLY",
+  "note": "Test fixture. Enables the POC policy with the safest settings: CLEAR columns only; a caller-supplied category is accepted as the confirmed category for the POC.",
+  "enabled": true,
+  "accept_plausible": false,
+  "accept_supplied_category": true
+}

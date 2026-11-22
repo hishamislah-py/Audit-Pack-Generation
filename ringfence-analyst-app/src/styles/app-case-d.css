@@ -1,0 +1,43 @@
+/* Case tabs · Reconciliation (S12), exception drawer (S13) and Activity (S14).
+   Local classes only (rfd-*); everything else reuses ringfence.css. */
+.rfd-runline { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+.rfd-runline b { font-weight: 500; color: var(--ink-secondary); }
+.rfd-rstat { display: grid; grid-template-columns: 16px 150px minmax(0, 1fr); gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line-subtle); font-size: 13px; line-height: 18px; align-items: start; }
+.rfd-rstat:last-child { border-bottom: 0; }
+.rfd-rstat b { font-weight: 500; }
+.rfd-runs { list-style: none; margin: 0; padding: 0; }
+.rfd-run { display: flex; flex-direction: column; gap: 4px; padding: 10px 16px; border-top: 1px solid var(--line-subtle); cursor: pointer; }
+.rfd-run:first-child { border-top: 0; }
+.rfd-run:hover { background: var(--surface-hover); }
+.rfd-run.is-selected { background: var(--surface-selected); box-shadow: inset 3px 0 0 var(--brand-600); }
+.rfd-run:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -2px; }
+.rfd-run__err { font-size: 12px; line-height: 16px; color: var(--danger-fg); overflow-wrap: anywhere; }
+.rfd-section { display: flex; align-items: baseline; gap: 10px; margin: 4px 0 -8px; }
+.rfd-section__title { font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-muted); }
+.rfd-section__note { font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+.rfd-filters { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
+.rfd-select { height: var(--control-md); padding: 0 8px; border: 1px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface); color: var(--ink); font-size: 13px; }
+.rfd-select:focus { outline: 2px solid var(--focus-ring); outline-offset: 0; }
+.rfd-rowvals { display: flex; flex-wrap: wrap; gap: 2px 10px; font-family: var(--font-mono); font-size: 11px; line-height: 16px; color: var(--ink-secondary); }
+.rfd-rowvals b { font-weight: 500; color: var(--ink-muted); margin-right: 4px; }
+.rfd-pre { margin: 0; max-height: 56vh; overflow: auto; padding: 12px 14px; border: 1px solid var(--line-subtle); border-radius: var(--radius-md); background: var(--surface-muted); font-family: var(--font-mono); font-size: 12px; line-height: 18px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.rfd-bad { color: var(--danger-fg); }
+/* Overlays anchored to the viewport so a scrolled page still shows them. */
+.rfd-layer { position: fixed; inset: 0; z-index: 60; }
+.rfd-layer--drawer { top: var(--topbar-height); pointer-events: none; }
+.rfd-layer--drawer > .rf-drawer { pointer-events: auto; }
+.rfd-dhead { display: flex; align-items: center; gap: 8px; }
+.rfd-dhead__pos { font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+.rfd-dtitle { margin: 8px 0 6px; font-size: 16px; line-height: 24px; font-weight: 600; color: var(--ink); }
+.rfd-dsec { margin-top: 18px; }
+.rfd-dsec__title { margin: 0 0 8px; font-size: 13px; line-height: 18px; font-weight: 600; color: var(--ink); }
+.rfd-ev { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line-subtle); border-radius: var(--radius-lg); }
+.rfd-ev li { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-top: 1px solid var(--line-subtle); }
+.rfd-ev li:first-child { border-top: 0; }
+.rfd-ev__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+/* Activity */
+.rfd-hist { list-style: none; margin: 0; padding: 0; }
+.rfd-hist li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; align-items: center; padding: 10px 16px; border-top: 1px solid var(--line-subtle); }
+.rfd-hist li:first-child { border-top: 0; }
+.rfd-hist__at { font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+.rfd-hist__note { grid-column: 1 / -1; font-size: 12px; line-height: 16px; color: var(--ink-secondary); }
