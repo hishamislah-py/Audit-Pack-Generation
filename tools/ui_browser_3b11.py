@@ -203,6 +203,10 @@ def run(out: Path) -> dict:
 
             # 5 B: ambiguous proposal session
             open_review("B")
+            # Fix8 lead (race fix): reviews C and B share a package, so open_review's package-level wait can pass while
+            # review C's table is still on screen; wait for review B's own content before asserting on it.
+            b.wait(f"{txt('#mapping')}.includes('AMBIGUOUS') && {txt('#mapping')}.includes('PLAUSIBLE')",
+                   what="review B's ambiguous proposals rendered")
             step("ambiguous proposals shown (AMBIGUOUS + PLAUSIBLE), no Ignore action offered",
                  "AMBIGUOUS" in b.js(txt("#mapping")) and "PLAUSIBLE" in b.js(txt("#mapping")) and
                  not b.js("!!document.querySelector('#mapping button[data-action=IGNORE_COLUMN]')"), "")
