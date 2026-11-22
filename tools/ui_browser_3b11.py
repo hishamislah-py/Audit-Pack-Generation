@@ -207,9 +207,13 @@ def run(out: Path) -> dict:
                  "AMBIGUOUS" in b.js(txt("#mapping")) and "PLAUSIBLE" in b.js(txt("#mapping")) and
                  not b.js("!!document.querySelector('#mapping button[data-action=IGNORE_COLUMN]')"), "")
             b.shot(out / "06_ambiguous_review_before.png")
-            for i in (4, 7):
-                b.js(f"{row(i, 'button[data-action=MAP]')}.click()")
-                b.wait(decided(i), what=f"session decision {i}")
+            # Fix8 D4: the AMBIGUOUS money proposal (column 4) cannot be accepted with a one-click MAP; the field is
+            # named explicitly (CHANGE -> amount). Column 7 (reference) is still a one-click MAP.
+            b.js(f"{row(4, 'select.field')}.value = 'amount'")
+            b.js(f"{row(4, 'button[data-action=CHANGE]')}.click()")
+            b.wait(decided(4), what="session decision 4")
+            b.js(f"{row(7, 'button[data-action=MAP]')}.click()")
+            b.wait(decided(7), what="session decision 7")
             complete()
             o = b.js(txt("#outcome"))
             step("B completed through the proposal session: VALIDATED with 14 checks", "VALIDATED" in o and
