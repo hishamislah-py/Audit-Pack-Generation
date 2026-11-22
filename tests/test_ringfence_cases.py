@@ -30,13 +30,21 @@ def name(fid):
     return NAMES.get(fid, f"f_{fid}" + (".pdf" if fid in ("IN-15", "IN-16", "IN-17") else ".csv"))
 
 
+FIXED_ZIP_TIME = (2026, 9, 30, 12, 0, 0)          # deterministic member timestamps (see make_zip)
+
+
 def make_zip(skip=(), replace=None) -> bytes:
+    """Fix8 lead (race fix): every member gets a FIXED timestamp. `ZipFile.writestr(name, data)` stamps members with the
+    current clock, and ZIP times have 2-second resolution, so two identical submissions built either side of a 2-second
+    boundary differed in bytes (and SHA-256) - test_several_cases_per_period... failed intermittently, more often under
+    load. Same content now always gives the same bytes."""
     replace = replace or {}
     b = io.BytesIO()
     with zipfile.ZipFile(b, "w") as z:
         for f in REQUIRED:
             if f not in skip:
-                z.writestr(f"submission/{name(f)}", replace.get(f, read(SEP, f)))
+                z.writestr(zipfile.ZipInfo(f"submission/{name(f)}", date_time=FIXED_ZIP_TIME),
+                           replace.get(f, read(SEP, f)))
     return b.getvalue()
 
 
