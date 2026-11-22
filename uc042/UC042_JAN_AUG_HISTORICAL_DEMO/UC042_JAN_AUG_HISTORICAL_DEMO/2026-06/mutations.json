@@ -1,0 +1,11 @@
+[
+ {
+  "op": "set_field",
+  "file_id": "IN-09",
+  "key": "BE-GBP-0610-SB1",
+  "field": "bank_reference",
+  "old": "SB-GBP-20260610",
+  "new": "SB-GBP-20260601",
+  "why": "bank entry for this batch carries an earlier batch's reference (amount unchanged)"
+ }
+]

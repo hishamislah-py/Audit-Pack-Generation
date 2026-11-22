@@ -1,0 +1,221 @@
+{
+  "scenario_id": "SC5C",
+  "description": "Refund TX-0909-0R001 (60.00) counted twice in C0002's balance from 9 Sep; reported shortfall -60.00 on 16 days",
+  "non_passing_results": [
+    [
+      "C06-DIFFERENCE",
+      "2026-09-09/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-10/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-11/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-14/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-15/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-16/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-17/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-18/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-21/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-22/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-23/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-24/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-25/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-28/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-29/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-30/GBP",
+      "FAIL"
+    ],
+    [
+      "CBAL-ROLLFWD",
+      "GBP/C0002 2026-09-09",
+      "FAIL"
+    ]
+  ],
+  "exceptions": [
+    {
+      "exception_id": "EXC-SC5C-01",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-09/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-02",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-10/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-03",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-11/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-04",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-14/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-05",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-15/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-06",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-16/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-07",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-17/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-08",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-18/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-09",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-21/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-10",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-22/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-11",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-23/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-12",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-24/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-13",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-25/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-14",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-28/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-15",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-29/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-16",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-30/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5C-17",
+      "severity": "High",
+      "root_cause": "CBAL-ROLLFWD|GBP/C0002 2026-09-09",
+      "affected_results": 1
+    }
+  ],
+  "evidence_statuses": {},
+  "investigation_groups": [
+    [
+      "EXC-SC5C-01",
+      "EXC-SC5C-02",
+      "EXC-SC5C-03",
+      "EXC-SC5C-04",
+      "EXC-SC5C-05",
+      "EXC-SC5C-06",
+      "EXC-SC5C-07",
+      "EXC-SC5C-08",
+      "EXC-SC5C-09",
+      "EXC-SC5C-10",
+      "EXC-SC5C-11",
+      "EXC-SC5C-12",
+      "EXC-SC5C-13",
+      "EXC-SC5C-14",
+      "EXC-SC5C-15",
+      "EXC-SC5C-16",
+      "EXC-SC5C-17"
+    ]
+  ],
+  "candidate_relationships": [],
+  "expected_outcome_basis": "scenario design; engine changes E1 (timing evidence) and E2 (investigation groups) implemented",
+  "target_outcome": "17 individual exceptions kept, linked in one investigation group (the same -60.00 internal difference on consecutive days; C0002's 9 Sep snapshot, which fails the roll-forward, is an input to the 9 Sep requirement). Unresolved pending the client-ledger detail and human review; no cause set.",
+  "engine_limitations": []
+}

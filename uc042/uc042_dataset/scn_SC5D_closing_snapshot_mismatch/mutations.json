@@ -1,0 +1,11 @@
+[
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260930-C0003-GBP",
+    "field": "balance",
+    "old": "49374.75",
+    "new": "49124.75",
+    "why": "closing snapshot 250.00 below the transaction roll-forward"
+  }
+]

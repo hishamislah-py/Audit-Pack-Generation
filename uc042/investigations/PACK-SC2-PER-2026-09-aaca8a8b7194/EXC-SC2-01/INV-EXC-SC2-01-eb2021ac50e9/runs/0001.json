@@ -1,0 +1,45 @@
+{
+ "workflow_version": "uc042-investigation-graph/1.1",
+ "prompt_version": "uc042-investigator-prompt/1.0",
+ "trace": [
+  {
+   "node": "load_investigation_case",
+   "seconds": 0.125,
+   "ok": true
+  },
+  {
+   "node": "identify_investigation_scope",
+   "seconds": 0.0
+  },
+  {
+   "node": "route_investigation",
+   "seconds": 0.0,
+   "route": "bank_ledger_mismatch"
+  },
+  {
+   "node": "retrieve_relevant_evidence[bank_ledger_mismatch]",
+   "seconds": 0.032,
+   "records": 30
+  },
+  {
+   "node": "build_evidence_packet",
+   "seconds": 0.0,
+   "records": 30,
+   "citable_ids": 34
+  },
+  {
+   "node": "ai_investigation",
+   "seconds": 48.031,
+   "ok": true
+  },
+  {
+   "node": "validate_findings",
+   "seconds": 0.0,
+   "status": "VALID",
+   "errors": 0
+  }
+ ],
+ "route": "bank_ledger_mismatch",
+ "recorded_at": "2026-11-02T11:26:35+00:00",
+ "outcome": "PUBLISHED"
+}

@@ -1,0 +1,23 @@
+# Local secrets and configuration: never commit
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Backend application state (never commit)
+app_state/
+
+# Frontend build output and dependencies (also in frontend/.gitignore)
+frontend/node_modules/
+frontend/dist/
+
+# Uploaded source documents and processing case folders (never commit)
+document_store/
+
+# PostgreSQL backups taken before migrations (never commit)
+db_backups/
+docs/token_optimisation/test_db.url

@@ -1,0 +1,14 @@
+[
+  {
+    "op": "delete_record",
+    "file_id": "IN-13",
+    "key": "SL-AQ-GBP-20260908-0005",
+    "why": "fee not itemised in the acquirer report"
+  },
+  {
+    "op": "delete_record",
+    "file_id": "IN-13",
+    "key": "SL-AQ-GBP-20260908-0006",
+    "why": "fee not itemised in the acquirer report"
+  }
+]

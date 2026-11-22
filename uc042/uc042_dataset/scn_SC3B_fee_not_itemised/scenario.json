@@ -1,0 +1,8 @@
+{
+  "scenario_id": "SC3B",
+  "name": "Fee not itemised (AQ-GBP-20260908)",
+  "assessment_scenario": "3b",
+  "baseline": "set_01_clean_baseline",
+  "baseline_manifest_sha256": "0360b4055aa6812f063b411c7ceacdb2f4f153df73fd76c2acc7da3df565b69e",
+  "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA (decision D6): all records, timings, references and fee treatments are illustrative conventions for the UC-042 POC, not confirmed Moorwand practice."
+}

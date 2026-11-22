@@ -1,0 +1,2 @@
+exception_id,severity,status,category,root_cause,account_id,currency,first_date,last_date,amount,affected_results,affected,flags,related_records,cause_category,evidence,evidence_status,evidence_status_detail,review_status,investigation_group_id
+EXC-SC3B-01,High,OPEN,C11-BATCH-ARITH,C11-BATCH-ARITH|AQ-GBP-20260908,,,,,,1,C11-BATCH-ARITH AQ-GBP-20260908 [FAIL],,,,IN-12:settlement_batches_2026-09.csv#L22; IN-13:settlement_lines_2026-09.csv#L97-L100,,,AWAITING_HUMAN_REVIEW,

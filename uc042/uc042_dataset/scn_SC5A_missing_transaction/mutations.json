@@ -1,0 +1,8 @@
+[
+  {
+    "op": "delete_record",
+    "file_id": "IN-11",
+    "key": "TX-0915-00009",
+    "why": "transaction missing from the platform export"
+  }
+]

@@ -1,0 +1,9 @@
+month,scenario_composition,discrepancy_types,reconciliation_days,csv_files,csv_rows,pdf_files,expected_case_status,expected_exceptions,investigation_groups,pre_validated
+2026-01,Clean baseline,0,21,14,1989,3,CLEAN,0,0,YES
+2026-02,Missing EUR bank statement,1,20,14,1881,3,EVIDENCE_INCOMPLETE,1,0,YES
+2026-03,Unexplained GBP discrepancy,1,22,14,2080,3,EXCEPTIONS_OPEN,3,1,YES
+2026-04,Clean baseline,0,20,14,1905,3,CLEAN,0,0,YES
+2026-05,Missing EUR bank statement + Unexplained GBP discrepancy,2,19,14,1794,4,EVIDENCE_INCOMPLETE,4,1,YES
+2026-06,Inconsistent settlement reference,1,22,14,2077,3,EXCEPTIONS_OPEN,4,2,YES
+2026-07,Missing EUR bank statement + Inconsistent settlement reference,2,23,14,2145,3,EVIDENCE_INCOMPLETE,5,2,YES
+2026-08,Missing EUR bank statement + Unexplained GBP discrepancy + Inconsistent settlement reference,3,20,14,1937,3,EVIDENCE_INCOMPLETE,8,3,YES

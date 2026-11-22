@@ -1,0 +1,14 @@
+E
+======================================================================
+ERROR: test_continuity_never_crosses_workflows (tests.test_zip_only_workflow.ContinuityStaysWithinItsWorkflow.test_continuity_never_crosses_workflows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 490, in test_continuity_never_crosses_workflows
+    legacy = m._continuity(october, case, workflow="LEGACY")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: MonthlyService._continuity() got an unexpected keyword argument 'workflow'
+
+----------------------------------------------------------------------
+Ran 1 test in 3.706s
+
+FAILED (errors=1)

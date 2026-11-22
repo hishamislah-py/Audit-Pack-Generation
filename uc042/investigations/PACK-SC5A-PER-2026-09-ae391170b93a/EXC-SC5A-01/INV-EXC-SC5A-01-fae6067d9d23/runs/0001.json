@@ -1,0 +1,54 @@
+{
+ "investigation_mode": "tools",
+ "workflow_version": "uc042-investigation-graph/2.0-tools",
+ "prompt_version": "uc042-investigator-prompt/2.0-tools",
+ "trace": [
+  {
+   "node": "load_investigation_case",
+   "seconds": 0.141,
+   "ok": true
+  },
+  {
+   "node": "identify_investigation_scope",
+   "seconds": 0.0
+  },
+  {
+   "node": "route_investigation",
+   "seconds": 0.0,
+   "route": "unverified_relationship"
+  },
+  {
+   "node": "retrieve_relevant_evidence[unverified_relationship]",
+   "seconds": 0.062,
+   "records": 20
+  },
+  {
+   "node": "build_evidence_packet",
+   "seconds": 0.0,
+   "records": 20,
+   "citable_ids": 31
+  },
+  {
+   "node": "ai_investigation[tools]",
+   "seconds": 51.532,
+   "ok": true,
+   "llm_calls": 2,
+   "tool_calls": 1,
+   "rounds": 1,
+   "stop": "final_answer"
+  },
+  {
+   "node": "validate_findings",
+   "seconds": 0.0,
+   "status": "VALID",
+   "errors": 0
+  }
+ ],
+ "route": "unverified_relationship",
+ "artefact_sha256": {
+  "evidence_ledger.json": "1422f4cbadd441a10a9f2d02dc550916e751555bc5066a9cd77cccb022d09e72",
+  "tool_calls.json": "47b622a7f544fd600cb0a377a4005e2bd51a0ad6853ec496273f784eae80dfad"
+ },
+ "recorded_at": "2026-11-02T11:58:29+00:00",
+ "outcome": "PUBLISHED"
+}

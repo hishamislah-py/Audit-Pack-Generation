@@ -1,0 +1,1801 @@
+{
+ "result": {
+  "investigation_id": "",
+  "pack_id": "PACK-S02-PER-2026-09-f3dfa52766bb",
+  "pack_content_sha256": "f3dfa52766bb260916a148f2826a46cfecc26474143e192beb61984d5b20e63d",
+  "exception_id": "EXC-S02-01",
+  "original_exception_status": "OPEN",
+  "original_review_status": "AWAITING_HUMAN_REVIEW",
+  "original_evidence_status": "",
+  "investigation_scope": {
+   "root_cause_kind": "MISSING_BANK_EVIDENCE",
+   "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-09-15",
+   "category": "Missing bank evidence",
+   "severity": "Critical",
+   "account_id": "SGA-EUR-01",
+   "currency": "EUR",
+   "first_date": "2026-09-15",
+   "last_date": "2026-09-15",
+   "amount": "",
+   "control_codes": [
+    "C05/C07",
+    "C06",
+    "C07",
+    "C08",
+    "C09",
+    "C11",
+    "C14",
+    "DQ22"
+   ],
+   "check_ids": [
+    "C07-BANK-EVIDENCE",
+    "C08-DIFFERENCE",
+    "C11-BATCH-BANK",
+    "C14-COVER",
+    "CASH-BANK-LINK",
+    "DQ22-CONTINUITY",
+    "FUND-TOPUP",
+    "RC4-DIRECT"
+   ],
+   "affected_result_count": 13,
+   "evidence_status": "",
+   "investigation_group_id": "",
+   "group_size": 0,
+   "candidate_relationship_ids": [],
+   "related_exception_ids": [],
+   "missing_evidence_item_ids": [
+    "MISS-01"
+   ],
+   "keys": {
+    "account_id": "SGA-EUR-01",
+    "date": "2026-09-15"
+   }
+  },
+  "investigation_route": "missing_bank_evidence",
+  "investigation_status": "COMPLETED",
+  "exception_resolution": "NOT_RESOLVED_BY_INVESTIGATION",
+  "investigation_summary": "EXC-S02-01 concerns missing bank evidence for the EUR safeguarding account SGA-EUR-01 on 2026-09-15. The supplied records establish what the firm recorded in its reconciliations and cash book, and what the settlement records describe, but no same-day 17:00 confirmation, end-of-day statement, or bank entries were found. The engine’s affected checks are reported as INSUFFICIENT_EVIDENCE; the actual bank position and movements on the date therefore cannot be established.",
+  "confirmed_findings": [
+   {
+    "finding_id": "F-01",
+    "claim": "The exception concerns a scheduled reconciliation day for the relevant-funds EUR account.",
+    "explanation": "The calendar record identifies 2026-09-15 as a reconciliation day, and the account inventory identifies SGA-EUR-01 as a EUR relevant-funds bank account. The engine reports EXC-S02-01 as OPEN and AWAITING_HUMAN_REVIEW.",
+    "evidence_ids": [
+     "IN-01:2026-09-15",
+     "IN-02:SGA-EUR-01",
+     "EXC-S02-01"
+    ],
+    "supporting_records": [
+     "IN-01:2026-09-15",
+     "IN-02:SGA-EUR-01"
+    ]
+   },
+   {
+    "finding_id": "F-02",
+    "claim": "The required 2026-09-15 bank confirmation, end-of-day statement, and bank entries are not available in the supplied data.",
+    "explanation": "The searches for a 17:00 bank confirmation, an end-of-day statement, and bank entries booked on the account for 2026-09-15 returned NOT_FOUND. The C14 coverage outcomes for the confirmation and statement, and the applicable cash-book-to-bank checks, are reported as INSUFFICIENT_EVIDENCE. This establishes an evidence gap, not that such records never existed.",
+    "evidence_ids": [
+     "SEARCH-01",
+     "SEARCH-02",
+     "SEARCH-03",
+     "C14-COVER|IN-07 2026-09-15/SGA-EUR-01",
+     "C14-COVER|IN-08 2026-09-15/SGA-EUR-01",
+     "CASH-BANK-LINK|LE-EUR-0915-0001",
+     "CASH-BANK-LINK|LE-EUR-0915-0002",
+     "CASH-BANK-LINK|LE-EUR-0915-0003",
+     "CASH-BANK-LINK|LE-EUR-0915-0004"
+    ],
+    "supporting_records": [
+     "IN-01:2026-09-15",
+     "IN-02:SGA-EUR-01"
+    ]
+   },
+   {
+    "finding_id": "F-03",
+    "claim": "The firm’s reconciliation records report matching EUR 98,500.35 balances, but the bank balance is not independently verified by the supplied same-day bank evidence.",
+    "explanation": "The external reconciliation record reports bank and ledger balances of 98500.35 and a difference of 0.00, and cites a same-day statement that is not available. The internal reconciliation record also reports resource and requirement of 98500.35 and a difference of 0.00. The engine reports C07 and C08 as INSUFFICIENT_EVIDENCE; C07’s reported bank balance is 98500.35, while C08’s reported value is 0.00 and its note says bank evidence was not provided and the difference was not computed. These firm-reported figures do not establish the actual bank balance.",
+    "evidence_ids": [
+     "IN-06:ERL-SGA-EUR-01-20260915",
+     "IN-05:IRR-EMONEY-EUR-20260915",
+     "C07-BANK-EVIDENCE|2026-09-15/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-15/SGA-EUR-01"
+    ],
+    "supporting_records": [
+     "IN-06:ERL-SGA-EUR-01-20260915",
+     "IN-05:IRR-EMONEY-EUR-20260915"
+    ]
+   },
+   {
+    "finding_id": "F-04",
+    "claim": "The adjacent-day statement records do not fill the missing 2026-09-15 bank evidence.",
+    "explanation": "The 2026-09-14 end-of-day statement reports a closing balance of 97797.08. The 2026-09-16 end-of-day statement reports an opening balance of 98500.35 and closing balance of 101242.61. The engine reports a statement continuity gap for 2026-09-15 as INSUFFICIENT_EVIDENCE. Neither adjacent-day record is a same-day statement or confirmation.",
+    "evidence_ids": [
+     "IN-08:ST-SGA-EUR-01-20260914-EOD",
+     "IN-08:ST-SGA-EUR-01-20260916-EOD",
+     "DQ22-CONTINUITY|ST-SGA-EUR-01-20260916-EOD"
+    ],
+    "supporting_records": [
+     "IN-08:ST-SGA-EUR-01-20260914-EOD",
+     "IN-08:ST-SGA-EUR-01-20260916-EOD"
+    ]
+   },
+   {
+    "finding_id": "F-05",
+    "claim": "The firm cash book records four entries on SGA-EUR-01 dated 2026-09-15.",
+    "explanation": "The records show a BANK_LOAD of EUR 471.30, an ACQUIRER_SETTLEMENT of EUR 1,339.82, an OWN_FUNDS_TOPUP of EUR 6.13, and a SCHEME_SETTLEMENT of EUR 1,113.98, with the recorded debit/credit indicators and payment references in the cited entries. The engine reports each corresponding cash-book-to-bank check as INSUFFICIENT_EVIDENCE because the bank statement for that day was not provided. The cash book shows firm records, not proof that funds moved at the bank.",
+    "evidence_ids": [
+     "IN-10:LE-EUR-0915-0001",
+     "IN-10:LE-EUR-0915-0002",
+     "IN-10:LE-EUR-0915-0003",
+     "IN-10:LE-EUR-0915-0004",
+     "CASH-BANK-LINK|LE-EUR-0915-0001",
+     "CASH-BANK-LINK|LE-EUR-0915-0002",
+     "CASH-BANK-LINK|LE-EUR-0915-0003",
+     "CASH-BANK-LINK|LE-EUR-0915-0004"
+    ],
+    "supporting_records": [
+     "IN-10:LE-EUR-0915-0001",
+     "IN-10:LE-EUR-0915-0002",
+     "IN-10:LE-EUR-0915-0003",
+     "IN-10:LE-EUR-0915-0004"
+    ]
+   },
+   {
+    "finding_id": "F-06",
+    "claim": "The settlement records describe an acquirer batch to the firm and a scheme batch from the firm, without confirming corresponding bank movements.",
+    "explanation": "The acquirer batch header reports net amount 1339.82 and expected bank reference AQ-EUR-20260915; its retrieved lines and referenced transactions describe two settled load transactions and fee lines. The scheme batch header reports net amount 1113.98 and expected bank reference SB-EUR-20260915; its retrieved lines and referenced transactions describe three settled spend transactions. The engine reports both C11 batch-to-bank checks as INSUFFICIENT_EVIDENCE because the settlement-date bank statement is unavailable.",
+    "evidence_ids": [
+     "IN-12:AQ-EUR-20260915",
+     "IN-13:SL-AQ-EUR-20260915-0001",
+     "IN-13:SL-AQ-EUR-20260915-0002",
+     "IN-13:SL-AQ-EUR-20260915-0003",
+     "IN-13:SL-AQ-EUR-20260915-0004",
+     "IN-11:TX-0915-00014",
+     "IN-11:TX-0915-00015",
+     "IN-12:SB-EUR-20260915",
+     "IN-13:SL-SB-EUR-20260915-0001",
+     "IN-13:SL-SB-EUR-20260915-0002",
+     "IN-13:SL-SB-EUR-20260915-0003",
+     "IN-11:TX-0915-00016",
+     "IN-11:TX-0915-00017",
+     "IN-11:TX-0915-00018",
+     "C11-BATCH-BANK|AQ-EUR-20260915",
+     "C11-BATCH-BANK|SB-EUR-20260915"
+    ],
+    "supporting_records": [
+     "IN-12:AQ-EUR-20260915",
+     "IN-12:SB-EUR-20260915"
+    ]
+   },
+   {
+    "finding_id": "F-07",
+    "claim": "A client load transaction and a cash-book entry carry the same payment reference and recorded amount.",
+    "explanation": "The client transaction TX-0915-00013 is recorded as an executed EUR 471.30 LOAD_BANK credit with payment reference E2E-EUR-0915-L01; the cash-book entry LE-EUR-0915-0001 records EUR 471.30 with that reference. The engine reports RC4-DIRECT as INSUFFICIENT_EVIDENCE because the bank statement for that day was not provided. The matching reference and amount do not establish a bank entry or settlement movement.",
+    "evidence_ids": [
+     "IN-11:TX-0915-00013",
+     "IN-10:LE-EUR-0915-0001",
+     "RC4-DIRECT|TX-0915-00013"
+    ],
+    "supporting_records": [
+     "IN-11:TX-0915-00013",
+     "IN-10:LE-EUR-0915-0001"
+    ]
+   }
+  ],
+  "hypotheses": [
+   {
+    "hypothesis_id": "H-01",
+    "possible_explanation": "The EUR 98,500.35 reported in the firm’s 2026-09-15 reconciliation may have been carried forward as the 2026-09-16 statement’s opening balance.",
+    "supporting_evidence": [
+     "IN-06:ERL-SGA-EUR-01-20260915",
+     "IN-05:IRR-EMONEY-EUR-20260915",
+     "IN-08:ST-SGA-EUR-01-20260916-EOD"
+    ],
+    "contradictory_evidence": [],
+    "limitations": "The matching amounts do not prove the bank’s balance on 2026-09-15 or establish how the next-day opening balance was derived. Same-day bank evidence is unavailable.",
+    "status": "HYPOTHESIS"
+   }
+  ],
+  "contradictory_evidence": [],
+  "missing_evidence": [
+   {
+    "item_id": "M-01",
+    "description": "The packet’s MISS-01 identifies missing bank evidence for SGA-EUR-01 on 2026-09-15. Searches for the 17:00 bank confirmation, end-of-day statement, and that date’s bank entries returned NOT_FOUND. The statement cited by the external reconciliation is also not available. The packet reports 13 check results that could not be assessed.",
+    "expected_source": "Official bank 17:00 confirmation, end-of-day statement and transaction-level bank entries for SGA-EUR-01 on 2026-09-15; also the statement identified by the firm’s external reconciliation.",
+    "impact": "Without these records, the actual bank balance and movements cannot be verified, and the affected bank-evidence, difference, settlement, cash-book-link and continuity checks remain insufficiently assessed.",
+    "related_ids": [
+     "MISS-01",
+     "SEARCH-01",
+     "SEARCH-02",
+     "SEARCH-03",
+     "C14-COVER|IN-07 2026-09-15/SGA-EUR-01",
+     "C14-COVER|IN-08 2026-09-15/SGA-EUR-01",
+     "C07-BANK-EVIDENCE|2026-09-15/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-15/SGA-EUR-01",
+     "C11-BATCH-BANK|AQ-EUR-20260915",
+     "C11-BATCH-BANK|SB-EUR-20260915",
+     "DQ22-CONTINUITY|ST-SGA-EUR-01-20260916-EOD",
+     "CASH-BANK-LINK|LE-EUR-0915-0001",
+     "CASH-BANK-LINK|LE-EUR-0915-0002",
+     "CASH-BANK-LINK|LE-EUR-0915-0003",
+     "CASH-BANK-LINK|LE-EUR-0915-0004",
+     "FUND-TOPUP|AQ-EUR-20260915",
+     "RC4-DIRECT|TX-0915-00013"
+    ]
+   }
+  ],
+  "open_questions": [
+   "Can the bank provide an authentic 2026-09-15 17:00 confirmation and complete statement or transaction listing for SGA-EUR-01?",
+   "What is the bank-supported balance and what entries, if any, correspond to the firm’s recorded cash-book and settlement items?",
+   "What source and method support the 98500.35 bank balance reported in the external reconciliation, given the cited same-day statement is unavailable?",
+   "Can the 2026-09-16 opening balance be substantiated as a carry-forward from an authenticated 2026-09-15 closing balance?"
+  ],
+  "recommended_next_steps": [
+   {
+    "step_id": "S-01",
+    "action": "Obtain the bank-issued 2026-09-15 17:00 balance confirmation and complete end-of-day statement for SGA-EUR-01, including the statement cited by the external reconciliation; authenticate them through the bank or an approved source.",
+    "rationale": "These are the missing primary records needed to verify the reported bank balance and address the statement gap.",
+    "evidence_needed": "Bank-issued confirmation and statement with account, currency, date/time, balance, and transaction detail."
+   },
+   {
+    "step_id": "S-02",
+    "action": "Obtain the bank’s transaction-level entries for 2026-09-15 and compare them with the four cash-book entries and the acquirer and scheme batch references.",
+    "rationale": "Cash-book and batch records document what the firm recorded or expected, but do not establish that money moved at the bank.",
+    "evidence_needed": "Bank statement lines or bank transaction export showing booking date, amount, direction, and reference."
+   },
+   {
+    "step_id": "S-03",
+    "action": "Obtain the supporting workpapers and source reports used to prepare the 2026-09-15 internal and external reconciliations, including the basis for the reported balances and the cited statement identifier.",
+    "rationale": "The firm’s reconciliation records report matching balances, but the cited bank evidence is unavailable and the engine could not verify the reported difference.",
+    "evidence_needed": "Reconciliation workpapers, underlying ledger/resource extracts, and the identified bank confirmation or statement."
+   }
+  ],
+  "overall_evidence_assessment": "INSUFFICIENT_EVIDENCE",
+  "evidence_references": [
+   "C07-BANK-EVIDENCE|2026-09-15/SGA-EUR-01",
+   "C08-DIFFERENCE|2026-09-15/SGA-EUR-01",
+   "C11-BATCH-BANK|AQ-EUR-20260915",
+   "C11-BATCH-BANK|SB-EUR-20260915",
+   "C14-COVER|IN-07 2026-09-15/SGA-EUR-01",
+   "C14-COVER|IN-08 2026-09-15/SGA-EUR-01",
+   "CASH-BANK-LINK|LE-EUR-0915-0001",
+   "CASH-BANK-LINK|LE-EUR-0915-0002",
+   "CASH-BANK-LINK|LE-EUR-0915-0003",
+   "CASH-BANK-LINK|LE-EUR-0915-0004",
+   "DQ22-CONTINUITY|ST-SGA-EUR-01-20260916-EOD",
+   "EXC-S02-01",
+   "FUND-TOPUP|AQ-EUR-20260915",
+   "IN-01:2026-09-15",
+   "IN-02:SGA-EUR-01",
+   "IN-05:IRR-EMONEY-EUR-20260915",
+   "IN-06:ERL-SGA-EUR-01-20260915",
+   "IN-08:ST-SGA-EUR-01-20260914-EOD",
+   "IN-08:ST-SGA-EUR-01-20260916-EOD",
+   "IN-10:LE-EUR-0915-0001",
+   "IN-10:LE-EUR-0915-0002",
+   "IN-10:LE-EUR-0915-0003",
+   "IN-10:LE-EUR-0915-0004",
+   "IN-11:TX-0915-00013",
+   "IN-11:TX-0915-00014",
+   "IN-11:TX-0915-00015",
+   "IN-11:TX-0915-00016",
+   "IN-11:TX-0915-00017",
+   "IN-11:TX-0915-00018",
+   "IN-12:AQ-EUR-20260915",
+   "IN-12:SB-EUR-20260915",
+   "IN-13:SL-AQ-EUR-20260915-0001",
+   "IN-13:SL-AQ-EUR-20260915-0002",
+   "IN-13:SL-AQ-EUR-20260915-0003",
+   "IN-13:SL-AQ-EUR-20260915-0004",
+   "IN-13:SL-SB-EUR-20260915-0001",
+   "IN-13:SL-SB-EUR-20260915-0002",
+   "IN-13:SL-SB-EUR-20260915-0003",
+   "MISS-01",
+   "RC4-DIRECT|TX-0915-00013",
+   "SEARCH-01",
+   "SEARCH-02",
+   "SEARCH-03"
+  ],
+  "evidence_packet_sha256": "21be458e37e5d72e298dd0a26638a507382a4068934a77a1935f26c452bcdf0c",
+  "investigation_mode": "tools",
+  "evidence_ledger_sha256": "dc54f06ed9585174cdbec4d1d90d71a287396b5ee8e012e1d585c0181525d39a",
+  "tool_summary": {
+   "status": "COMPLETED",
+   "stop_reason": "final_answer",
+   "llm_calls": 2,
+   "tool_calls_requested": 3,
+   "tool_rounds": 1,
+   "tools_executed": 3,
+   "tools_deduplicated": 0,
+   "tools_rejected_or_failed": 0,
+   "tools_refused_budget": 0,
+   "tools_used": [
+    "get_reconciliation_evidence",
+    "get_settlement_batch",
+    "get_settlement_batch"
+   ],
+   "records_initial": 14,
+   "records_final": 27,
+   "limits": {
+    "max_tool_calls": 8,
+    "max_rounds": 4,
+    "max_records_per_call": 25,
+    "max_input_tokens": 150000,
+    "max_total_records": 160,
+    "total_timeout": 300.0
+   }
+  },
+  "classification_summary": {
+   "EVIDENCE_BACKED": [
+    "F-01",
+    "F-02",
+    "F-03",
+    "F-04",
+    "F-05",
+    "F-06",
+    "F-07"
+   ],
+   "HYPOTHESIS": [
+    "H-01"
+   ],
+   "INSUFFICIENT_EVIDENCE": [
+    "M-01"
+   ],
+   "CONFLICTING_EVIDENCE": [],
+   "evidence_gaps": {
+    "engine_missing_evidence": [
+     "M-01"
+    ],
+    "searched_not_found": [
+     "M-01"
+    ],
+    "additional_gaps_identified_by_ai": []
+   },
+   "unverified_candidate_relationships": [],
+   "deterministic_conflicts": [],
+   "not_found_searches": [
+    "SEARCH-01",
+    "SEARCH-02",
+    "SEARCH-03",
+    "SEARCH-05",
+    "SEARCH-06"
+   ]
+  },
+  "model_metadata": {
+   "provider": "openai",
+   "model": "gpt-6-luna",
+   "simulated": false,
+   "prompt_version": "uc042-investigator-prompt/2.0-tools",
+   "workflow_version": "uc042-investigation-graph/2.0-tools",
+   "findings_schema_version": "uc042-investigation-findings/1.2",
+   "attempts": 2,
+   "usage": {
+    "input_tokens": 29746,
+    "output_tokens": 5883,
+    "reasoning_tokens": 2078,
+    "cached_input_tokens": 16361,
+    "total_tokens": 35629,
+    "latency_seconds": 52.91
+   },
+   "provider_response": {
+    "responses": [
+     {
+      "response_id": "resp_0c42d6eb021949af016ae87a7c212c87d2aa5e00ad0c3abf3e",
+      "resolved_model": "gpt-6-luna",
+      "status": "completed",
+      "request_id": "req_c71f7bd079b74f928b75408b37deb578"
+     },
+     {
+      "response_id": "resp_0c42d6eb021949af016ae87a8045d887d29601776e77937c21",
+      "resolved_model": "gpt-6-luna",
+      "status": "completed",
+      "request_id": "req_1a0a9337ddf2416183570074f44b4674"
+     }
+    ]
+   },
+   "investigation_mode": "tools",
+   "tool_registry_version": "uc042-evidence-tools/1.0"
+  },
+  "validation_status": "REJECTED",
+  "validation_findings": [
+   "F-02: claims evidence does not exist; absence from the supplied data is only 'not found'"
+  ],
+  "failure_reason": "",
+  "investigated_at": "2026-11-02T11:57:36+00:00",
+  "statement": "AI investigation findings are an aid to human review. They do not change any deterministic control outcome, do not resolve or close any exception, and are not a compliance opinion."
+ },
+ "run": {
+  "investigation_mode": "tools",
+  "workflow_version": "uc042-investigation-graph/2.0-tools",
+  "prompt_version": "uc042-investigator-prompt/2.0-tools",
+  "trace": [
+   {
+    "node": "load_investigation_case",
+    "seconds": 0.11,
+    "ok": true
+   },
+   {
+    "node": "identify_investigation_scope",
+    "seconds": 0.0
+   },
+   {
+    "node": "route_investigation",
+    "seconds": 0.0,
+    "route": "missing_bank_evidence"
+   },
+   {
+    "node": "retrieve_relevant_evidence[missing_bank_evidence]",
+    "seconds": 0.047,
+    "records": 14
+   },
+   {
+    "node": "build_evidence_packet",
+    "seconds": 0.0,
+    "records": 14,
+    "citable_ids": 32
+   },
+   {
+    "node": "ai_investigation[tools]",
+    "seconds": 52.906,
+    "ok": true,
+    "llm_calls": 2,
+    "tool_calls": 3,
+    "rounds": 1,
+    "stop": "final_answer"
+   },
+   {
+    "node": "validate_findings",
+    "seconds": 0.015,
+    "status": "REJECTED",
+    "errors": 1
+   }
+  ],
+  "route": "missing_bank_evidence",
+  "artefact_sha256": {
+   "evidence_ledger.json": "3507cffbe3f5229272bad2d143791b9c60dc060fd0bd9af64f349b956c9400eb",
+   "tool_calls.json": "509b5d65fe0487f6124e45e8dbe72d3e5c8483d19f82c4d097e35d2e9b63beae"
+  }
+ },
+ "evidence_packet_sha256": "21be458e37e5d72e298dd0a26638a507382a4068934a77a1935f26c452bcdf0c",
+ "evidence_ledger": {
+  "pack_id": "PACK-S02-PER-2026-09-f3dfa52766bb",
+  "pack_content_sha256": "f3dfa52766bb260916a148f2826a46cfecc26474143e192beb61984d5b20e63d",
+  "investigation_route": "missing_bank_evidence",
+  "investigation_scope": {
+   "root_cause_kind": "MISSING_BANK_EVIDENCE",
+   "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-09-15",
+   "category": "Missing bank evidence",
+   "severity": "Critical",
+   "account_id": "SGA-EUR-01",
+   "currency": "EUR",
+   "first_date": "2026-09-15",
+   "last_date": "2026-09-15",
+   "amount": "",
+   "control_codes": [
+    "C05/C07",
+    "C06",
+    "C07",
+    "C08",
+    "C09",
+    "C11",
+    "C14",
+    "DQ22"
+   ],
+   "check_ids": [
+    "C07-BANK-EVIDENCE",
+    "C08-DIFFERENCE",
+    "C11-BATCH-BANK",
+    "C14-COVER",
+    "CASH-BANK-LINK",
+    "DQ22-CONTINUITY",
+    "FUND-TOPUP",
+    "RC4-DIRECT"
+   ],
+   "affected_result_count": 13,
+   "evidence_status": "",
+   "investigation_group_id": "",
+   "group_size": 0,
+   "candidate_relationship_ids": [],
+   "related_exception_ids": [],
+   "missing_evidence_item_ids": [
+    "MISS-01"
+   ],
+   "keys": {
+    "account_id": "SGA-EUR-01",
+    "date": "2026-09-15"
+   }
+  },
+  "exception": {
+   "exception_id": "EXC-S02-01",
+   "severity": "Critical",
+   "status": "OPEN",
+   "category": "Missing bank evidence",
+   "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-09-15",
+   "account_id": "SGA-EUR-01",
+   "currency": "EUR",
+   "first_date": "2026-09-15",
+   "last_date": "2026-09-15",
+   "amount": "",
+   "affected_results": 13,
+   "control_codes": [
+    "C05/C07",
+    "C06",
+    "C07",
+    "C08",
+    "C09",
+    "C11",
+    "C14",
+    "DQ22"
+   ],
+   "flags": "",
+   "related_records": "",
+   "cause_category": "",
+   "evidence_status": "",
+   "evidence_status_detail": "",
+   "review_status": "AWAITING_HUMAN_REVIEW",
+   "investigation_group_id": ""
+  },
+  "related_exceptions": [],
+  "investigation_group": null,
+  "candidate_relationships": [],
+  "control_results": [
+   {
+    "result_id": "C14-COVER|IN-07 2026-09-15/SGA-EUR-01",
+    "for_exception": "EXC-S02-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "evidence_status": "",
+    "structured": {},
+    "note": "expected record absent (expected because of the cited calendar and account rows)",
+    "evidence_ids": [
+     "IN-01:2026-09-15",
+     "IN-02:SGA-EUR-01"
+    ]
+   },
+   {
+    "result_id": "C14-COVER|IN-08 2026-09-15/SGA-EUR-01",
+    "for_exception": "EXC-S02-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "evidence_status": "",
+    "structured": {},
+    "note": "expected record absent (expected because of the cited calendar and account rows)",
+    "evidence_ids": [
+     "IN-01:2026-09-15",
+     "IN-02:SGA-EUR-01"
+    ]
+   },
+   {
+    "result_id": "DQ22-CONTINUITY|ST-SGA-EUR-01-20260916-EOD",
+    "for_exception": "EXC-S02-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "evidence_status": "",
+    "structured": {},
+    "note": "statement gap: no statement for 2026-09-15",
+    "evidence_ids": [
+     "IN-08:ST-SGA-EUR-01-20260914-EOD",
+     "IN-08:ST-SGA-EUR-01-20260916-EOD"
+    ]
+   },
+   {
+    "result_id": "CASH-BANK-LINK|LE-EUR-0915-0001",
+    "for_exception": "EXC-S02-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "evidence_status": "",
+    "structured": {},
+    "note": "bank statement for that day not provided",
+    "evidence_ids": [
+     "IN-10:LE-EUR-0915-0001"
+    ]
+   },
+   {
+    "result_id": "CASH-BANK-LINK|LE-EUR-0915-0002",
+    "for_exception": "EXC-S02-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "evidence_status": "",
+    "structured": {},
+    "note": "bank statement for that day not provided",
+    "evidence_ids": [
+     "IN-10:LE-EUR-0915-0002"
+    ]
+   },
+   {
+    "result_id": "CASH-BANK-LINK|LE-EUR-0915-0003",
+    "for_exception": "EXC-S02-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "evidence_status": "",
+    "structured": {},
+    "note": "bank statement for that day not provided",
+    "evidence_ids": [
+     "IN-10:LE-EUR-0915-0003"
+    ]
+   },
+   {
+    "result_id": "CASH-BANK-LINK|LE-EUR-0915-0004",
+    "for_exception": "EXC-S02-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "evidence_status": "",
+    "structured": {},
+    "note": "bank statement for that day not provided",
+    "evidence_ids": [
+     "IN-10:LE-EUR-0915-0004"
+    ]
+   },
+   {
+    "result_id": "C07-BANK-EVIDENCE|2026-09-15/SGA-EUR-01",
+    "for_exception": "EXC-S02-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "98500.35",
+    "evidence_status": "",
+    "structured": {},
+    "note": "cited statement ST-SGA-EUR-01-20260915-1700 not provided; reported bank balance is unverified",
+    "evidence_ids": [
+     "IN-06:ERL-SGA-EUR-01-20260915"
+    ]
+   },
+   {
+    "result_id": "C08-DIFFERENCE|2026-09-15/SGA-EUR-01",
+    "for_exception": "EXC-S02-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "0.00",
+    "evidence_status": "",
+    "structured": {},
+    "note": "bank evidence not provided; difference not computed",
+    "evidence_ids": [
+     "IN-06:ERL-SGA-EUR-01-20260915"
+    ]
+   },
+   {
+    "result_id": "C11-BATCH-BANK|AQ-EUR-20260915",
+    "for_exception": "EXC-S02-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "evidence_status": "",
+    "structured": {},
+    "note": "bank statement for settlement date not provided",
+    "evidence_ids": [
+     "IN-12:AQ-EUR-20260915"
+    ]
+   },
+   {
+    "result_id": "C11-BATCH-BANK|SB-EUR-20260915",
+    "for_exception": "EXC-S02-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "evidence_status": "",
+    "structured": {},
+    "note": "bank statement for settlement date not provided",
+    "evidence_ids": [
+     "IN-12:SB-EUR-20260915"
+    ]
+   },
+   {
+    "result_id": "FUND-TOPUP|AQ-EUR-20260915",
+    "for_exception": "EXC-S02-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "6.13",
+    "reported": "",
+    "evidence_status": "",
+    "structured": {},
+    "note": "bank statement for SGA-EUR-01 on 2026-09-15 not provided",
+    "evidence_ids": [
+     "IN-12:AQ-EUR-20260915"
+    ]
+   },
+   {
+    "result_id": "RC4-DIRECT|TX-0915-00013",
+    "for_exception": "EXC-S02-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "evidence_status": "",
+    "structured": {},
+    "note": "bank statement for that day not provided",
+    "evidence_ids": [
+     "IN-11:TX-0915-00013"
+    ]
+   }
+  ],
+  "source_records": [
+   {
+    "evidence_id": "IN-01:2026-09-15",
+    "file_id": "IN-01",
+    "record_type": "Reconciliation-day calendar",
+    "source_file": "source_data/recon_calendar_2026-09.csv",
+    "source_line": 16,
+    "file_sha256": "e9ef76e28ab7582f348a4917ae45e0e565194a1e4c51dff2bb2d3898f81a6589",
+    "retrieved_via": "cited by control result C14-COVER|IN-07 2026-09-15/SGA-EUR-01",
+    "join_key": "calendar_date=2026-09-15",
+    "fields": {
+     "calendar_date": "2026-09-15",
+     "period_id": "PER-2026-09",
+     "is_recon_day": "true",
+     "non_recon_reason": "",
+     "calendar_basis": "SYNTHETIC: UK weekends and bank holidays; no foreign-market closures assumed"
+    }
+   },
+   {
+    "evidence_id": "IN-02:SGA-EUR-01",
+    "file_id": "IN-02",
+    "record_type": "Institution and account inventory",
+    "source_file": "source_data/account_inventory.csv",
+    "source_line": 3,
+    "file_sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d",
+    "retrieved_via": "cited by control result C14-COVER|IN-07 2026-09-15/SGA-EUR-01",
+    "join_key": "account_id=SGA-EUR-01",
+    "fields": {
+     "account_id": "SGA-EUR-01",
+     "account_class": "RELEVANT_FUNDS_BANK",
+     "currency": "EUR",
+     "asset_pool_id": "POOL-EMONEY",
+     "account_number_masked": "****8823",
+     "designation_name": "Synthetic EMI Ltd Safeguarding Account (EUR)",
+     "acknowledgement_letter_ref": "ACK-INST01-8823",
+     "institution_id": "INST-01",
+     "institution_full_name": "Example Bank plc",
+     "institution_postal_address": "1 Example Street, London EC0A 0AA (fictional)",
+     "institution_email": "safeguarding@example-bank.invalid",
+     "institution_phone": "+44 20 0000 0000",
+     "institution_role": "RELEVANT_FUNDS_BANK",
+     "open_date": "2024-03-01",
+     "close_date": ""
+    }
+   },
+   {
+    "evidence_id": "IN-08:ST-SGA-EUR-01-20260914-EOD",
+    "file_id": "IN-08",
+    "record_type": "End-of-day bank statement headers",
+    "source_file": "source_data/bank_statements_eod_2026-09.csv",
+    "source_line": 39,
+    "file_sha256": "945e15c4dd951e046bb47f1015459d7bc4d4daf80d7ddeece0cfd635a680066d",
+    "retrieved_via": "cited by control result DQ22-CONTINUITY|ST-SGA-EUR-01-20260916-EOD",
+    "join_key": "statement_id=ST-SGA-EUR-01-20260914-EOD",
+    "fields": {
+     "statement_id": "ST-SGA-EUR-01-20260914-EOD",
+     "account_id": "SGA-EUR-01",
+     "statement_date": "2026-09-14",
+     "as_at_ts": "2026-09-14T23:59:59+01:00",
+     "currency": "EUR",
+     "opening_balance_amount": "95606.43",
+     "opening_balance_dc": "C",
+     "closing_balance_amount": "97797.08",
+     "closing_balance_dc": "C",
+     "entry_count": "5",
+     "bank_statement_ref": "EOD/SGA-EUR-01/20260914"
+    }
+   },
+   {
+    "evidence_id": "IN-08:ST-SGA-EUR-01-20260916-EOD",
+    "file_id": "IN-08",
+    "record_type": "End-of-day bank statement headers",
+    "source_file": "source_data/bank_statements_eod_2026-09.csv",
+    "source_line": 46,
+    "file_sha256": "945e15c4dd951e046bb47f1015459d7bc4d4daf80d7ddeece0cfd635a680066d",
+    "retrieved_via": "cited by control result DQ22-CONTINUITY|ST-SGA-EUR-01-20260916-EOD",
+    "join_key": "statement_id=ST-SGA-EUR-01-20260916-EOD",
+    "fields": {
+     "statement_id": "ST-SGA-EUR-01-20260916-EOD",
+     "account_id": "SGA-EUR-01",
+     "statement_date": "2026-09-16",
+     "as_at_ts": "2026-09-16T23:59:59+01:00",
+     "currency": "EUR",
+     "opening_balance_amount": "98500.35",
+     "opening_balance_dc": "C",
+     "closing_balance_amount": "101242.61",
+     "closing_balance_dc": "C",
+     "entry_count": "5",
+     "bank_statement_ref": "EOD/SGA-EUR-01/20260916"
+    }
+   },
+   {
+    "evidence_id": "IN-10:LE-EUR-0915-0001",
+    "file_id": "IN-10",
+    "record_type": "Safeguarding-account cash book (firm ledger)",
+    "source_file": "source_data/sga_cashbook_entries_2026-09.csv",
+    "source_line": 110,
+    "file_sha256": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7",
+    "retrieved_via": "cited by control result CASH-BANK-LINK|LE-EUR-0915-0001",
+    "join_key": "ledger_entry_id=LE-EUR-0915-0001",
+    "fields": {
+     "ledger_entry_id": "LE-EUR-0915-0001",
+     "account_id": "SGA-EUR-01",
+     "posted_ts": "2026-09-15T10:00:00+01:00",
+     "entry_type": "BANK_LOAD",
+     "amount": "471.30",
+     "dc_indicator": "D",
+     "currency": "EUR",
+     "payment_reference": "E2E-EUR-0915-L01"
+    }
+   },
+   {
+    "evidence_id": "IN-10:LE-EUR-0915-0002",
+    "file_id": "IN-10",
+    "record_type": "Safeguarding-account cash book (firm ledger)",
+    "source_file": "source_data/sga_cashbook_entries_2026-09.csv",
+    "source_line": 111,
+    "file_sha256": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7",
+    "retrieved_via": "cited by control result CASH-BANK-LINK|LE-EUR-0915-0002",
+    "join_key": "ledger_entry_id=LE-EUR-0915-0002",
+    "fields": {
+     "ledger_entry_id": "LE-EUR-0915-0002",
+     "account_id": "SGA-EUR-01",
+     "posted_ts": "2026-09-15T14:00:00+01:00",
+     "entry_type": "ACQUIRER_SETTLEMENT",
+     "amount": "1339.82",
+     "dc_indicator": "D",
+     "currency": "EUR",
+     "payment_reference": "AQ-EUR-20260915"
+    }
+   },
+   {
+    "evidence_id": "IN-10:LE-EUR-0915-0003",
+    "file_id": "IN-10",
+    "record_type": "Safeguarding-account cash book (firm ledger)",
+    "source_file": "source_data/sga_cashbook_entries_2026-09.csv",
+    "source_line": 112,
+    "file_sha256": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7",
+    "retrieved_via": "cited by control result CASH-BANK-LINK|LE-EUR-0915-0003",
+    "join_key": "ledger_entry_id=LE-EUR-0915-0003",
+    "fields": {
+     "ledger_entry_id": "LE-EUR-0915-0003",
+     "account_id": "SGA-EUR-01",
+     "posted_ts": "2026-09-15T14:30:00+01:00",
+     "entry_type": "OWN_FUNDS_TOPUP",
+     "amount": "6.13",
+     "dc_indicator": "D",
+     "currency": "EUR",
+     "payment_reference": "TOPUP-EUR-20260915"
+    }
+   },
+   {
+    "evidence_id": "IN-10:LE-EUR-0915-0004",
+    "file_id": "IN-10",
+    "record_type": "Safeguarding-account cash book (firm ledger)",
+    "source_file": "source_data/sga_cashbook_entries_2026-09.csv",
+    "source_line": 113,
+    "file_sha256": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7",
+    "retrieved_via": "cited by control result CASH-BANK-LINK|LE-EUR-0915-0004",
+    "join_key": "ledger_entry_id=LE-EUR-0915-0004",
+    "fields": {
+     "ledger_entry_id": "LE-EUR-0915-0004",
+     "account_id": "SGA-EUR-01",
+     "posted_ts": "2026-09-15T15:00:00+01:00",
+     "entry_type": "SCHEME_SETTLEMENT",
+     "amount": "1113.98",
+     "dc_indicator": "C",
+     "currency": "EUR",
+     "payment_reference": "SB-EUR-20260915"
+    }
+   },
+   {
+    "evidence_id": "IN-06:ERL-SGA-EUR-01-20260915",
+    "file_id": "IN-06",
+    "record_type": "External reconciliation records (as reported by the firm)",
+    "source_file": "source_data/external_recon_records_2026-09.csv",
+    "source_line": 23,
+    "file_sha256": "b18dd5df473a66580b9b75747aebbf2b0b51e8bcac01816a0b1a219154e7ebf5",
+    "retrieved_via": "cited by control result C07-BANK-EVIDENCE|2026-09-15/SGA-EUR-01",
+    "join_key": "ext_recon_id=ERL-SGA-EUR-01-20260915",
+    "fields": {
+     "ext_recon_id": "ERL-SGA-EUR-01-20260915",
+     "recon_date": "2026-09-15",
+     "performed_at_ts": "2026-09-15T17:50:00+01:00",
+     "account_id": "SGA-EUR-01",
+     "currency": "EUR",
+     "ledger_balance_reported": "98500.35",
+     "bank_statement_id": "ST-SGA-EUR-01-20260915-1700",
+     "bank_balance_reported": "98500.35",
+     "difference_reported": "0.00",
+     "timing_difference_claimed": "false",
+     "preparer_id": "U-12"
+    }
+   },
+   {
+    "evidence_id": "IN-12:AQ-EUR-20260915",
+    "file_id": "IN-12",
+    "record_type": "Settlement batch headers (generic synthetic format)",
+    "source_file": "source_data/settlement_batches_2026-09.csv",
+    "source_line": 44,
+    "file_sha256": "2e25a4fdee7179e965f9c2ec48f56331dac31ce6aaae1840002bc54178caef87",
+    "retrieved_via": "cited by control result C11-BATCH-BANK|AQ-EUR-20260915",
+    "join_key": "batch_id=AQ-EUR-20260915",
+    "fields": {
+     "batch_id": "AQ-EUR-20260915",
+     "counterparty_type": "ACQUIRER",
+     "cycle_date": "2026-09-15",
+     "settlement_date": "2026-09-15",
+     "account_id": "SGA-EUR-01",
+     "currency": "EUR",
+     "direction": "TO_FIRM",
+     "gross_amount": "1345.95",
+     "total_fees": "6.13",
+     "total_adjustments": "0.00",
+     "net_amount_reported": "1339.82",
+     "expected_bank_reference": "AQ-EUR-20260915"
+    }
+   },
+   {
+    "evidence_id": "IN-12:SB-EUR-20260915",
+    "file_id": "IN-12",
+    "record_type": "Settlement batch headers (generic synthetic format)",
+    "source_file": "source_data/settlement_batches_2026-09.csv",
+    "source_line": 45,
+    "file_sha256": "2e25a4fdee7179e965f9c2ec48f56331dac31ce6aaae1840002bc54178caef87",
+    "retrieved_via": "cited by control result C11-BATCH-BANK|SB-EUR-20260915",
+    "join_key": "batch_id=SB-EUR-20260915",
+    "fields": {
+     "batch_id": "SB-EUR-20260915",
+     "counterparty_type": "SCHEME",
+     "cycle_date": "2026-09-15",
+     "settlement_date": "2026-09-15",
+     "account_id": "SGA-EUR-01",
+     "currency": "EUR",
+     "direction": "FROM_FIRM",
+     "gross_amount": "1113.98",
+     "total_fees": "0.00",
+     "total_adjustments": "0.00",
+     "net_amount_reported": "1113.98",
+     "expected_bank_reference": "SB-EUR-20260915"
+    }
+   },
+   {
+    "evidence_id": "IN-11:TX-0915-00013",
+    "file_id": "IN-11",
+    "record_type": "Client transactions",
+    "source_file": "source_data/transactions_2026-09.csv",
+    "source_line": 201,
+    "file_sha256": "1ea8c46db298c13b4e531827ec32279045f4aeb7b20cbd95afbbc6e74c0d2938",
+    "retrieved_via": "cited by control result RC4-DIRECT|TX-0915-00013",
+    "join_key": "txn_id=TX-0915-00013",
+    "fields": {
+     "txn_id": "TX-0915-00013",
+     "client_id": "C0102",
+     "txn_type": "LOAD_BANK",
+     "status": "EXECUTED",
+     "auth_ts": "",
+     "clearing_date": "",
+     "executed_ts": "2026-09-15T10:00:00+01:00",
+     "amount": "471.30",
+     "direction": "CR",
+     "currency": "EUR",
+     "settlement_batch_id": "",
+     "payment_reference": "E2E-EUR-0915-L01",
+     "original_txn_id": ""
+    }
+   },
+   {
+    "evidence_id": "IN-07:ST-SGA-EUR-01-20260914-1700",
+    "file_id": "IN-07",
+    "record_type": "Bank balance confirmations at 17:00",
+    "source_file": "source_data/bank_balance_confirmations_2026-09.csv",
+    "source_line": 21,
+    "file_sha256": "9651b89f3380d33bd3f3b53115268402fc0e8e07b501122daf4309390143d03e",
+    "retrieved_via": "adjacent-day confirmation (context only; not a substitute)",
+    "join_key": "account_id=SGA-EUR-01, as_at_ts date=2026-09-14",
+    "fields": {
+     "statement_id": "ST-SGA-EUR-01-20260914-1700",
+     "account_id": "SGA-EUR-01",
+     "as_at_ts": "2026-09-14T17:00:00+01:00",
+     "currency": "EUR",
+     "balance_amount": "97797.08",
+     "balance_dc_indicator": "C",
+     "bank_statement_ref": "BC/SGA-EUR-01/20260914"
+    }
+   },
+   {
+    "evidence_id": "IN-07:ST-SGA-EUR-01-20260916-1700",
+    "file_id": "IN-07",
+    "record_type": "Bank balance confirmations at 17:00",
+    "source_file": "source_data/bank_balance_confirmations_2026-09.csv",
+    "source_line": 24,
+    "file_sha256": "9651b89f3380d33bd3f3b53115268402fc0e8e07b501122daf4309390143d03e",
+    "retrieved_via": "adjacent-day confirmation (context only; not a substitute)",
+    "join_key": "account_id=SGA-EUR-01, as_at_ts date=2026-09-16",
+    "fields": {
+     "statement_id": "ST-SGA-EUR-01-20260916-1700",
+     "account_id": "SGA-EUR-01",
+     "as_at_ts": "2026-09-16T17:00:00+01:00",
+     "currency": "EUR",
+     "balance_amount": "101242.61",
+     "balance_dc_indicator": "C",
+     "bank_statement_ref": "BC/SGA-EUR-01/20260916"
+    }
+   },
+   {
+    "evidence_id": "IN-05:IRR-EMONEY-EUR-20260915",
+    "file_id": "IN-05",
+    "record_type": "Internal reconciliation records (as reported by the firm)",
+    "source_file": "source_data/internal_recon_records_2026-09.csv",
+    "source_line": 23,
+    "file_sha256": "450d8977bcda98ee2a233dcc207ebeb0426a9e70d7d1b1d0bd8094176dd9d617",
+    "retrieved_via": "tool get_reconciliation_evidence: internal reconciliation record",
+    "join_key": "currency=EUR, recon_date=2026-09-15",
+    "fields": {
+     "recon_run_id": "IRR-EMONEY-EUR-20260915",
+     "recon_date": "2026-09-15",
+     "reconciliation_point_ts": "2026-09-15T17:00:00+01:00",
+     "performed_at_ts": "2026-09-15T17:35:00+01:00",
+     "asset_pool_id": "POOL-EMONEY",
+     "currency": "EUR",
+     "method": "STANDARD",
+     "requirement_reported": "98500.35",
+     "resource_reported": "98500.35",
+     "item_a": "98500.35",
+     "item_b": "0.00",
+     "item_c": "0.00",
+     "item_d": "0.00",
+     "difference_reported": "0.00",
+     "d1_requirement": "",
+     "d1_resource": "",
+     "actions_taken_text": "Client ledger extract and safeguarding cash book taken at 17:00; requirement and resource compared; no difference. D+1 comparison not performed (synthetic convention, gap G-R05).",
+     "preparer_id": "U-12",
+     "reviewer_id": "U-04"
+    }
+   },
+   {
+    "evidence_id": "IN-13:SL-AQ-EUR-20260915-0001",
+    "file_id": "IN-13",
+    "record_type": "Settlement batch lines",
+    "source_file": "source_data/settlement_lines_2026-09.csv",
+    "source_line": 205,
+    "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+    "retrieved_via": "tool get_settlement_batch: settlement lines of the batch",
+    "join_key": "batch_id=AQ-EUR-20260915",
+    "fields": {
+     "line_id": "SL-AQ-EUR-20260915-0001",
+     "batch_id": "AQ-EUR-20260915",
+     "line_type": "TXN",
+     "txn_id": "TX-0915-00014",
+     "fee_code": "",
+     "amount": "231.89",
+     "dc_indicator": "C",
+     "currency": "EUR"
+    }
+   },
+   {
+    "evidence_id": "IN-13:SL-AQ-EUR-20260915-0002",
+    "file_id": "IN-13",
+    "record_type": "Settlement batch lines",
+    "source_file": "source_data/settlement_lines_2026-09.csv",
+    "source_line": 206,
+    "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+    "retrieved_via": "tool get_settlement_batch: settlement lines of the batch",
+    "join_key": "batch_id=AQ-EUR-20260915",
+    "fields": {
+     "line_id": "SL-AQ-EUR-20260915-0002",
+     "batch_id": "AQ-EUR-20260915",
+     "line_type": "TXN",
+     "txn_id": "TX-0915-00015",
+     "fee_code": "",
+     "amount": "1114.06",
+     "dc_indicator": "C",
+     "currency": "EUR"
+    }
+   },
+   {
+    "evidence_id": "IN-13:SL-AQ-EUR-20260915-0003",
+    "file_id": "IN-13",
+    "record_type": "Settlement batch lines",
+    "source_file": "source_data/settlement_lines_2026-09.csv",
+    "source_line": 207,
+    "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+    "retrieved_via": "tool get_settlement_batch: settlement lines of the batch",
+    "join_key": "batch_id=AQ-EUR-20260915",
+    "fields": {
+     "line_id": "SL-AQ-EUR-20260915-0003",
+     "batch_id": "AQ-EUR-20260915",
+     "line_type": "FEE",
+     "txn_id": "",
+     "fee_code": "ACQ_FEE",
+     "amount": "4.04",
+     "dc_indicator": "D",
+     "currency": "EUR"
+    }
+   },
+   {
+    "evidence_id": "IN-13:SL-AQ-EUR-20260915-0004",
+    "file_id": "IN-13",
+    "record_type": "Settlement batch lines",
+    "source_file": "source_data/settlement_lines_2026-09.csv",
+    "source_line": 208,
+    "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+    "retrieved_via": "tool get_settlement_batch: settlement lines of the batch",
+    "join_key": "batch_id=AQ-EUR-20260915",
+    "fields": {
+     "line_id": "SL-AQ-EUR-20260915-0004",
+     "batch_id": "AQ-EUR-20260915",
+     "line_type": "FEE",
+     "txn_id": "",
+     "fee_code": "SCHEME_FEE",
+     "amount": "2.09",
+     "dc_indicator": "D",
+     "currency": "EUR"
+    }
+   },
+   {
+    "evidence_id": "IN-11:TX-0915-00014",
+    "file_id": "IN-11",
+    "record_type": "Client transactions",
+    "source_file": "source_data/transactions_2026-09.csv",
+    "source_line": 195,
+    "file_sha256": "1ea8c46db298c13b4e531827ec32279045f4aeb7b20cbd95afbbc6e74c0d2938",
+    "retrieved_via": "tool get_settlement_batch: transaction referenced by a settlement line",
+    "join_key": "txn_id=TX-0915-00014",
+    "fields": {
+     "txn_id": "TX-0915-00014",
+     "client_id": "C0103",
+     "txn_type": "LOAD_CARD",
+     "status": "SETTLED",
+     "auth_ts": "2026-09-15T08:05:00+01:00",
+     "clearing_date": "2026-09-15",
+     "executed_ts": "2026-09-15T08:05:00+01:00",
+     "amount": "231.89",
+     "direction": "CR",
+     "currency": "EUR",
+     "settlement_batch_id": "AQ-EUR-20260915",
+     "payment_reference": "",
+     "original_txn_id": ""
+    }
+   },
+   {
+    "evidence_id": "IN-11:TX-0915-00015",
+    "file_id": "IN-11",
+    "record_type": "Client transactions",
+    "source_file": "source_data/transactions_2026-09.csv",
+    "source_line": 197,
+    "file_sha256": "1ea8c46db298c13b4e531827ec32279045f4aeb7b20cbd95afbbc6e74c0d2938",
+    "retrieved_via": "tool get_settlement_batch: transaction referenced by a settlement line",
+    "join_key": "txn_id=TX-0915-00015",
+    "fields": {
+     "txn_id": "TX-0915-00015",
+     "client_id": "C0102",
+     "txn_type": "LOAD_CARD",
+     "status": "SETTLED",
+     "auth_ts": "2026-09-15T08:15:00+01:00",
+     "clearing_date": "2026-09-15",
+     "executed_ts": "2026-09-15T08:15:00+01:00",
+     "amount": "1114.06",
+     "direction": "CR",
+     "currency": "EUR",
+     "settlement_batch_id": "AQ-EUR-20260915",
+     "payment_reference": "",
+     "original_txn_id": ""
+    }
+   },
+   {
+    "evidence_id": "IN-13:SL-SB-EUR-20260915-0001",
+    "file_id": "IN-13",
+    "record_type": "Settlement batch lines",
+    "source_file": "source_data/settlement_lines_2026-09.csv",
+    "source_line": 209,
+    "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+    "retrieved_via": "tool get_settlement_batch: settlement lines of the batch",
+    "join_key": "batch_id=SB-EUR-20260915",
+    "fields": {
+     "line_id": "SL-SB-EUR-20260915-0001",
+     "batch_id": "SB-EUR-20260915",
+     "line_type": "TXN",
+     "txn_id": "TX-0915-00016",
+     "fee_code": "",
+     "amount": "350.14",
+     "dc_indicator": "D",
+     "currency": "EUR"
+    }
+   },
+   {
+    "evidence_id": "IN-13:SL-SB-EUR-20260915-0002",
+    "file_id": "IN-13",
+    "record_type": "Settlement batch lines",
+    "source_file": "source_data/settlement_lines_2026-09.csv",
+    "source_line": 210,
+    "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+    "retrieved_via": "tool get_settlement_batch: settlement lines of the batch",
+    "join_key": "batch_id=SB-EUR-20260915",
+    "fields": {
+     "line_id": "SL-SB-EUR-20260915-0002",
+     "batch_id": "SB-EUR-20260915",
+     "line_type": "TXN",
+     "txn_id": "TX-0915-00017",
+     "fee_code": "",
+     "amount": "364.41",
+     "dc_indicator": "D",
+     "currency": "EUR"
+    }
+   },
+   {
+    "evidence_id": "IN-13:SL-SB-EUR-20260915-0003",
+    "file_id": "IN-13",
+    "record_type": "Settlement batch lines",
+    "source_file": "source_data/settlement_lines_2026-09.csv",
+    "source_line": 211,
+    "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+    "retrieved_via": "tool get_settlement_batch: settlement lines of the batch",
+    "join_key": "batch_id=SB-EUR-20260915",
+    "fields": {
+     "line_id": "SL-SB-EUR-20260915-0003",
+     "batch_id": "SB-EUR-20260915",
+     "line_type": "TXN",
+     "txn_id": "TX-0915-00018",
+     "fee_code": "",
+     "amount": "399.43",
+     "dc_indicator": "D",
+     "currency": "EUR"
+    }
+   },
+   {
+    "evidence_id": "IN-11:TX-0915-00016",
+    "file_id": "IN-11",
+    "record_type": "Client transactions",
+    "source_file": "source_data/transactions_2026-09.csv",
+    "source_line": 209,
+    "file_sha256": "1ea8c46db298c13b4e531827ec32279045f4aeb7b20cbd95afbbc6e74c0d2938",
+    "retrieved_via": "tool get_settlement_batch: transaction referenced by a settlement line",
+    "join_key": "txn_id=TX-0915-00016",
+    "fields": {
+     "txn_id": "TX-0915-00016",
+     "client_id": "C0101",
+     "txn_type": "SPEND",
+     "status": "SETTLED",
+     "auth_ts": "2026-09-15T07:15:00+01:00",
+     "clearing_date": "2026-09-15",
+     "executed_ts": "2026-09-15T15:00:00+01:00",
+     "amount": "350.14",
+     "direction": "DR",
+     "currency": "EUR",
+     "settlement_batch_id": "SB-EUR-20260915",
+     "payment_reference": "",
+     "original_txn_id": ""
+    }
+   },
+   {
+    "evidence_id": "IN-11:TX-0915-00017",
+    "file_id": "IN-11",
+    "record_type": "Client transactions",
+    "source_file": "source_data/transactions_2026-09.csv",
+    "source_line": 210,
+    "file_sha256": "1ea8c46db298c13b4e531827ec32279045f4aeb7b20cbd95afbbc6e74c0d2938",
+    "retrieved_via": "tool get_settlement_batch: transaction referenced by a settlement line",
+    "join_key": "txn_id=TX-0915-00017",
+    "fields": {
+     "txn_id": "TX-0915-00017",
+     "client_id": "C0104",
+     "txn_type": "SPEND",
+     "status": "SETTLED",
+     "auth_ts": "2026-09-15T08:15:00+01:00",
+     "clearing_date": "2026-09-15",
+     "executed_ts": "2026-09-15T15:00:00+01:00",
+     "amount": "364.41",
+     "direction": "DR",
+     "currency": "EUR",
+     "settlement_batch_id": "SB-EUR-20260915",
+     "payment_reference": "",
+     "original_txn_id": ""
+    }
+   },
+   {
+    "evidence_id": "IN-11:TX-0915-00018",
+    "file_id": "IN-11",
+    "record_type": "Client transactions",
+    "source_file": "source_data/transactions_2026-09.csv",
+    "source_line": 211,
+    "file_sha256": "1ea8c46db298c13b4e531827ec32279045f4aeb7b20cbd95afbbc6e74c0d2938",
+    "retrieved_via": "tool get_settlement_batch: transaction referenced by a settlement line",
+    "join_key": "txn_id=TX-0915-00018",
+    "fields": {
+     "txn_id": "TX-0915-00018",
+     "client_id": "C0101",
+     "txn_type": "SPEND",
+     "status": "SETTLED",
+     "auth_ts": "2026-09-15T09:15:00+01:00",
+     "clearing_date": "2026-09-15",
+     "executed_ts": "2026-09-15T15:00:00+01:00",
+     "amount": "399.43",
+     "direction": "DR",
+     "currency": "EUR",
+     "settlement_batch_id": "SB-EUR-20260915",
+     "payment_reference": "",
+     "original_txn_id": ""
+    }
+   }
+  ],
+  "relationships": [
+   {
+    "from": "C14-COVER|IN-07 2026-09-15/SGA-EUR-01",
+    "to": "IN-01:2026-09-15",
+    "relationship": "cited_by_control_result",
+    "join_key": "calendar_date=2026-09-15"
+   },
+   {
+    "from": "C14-COVER|IN-07 2026-09-15/SGA-EUR-01",
+    "to": "IN-02:SGA-EUR-01",
+    "relationship": "cited_by_control_result",
+    "join_key": "account_id=SGA-EUR-01"
+   },
+   {
+    "from": "C14-COVER|IN-08 2026-09-15/SGA-EUR-01",
+    "to": "IN-01:2026-09-15",
+    "relationship": "cited_by_control_result",
+    "join_key": "calendar_date=2026-09-15"
+   },
+   {
+    "from": "C14-COVER|IN-08 2026-09-15/SGA-EUR-01",
+    "to": "IN-02:SGA-EUR-01",
+    "relationship": "cited_by_control_result",
+    "join_key": "account_id=SGA-EUR-01"
+   },
+   {
+    "from": "DQ22-CONTINUITY|ST-SGA-EUR-01-20260916-EOD",
+    "to": "IN-08:ST-SGA-EUR-01-20260914-EOD",
+    "relationship": "cited_by_control_result",
+    "join_key": "statement_id=ST-SGA-EUR-01-20260914-EOD"
+   },
+   {
+    "from": "DQ22-CONTINUITY|ST-SGA-EUR-01-20260916-EOD",
+    "to": "IN-08:ST-SGA-EUR-01-20260916-EOD",
+    "relationship": "cited_by_control_result",
+    "join_key": "statement_id=ST-SGA-EUR-01-20260916-EOD"
+   },
+   {
+    "from": "CASH-BANK-LINK|LE-EUR-0915-0001",
+    "to": "IN-10:LE-EUR-0915-0001",
+    "relationship": "cited_by_control_result",
+    "join_key": "ledger_entry_id=LE-EUR-0915-0001"
+   },
+   {
+    "from": "CASH-BANK-LINK|LE-EUR-0915-0002",
+    "to": "IN-10:LE-EUR-0915-0002",
+    "relationship": "cited_by_control_result",
+    "join_key": "ledger_entry_id=LE-EUR-0915-0002"
+   },
+   {
+    "from": "CASH-BANK-LINK|LE-EUR-0915-0003",
+    "to": "IN-10:LE-EUR-0915-0003",
+    "relationship": "cited_by_control_result",
+    "join_key": "ledger_entry_id=LE-EUR-0915-0003"
+   },
+   {
+    "from": "CASH-BANK-LINK|LE-EUR-0915-0004",
+    "to": "IN-10:LE-EUR-0915-0004",
+    "relationship": "cited_by_control_result",
+    "join_key": "ledger_entry_id=LE-EUR-0915-0004"
+   },
+   {
+    "from": "C07-BANK-EVIDENCE|2026-09-15/SGA-EUR-01",
+    "to": "IN-06:ERL-SGA-EUR-01-20260915",
+    "relationship": "cited_by_control_result",
+    "join_key": "ext_recon_id=ERL-SGA-EUR-01-20260915"
+   },
+   {
+    "from": "C08-DIFFERENCE|2026-09-15/SGA-EUR-01",
+    "to": "IN-06:ERL-SGA-EUR-01-20260915",
+    "relationship": "cited_by_control_result",
+    "join_key": "ext_recon_id=ERL-SGA-EUR-01-20260915"
+   },
+   {
+    "from": "C11-BATCH-BANK|AQ-EUR-20260915",
+    "to": "IN-12:AQ-EUR-20260915",
+    "relationship": "cited_by_control_result",
+    "join_key": "batch_id=AQ-EUR-20260915"
+   },
+   {
+    "from": "C11-BATCH-BANK|SB-EUR-20260915",
+    "to": "IN-12:SB-EUR-20260915",
+    "relationship": "cited_by_control_result",
+    "join_key": "batch_id=SB-EUR-20260915"
+   },
+   {
+    "from": "FUND-TOPUP|AQ-EUR-20260915",
+    "to": "IN-12:AQ-EUR-20260915",
+    "relationship": "cited_by_control_result",
+    "join_key": "batch_id=AQ-EUR-20260915"
+   },
+   {
+    "from": "RC4-DIRECT|TX-0915-00013",
+    "to": "IN-11:TX-0915-00013",
+    "relationship": "cited_by_control_result",
+    "join_key": "txn_id=TX-0915-00013"
+   },
+   {
+    "from": "IN-12:AQ-EUR-20260915",
+    "to": "IN-13:SL-AQ-EUR-20260915-0001",
+    "relationship": "line.batch_id",
+    "join_key": "batch_id=AQ-EUR-20260915"
+   },
+   {
+    "from": "IN-12:AQ-EUR-20260915",
+    "to": "IN-13:SL-AQ-EUR-20260915-0002",
+    "relationship": "line.batch_id",
+    "join_key": "batch_id=AQ-EUR-20260915"
+   },
+   {
+    "from": "IN-12:AQ-EUR-20260915",
+    "to": "IN-13:SL-AQ-EUR-20260915-0003",
+    "relationship": "line.batch_id",
+    "join_key": "batch_id=AQ-EUR-20260915"
+   },
+   {
+    "from": "IN-12:AQ-EUR-20260915",
+    "to": "IN-13:SL-AQ-EUR-20260915-0004",
+    "relationship": "line.batch_id",
+    "join_key": "batch_id=AQ-EUR-20260915"
+   },
+   {
+    "from": "IN-13:SL-AQ-EUR-20260915-0001",
+    "to": "IN-11:TX-0915-00014",
+    "relationship": "line.txn_id = transaction.txn_id",
+    "join_key": "txn_id=TX-0915-00014"
+   },
+   {
+    "from": "IN-13:SL-AQ-EUR-20260915-0002",
+    "to": "IN-11:TX-0915-00015",
+    "relationship": "line.txn_id = transaction.txn_id",
+    "join_key": "txn_id=TX-0915-00015"
+   },
+   {
+    "from": "IN-12:SB-EUR-20260915",
+    "to": "IN-13:SL-SB-EUR-20260915-0001",
+    "relationship": "line.batch_id",
+    "join_key": "batch_id=SB-EUR-20260915"
+   },
+   {
+    "from": "IN-12:SB-EUR-20260915",
+    "to": "IN-13:SL-SB-EUR-20260915-0002",
+    "relationship": "line.batch_id",
+    "join_key": "batch_id=SB-EUR-20260915"
+   },
+   {
+    "from": "IN-12:SB-EUR-20260915",
+    "to": "IN-13:SL-SB-EUR-20260915-0003",
+    "relationship": "line.batch_id",
+    "join_key": "batch_id=SB-EUR-20260915"
+   },
+   {
+    "from": "IN-13:SL-SB-EUR-20260915-0001",
+    "to": "IN-11:TX-0915-00016",
+    "relationship": "line.txn_id = transaction.txn_id",
+    "join_key": "txn_id=TX-0915-00016"
+   },
+   {
+    "from": "IN-13:SL-SB-EUR-20260915-0002",
+    "to": "IN-11:TX-0915-00017",
+    "relationship": "line.txn_id = transaction.txn_id",
+    "join_key": "txn_id=TX-0915-00017"
+   },
+   {
+    "from": "IN-13:SL-SB-EUR-20260915-0003",
+    "to": "IN-11:TX-0915-00018",
+    "relationship": "line.txn_id = transaction.txn_id",
+    "join_key": "txn_id=TX-0915-00018"
+   }
+  ],
+  "searches": [
+   {
+    "search_id": "SEARCH-01",
+    "description": "17:00 bank confirmation for SGA-EUR-01 on 2026-09-15",
+    "query": {
+     "file": "IN-07",
+     "account_id": "SGA-EUR-01",
+     "date": "2026-09-15"
+    },
+    "found": [],
+    "result": "NOT_FOUND"
+   },
+   {
+    "search_id": "SEARCH-02",
+    "description": "End-of-day statement for SGA-EUR-01 on 2026-09-15",
+    "query": {
+     "file": "IN-08",
+     "account_id": "SGA-EUR-01",
+     "statement_date": "2026-09-15"
+    },
+    "found": [],
+    "result": "NOT_FOUND"
+   },
+   {
+    "search_id": "SEARCH-03",
+    "description": "Bank entries booked on SGA-EUR-01 on 2026-09-15",
+    "query": {
+     "file": "IN-09",
+     "account_id": "SGA-EUR-01",
+     "booking_date": "2026-09-15"
+    },
+    "found": [],
+    "result": "NOT_FOUND"
+   },
+   {
+    "search_id": "SEARCH-04",
+    "description": "External reconciliation record for SGA-EUR-01 on 2026-09-15",
+    "query": {
+     "file": "IN-06",
+     "account_id": "SGA-EUR-01",
+     "currency": "EUR",
+     "date": "2026-09-15"
+    },
+    "found": [
+     "IN-06:ERL-SGA-EUR-01-20260915"
+    ],
+    "result": "FOUND"
+   },
+   {
+    "search_id": "SEARCH-05",
+    "description": "17:00 bank balance confirmation for SGA-EUR-01 on 2026-09-15",
+    "query": {
+     "file": "IN-07",
+     "account_id": "SGA-EUR-01",
+     "currency": "EUR",
+     "date": "2026-09-15"
+    },
+    "found": [],
+    "result": "NOT_FOUND"
+   },
+   {
+    "search_id": "SEARCH-06",
+    "description": "End-of-day bank statement for SGA-EUR-01 on 2026-09-15",
+    "query": {
+     "file": "IN-08",
+     "account_id": "SGA-EUR-01",
+     "currency": "EUR",
+     "date": "2026-09-15"
+    },
+    "found": [],
+    "result": "NOT_FOUND"
+   },
+   {
+    "search_id": "SEARCH-07",
+    "description": "Internal EUR reconciliation record on 2026-09-15",
+    "query": {
+     "file": "IN-05",
+     "account_id": null,
+     "currency": "EUR",
+     "date": "2026-09-15"
+    },
+    "found": [
+     "IN-05:IRR-EMONEY-EUR-20260915"
+    ],
+    "result": "FOUND"
+   }
+  ],
+  "missing_evidence": [
+   {
+    "completeness_impact": "13 check result(s) could not be assessed: C07-BANK-EVIDENCE, C08-DIFFERENCE, C11-BATCH-BANK, C14-COVER, CASH-BANK-LINK, DQ22-CONTINUITY, FUND-TOPUP, RC4-DIRECT",
+    "expected_evidence": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-09-15",
+    "item_id": "MISS-01",
+    "related_controls": [
+     "C05/C07",
+     "C06",
+     "C07",
+     "C08",
+     "C09",
+     "C11",
+     "C14",
+     "DQ22"
+    ],
+    "related_exception_id": "EXC-S02-01",
+    "related_result_ids": [
+     "C14-COVER|IN-07 2026-09-15/SGA-EUR-01",
+     "C14-COVER|IN-08 2026-09-15/SGA-EUR-01",
+     "DQ22-CONTINUITY|ST-SGA-EUR-01-20260916-EOD",
+     "CASH-BANK-LINK|LE-EUR-0915-0001",
+     "CASH-BANK-LINK|LE-EUR-0915-0002",
+     "CASH-BANK-LINK|LE-EUR-0915-0003",
+     "CASH-BANK-LINK|LE-EUR-0915-0004",
+     "C07-BANK-EVIDENCE|2026-09-15/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-15/SGA-EUR-01",
+     "C11-BATCH-BANK|AQ-EUR-20260915",
+     "C11-BATCH-BANK|SB-EUR-20260915",
+     "FUND-TOPUP|AQ-EUR-20260915",
+     "RC4-DIRECT|TX-0915-00013"
+    ],
+    "value_shown": "not available"
+   }
+  ],
+  "conflicts": [],
+  "retrieval_truncated": false,
+  "conventions": {
+   "bank_dc": "C = money into the account, D = money out (bank perspective)",
+   "cashbook_dc": "D = money in, C = money out (firm asset-ledger perspective)",
+   "transaction_direction": "CR increases the client balance, DR decreases it",
+   "difference_sign": "bank minus ledger (C08); resource minus requirement (C06)",
+   "reconciliation_point": "17:00 Europe/London each reconciliation day"
+  },
+  "allowed_citation_ids": [
+   "C07-BANK-EVIDENCE|2026-09-15/SGA-EUR-01",
+   "C08-DIFFERENCE|2026-09-15/SGA-EUR-01",
+   "C11-BATCH-BANK|AQ-EUR-20260915",
+   "C11-BATCH-BANK|SB-EUR-20260915",
+   "C14-COVER|IN-07 2026-09-15/SGA-EUR-01",
+   "C14-COVER|IN-08 2026-09-15/SGA-EUR-01",
+   "CASH-BANK-LINK|LE-EUR-0915-0001",
+   "CASH-BANK-LINK|LE-EUR-0915-0002",
+   "CASH-BANK-LINK|LE-EUR-0915-0003",
+   "CASH-BANK-LINK|LE-EUR-0915-0004",
+   "DQ22-CONTINUITY|ST-SGA-EUR-01-20260916-EOD",
+   "EXC-S02-01",
+   "FUND-TOPUP|AQ-EUR-20260915",
+   "IN-01:2026-09-15",
+   "IN-02:SGA-EUR-01",
+   "IN-05:IRR-EMONEY-EUR-20260915",
+   "IN-06:ERL-SGA-EUR-01-20260915",
+   "IN-07:ST-SGA-EUR-01-20260914-1700",
+   "IN-07:ST-SGA-EUR-01-20260916-1700",
+   "IN-08:ST-SGA-EUR-01-20260914-EOD",
+   "IN-08:ST-SGA-EUR-01-20260916-EOD",
+   "IN-10:LE-EUR-0915-0001",
+   "IN-10:LE-EUR-0915-0002",
+   "IN-10:LE-EUR-0915-0003",
+   "IN-10:LE-EUR-0915-0004",
+   "IN-11:TX-0915-00013",
+   "IN-11:TX-0915-00014",
+   "IN-11:TX-0915-00015",
+   "IN-11:TX-0915-00016",
+   "IN-11:TX-0915-00017",
+   "IN-11:TX-0915-00018",
+   "IN-12:AQ-EUR-20260915",
+   "IN-12:SB-EUR-20260915",
+   "IN-13:SL-AQ-EUR-20260915-0001",
+   "IN-13:SL-AQ-EUR-20260915-0002",
+   "IN-13:SL-AQ-EUR-20260915-0003",
+   "IN-13:SL-AQ-EUR-20260915-0004",
+   "IN-13:SL-SB-EUR-20260915-0001",
+   "IN-13:SL-SB-EUR-20260915-0002",
+   "IN-13:SL-SB-EUR-20260915-0003",
+   "MISS-01",
+   "RC4-DIRECT|TX-0915-00013",
+   "SEARCH-01",
+   "SEARCH-02",
+   "SEARCH-03",
+   "SEARCH-04",
+   "SEARCH-05",
+   "SEARCH-06",
+   "SEARCH-07"
+  ],
+  "ledger_version": "uc042-evidence-ledger/1.0",
+  "initial_packet_sha256": "21be458e37e5d72e298dd0a26638a507382a4068934a77a1935f26c452bcdf0c",
+  "ledger_sha256": "dc54f06ed9585174cdbec4d1d90d71a287396b5ee8e012e1d585c0181525d39a"
+ },
+ "tool_calls": {
+  "tool_registry_version": "uc042-evidence-tools/1.0",
+  "exception_id": "EXC-S02-01",
+  "pack_id": "PACK-S02-PER-2026-09-f3dfa52766bb",
+  "summary": {
+   "status": "COMPLETED",
+   "stop_reason": "final_answer",
+   "llm_calls": 2,
+   "tool_calls_requested": 3,
+   "tool_rounds": 1,
+   "tools_executed": 3,
+   "tools_deduplicated": 0,
+   "tools_rejected_or_failed": 0,
+   "tools_refused_budget": 0,
+   "tools_used": [
+    "get_reconciliation_evidence",
+    "get_settlement_batch",
+    "get_settlement_batch"
+   ],
+   "records_initial": 14,
+   "records_final": 27,
+   "limits": {
+    "max_tool_calls": 8,
+    "max_rounds": 4,
+    "max_records_per_call": 25,
+    "max_input_tokens": 150000,
+    "max_total_records": 160,
+    "total_timeout": 300.0
+   }
+  },
+  "tool_calls": [
+   {
+    "call_id": "call_u34O7AxekUnKDCdnYCQqckvm",
+    "tool": "get_reconciliation_evidence",
+    "round": 1,
+    "arguments": {
+     "account_id": "SGA-EUR-01",
+     "currency": "EUR",
+     "date": "2026-09-15"
+    },
+    "requested_at": "2026-11-02T11:56:47.996+00:00",
+    "status": "OK",
+    "deduplicated": false,
+    "evidence_ids": [
+     "IN-06:ERL-SGA-EUR-01-20260915",
+     "IN-05:IRR-EMONEY-EUR-20260915"
+    ],
+    "new_evidence_ids": [
+     "IN-05:IRR-EMONEY-EUR-20260915"
+    ],
+    "search_ids": [
+     "SEARCH-04",
+     "SEARCH-05",
+     "SEARCH-06",
+     "SEARCH-07"
+    ],
+    "records_returned": 2,
+    "truncated": false,
+    "error": "",
+    "latency_ms": 0.0
+   },
+   {
+    "call_id": "call_WSf1y8o6zBddHoNx8X1MWAap",
+    "tool": "get_settlement_batch",
+    "round": 1,
+    "arguments": {
+     "batch_id": "AQ-EUR-20260915"
+    },
+    "requested_at": "2026-11-02T11:56:47.996+00:00",
+    "status": "OK",
+    "deduplicated": false,
+    "evidence_ids": [
+     "IN-12:AQ-EUR-20260915",
+     "IN-13:SL-AQ-EUR-20260915-0001",
+     "IN-13:SL-AQ-EUR-20260915-0002",
+     "IN-13:SL-AQ-EUR-20260915-0003",
+     "IN-13:SL-AQ-EUR-20260915-0004",
+     "IN-11:TX-0915-00014",
+     "IN-11:TX-0915-00015"
+    ],
+    "new_evidence_ids": [
+     "IN-13:SL-AQ-EUR-20260915-0001",
+     "IN-13:SL-AQ-EUR-20260915-0002",
+     "IN-13:SL-AQ-EUR-20260915-0003",
+     "IN-13:SL-AQ-EUR-20260915-0004",
+     "IN-11:TX-0915-00014",
+     "IN-11:TX-0915-00015"
+    ],
+    "search_ids": [],
+    "records_returned": 7,
+    "truncated": false,
+    "error": "",
+    "latency_ms": 0.0
+   },
+   {
+    "call_id": "call_CiUiEmQLT6PhgcXr6d7JqRj5",
+    "tool": "get_settlement_batch",
+    "round": 1,
+    "arguments": {
+     "batch_id": "SB-EUR-20260915"
+    },
+    "requested_at": "2026-11-02T11:56:47.996+00:00",
+    "status": "OK",
+    "deduplicated": false,
+    "evidence_ids": [
+     "IN-12:SB-EUR-20260915",
+     "IN-13:SL-SB-EUR-20260915-0001",
+     "IN-13:SL-SB-EUR-20260915-0002",
+     "IN-13:SL-SB-EUR-20260915-0003",
+     "IN-11:TX-0915-00016",
+     "IN-11:TX-0915-00017",
+     "IN-11:TX-0915-00018"
+    ],
+    "new_evidence_ids": [
+     "IN-13:SL-SB-EUR-20260915-0001",
+     "IN-13:SL-SB-EUR-20260915-0002",
+     "IN-13:SL-SB-EUR-20260915-0003",
+     "IN-11:TX-0915-00016",
+     "IN-11:TX-0915-00017",
+     "IN-11:TX-0915-00018"
+    ],
+    "search_ids": [],
+    "records_returned": 7,
+    "truncated": false,
+    "error": "",
+    "latency_ms": 0.0
+   }
+  ]
+ }
+}

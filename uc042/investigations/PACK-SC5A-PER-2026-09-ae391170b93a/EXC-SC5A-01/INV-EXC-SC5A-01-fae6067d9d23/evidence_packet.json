@@ -1,0 +1,882 @@
+{
+ "allowed_citation_ids": [
+  "C11-BATCH-ARITH|SB-GBP-20260915",
+  "CAND-SC5A-01",
+  "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+  "CONF-01",
+  "EXC-SC5A-01",
+  "EXC-SC5A-02",
+  "IN-03:CBS-20260914-C0002-GBP",
+  "IN-03:CBS-20260915-C0002-GBP",
+  "IN-05:IRR-EMONEY-GBP-20260915",
+  "IN-09:BE-GBP-0915-SB1",
+  "IN-10:LE-GBP-0915-0005",
+  "IN-11:TX-0909-0R001",
+  "IN-11:TX-0915-00006",
+  "IN-11:TX-0915-00007",
+  "IN-11:TX-0915-00008",
+  "IN-11:TX-0915-00010",
+  "IN-11:TX-0915-00011",
+  "IN-11:TX-0915-00012",
+  "IN-12:SB-GBP-20260915",
+  "IN-13:SL-AQ-GBP-20260915-0004",
+  "IN-13:SL-SB-GBP-20260915-0001",
+  "IN-13:SL-SB-GBP-20260915-0002",
+  "IN-13:SL-SB-GBP-20260915-0003",
+  "IN-13:SL-SB-GBP-20260915-0004",
+  "IN-13:SL-SB-GBP-20260915-0005",
+  "IN-13:SL-SB-GBP-20260915-0006",
+  "SEARCH-01",
+  "SEARCH-02",
+  "SEARCH-03",
+  "SEARCH-04",
+  "SEARCH-05"
+ ],
+ "candidate_relationships": [
+  {
+   "basis": "DATE_AND_AMOUNT_COINCIDENCE",
+   "candidate_id": "CAND-SC5A-01",
+   "detail": "line SL-SB-GBP-20260915-0003 references TX-0915-00009 (443.55), absent from the transaction export; C0002's roll-forward on 2026-09-15 differs by the same amount. No record links the transaction to this client.",
+   "evidence": "IN-13:settlement_lines_2026-09.csv#L201; IN-03:client_balance_snapshots_2026-09.csv#L123",
+   "evidence_ids": [
+    "IN-13:SL-SB-GBP-20260915-0003",
+    "IN-03:CBS-20260914-C0002-GBP"
+   ],
+   "exception_ids": "EXC-SC5A-01; EXC-SC5A-02",
+   "label": "UNVERIFIED — NOT EVIDENCE-BACKED; not an investigation group",
+   "note": "UNVERIFIED — NOT EVIDENCE-BACKED. Not a confirmed relationship."
+  }
+ ],
+ "conflicts": [
+  {
+   "conflict_id": "CONF-01",
+   "description": "Engine recomputed 48257.08 but the firm's record reports 47813.53 (CBAL-ROLLFWD|GBP/C0002 2026-09-15).",
+   "evidence_ids": [
+    "CBAL-ROLLFWD|GBP/C0002 2026-09-15"
+   ]
+  }
+ ],
+ "control_results": [
+  {
+   "computed": "-2868.50",
+   "evidence_ids": [
+    "IN-12:SB-GBP-20260915",
+    "IN-13:SL-SB-GBP-20260915-0001",
+    "IN-13:SL-SB-GBP-20260915-0002",
+    "IN-13:SL-SB-GBP-20260915-0003",
+    "IN-13:SL-SB-GBP-20260915-0004",
+    "IN-13:SL-SB-GBP-20260915-0005",
+    "IN-13:SL-SB-GBP-20260915-0006"
+   ],
+   "evidence_status": "",
+   "for_exception": "EXC-SC5A-01",
+   "note": "SL-SB-GBP-20260915-0003 does not match transaction TX-0915-00009",
+   "outcome": "FAIL",
+   "reported": "-2868.50",
+   "result_id": "C11-BATCH-ARITH|SB-GBP-20260915",
+   "structured": {}
+  },
+  {
+   "computed": "48257.08",
+   "evidence_ids": [
+    "IN-03:CBS-20260914-C0002-GBP",
+    "IN-03:CBS-20260915-C0002-GBP",
+    "IN-11:TX-0915-00006",
+    "IN-11:TX-0915-00010",
+    "IN-11:TX-0915-00011"
+   ],
+   "evidence_status": "",
+   "for_exception": "EXC-SC5A-02",
+   "note": "previous balance + 3 transaction(s)",
+   "outcome": "FAIL",
+   "reported": "47813.53",
+   "result_id": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "structured": {}
+  }
+ ],
+ "conventions": {
+  "bank_dc": "C = money into the account, D = money out (bank perspective)",
+  "cashbook_dc": "D = money in, C = money out (firm asset-ledger perspective)",
+  "difference_sign": "bank minus ledger (C08); resource minus requirement (C06)",
+  "reconciliation_point": "17:00 Europe/London each reconciliation day",
+  "transaction_direction": "CR increases the client balance, DR decreases it"
+ },
+ "exception": {
+  "account_id": "",
+  "affected_results": 1,
+  "amount": "",
+  "category": "C11-BATCH-ARITH",
+  "cause_category": "",
+  "control_codes": [
+   "C11"
+  ],
+  "currency": "",
+  "evidence_status": "",
+  "evidence_status_detail": "",
+  "exception_id": "EXC-SC5A-01",
+  "first_date": "",
+  "flags": "",
+  "investigation_group_id": "",
+  "last_date": "",
+  "related_records": "",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "root_cause": "C11-BATCH-ARITH|SB-GBP-20260915",
+  "severity": "High",
+  "status": "OPEN"
+ },
+ "investigation_group": null,
+ "investigation_route": "unverified_relationship",
+ "investigation_scope": {
+  "account_id": "",
+  "affected_result_count": 1,
+  "amount": "",
+  "candidate_relationship_ids": [
+   "CAND-SC5A-01"
+  ],
+  "category": "C11-BATCH-ARITH",
+  "check_ids": [
+   "C11-BATCH-ARITH"
+  ],
+  "control_codes": [
+   "C11"
+  ],
+  "currency": "",
+  "evidence_status": "",
+  "first_date": "",
+  "group_size": 0,
+  "investigation_group_id": "",
+  "keys": {
+   "batch_id": "SB-GBP-20260915"
+  },
+  "last_date": "",
+  "missing_evidence_item_ids": [],
+  "related_exception_ids": [
+   "EXC-SC5A-02"
+  ],
+  "root_cause": "C11-BATCH-ARITH|SB-GBP-20260915",
+  "root_cause_kind": "C11-BATCH-ARITH",
+  "severity": "High"
+ },
+ "missing_evidence": [],
+ "pack_content_sha256": "ae391170b93a4a6db21e8b4c21c685f55e56024a153ebc997164d76140faabee",
+ "pack_id": "PACK-SC5A-PER-2026-09-ae391170b93a",
+ "packet_sha256": "a31fade3ef2c9ce64727c34bcdc2985713e6fa4031d0e0c0f84ca9e2b629a64b",
+ "packet_version": "uc042-evidence-packet/1.0",
+ "related_exceptions": [
+  {
+   "account_id": "",
+   "affected_results": 1,
+   "amount": "",
+   "category": "CBAL-ROLLFWD",
+   "cause_category": "",
+   "control_codes": [
+    "C04"
+   ],
+   "currency": "",
+   "evidence_status": "",
+   "evidence_status_detail": "",
+   "exception_id": "EXC-SC5A-02",
+   "first_date": "",
+   "flags": "",
+   "investigation_group_id": "",
+   "last_date": "",
+   "related_records": "",
+   "review_status": "AWAITING_HUMAN_REVIEW",
+   "root_cause": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "severity": "High",
+   "status": "OPEN"
+  }
+ ],
+ "relationships": [
+  {
+   "from": "C11-BATCH-ARITH|SB-GBP-20260915",
+   "join_key": "batch_id=SB-GBP-20260915",
+   "relationship": "cited_by_control_result",
+   "to": "IN-12:SB-GBP-20260915"
+  },
+  {
+   "from": "C11-BATCH-ARITH|SB-GBP-20260915",
+   "join_key": "line_id=SL-SB-GBP-20260915-0001",
+   "relationship": "cited_by_control_result",
+   "to": "IN-13:SL-SB-GBP-20260915-0001"
+  },
+  {
+   "from": "C11-BATCH-ARITH|SB-GBP-20260915",
+   "join_key": "line_id=SL-SB-GBP-20260915-0002",
+   "relationship": "cited_by_control_result",
+   "to": "IN-13:SL-SB-GBP-20260915-0002"
+  },
+  {
+   "from": "C11-BATCH-ARITH|SB-GBP-20260915",
+   "join_key": "line_id=SL-SB-GBP-20260915-0003",
+   "relationship": "cited_by_control_result",
+   "to": "IN-13:SL-SB-GBP-20260915-0003"
+  },
+  {
+   "from": "C11-BATCH-ARITH|SB-GBP-20260915",
+   "join_key": "line_id=SL-SB-GBP-20260915-0004",
+   "relationship": "cited_by_control_result",
+   "to": "IN-13:SL-SB-GBP-20260915-0004"
+  },
+  {
+   "from": "C11-BATCH-ARITH|SB-GBP-20260915",
+   "join_key": "line_id=SL-SB-GBP-20260915-0005",
+   "relationship": "cited_by_control_result",
+   "to": "IN-13:SL-SB-GBP-20260915-0005"
+  },
+  {
+   "from": "C11-BATCH-ARITH|SB-GBP-20260915",
+   "join_key": "line_id=SL-SB-GBP-20260915-0006",
+   "relationship": "cited_by_control_result",
+   "to": "IN-13:SL-SB-GBP-20260915-0006"
+  },
+  {
+   "from": "IN-12:SB-GBP-20260915",
+   "join_key": "batch_id=SB-GBP-20260915",
+   "relationship": "line.batch_id",
+   "to": "IN-13:SL-SB-GBP-20260915-0001"
+  },
+  {
+   "from": "IN-12:SB-GBP-20260915",
+   "join_key": "batch_id=SB-GBP-20260915",
+   "relationship": "line.batch_id",
+   "to": "IN-13:SL-SB-GBP-20260915-0002"
+  },
+  {
+   "from": "IN-12:SB-GBP-20260915",
+   "join_key": "batch_id=SB-GBP-20260915",
+   "relationship": "line.batch_id",
+   "to": "IN-13:SL-SB-GBP-20260915-0003"
+  },
+  {
+   "from": "IN-12:SB-GBP-20260915",
+   "join_key": "batch_id=SB-GBP-20260915",
+   "relationship": "line.batch_id",
+   "to": "IN-13:SL-SB-GBP-20260915-0004"
+  },
+  {
+   "from": "IN-12:SB-GBP-20260915",
+   "join_key": "batch_id=SB-GBP-20260915",
+   "relationship": "line.batch_id",
+   "to": "IN-13:SL-SB-GBP-20260915-0005"
+  },
+  {
+   "from": "IN-12:SB-GBP-20260915",
+   "join_key": "batch_id=SB-GBP-20260915",
+   "relationship": "line.batch_id",
+   "to": "IN-13:SL-SB-GBP-20260915-0006"
+  },
+  {
+   "from": "IN-13:SL-SB-GBP-20260915-0001",
+   "join_key": "txn_id=TX-0915-00007",
+   "relationship": "line.txn_id = transaction.txn_id",
+   "to": "IN-11:TX-0915-00007"
+  },
+  {
+   "from": "IN-13:SL-SB-GBP-20260915-0002",
+   "join_key": "txn_id=TX-0915-00008",
+   "relationship": "line.txn_id = transaction.txn_id",
+   "to": "IN-11:TX-0915-00008"
+  },
+  {
+   "from": "IN-13:SL-SB-GBP-20260915-0004",
+   "join_key": "txn_id=TX-0915-00010",
+   "relationship": "line.txn_id = transaction.txn_id",
+   "to": "IN-11:TX-0915-00010"
+  },
+  {
+   "from": "IN-13:SL-SB-GBP-20260915-0005",
+   "join_key": "txn_id=TX-0915-00011",
+   "relationship": "line.txn_id = transaction.txn_id",
+   "to": "IN-11:TX-0915-00011"
+  },
+  {
+   "from": "IN-13:SL-SB-GBP-20260915-0006",
+   "join_key": "txn_id=TX-0915-00012",
+   "relationship": "line.txn_id = transaction.txn_id",
+   "to": "IN-11:TX-0915-00012"
+  },
+  {
+   "from": "IN-12:SB-GBP-20260915",
+   "join_key": "account_id=SGA-GBP-01, bank_reference|end_to_end_ref=SB-GBP-20260915",
+   "relationship": "bank.bank_reference = batch.expected_bank_reference",
+   "to": "IN-09:BE-GBP-0915-SB1"
+  },
+  {
+   "from": "IN-12:SB-GBP-20260915",
+   "join_key": "account_id=SGA-GBP-01, payment_reference=SB-GBP-20260915",
+   "relationship": "cashbook.payment_reference = batch.expected_bank_reference",
+   "to": "IN-10:LE-GBP-0915-0005"
+  },
+  {
+   "from": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "join_key": "snapshot_id=CBS-20260914-C0002-GBP",
+   "relationship": "cited_by_control_result",
+   "to": "IN-03:CBS-20260914-C0002-GBP"
+  },
+  {
+   "from": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "join_key": "snapshot_id=CBS-20260915-C0002-GBP",
+   "relationship": "cited_by_control_result",
+   "to": "IN-03:CBS-20260915-C0002-GBP"
+  },
+  {
+   "from": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "join_key": "txn_id=TX-0915-00006",
+   "relationship": "cited_by_control_result",
+   "to": "IN-11:TX-0915-00006"
+  },
+  {
+   "from": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "join_key": "txn_id=TX-0915-00010",
+   "relationship": "cited_by_control_result",
+   "to": "IN-11:TX-0915-00010"
+  },
+  {
+   "from": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "join_key": "txn_id=TX-0915-00011",
+   "relationship": "cited_by_control_result",
+   "to": "IN-11:TX-0915-00011"
+  },
+  {
+   "from": "IN-11:TX-0915-00006",
+   "join_key": "txn_id=TX-0915-00006",
+   "relationship": "line.txn_id = transaction.txn_id",
+   "to": "IN-13:SL-AQ-GBP-20260915-0004"
+  },
+  {
+   "from": "IN-11:TX-0915-00010",
+   "join_key": "txn_id=TX-0915-00010",
+   "relationship": "line.txn_id = transaction.txn_id",
+   "to": "IN-13:SL-SB-GBP-20260915-0004"
+  },
+  {
+   "from": "IN-11:TX-0915-00011",
+   "join_key": "txn_id=TX-0915-00011",
+   "relationship": "line.txn_id = transaction.txn_id",
+   "to": "IN-13:SL-SB-GBP-20260915-0005"
+  }
+ ],
+ "retrieval_truncated": false,
+ "searches": [
+  {
+   "description": "Transaction TX-0915-00009 referenced by settlement line SL-SB-GBP-20260915-0003",
+   "found": [],
+   "query": {
+    "file": "IN-11",
+    "txn_id": "TX-0915-00009"
+   },
+   "result": "NOT_FOUND",
+   "search_id": "SEARCH-01"
+  },
+  {
+   "description": "Bank entries carrying batch reference SB-GBP-20260915",
+   "found": [
+    "IN-09:BE-GBP-0915-SB1"
+   ],
+   "query": {
+    "account_id": "SGA-GBP-01",
+    "file": "IN-09",
+    "reference": "SB-GBP-20260915"
+   },
+   "result": "FOUND",
+   "search_id": "SEARCH-02"
+  },
+  {
+   "description": "Transactions for C0002 GBP executed after 2026-09-14 17:00 and up to 2026-09-15 17:00",
+   "found": [
+    "IN-11:TX-0915-00006",
+    "IN-11:TX-0915-00010",
+    "IN-11:TX-0915-00011"
+   ],
+   "query": {
+    "client_id": "C0002",
+    "currency": "GBP",
+    "file": "IN-11",
+    "window": [
+     "2026-09-14T17:00:00+01:00",
+     "2026-09-15T17:00:00+01:00"
+    ]
+   },
+   "result": "FOUND",
+   "search_id": "SEARCH-03"
+  },
+  {
+   "description": "All REFUND transactions for C0002 GBP in the period",
+   "found": [
+    "IN-11:TX-0909-0R001"
+   ],
+   "query": {
+    "client_id": "C0002",
+    "file": "IN-11",
+    "txn_type": "REFUND"
+   },
+   "result": "FOUND",
+   "search_id": "SEARCH-04"
+  },
+  {
+   "description": "Posting-level client ledger for C0002",
+   "found": [],
+   "query": {
+    "source": "client ledger postings"
+   },
+   "result": "NOT_FOUND",
+   "search_id": "SEARCH-05"
+  }
+ ],
+ "source_records": [
+  {
+   "evidence_id": "IN-12:SB-GBP-20260915",
+   "fields": {
+    "account_id": "SGA-GBP-01",
+    "batch_id": "SB-GBP-20260915",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "cycle_date": "2026-09-15",
+    "direction": "FROM_FIRM",
+    "expected_bank_reference": "SB-GBP-20260915",
+    "gross_amount": "2868.50",
+    "net_amount_reported": "2868.50",
+    "settlement_date": "2026-09-15",
+    "total_adjustments": "0.00",
+    "total_fees": "0.00"
+   },
+   "file_id": "IN-12",
+   "file_sha256": "2e25a4fdee7179e965f9c2ec48f56331dac31ce6aaae1840002bc54178caef87",
+   "join_key": "batch_id=SB-GBP-20260915",
+   "record_type": "Settlement batch headers (generic synthetic format)",
+   "retrieved_via": "cited by control result C11-BATCH-ARITH|SB-GBP-20260915",
+   "source_file": "source_data/settlement_batches_2026-09.csv",
+   "source_line": 43
+  },
+  {
+   "evidence_id": "IN-13:SL-SB-GBP-20260915-0001",
+   "fields": {
+    "amount": "176.37",
+    "batch_id": "SB-GBP-20260915",
+    "currency": "GBP",
+    "dc_indicator": "D",
+    "fee_code": "",
+    "line_id": "SL-SB-GBP-20260915-0001",
+    "line_type": "TXN",
+    "txn_id": "TX-0915-00007"
+   },
+   "file_id": "IN-13",
+   "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+   "join_key": "line_id=SL-SB-GBP-20260915-0001",
+   "record_type": "Settlement batch lines",
+   "retrieved_via": "cited by control result C11-BATCH-ARITH|SB-GBP-20260915",
+   "source_file": "source_data/settlement_lines_2026-09.csv",
+   "source_line": 199
+  },
+  {
+   "evidence_id": "IN-13:SL-SB-GBP-20260915-0002",
+   "fields": {
+    "amount": "438.20",
+    "batch_id": "SB-GBP-20260915",
+    "currency": "GBP",
+    "dc_indicator": "D",
+    "fee_code": "",
+    "line_id": "SL-SB-GBP-20260915-0002",
+    "line_type": "TXN",
+    "txn_id": "TX-0915-00008"
+   },
+   "file_id": "IN-13",
+   "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+   "join_key": "line_id=SL-SB-GBP-20260915-0002",
+   "record_type": "Settlement batch lines",
+   "retrieved_via": "cited by control result C11-BATCH-ARITH|SB-GBP-20260915",
+   "source_file": "source_data/settlement_lines_2026-09.csv",
+   "source_line": 200
+  },
+  {
+   "evidence_id": "IN-13:SL-SB-GBP-20260915-0003",
+   "fields": {
+    "amount": "443.55",
+    "batch_id": "SB-GBP-20260915",
+    "currency": "GBP",
+    "dc_indicator": "D",
+    "fee_code": "",
+    "line_id": "SL-SB-GBP-20260915-0003",
+    "line_type": "TXN",
+    "txn_id": "TX-0915-00009"
+   },
+   "file_id": "IN-13",
+   "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+   "join_key": "line_id=SL-SB-GBP-20260915-0003",
+   "record_type": "Settlement batch lines",
+   "retrieved_via": "cited by control result C11-BATCH-ARITH|SB-GBP-20260915",
+   "source_file": "source_data/settlement_lines_2026-09.csv",
+   "source_line": 201
+  },
+  {
+   "evidence_id": "IN-13:SL-SB-GBP-20260915-0004",
+   "fields": {
+    "amount": "536.88",
+    "batch_id": "SB-GBP-20260915",
+    "currency": "GBP",
+    "dc_indicator": "D",
+    "fee_code": "",
+    "line_id": "SL-SB-GBP-20260915-0004",
+    "line_type": "TXN",
+    "txn_id": "TX-0915-00010"
+   },
+   "file_id": "IN-13",
+   "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+   "join_key": "line_id=SL-SB-GBP-20260915-0004",
+   "record_type": "Settlement batch lines",
+   "retrieved_via": "cited by control result C11-BATCH-ARITH|SB-GBP-20260915",
+   "source_file": "source_data/settlement_lines_2026-09.csv",
+   "source_line": 202
+  },
+  {
+   "evidence_id": "IN-13:SL-SB-GBP-20260915-0005",
+   "fields": {
+    "amount": "437.77",
+    "batch_id": "SB-GBP-20260915",
+    "currency": "GBP",
+    "dc_indicator": "D",
+    "fee_code": "",
+    "line_id": "SL-SB-GBP-20260915-0005",
+    "line_type": "TXN",
+    "txn_id": "TX-0915-00011"
+   },
+   "file_id": "IN-13",
+   "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+   "join_key": "line_id=SL-SB-GBP-20260915-0005",
+   "record_type": "Settlement batch lines",
+   "retrieved_via": "cited by control result C11-BATCH-ARITH|SB-GBP-20260915",
+   "source_file": "source_data/settlement_lines_2026-09.csv",
+   "source_line": 203
+  },
+  {
+   "evidence_id": "IN-13:SL-SB-GBP-20260915-0006",
+   "fields": {
+    "amount": "835.73",
+    "batch_id": "SB-GBP-20260915",
+    "currency": "GBP",
+    "dc_indicator": "D",
+    "fee_code": "",
+    "line_id": "SL-SB-GBP-20260915-0006",
+    "line_type": "TXN",
+    "txn_id": "TX-0915-00012"
+   },
+   "file_id": "IN-13",
+   "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+   "join_key": "line_id=SL-SB-GBP-20260915-0006",
+   "record_type": "Settlement batch lines",
+   "retrieved_via": "cited by control result C11-BATCH-ARITH|SB-GBP-20260915",
+   "source_file": "source_data/settlement_lines_2026-09.csv",
+   "source_line": 204
+  },
+  {
+   "evidence_id": "IN-11:TX-0915-00007",
+   "fields": {
+    "amount": "176.37",
+    "auth_ts": "2026-09-15T07:15:00+01:00",
+    "clearing_date": "2026-09-15",
+    "client_id": "C0007",
+    "currency": "GBP",
+    "direction": "DR",
+    "executed_ts": "2026-09-15T15:00:00+01:00",
+    "original_txn_id": "",
+    "payment_reference": "",
+    "settlement_batch_id": "SB-GBP-20260915",
+    "status": "SETTLED",
+    "txn_id": "TX-0915-00007",
+    "txn_type": "SPEND"
+   },
+   "file_id": "IN-11",
+   "file_sha256": "8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202",
+   "join_key": "txn_id=TX-0915-00007",
+   "record_type": "Client transactions",
+   "retrieved_via": "transaction referenced by a settlement line",
+   "source_file": "source_data/transactions_2026-09.csv",
+   "source_line": 203
+  },
+  {
+   "evidence_id": "IN-11:TX-0915-00008",
+   "fields": {
+    "amount": "438.20",
+    "auth_ts": "2026-09-15T08:15:00+01:00",
+    "clearing_date": "2026-09-15",
+    "client_id": "C0005",
+    "currency": "GBP",
+    "direction": "DR",
+    "executed_ts": "2026-09-15T15:00:00+01:00",
+    "original_txn_id": "",
+    "payment_reference": "",
+    "settlement_batch_id": "SB-GBP-20260915",
+    "status": "SETTLED",
+    "txn_id": "TX-0915-00008",
+    "txn_type": "SPEND"
+   },
+   "file_id": "IN-11",
+   "file_sha256": "8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202",
+   "join_key": "txn_id=TX-0915-00008",
+   "record_type": "Client transactions",
+   "retrieved_via": "transaction referenced by a settlement line",
+   "source_file": "source_data/transactions_2026-09.csv",
+   "source_line": 204
+  },
+  {
+   "evidence_id": "IN-11:TX-0915-00010",
+   "fields": {
+    "amount": "536.88",
+    "auth_ts": "2026-09-15T10:15:00+01:00",
+    "clearing_date": "2026-09-15",
+    "client_id": "C0002",
+    "currency": "GBP",
+    "direction": "DR",
+    "executed_ts": "2026-09-15T15:00:00+01:00",
+    "original_txn_id": "",
+    "payment_reference": "",
+    "settlement_batch_id": "SB-GBP-20260915",
+    "status": "SETTLED",
+    "txn_id": "TX-0915-00010",
+    "txn_type": "SPEND"
+   },
+   "file_id": "IN-11",
+   "file_sha256": "8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202",
+   "join_key": "txn_id=TX-0915-00010",
+   "record_type": "Client transactions",
+   "retrieved_via": "transaction referenced by a settlement line",
+   "source_file": "source_data/transactions_2026-09.csv",
+   "source_line": 205
+  },
+  {
+   "evidence_id": "IN-11:TX-0915-00011",
+   "fields": {
+    "amount": "437.77",
+    "auth_ts": "2026-09-15T11:15:00+01:00",
+    "clearing_date": "2026-09-15",
+    "client_id": "C0002",
+    "currency": "GBP",
+    "direction": "DR",
+    "executed_ts": "2026-09-15T15:00:00+01:00",
+    "original_txn_id": "",
+    "payment_reference": "",
+    "settlement_batch_id": "SB-GBP-20260915",
+    "status": "SETTLED",
+    "txn_id": "TX-0915-00011",
+    "txn_type": "SPEND"
+   },
+   "file_id": "IN-11",
+   "file_sha256": "8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202",
+   "join_key": "txn_id=TX-0915-00011",
+   "record_type": "Client transactions",
+   "retrieved_via": "transaction referenced by a settlement line",
+   "source_file": "source_data/transactions_2026-09.csv",
+   "source_line": 206
+  },
+  {
+   "evidence_id": "IN-11:TX-0915-00012",
+   "fields": {
+    "amount": "835.73",
+    "auth_ts": "2026-09-15T12:15:00+01:00",
+    "clearing_date": "2026-09-15",
+    "client_id": "C0008",
+    "currency": "GBP",
+    "direction": "DR",
+    "executed_ts": "2026-09-15T15:00:00+01:00",
+    "original_txn_id": "",
+    "payment_reference": "",
+    "settlement_batch_id": "SB-GBP-20260915",
+    "status": "SETTLED",
+    "txn_id": "TX-0915-00012",
+    "txn_type": "SPEND"
+   },
+   "file_id": "IN-11",
+   "file_sha256": "8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202",
+   "join_key": "txn_id=TX-0915-00012",
+   "record_type": "Client transactions",
+   "retrieved_via": "transaction referenced by a settlement line",
+   "source_file": "source_data/transactions_2026-09.csv",
+   "source_line": 207
+  },
+  {
+   "evidence_id": "IN-09:BE-GBP-0915-SB1",
+   "fields": {
+    "account_id": "SGA-GBP-01",
+    "amount": "2868.50",
+    "bank_entry_id": "BE-GBP-0915-SB1",
+    "bank_reference": "SB-GBP-20260915",
+    "booking_date": "2026-09-15",
+    "booking_ts": "2026-09-15T15:00:00+01:00",
+    "counterparty_name": "Synthetic Card Scheme",
+    "currency": "GBP",
+    "dc_indicator": "D",
+    "end_to_end_ref": "",
+    "narrative_text": "SCHEME SETTLEMENT SB-GBP-20260915",
+    "statement_id": "ST-SGA-GBP-01-20260915-EOD",
+    "value_date": "2026-09-15"
+   },
+   "file_id": "IN-09",
+   "file_sha256": "28df3e2a115a2d8b88115cd8c6dae39c8a3d71124b99641ee4846a68c18f54b0",
+   "join_key": "account_id=SGA-GBP-01, bank_reference|end_to_end_ref=SB-GBP-20260915",
+   "record_type": "Bank statement entries",
+   "retrieved_via": "bank entry carrying the batch reference",
+   "source_file": "source_data/bank_statement_entries_2026-09.csv",
+   "source_line": 127
+  },
+  {
+   "evidence_id": "IN-10:LE-GBP-0915-0005",
+   "fields": {
+    "account_id": "SGA-GBP-01",
+    "amount": "2868.50",
+    "currency": "GBP",
+    "dc_indicator": "C",
+    "entry_type": "SCHEME_SETTLEMENT",
+    "ledger_entry_id": "LE-GBP-0915-0005",
+    "payment_reference": "SB-GBP-20260915",
+    "posted_ts": "2026-09-15T15:00:00+01:00"
+   },
+   "file_id": "IN-10",
+   "file_sha256": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7",
+   "join_key": "account_id=SGA-GBP-01, payment_reference=SB-GBP-20260915",
+   "record_type": "Safeguarding-account cash book (firm ledger)",
+   "retrieved_via": "cash-book entry carrying the batch reference",
+   "source_file": "source_data/sga_cashbook_entries_2026-09.csv",
+   "source_line": 109
+  },
+  {
+   "evidence_id": "IN-03:CBS-20260914-C0002-GBP",
+   "fields": {
+    "as_at_ts": "2026-09-14T17:00:00+01:00",
+    "asset_pool_id": "POOL-EMONEY",
+    "balance": "48492.79",
+    "client_id": "C0002",
+    "currency": "GBP",
+    "recon_date": "2026-09-14",
+    "snapshot_id": "CBS-20260914-C0002-GBP"
+   },
+   "file_id": "IN-03",
+   "file_sha256": "d28ff85d5871975d2f7231bacbd88179d9861b8b68003b793e21893c9b09dddc",
+   "join_key": "snapshot_id=CBS-20260914-C0002-GBP",
+   "record_type": "Client balance snapshots at each 17:00 point",
+   "retrieved_via": "cited by control result CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "source_file": "source_data/client_balance_snapshots_2026-09.csv",
+   "source_line": 123
+  },
+  {
+   "evidence_id": "IN-03:CBS-20260915-C0002-GBP",
+   "fields": {
+    "as_at_ts": "2026-09-15T17:00:00+01:00",
+    "asset_pool_id": "POOL-EMONEY",
+    "balance": "47813.53",
+    "client_id": "C0002",
+    "currency": "GBP",
+    "recon_date": "2026-09-15",
+    "snapshot_id": "CBS-20260915-C0002-GBP"
+   },
+   "file_id": "IN-03",
+   "file_sha256": "d28ff85d5871975d2f7231bacbd88179d9861b8b68003b793e21893c9b09dddc",
+   "join_key": "snapshot_id=CBS-20260915-C0002-GBP",
+   "record_type": "Client balance snapshots at each 17:00 point",
+   "retrieved_via": "cited by control result CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "source_file": "source_data/client_balance_snapshots_2026-09.csv",
+   "source_line": 135
+  },
+  {
+   "evidence_id": "IN-11:TX-0915-00006",
+   "fields": {
+    "amount": "738.94",
+    "auth_ts": "2026-09-15T08:35:00+01:00",
+    "clearing_date": "2026-09-15",
+    "client_id": "C0002",
+    "currency": "GBP",
+    "direction": "CR",
+    "executed_ts": "2026-09-15T08:35:00+01:00",
+    "original_txn_id": "",
+    "payment_reference": "",
+    "settlement_batch_id": "AQ-GBP-20260915",
+    "status": "SETTLED",
+    "txn_id": "TX-0915-00006",
+    "txn_type": "LOAD_CARD"
+   },
+   "file_id": "IN-11",
+   "file_sha256": "8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202",
+   "join_key": "txn_id=TX-0915-00006",
+   "record_type": "Client transactions",
+   "retrieved_via": "cited by control result CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "source_file": "source_data/transactions_2026-09.csv",
+   "source_line": 199
+  },
+  {
+   "evidence_id": "IN-05:IRR-EMONEY-GBP-20260915",
+   "fields": {
+    "actions_taken_text": "Client ledger extract and safeguarding cash book taken at 17:00; requirement and resource compared; no difference. D+1 comparison not performed (synthetic convention, gap G-R05).",
+    "asset_pool_id": "POOL-EMONEY",
+    "currency": "GBP",
+    "d1_requirement": "",
+    "d1_resource": "",
+    "difference_reported": "0.00",
+    "item_a": "328310.94",
+    "item_b": "0.00",
+    "item_c": "0.00",
+    "item_d": "0.00",
+    "method": "STANDARD",
+    "performed_at_ts": "2026-09-15T17:35:00+01:00",
+    "preparer_id": "U-12",
+    "recon_date": "2026-09-15",
+    "recon_run_id": "IRR-EMONEY-GBP-20260915",
+    "reconciliation_point_ts": "2026-09-15T17:00:00+01:00",
+    "requirement_reported": "328310.94",
+    "resource_reported": "328310.94",
+    "reviewer_id": "U-04"
+   },
+   "file_id": "IN-05",
+   "file_sha256": "450d8977bcda98ee2a233dcc207ebeb0426a9e70d7d1b1d0bd8094176dd9d617",
+   "join_key": "currency=GBP, recon_date=2026-09-15",
+   "record_type": "Internal reconciliation records (as reported by the firm)",
+   "retrieved_via": "internal reconciliation record for the currency and date (as reported by the firm)",
+   "source_file": "source_data/internal_recon_records_2026-09.csv",
+   "source_line": 22
+  },
+  {
+   "evidence_id": "IN-13:SL-AQ-GBP-20260915-0004",
+   "fields": {
+    "amount": "738.94",
+    "batch_id": "AQ-GBP-20260915",
+    "currency": "GBP",
+    "dc_indicator": "C",
+    "fee_code": "",
+    "line_id": "SL-AQ-GBP-20260915-0004",
+    "line_type": "TXN",
+    "txn_id": "TX-0915-00006"
+   },
+   "file_id": "IN-13",
+   "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+   "join_key": "txn_id=TX-0915-00006",
+   "record_type": "Settlement batch lines",
+   "retrieved_via": "settlement line for the transaction",
+   "source_file": "source_data/settlement_lines_2026-09.csv",
+   "source_line": 196
+  },
+  {
+   "evidence_id": "IN-11:TX-0909-0R001",
+   "fields": {
+    "amount": "60.00",
+    "auth_ts": "",
+    "clearing_date": "2026-09-09",
+    "client_id": "C0002",
+    "currency": "GBP",
+    "direction": "CR",
+    "executed_ts": "2026-09-09T15:00:00+01:00",
+    "original_txn_id": "TX-0902-00044",
+    "payment_reference": "",
+    "settlement_batch_id": "SB-GBP-20260909",
+    "status": "SETTLED",
+    "txn_id": "TX-0909-0R001",
+    "txn_type": "REFUND"
+   },
+   "file_id": "IN-11",
+   "file_sha256": "8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202",
+   "join_key": "client_id=C0002, currency=GBP, txn_type=REFUND",
+   "record_type": "Client transactions",
+   "retrieved_via": "refund transactions for the client",
+   "source_file": "source_data/transactions_2026-09.csv",
+   "source_line": 134
+  }
+ ]
+}

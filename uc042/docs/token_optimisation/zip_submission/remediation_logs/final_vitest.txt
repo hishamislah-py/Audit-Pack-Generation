@@ -1,0 +1,13 @@
+
+ RUN  v5.1.0 C:/Users/artlptp263user/p10/uc042_token_optimisation/frontend
+
+
+ Test Files  14 passed | 1 skipped (15)
+      Tests  86 passed | 2 skipped (88)
+   Start at  17:05:02
+   Duration  21.72s (tests 56%, environment 33%, setup 6%, import 3%, transform 1%)
+
+Environment  jsdom was created 15 times · 28.51s total, 33% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

@@ -1,0 +1,53 @@
+{
+  "scenario_id": "SC5D",
+  "description": "Closing snapshot C0003 30 Sep 49,124.75 against an independent roll-forward of 49,374.75",
+  "non_passing_results": [
+    [
+      "C04-REQUIREMENT",
+      "2026-09-30/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-30/GBP",
+      "FAIL"
+    ],
+    [
+      "CBAL-ROLLFWD",
+      "GBP/C0003 2026-09-30",
+      "FAIL"
+    ]
+  ],
+  "exceptions": [
+    {
+      "exception_id": "EXC-SC5D-01",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-30/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5D-02",
+      "severity": "High",
+      "root_cause": "CBAL-ROLLFWD|GBP/C0003 2026-09-30",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5D-03",
+      "severity": "High",
+      "root_cause": "C04-REQUIREMENT|2026-09-30/GBP",
+      "affected_results": 1
+    }
+  ],
+  "evidence_statuses": {},
+  "investigation_groups": [
+    [
+      "EXC-SC5D-01",
+      "EXC-SC5D-02",
+      "EXC-SC5D-03"
+    ]
+  ],
+  "candidate_relationships": [],
+  "expected_outcome_basis": "scenario design; engine changes E1 (timing evidence) and E2 (investigation groups) implemented",
+  "target_outcome": "Three individual exceptions kept, linked in one investigation group (C0003's 30 Sep snapshot is an input to the 30 Sep requirement; the internal difference uses that requirement). 250.00 unexplained; no cause set; awaiting human review.",
+  "engine_limitations": []
+}

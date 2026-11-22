@@ -1,0 +1,61 @@
+{
+ "package": "UC042_JAN_AUG_HISTORICAL_DEMO",
+ "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA — DEMONSTRATION ONLY — NOT REAL MOORWAND FINANCIAL RECORDS",
+ "months": [
+  {
+   "period": "2026-01",
+   "manifest": "2026-01/manifest.json",
+   "manifest_sha256": "ff9ee4f99c27ceb002408f17399f3f560e28a956d44199bbf896c612bc78d74b",
+   "scenario_definition_sha256": "eea6c4269c4fc582c5ad7a64822cb0c9a4e42640b127d9f37bb0393814c588c5"
+  },
+  {
+   "period": "2026-02",
+   "manifest": "2026-02/manifest.json",
+   "manifest_sha256": "20594920a705da0e0e8d5767b29f8a2e996a7618db4915e679c5f1bab241c46d",
+   "scenario_definition_sha256": "7959f4a5a480df2fa6dd24d3c5b876484d9de72f70adb1b12c3681b7dd4e30cb"
+  },
+  {
+   "period": "2026-03",
+   "manifest": "2026-03/manifest.json",
+   "manifest_sha256": "d8855985968a7ef379b2003237416cef88cb1efc7da3a606a484983b589e64be",
+   "scenario_definition_sha256": "4ddd27b11708126ececf9b3d8125f987f55077a139d483de6b1c08f51d94d3b8"
+  },
+  {
+   "period": "2026-04",
+   "manifest": "2026-04/manifest.json",
+   "manifest_sha256": "eb02bd1dbebddb8214bccbe271264c6daa6769c49e01512586a497ba6e7c3474",
+   "scenario_definition_sha256": "43ca8109e9e7a160f49e5195d84bff5e41fb054c08c3325bfbe13c45ada379c3"
+  },
+  {
+   "period": "2026-05",
+   "manifest": "2026-05/manifest.json",
+   "manifest_sha256": "7100d24aae6100824a243f365eb07bd8ee4711567fc5623a892a858aa1024f3f",
+   "scenario_definition_sha256": "92a6191817d95bd95704a918cacb1bf4b287b6e5b1252da3bce0c62d4ce153e1"
+  },
+  {
+   "period": "2026-06",
+   "manifest": "2026-06/manifest.json",
+   "manifest_sha256": "87a4d165184dbd0f250092f7ff57f7ec2064e805314204391a09cc47728e0d62",
+   "scenario_definition_sha256": "3bb4ea379026c1ca466a0df94871474ebae6fe84c676e973caa43016d5aab595"
+  },
+  {
+   "period": "2026-07",
+   "manifest": "2026-07/manifest.json",
+   "manifest_sha256": "d97cb4c8936269fe62ebde65f31387b2ed6bf2a6d3f0b9ba0996bbe33893d0a8",
+   "scenario_definition_sha256": "3709e489eaa3831cbf057c57b21baf8dd12689696176152e86b0bf1ddf5c8bf0"
+  },
+  {
+   "period": "2026-08",
+   "manifest": "2026-08/manifest.json",
+   "manifest_sha256": "2bf49bf87b8a0138a719f56ea5dde18ef6a8b19059bbf9e81c103de483e301c1",
+   "scenario_definition_sha256": "d453724d45a2aa551de53abc52479e0124035a91ed37d063ce175360ee955295"
+  }
+ ],
+ "september_reference": {
+  "baseline_manifest": "uc042_dataset/set_01_clean_baseline/manifest.csv",
+  "sha256_at_generation": "0360b4055aa6812f063b411c7ceacdb2f4f153df73fd76c2acc7da3df565b69e",
+  "note": "September 2026 is not part of this package and was not modified."
+ },
+ "october_2026": "NO DATA",
+ "november_2026": "AVAILABLE FOR FRESH UPLOAD (no data generated)"
+}

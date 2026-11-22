@@ -1,0 +1,2 @@
+receipt_id,bank_reference,receipt_date,receipt_ts,amount,currency,classification,identified_date,allocated_date,allocated_ts,client_id
+UR-202601-G01,E2E-GBP-0113-U01,2026-01-13,2026-01-13T16:20:00+00:00,1155.69,GBP,UNALLOCATED,,2026-01-14,2026-01-14T09:25:00+00:00,C0002

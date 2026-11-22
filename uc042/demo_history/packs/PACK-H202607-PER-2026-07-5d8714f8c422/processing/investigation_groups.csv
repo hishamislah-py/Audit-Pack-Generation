@@ -1,0 +1,3 @@
+group_id,exception_ids,primary_exception_id,size,link_types,links,status,review_status,cause,correlation_version
+GRP-H202607-01,EXC-H202607-02; EXC-H202607-04,EXC-H202607-02,2,L1 REFERENCE,"EXC-H202607-02—EXC-H202607-04 L1 REFERENCE: both involve reference SB-GBP-20260701 on SGA-GBP-01 [IN-12:settlement_batches_2026-07.csv#L3, IN-10:sga_cashbook_entries_2026-07.csv#L8]",OPEN,AWAITING_HUMAN_REVIEW,,deterministic-v1
+GRP-H202607-02,EXC-H202607-03; EXC-H202607-05,EXC-H202607-03,2,L1 REFERENCE,"EXC-H202607-03—EXC-H202607-05 L1 REFERENCE: both involve reference SB-GBP-20260710 on SGA-GBP-01 [IN-12:settlement_batches_2026-07.csv#L31, IN-10:sga_cashbook_entries_2026-07.csv#L91]",OPEN,AWAITING_HUMAN_REVIEW,,deterministic-v1

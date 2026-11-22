@@ -1,0 +1,11 @@
+{
+ "generated_at": "2026-10-30T12:14:21+00:00",
+ "status": "GENERATED",
+ "outcome": "PUBLISHED",
+ "case_dir": "uc042_dataset/scn_SC5A_missing_transaction",
+ "pack_id": "PACK-SC5A-PER-2026-09-ae391170b93a",
+ "processing_run_id": "RUN-9a2ac69c8b729bb9",
+ "pack_content_sha256": "ae391170b93a4a6db21e8b4c21c685f55e56024a153ebc997164d76140faabee",
+ "validation_findings": [],
+ "python": "3.12.3"
+}

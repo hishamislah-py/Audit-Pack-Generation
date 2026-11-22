@@ -1,0 +1,11 @@
+{
+ "generated_at": "2026-10-30T12:14:19+00:00",
+ "status": "GENERATED",
+ "outcome": "PUBLISHED",
+ "case_dir": "uc042_dataset/set_01_clean_baseline",
+ "pack_id": "PACK-S01-PER-2026-09-577b06a1d894",
+ "processing_run_id": "RUN-69c6756f1962a0c9",
+ "pack_content_sha256": "577b06a1d8944cbb8bc5fd0c5aace5cb891f707daa3e72ead35d85e3dee81612",
+ "validation_findings": [],
+ "python": "3.12.3"
+}

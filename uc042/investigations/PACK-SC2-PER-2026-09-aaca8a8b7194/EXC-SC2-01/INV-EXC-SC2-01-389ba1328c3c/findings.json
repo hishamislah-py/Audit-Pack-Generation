@@ -1,0 +1,304 @@
+{
+ "classification_summary": {
+  "CONFLICTING_EVIDENCE": [
+   "C-01"
+  ],
+  "EVIDENCE_BACKED": [
+   "F-01",
+   "F-02",
+   "F-03",
+   "F-04"
+  ],
+  "HYPOTHESIS": [],
+  "INSUFFICIENT_EVIDENCE": [
+   "M-01"
+  ],
+  "deterministic_conflicts": [
+   "CONF-01"
+  ],
+  "evidence_gaps": {
+   "additional_gaps_identified_by_ai": [
+    "M-01"
+   ],
+   "engine_missing_evidence": [],
+   "searched_not_found": []
+  },
+  "not_found_searches": [],
+  "unverified_candidate_relationships": []
+ },
+ "confirmed_findings": [
+  {
+   "claim": "C08 reports FAIL for the 2026-09-15 GBP reconciliation, with a reported/computed difference of 2868.50.",
+   "evidence_ids": [
+    "C08-DIFFERENCE|2026-09-15/SGA-GBP-01",
+    "EXC-SC2-01"
+   ],
+   "explanation": "The engine reports TIMING_EVIDENCED, 2868.50 explained by timing, residual unexplained of 0.00, and the item IN_WINDOW/D1. It also reports the exception as awaiting human confirmation, not resolved.",
+   "finding_id": "F-01",
+   "supporting_records": [
+    "IN-06:ERL-SGA-GBP-01-20260915",
+    "IN-07:ST-SGA-GBP-01-20260915-1700",
+    "IN-10:LE-GBP-0915-0005",
+    "IN-09:BE-GBP-0916-T01"
+   ]
+  },
+  {
+   "claim": "The firm's cash book records a 2868.50 scheme-settlement outflow dated 2026-09-15, and the bank statement records a 2868.50 debit dated 2026-09-16 with the same reference.",
+   "evidence_ids": [
+    "IN-10:LE-GBP-0915-0005",
+    "IN-09:BE-GBP-0916-T01",
+    "IN-12:SB-GBP-20260915"
+   ],
+   "explanation": "The cash-book entry has reference SB-GBP-20260915. The bank entry has that bank reference and is booked on 2026-09-16. The verified relationship retrieval links the cash-book entry and settlement batch to that bank entry. This supports the reported timing match; the cash-book record alone does not establish bank movement.",
+   "finding_id": "F-02",
+   "supporting_records": [
+    "IN-10:LE-GBP-0915-0005",
+    "IN-09:BE-GBP-0916-T01",
+    "IN-12:SB-GBP-20260915"
+   ]
+  },
+  {
+   "claim": "The settlement batch records a 2026-09-15 scheme settlement with gross and reported net amounts of 2868.50, and six transaction lines reference client transactions marked SETTLED.",
+   "evidence_ids": [
+    "IN-12:SB-GBP-20260915",
+    "IN-13:SL-SB-GBP-20260915-0001",
+    "IN-13:SL-SB-GBP-20260915-0002",
+    "IN-13:SL-SB-GBP-20260915-0003",
+    "IN-13:SL-SB-GBP-20260915-0004",
+    "IN-13:SL-SB-GBP-20260915-0005",
+    "IN-13:SL-SB-GBP-20260915-0006",
+    "IN-11:TX-0915-00007",
+    "IN-11:TX-0915-00008",
+    "IN-11:TX-0915-00009",
+    "IN-11:TX-0915-00010",
+    "IN-11:TX-0915-00011",
+    "IN-11:TX-0915-00012"
+   ],
+   "explanation": "The batch header reports direction FROM_FIRM, settlement date 2026-09-15, and zero reported fees and adjustments. Its six retrieved lines each reference a transaction record marked SETTLED. These records describe the batch and its underlying entries; they do not independently establish the bank debit, which is shown in the bank statement record.",
+   "finding_id": "F-03",
+   "supporting_records": [
+    "IN-12:SB-GBP-20260915",
+    "IN-13:SL-SB-GBP-20260915-0001",
+    "IN-13:SL-SB-GBP-20260915-0002",
+    "IN-13:SL-SB-GBP-20260915-0003",
+    "IN-13:SL-SB-GBP-20260915-0004",
+    "IN-13:SL-SB-GBP-20260915-0005",
+    "IN-13:SL-SB-GBP-20260915-0006",
+    "IN-11:TX-0915-00007",
+    "IN-11:TX-0915-00008",
+    "IN-11:TX-0915-00009",
+    "IN-11:TX-0915-00010",
+    "IN-11:TX-0915-00011",
+    "IN-11:TX-0915-00012"
+   ]
+  },
+  {
+   "claim": "The 2026-09-16 external and internal reconciliation records report matching GBP bank/resource and ledger/requirement balances of 334413.00, with no reported difference.",
+   "evidence_ids": [
+    "IN-06:ERL-SGA-GBP-01-20260916",
+    "IN-07:ST-SGA-GBP-01-20260916-1700",
+    "IN-05:IRR-EMONEY-GBP-20260916"
+   ],
+   "explanation": "The 17:00 bank confirmation also reports 334413.00. The internal reconciliation is a firm-reported record; it documents what the firm recorded and does not substitute for the bank confirmation. The internal reconciliation narrative says a specific D+1 comparison was not performed.",
+   "finding_id": "F-04",
+   "supporting_records": [
+    "IN-06:ERL-SGA-GBP-01-20260916",
+    "IN-07:ST-SGA-GBP-01-20260916-1700",
+    "IN-05:IRR-EMONEY-GBP-20260916"
+   ]
+  }
+ ],
+ "contradictory_evidence": [
+  {
+   "description": "The firm's discrepancy log marks DL-0001 RESOLVED, while the engine exception remains OPEN and awaiting human review. These are differing statuses recorded by the firm and the engine; the log status does not change the engine exception status.",
+   "evidence_ids": [
+    "CONF-01",
+    "IN-14:DL-0001",
+    "EXC-SC2-01"
+   ],
+   "item_id": "C-01"
+  }
+ ],
+ "evidence_ledger_sha256": "2860f8f92fcea469c3926d78b0777b4c784dbd4c97437351b5a62eaaa89b165a",
+ "evidence_packet_sha256": "f0393c923d8ea2610d02e432e190120e26d6c4d96f3885151f91bfd5520b23d6",
+ "evidence_references": [
+  "C08-DIFFERENCE|2026-09-15/SGA-GBP-01",
+  "CONF-01",
+  "EXC-SC2-01",
+  "IN-05:IRR-EMONEY-GBP-20260916",
+  "IN-06:ERL-SGA-GBP-01-20260915",
+  "IN-06:ERL-SGA-GBP-01-20260916",
+  "IN-07:ST-SGA-GBP-01-20260915-1700",
+  "IN-07:ST-SGA-GBP-01-20260916-1700",
+  "IN-09:BE-GBP-0916-T01",
+  "IN-10:LE-GBP-0915-0005",
+  "IN-11:TX-0915-00007",
+  "IN-11:TX-0915-00008",
+  "IN-11:TX-0915-00009",
+  "IN-11:TX-0915-00010",
+  "IN-11:TX-0915-00011",
+  "IN-11:TX-0915-00012",
+  "IN-12:SB-GBP-20260915",
+  "IN-13:SL-SB-GBP-20260915-0001",
+  "IN-13:SL-SB-GBP-20260915-0002",
+  "IN-13:SL-SB-GBP-20260915-0003",
+  "IN-13:SL-SB-GBP-20260915-0004",
+  "IN-13:SL-SB-GBP-20260915-0005",
+  "IN-13:SL-SB-GBP-20260915-0006",
+  "IN-14:DL-0001"
+ ],
+ "exception_id": "EXC-SC2-01",
+ "exception_resolution": "NOT_RESOLVED_BY_INVESTIGATION",
+ "failure_reason": "",
+ "hypotheses": [],
+ "investigated_at": "2026-11-02T11:56:33+00:00",
+ "investigation_id": "INV-EXC-SC2-01-389ba1328c3c",
+ "investigation_mode": "tools",
+ "investigation_route": "bank_ledger_mismatch",
+ "investigation_scope": {
+  "account_id": "SGA-GBP-01",
+  "affected_result_count": 1,
+  "amount": "2868.50",
+  "candidate_relationship_ids": [],
+  "category": "Bank-ledger difference (explained by timing evidence, awaiting human confirmation)",
+  "check_ids": [
+   "C08-DIFFERENCE"
+  ],
+  "control_codes": [
+   "C08"
+  ],
+  "currency": "GBP",
+  "evidence_status": "TIMING_EVIDENCED",
+  "first_date": "2026-09-15",
+  "group_size": 0,
+  "investigation_group_id": "",
+  "keys": {
+   "account_id": "SGA-GBP-01",
+   "date": "2026-09-15"
+  },
+  "last_date": "2026-09-15",
+  "missing_evidence_item_ids": [],
+  "related_exception_ids": [],
+  "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-09-15|2868.50",
+  "root_cause_kind": "BANK_LEDGER_DIFFERENCE",
+  "severity": "Critical"
+ },
+ "investigation_status": "COMPLETED",
+ "investigation_summary": "The C08 exception concerns a GBP 2,868.50 bank-ledger difference at 17:00 on 2026-09-15. The engine reports the full difference as timing-evidenced, with a matching bank debit recorded on 2026-09-16, while the exception remains OPEN pending human review. The records support the timing explanation, but the firm's 2026-09-16 internal reconciliation notes that a D+1 comparison was not performed; this investigation does not resolve or change the exception status.",
+ "missing_evidence": [
+  {
+   "description": "A specific D+1 comparison for the timing item was not performed, according to the firm's 2026-09-16 internal reconciliation record. The ordinary 2026-09-16 reconciliation is available, but it is not a record of that specific D+1 comparison.",
+   "expected_source": "Internal reconciliation workpapers or other contemporaneous records documenting a D+1 comparison, if such a comparison was performed.",
+   "impact": "The bank debit and matching references support the timing explanation, but the absent specific comparison limits corroboration of the firm's D+1 follow-up process.",
+   "item_id": "M-01",
+   "related_ids": [
+    "IN-05:IRR-EMONEY-GBP-20260916",
+    "C08-DIFFERENCE|2026-09-15/SGA-GBP-01"
+   ]
+  }
+ ],
+ "model_metadata": {
+  "attempts": 4,
+  "findings_schema_version": "uc042-investigation-findings/1.2",
+  "investigation_mode": "tools",
+  "model": "gpt-6-luna",
+  "prompt_version": "uc042-investigator-prompt/2.0-tools",
+  "provider": "openai",
+  "provider_response": {
+   "responses": [
+    {
+     "request_id": "req_a41ab7b627b74f5e8b0d7a19a9511b05",
+     "resolved_model": "gpt-6-luna",
+     "response_id": "resp_076f837a63269a16016ae87a463da087d281e916fee09a8fb1",
+     "status": "completed"
+    },
+    {
+     "request_id": "req_1690f9233f6a4a30b7fcd7256d2eb9be",
+     "resolved_model": "gpt-6-luna",
+     "response_id": "resp_076f837a63269a16016ae87a49fcf887d2866f262988849e46",
+     "status": "completed"
+    },
+    {
+     "request_id": "req_c3912b6e3b1f4a3faad4e78f726de6c3",
+     "resolved_model": "gpt-6-luna",
+     "response_id": "resp_076f837a63269a16016ae87a4eac2487d2a2a194036587571b",
+     "status": "completed"
+    },
+    {
+     "request_id": "req_1534b3b47a5342afbe51b2016651eb8c",
+     "resolved_model": "gpt-6-luna",
+     "response_id": "resp_076f837a63269a16016ae87a595f2087d287d6e125a421ccb7",
+     "status": "completed"
+    }
+   ]
+  },
+  "simulated": false,
+  "tool_registry_version": "uc042-evidence-tools/1.0",
+  "usage": {
+   "cached_input_tokens": 57156,
+   "input_tokens": 79361,
+   "latency_seconds": 44.14,
+   "output_tokens": 4073,
+   "reasoning_tokens": 1651,
+   "total_tokens": 83434
+  },
+  "workflow_version": "uc042-investigation-graph/2.0-tools"
+ },
+ "open_questions": [
+  "Has a human reviewer independently confirmed the timing evidence and the continued OPEN status of the exception?",
+  "Are there contemporaneous workpapers or other records for a D+1 comparison beyond the internal reconciliation record, which says that comparison was not performed?",
+  "What evidence and review process supported the discrepancy log's RESOLVED status?"
+ ],
+ "original_evidence_status": "TIMING_EVIDENCED",
+ "original_exception_status": "OPEN",
+ "original_review_status": "AWAITING_HUMAN_REVIEW",
+ "overall_evidence_assessment": "PARTIALLY_SUFFICIENT",
+ "pack_content_sha256": "aaca8a8b7194f34b3122dfc2a3727d5c54e72593f4b23c306851889cc4fc2b2d",
+ "pack_id": "PACK-SC2-PER-2026-09-aaca8a8b7194",
+ "recommended_next_steps": [
+  {
+   "action": "Obtain and review any contemporaneous D+1 follow-up workpapers or confirmation from the responsible preparer explaining that no specific comparison was performed.",
+   "evidence_needed": "D+1 reconciliation workpapers, preparer confirmation, or other contemporaneous follow-up records for the settlement reference SB-GBP-20260915.",
+   "rationale": "The 2026-09-16 internal reconciliation reports that the D+1 comparison was not performed; additional records could clarify the follow-up performed without changing the engine outcome.",
+   "step_id": "S-01"
+  },
+  {
+   "action": "Obtain the human reviewer's assessment of the bank debit and the mismatch between the discrepancy-log and engine exception statuses.",
+   "evidence_needed": "Reviewer documentation addressing the bank entry dated 2026-09-16, the cash-book and batch records, and DL-0001's RESOLVED status.",
+   "rationale": "The engine states that human confirmation is pending, and the records show different statuses for the discrepancy log and exception.",
+   "step_id": "S-02"
+  }
+ ],
+ "statement": "AI investigation findings are an aid to human review. They do not change any deterministic control outcome, do not resolve or close any exception, and are not a compliance opinion.",
+ "tool_summary": {
+  "limits": {
+   "max_input_tokens": 150000,
+   "max_records_per_call": 25,
+   "max_rounds": 4,
+   "max_tool_calls": 8,
+   "max_total_records": 160,
+   "total_timeout": 300.0
+  },
+  "llm_calls": 4,
+  "records_final": 44,
+  "records_initial": 30,
+  "status": "COMPLETED",
+  "stop_reason": "final_answer",
+  "tool_calls_requested": 6,
+  "tool_rounds": 3,
+  "tools_deduplicated": 0,
+  "tools_executed": 6,
+  "tools_refused_budget": 0,
+  "tools_rejected_or_failed": 0,
+  "tools_used": [
+   "get_settlement_batch",
+   "get_reconciliation_evidence",
+   "follow_relationship",
+   "follow_relationship",
+   "follow_relationship",
+   "get_reconciliation_evidence"
+  ]
+ },
+ "validation_findings": [],
+ "validation_status": "VALID"
+}

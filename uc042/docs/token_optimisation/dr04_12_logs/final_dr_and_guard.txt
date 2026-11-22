@@ -1,0 +1,8 @@
+........................................................................................................................C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage4_dr06_dr07.py:124: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\artlptp263user\\p10\\uc042_token_optimisation\\uc042lib\\investigation\\packet_view.py' mode='r' encoding='utf-8'>
+  self.assertNotIn("no such edge", open(packet_view.__file__, encoding="utf-8").read())
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..............................
+----------------------------------------------------------------------
+Ran 150 tests in 214.355s
+
+OK

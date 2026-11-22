@@ -1,0 +1,29 @@
+{
+ "files": {
+  "final_pack.json": {
+   "media_type": "application/json",
+   "sha256": "86b813fc77656a4d699c2d05a32ec54b3461d257320fdea03a59b61fdaaa86e4",
+   "size_bytes": 195013
+  },
+  "report.html": {
+   "media_type": "text/html",
+   "sha256": "82f9a3da4a2134fd9a4db0df1be425633b588aa092848c6add59bf760e587f37",
+   "size_bytes": 111395
+  },
+  "report.pdf": {
+   "media_type": "application/pdf",
+   "sha256": "f5be438d6252aaf8a824f185f0340902364c30f88390e6f5659be1492fa858b9",
+   "size_bytes": 78866
+  }
+ },
+ "final_content_sha256": "b8dd53bd24494b3ad78d02de03b5c349ff1fa11d6372406981b17dc9145cfd85",
+ "final_pack_id": "FAP-H202602-PER-2026-02-v1-b8dd53bd2449",
+ "generation_record": {
+  "generated_at": "2026-11-04T05:47:45+00:00",
+  "review_decision_id": "RD-29e39d965f3ac4d29819ab84",
+  "source_pack_id": "PACK-H202602-PER-2026-02-195df2e1f216",
+  "supersedes_final_pack_id": null,
+  "version": 1
+ },
+ "renderer_version": "uc042-final-report-renderer/1.0"
+}

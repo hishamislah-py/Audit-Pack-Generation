@@ -1,0 +1,132 @@
+{
+ "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA — DEMONSTRATION ONLY — NOT REAL MOORWAND FINANCIAL RECORDS",
+ "period_id": "PER-2026-05",
+ "scenario_types": [
+  "Missing EUR bank statement",
+  "Unexplained GBP discrepancy"
+ ],
+ "expected_discrepancy_types": 2,
+ "planted": [
+  {
+   "scenario": "MISSING_EUR_STATEMENT",
+   "date": "2026-05-15",
+   "account": "SGA-EUR-01",
+   "removed": {
+    "IN-07": 1,
+    "IN-08": 1,
+    "IN-09": 5
+   },
+   "financial_impact": "none — evidence missing for one day; balances continue on the next statement",
+   "expected_engine": "INSUFFICIENT_EVIDENCE on SGA-EUR-01 2026-05-15 (bank evidence); one Critical MISSING_BANK_EVIDENCE exception; evidence_completeness INCOMPLETE; no balance substituted"
+  },
+  {
+   "scenario": "UNEXPLAINED_GBP_DIFFERENCE",
+   "account": "SGA-GBP-01",
+   "amount": "-1093.65",
+   "bank_reference": "SETTLE 0391",
+   "counterparty": "(blank)",
+   "difference_days": [
+    "2026-05-18",
+    "2026-05-19",
+    "2026-05-20"
+   ],
+   "debit_entry": "BE-GBP-0518-X01",
+   "return_entry": "BE-GBP-0521-X02",
+   "financial_impact": "bank balance 1093.65 below the ledger from 2026-05-18 15:20 until the return at 2026-05-21 10:05; nil at month end",
+   "expected_engine": "C08 FAIL −1093.65 on 3 day(s) 2026-05-18..2026-05-20 (NOT_EVIDENCED); unmatched bank entries BE-GBP-0518-X01 and BE-GBP-0521-X02; DISC-LOG FAIL (no log); cause unexplained"
+  }
+ ],
+ "expected_missing_records": [
+  {
+   "IN-07": 1,
+   "IN-08": 1,
+   "IN-09": 5,
+   "date": "2026-05-15",
+   "account": "SGA-EUR-01"
+  }
+ ],
+ "expected_reconciliation_outcome": {
+  "case_status": "EVIDENCE_INCOMPLETE",
+  "evidence_completeness": "INCOMPLETE",
+  "exceptions": 4,
+  "exception_root_causes": [
+   "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+   "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-05-18|-1093.65",
+   "UNMATCHED_BANK_ENTRY|BE-GBP-0518-X01",
+   "UNMATCHED_BANK_ENTRY|BE-GBP-0521-X02"
+  ],
+  "investigation_groups": [
+   "EXC-CASE-02; EXC-CASE-03; EXC-CASE-04"
+  ],
+  "all_exceptions_open": true
+ },
+ "evidence_relationships": "All planted records keep the project's reference keys: bank_reference / end_to_end_ref ↔ cash-book payment_reference; batch expected_bank_reference ↔ bank entry; settlement line txn_id ↔ transaction; refund original_txn_id.",
+ "basis_of_expectations": "Scenario design (generator mutations) confirmed by PRE-VALIDATION: the existing project engine run with the period patched in memory. Claude Code must reproduce these with the real period-configured engine.",
+ "pre_validation_observed": {
+  "case_status": "EVIDENCE_INCOMPLETE",
+  "results_by_outcome": {
+   "PASS": 1604,
+   "NOT_APPLICABLE": 76,
+   "INSUFFICIENT_EVIDENCE": 15,
+   "FAIL": 8
+  },
+  "exceptions": [
+   {
+    "exception_id": "EXC-CASE-01",
+    "severity": "Critical",
+    "category": "Missing bank evidence",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "amount": "",
+    "first_date": "2026-05-15",
+    "last_date": "2026-05-15",
+    "affected_results": 15,
+    "evidence_status": "",
+    "investigation_group_id": ""
+   },
+   {
+    "exception_id": "EXC-CASE-02",
+    "severity": "Critical",
+    "category": "Unexplained bank-ledger difference",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-05-18|-1093.65",
+    "amount": "-1093.65",
+    "first_date": "2026-05-18",
+    "last_date": "2026-05-20",
+    "affected_results": 4,
+    "evidence_status": "NOT_EVIDENCED",
+    "investigation_group_id": "GRP-CASE-01"
+   },
+   {
+    "exception_id": "EXC-CASE-03",
+    "severity": "High",
+    "category": "Bank entry with no counterpart",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0518-X01",
+    "amount": "-1093.65",
+    "first_date": "2026-05-18",
+    "last_date": "2026-05-18",
+    "affected_results": 2,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-01"
+   },
+   {
+    "exception_id": "EXC-CASE-04",
+    "severity": "High",
+    "category": "Bank entry with no counterpart",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0521-X02",
+    "amount": "1093.65",
+    "first_date": "2026-05-21",
+    "last_date": "2026-05-21",
+    "affected_results": 2,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-01"
+   }
+  ],
+  "groups": [
+   {
+    "group_id": "GRP-CASE-01",
+    "exception_ids": "EXC-CASE-02; EXC-CASE-03; EXC-CASE-04",
+    "link_types": "L1 REFERENCE; L3 LINEAGE"
+   }
+  ],
+  "policy_file_used": "safeguarding_reconciliation_policy_v1.2.pdf"
+ }
+}

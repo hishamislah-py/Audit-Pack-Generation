@@ -1,0 +1,5 @@
+     × explains a model refusal as a provider refusal, not validation 5ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/test/stage6Labels.test.ts > readableFailure: provider refusals (DR-11) > explains a model refusal as a provider refusal, not validation
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)

@@ -1,0 +1,412 @@
+{
+ "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA — DEMONSTRATION ONLY — NOT REAL MOORWAND FINANCIAL RECORDS",
+ "status": "DETERMINISTIC PACKS ONLY — PENDING REVIEW AND APPROVAL",
+ "not_generated": [
+  "AI investigations",
+  "AI closing summaries",
+  "final audit packs"
+ ],
+ "package": "UC042_JAN_AUG_HISTORICAL_DEMO",
+ "months": [
+  {
+   "period_id": "PER-2026-01",
+   "dataset": "datasets/2026-01",
+   "scenario_id": "H202601",
+   "dataset_manifest_sha256": "abfbcb0373d3baef6a35ed0249c762a7dbbc8885f0d3ad3d65f37259412ea422",
+   "policy_version": "1.1",
+   "policy_files_supplied": [
+    "supporting_documents/safeguarding_reconciliation_policy_v1.1.pdf"
+   ],
+   "policy_basis": "the single policy version the month supplies",
+   "pack_id": "PACK-H202601-PER-2026-01-bc596db0bfe6",
+   "pack_content_sha256": "bc596db0bfe689f3fbcbe8e70dab37d77a9b483572798d42c3ef5f8cd99da18c",
+   "processing_run_id": "RUN-48e233cc180b2be1",
+   "engine_case_status": "CLEAN",
+   "evidence_completeness": "COMPLETE",
+   "engine_results_by_outcome": {
+    "NOT_APPLICABLE": 88,
+    "PASS": 1795
+   },
+   "exceptions": [],
+   "investigation_groups": [],
+   "missing_evidence_items": 0
+  },
+  {
+   "period_id": "PER-2026-02",
+   "dataset": "datasets/2026-02",
+   "scenario_id": "H202602",
+   "dataset_manifest_sha256": "b9cfe9803464b73dfb5c7a84759552238330c05736cb5d3cce3423b8dc9cddd0",
+   "policy_version": "1.1",
+   "policy_files_supplied": [
+    "supporting_documents/safeguarding_reconciliation_policy_v1.1.pdf"
+   ],
+   "policy_basis": "the single policy version the month supplies",
+   "pack_id": "PACK-H202602-PER-2026-02-195df2e1f216",
+   "pack_content_sha256": "195df2e1f216149c7f6fc8c78520f10e4b57293cde2e206bdb2a66921695b9e5",
+   "processing_run_id": "RUN-54096bc7beb7afbd",
+   "engine_case_status": "EVIDENCE_INCOMPLETE",
+   "evidence_completeness": "INCOMPLETE",
+   "engine_results_by_outcome": {
+    "INSUFFICIENT_EVIDENCE": 15,
+    "NOT_APPLICABLE": 83,
+    "PASS": 1690
+   },
+   "exceptions": [
+    {
+     "exception_id": "EXC-H202602-01",
+     "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+     "status": "OPEN",
+     "investigation_group_id": ""
+    }
+   ],
+   "investigation_groups": [],
+   "missing_evidence_items": 1
+  },
+  {
+   "period_id": "PER-2026-03",
+   "dataset": "datasets/2026-03",
+   "scenario_id": "H202603",
+   "dataset_manifest_sha256": "79d2dad7d4c5c177dbcebd3378cd52507b22bb2566b09f6b2c989501259233ed",
+   "policy_version": "1.1",
+   "policy_files_supplied": [
+    "supporting_documents/safeguarding_reconciliation_policy_v1.1.pdf"
+   ],
+   "policy_basis": "the single policy version the month supplies",
+   "pack_id": "PACK-H202603-PER-2026-03-d1d37aea9c2b",
+   "pack_content_sha256": "d1d37aea9c2bb41a3a4b1e99a6c5d84e24b57911cad4be653308faa8ded7dedd",
+   "processing_run_id": "RUN-b1fc4d9ff2c582ce",
+   "engine_case_status": "EXCEPTIONS_OPEN",
+   "evidence_completeness": "COMPLETE",
+   "engine_results_by_outcome": {
+    "FAIL": 8,
+    "NOT_APPLICABLE": 89,
+    "PASS": 1875
+   },
+   "exceptions": [
+    {
+     "exception_id": "EXC-H202603-01",
+     "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-03-17|-517.30",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202603-01"
+    },
+    {
+     "exception_id": "EXC-H202603-02",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0317-X01",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202603-01"
+    },
+    {
+     "exception_id": "EXC-H202603-03",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0320-X02",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202603-01"
+    }
+   ],
+   "investigation_groups": [
+    {
+     "group_id": "GRP-H202603-01",
+     "exception_ids": "EXC-H202603-01; EXC-H202603-02; EXC-H202603-03",
+     "link_types": "L1 REFERENCE; L3 LINEAGE"
+    }
+   ],
+   "missing_evidence_items": 0
+  },
+  {
+   "period_id": "PER-2026-04",
+   "dataset": "datasets/2026-04",
+   "scenario_id": "H202604",
+   "dataset_manifest_sha256": "82181da9dad2e691730af0e6b979bcc49b392a4551b7be375d65099044d07002",
+   "policy_version": "1.1",
+   "policy_files_supplied": [
+    "supporting_documents/safeguarding_reconciliation_policy_v1.1.pdf"
+   ],
+   "policy_basis": "the single policy version the month supplies",
+   "pack_id": "PACK-H202604-PER-2026-04-a854c4a2bcfd",
+   "pack_content_sha256": "a854c4a2bcfd24cbd287dbddbeb2c56024c8c335ca7d4cef3c6ded3f058a46f4",
+   "processing_run_id": "RUN-51135d0c61c1d192",
+   "engine_case_status": "CLEAN",
+   "evidence_completeness": "COMPLETE",
+   "engine_results_by_outcome": {
+    "NOT_APPLICABLE": 84,
+    "PASS": 1717
+   },
+   "exceptions": [],
+   "investigation_groups": [],
+   "missing_evidence_items": 0
+  },
+  {
+   "period_id": "PER-2026-05",
+   "dataset": "datasets/2026-05",
+   "scenario_id": "H202605",
+   "dataset_manifest_sha256": "3db5ec2d5e01baf9cf1e8933f4d59ea70c0cd66721c6863c0ab040f0d65abcf4",
+   "policy_version": "1.2",
+   "policy_files_supplied": [
+    "supporting_documents/safeguarding_reconciliation_policy_v1.1.pdf",
+    "supporting_documents/safeguarding_reconciliation_policy_v1.2.pdf"
+   ],
+   "policy_basis": "two versions supplied (illustrative v1.1 for 1-6 May, v1.2 effective 2026-05-07); v1.2 selected as the version in force at the period end; identical results under v1.1 (isolated comparison); PENDING APPROVAL",
+   "pack_id": "PACK-H202605-PER-2026-05-051d209cccc4",
+   "pack_content_sha256": "051d209cccc40cdccb036303fda15a9caf8a1494600b3794bf49b453818323a8",
+   "processing_run_id": "RUN-debcc5113a1fd648",
+   "engine_case_status": "EVIDENCE_INCOMPLETE",
+   "evidence_completeness": "INCOMPLETE",
+   "engine_results_by_outcome": {
+    "FAIL": 8,
+    "INSUFFICIENT_EVIDENCE": 15,
+    "NOT_APPLICABLE": 76,
+    "PASS": 1604
+   },
+   "exceptions": [
+    {
+     "exception_id": "EXC-H202605-01",
+     "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+     "status": "OPEN",
+     "investigation_group_id": ""
+    },
+    {
+     "exception_id": "EXC-H202605-02",
+     "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-05-18|-1093.65",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202605-01"
+    },
+    {
+     "exception_id": "EXC-H202605-03",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0518-X01",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202605-01"
+    },
+    {
+     "exception_id": "EXC-H202605-04",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0521-X02",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202605-01"
+    }
+   ],
+   "investigation_groups": [
+    {
+     "group_id": "GRP-H202605-01",
+     "exception_ids": "EXC-H202605-02; EXC-H202605-03; EXC-H202605-04",
+     "link_types": "L1 REFERENCE; L3 LINEAGE"
+    }
+   ],
+   "missing_evidence_items": 1
+  },
+  {
+   "period_id": "PER-2026-06",
+   "dataset": "datasets/2026-06",
+   "scenario_id": "H202606",
+   "dataset_manifest_sha256": "5cd7be6f73738efb94f0d15025dd8e6b7fd3e35348c96d04fc3a186eeed32345",
+   "policy_version": "1.2",
+   "policy_files_supplied": [
+    "supporting_documents/safeguarding_reconciliation_policy_v1.2.pdf"
+   ],
+   "policy_basis": "the single policy version the month supplies",
+   "pack_id": "PACK-H202606-PER-2026-06-a07de266b389",
+   "pack_content_sha256": "a07de266b3895847580478c39608c25bd883040e54d3ebdf30b0e4e3ea25415b",
+   "processing_run_id": "RUN-9bcc21df9bc0b724",
+   "engine_case_status": "EXCEPTIONS_OPEN",
+   "evidence_completeness": "COMPLETE",
+   "engine_results_by_outcome": {
+    "FAIL": 4,
+    "NOT_APPLICABLE": 92,
+    "PASS": 1873
+   },
+   "exceptions": [
+    {
+     "exception_id": "EXC-H202606-01",
+     "root_cause": "C11-BATCH-BANK|SB-GBP-20260601",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202606-01"
+    },
+    {
+     "exception_id": "EXC-H202606-02",
+     "root_cause": "C11-BATCH-BANK|SB-GBP-20260610",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202606-02"
+    },
+    {
+     "exception_id": "EXC-H202606-03",
+     "root_cause": "CASH-BANK-LINK|LE-GBP-0601-0005",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202606-01"
+    },
+    {
+     "exception_id": "EXC-H202606-04",
+     "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0610-0005",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202606-02"
+    }
+   ],
+   "investigation_groups": [
+    {
+     "group_id": "GRP-H202606-01",
+     "exception_ids": "EXC-H202606-01; EXC-H202606-03",
+     "link_types": "L1 REFERENCE"
+    },
+    {
+     "group_id": "GRP-H202606-02",
+     "exception_ids": "EXC-H202606-02; EXC-H202606-04",
+     "link_types": "L1 REFERENCE"
+    }
+   ],
+   "missing_evidence_items": 0
+  },
+  {
+   "period_id": "PER-2026-07",
+   "dataset": "datasets/2026-07",
+   "scenario_id": "H202607",
+   "dataset_manifest_sha256": "3bb0c561145c99f73531fac935f72fbeada01c85a92ec37da95c2e4fc2b326d3",
+   "policy_version": "1.2",
+   "policy_files_supplied": [
+    "supporting_documents/safeguarding_reconciliation_policy_v1.2.pdf"
+   ],
+   "policy_basis": "the single policy version the month supplies",
+   "pack_id": "PACK-H202607-PER-2026-07-5d8714f8c422",
+   "pack_content_sha256": "5d8714f8c422fc97c278d111a07c426bdf0d9caaedb7372ede8df583fb3935f0",
+   "processing_run_id": "RUN-305b535377282040",
+   "engine_case_status": "EVIDENCE_INCOMPLETE",
+   "evidence_completeness": "INCOMPLETE",
+   "engine_results_by_outcome": {
+    "FAIL": 4,
+    "INSUFFICIENT_EVIDENCE": 15,
+    "NOT_APPLICABLE": 95,
+    "PASS": 1928
+   },
+   "exceptions": [
+    {
+     "exception_id": "EXC-H202607-01",
+     "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+     "status": "OPEN",
+     "investigation_group_id": ""
+    },
+    {
+     "exception_id": "EXC-H202607-02",
+     "root_cause": "C11-BATCH-BANK|SB-GBP-20260701",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202607-01"
+    },
+    {
+     "exception_id": "EXC-H202607-03",
+     "root_cause": "C11-BATCH-BANK|SB-GBP-20260710",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202607-02"
+    },
+    {
+     "exception_id": "EXC-H202607-04",
+     "root_cause": "CASH-BANK-LINK|LE-GBP-0701-0005",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202607-01"
+    },
+    {
+     "exception_id": "EXC-H202607-05",
+     "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202607-02"
+    }
+   ],
+   "investigation_groups": [
+    {
+     "group_id": "GRP-H202607-01",
+     "exception_ids": "EXC-H202607-02; EXC-H202607-04",
+     "link_types": "L1 REFERENCE"
+    },
+    {
+     "group_id": "GRP-H202607-02",
+     "exception_ids": "EXC-H202607-03; EXC-H202607-05",
+     "link_types": "L1 REFERENCE"
+    }
+   ],
+   "missing_evidence_items": 1
+  },
+  {
+   "period_id": "PER-2026-08",
+   "dataset": "datasets/2026-08",
+   "scenario_id": "H202608",
+   "dataset_manifest_sha256": "f9289f22fdde495c1262241ca8ee8c28cdec4b9c4ef637842fd087a018f741c7",
+   "policy_version": "1.2",
+   "policy_files_supplied": [
+    "supporting_documents/safeguarding_reconciliation_policy_v1.2.pdf"
+   ],
+   "policy_basis": "the single policy version the month supplies",
+   "pack_id": "PACK-H202608-PER-2026-08-22a356a95098",
+   "pack_content_sha256": "22a356a950989fac860341abfd1ade0f5f846129268f91f6b3acac26b291fc25",
+   "processing_run_id": "RUN-3007353c36a63fca",
+   "engine_case_status": "EVIDENCE_INCOMPLETE",
+   "evidence_completeness": "INCOMPLETE",
+   "engine_results_by_outcome": {
+    "FAIL": 12,
+    "INSUFFICIENT_EVIDENCE": 15,
+    "NOT_APPLICABLE": 80,
+    "PASS": 1718
+   },
+   "exceptions": [
+    {
+     "exception_id": "EXC-H202608-01",
+     "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-08-17|-276.90",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202608-01"
+    },
+    {
+     "exception_id": "EXC-H202608-02",
+     "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+     "status": "OPEN",
+     "investigation_group_id": ""
+    },
+    {
+     "exception_id": "EXC-H202608-03",
+     "root_cause": "C11-BATCH-BANK|SB-GBP-20260803",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202608-02"
+    },
+    {
+     "exception_id": "EXC-H202608-04",
+     "root_cause": "C11-BATCH-BANK|SB-GBP-20260810",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202608-03"
+    },
+    {
+     "exception_id": "EXC-H202608-05",
+     "root_cause": "CASH-BANK-LINK|LE-GBP-0803-0005",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202608-02"
+    },
+    {
+     "exception_id": "EXC-H202608-06",
+     "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0810-0005",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202608-03"
+    },
+    {
+     "exception_id": "EXC-H202608-07",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0817-X01",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202608-01"
+    },
+    {
+     "exception_id": "EXC-H202608-08",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0820-X02",
+     "status": "OPEN",
+     "investigation_group_id": "GRP-H202608-01"
+    }
+   ],
+   "investigation_groups": [
+    {
+     "group_id": "GRP-H202608-01",
+     "exception_ids": "EXC-H202608-01; EXC-H202608-07; EXC-H202608-08",
+     "link_types": "L1 REFERENCE; L3 LINEAGE"
+    },
+    {
+     "group_id": "GRP-H202608-02",
+     "exception_ids": "EXC-H202608-03; EXC-H202608-05",
+     "link_types": "L1 REFERENCE"
+    },
+    {
+     "group_id": "GRP-H202608-03",
+     "exception_ids": "EXC-H202608-04; EXC-H202608-06",
+     "link_types": "L1 REFERENCE"
+    }
+   ],
+   "missing_evidence_items": 1
+  }
+ ]
+}

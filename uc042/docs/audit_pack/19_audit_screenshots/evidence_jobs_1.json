@@ -1,0 +1,23 @@
+{
+ "J1_bogus_retry_of": [
+  422,
+  "VALIDATION_ERROR",
+  "retry_of must name an earlier job for the same exception"
+ ],
+ "J2_start_A": [
+  202,
+  "JOB-6732bf269bb93f11d5d4e0f2",
+  "QUEUED",
+  "16:08:55"
+ ],
+ "J3_duplicate_while_active": [
+  409,
+  "INVESTIGATION_ACTIVE",
+  "JOB-6732bf269bb93f11d5d4e0f2"
+ ],
+ "J4_case_ai_while_active": [
+  409,
+  "INVESTIGATION_ACTIVE"
+ ],
+ "J5_A_after_6s": "RUNNING"
+}

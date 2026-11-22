@@ -1,0 +1,3087 @@
+{
+ "2026-01": {
+  "seed": 20260142,
+  "opening": {
+   "clients": {
+    "GBP": {
+     "C0001": 3612500,
+     "C0002": 3108040,
+     "C0003": 2895575,
+     "C0004": 2702010,
+     "C0005": 2681960,
+     "C0006": 2534215,
+     "C0007": 2440380,
+     "C0008": 2365320
+    },
+    "EUR": {
+     "C0101": 2214060,
+     "C0102": 1786300,
+     "C0103": 1597425,
+     "C0104": 1512215
+    }
+   },
+   "cash": {
+    "GBP": 22340000,
+    "EUR": 7110000
+   },
+   "bank": {
+    "SGA-GBP-01": 22340000,
+    "SGA-EUR-01": 7110000,
+    "OWN-GBP-01": 50413600,
+    "OWN-EUR-01": 15108284
+   }
+  },
+  "closing": {
+   "clients": {
+    "GBP": {
+     "C0001": 2914206,
+     "C0002": 2678981,
+     "C0003": 2646861,
+     "C0004": 3008561,
+     "C0005": 2880178,
+     "C0006": 3093632,
+     "C0007": 2304304,
+     "C0008": 2844902
+    },
+    "EUR": {
+     "C0101": 1844733,
+     "C0102": 1768888,
+     "C0103": 1698292,
+     "C0104": 1856543
+    }
+   },
+   "cash": {
+    "GBP": 22371625,
+    "EUR": 7168456
+   },
+   "bank": {
+    "SGA-GBP-01": 22371625,
+    "SGA-EUR-01": 7168456,
+    "OWN-GBP-01": 50362579,
+    "OWN-EUR-01": 15097125
+   }
+  },
+  "expect": [],
+  "documents": [
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.1.pdf",
+    "status": "ILLUSTRATIVE_SYNTHETIC_DOCUMENT",
+    "applies": "2026-01-01 to 2026-01-31",
+    "basis": "assumption A1: no pre-v1.2 policy exists in the project; watermarked illustrative v1.1 with v1.2's rules"
+   },
+   {
+    "file_id": "IN-18",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no governance register for this month exists; the only register is the September 2026 document (allocation from 2026-05-07); not reused or fabricated (optional evidence)"
+   },
+   {
+    "file_id": "IN-19",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no REP027 receipt for the 2025-12 return exists; regulatory receipts are not fabricated (optional evidence)"
+   }
+  ],
+  "recon_days": [
+   "2026-01-02",
+   "2026-01-05",
+   "2026-01-06",
+   "2026-01-07",
+   "2026-01-08",
+   "2026-01-09",
+   "2026-01-12",
+   "2026-01-13",
+   "2026-01-14",
+   "2026-01-15",
+   "2026-01-16",
+   "2026-01-19",
+   "2026-01-20",
+   "2026-01-21",
+   "2026-01-22",
+   "2026-01-23",
+   "2026-01-26",
+   "2026-01-27",
+   "2026-01-28",
+   "2026-01-29",
+   "2026-01-30"
+  ],
+  "days": 31,
+  "prev_end": "2025-12-31",
+  "topups": {
+   "GBP": 51021,
+   "EUR": 11159
+  },
+  "manifest": [
+   {
+    "file_id": "IN-01",
+    "filename": "recon_calendar_2026-01.csv",
+    "relative_path": "source_data/recon_calendar_2026-01.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Reconciliation-day calendar",
+    "reporting_period": "PER-2026-01",
+    "record_count": "31",
+    "record_unit": "data_rows",
+    "sha256": "1d3491d51bf15633d4d895d9cb43f84d9e409b4c96afb1a022b81d3de65c4530",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-02",
+    "filename": "account_inventory.csv",
+    "relative_path": "source_data/account_inventory.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Institution and account inventory",
+    "reporting_period": "PER-2026-01",
+    "record_count": "4",
+    "record_unit": "data_rows",
+    "sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-03",
+    "filename": "client_balance_snapshots_2026-01.csv",
+    "relative_path": "source_data/client_balance_snapshots_2026-01.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client balance snapshots at each 17:00 point",
+    "reporting_period": "PER-2026-01",
+    "record_count": "264",
+    "record_unit": "data_rows",
+    "sha256": "9e3957d15d1330c460c36adc82727851393a9e20e2a7168505e66f17884e9c1b",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-04",
+    "filename": "unallocated_register_2026-01.csv",
+    "relative_path": "source_data/unallocated_register_2026-01.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Unallocated receipts register",
+    "reporting_period": "PER-2026-01",
+    "record_count": "1",
+    "record_unit": "data_rows",
+    "sha256": "ac69349d380c38756decf7bc2d3e57feec858ead2363f9771e8bdebc041cc0ce",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-05",
+    "filename": "internal_recon_records_2026-01.csv",
+    "relative_path": "source_data/internal_recon_records_2026-01.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Internal reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-01",
+    "record_count": "42",
+    "record_unit": "data_rows",
+    "sha256": "d885e47361483010a928fe32775df1f5ccf028428e8806fc0b4eeacd9d4569b8",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-06",
+    "filename": "external_recon_records_2026-01.csv",
+    "relative_path": "source_data/external_recon_records_2026-01.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "External reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-01",
+    "record_count": "42",
+    "record_unit": "data_rows",
+    "sha256": "68bb873b312ba181225cdc8a0971854965c51979d4b62d2387287e3918fd1b25",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-07",
+    "filename": "bank_balance_confirmations_2026-01.csv",
+    "relative_path": "source_data/bank_balance_confirmations_2026-01.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank balance confirmations at 17:00",
+    "reporting_period": "PER-2026-01",
+    "record_count": "42",
+    "record_unit": "data_rows",
+    "sha256": "e33ee3fe6d61d30634f0a8227f07a29b3c2c6f6ca321bd1f055edfd9f020b854",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-08",
+    "filename": "bank_statements_eod_2026-01.csv",
+    "relative_path": "source_data/bank_statements_eod_2026-01.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "End-of-day bank statement headers",
+    "reporting_period": "PER-2026-01",
+    "record_count": "84",
+    "record_unit": "data_rows",
+    "sha256": "1901f856681482bef8706cfd99f62dce4a216d6bb89050b9d1f2abdc7b9bc4f2",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-09",
+    "filename": "bank_statement_entries_2026-01.csv",
+    "relative_path": "source_data/bank_statement_entries_2026-01.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank statement entries",
+    "reporting_period": "PER-2026-01",
+    "record_count": "295",
+    "record_unit": "data_rows",
+    "sha256": "29b240b6fa76fdb87d4fd6eab4aa0f16469bcb7e5a2d1cf6a3bcc2005bb7ef04",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-10",
+    "filename": "sga_cashbook_entries_2026-01.csv",
+    "relative_path": "source_data/sga_cashbook_entries_2026-01.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding-account cash book (firm ledger)",
+    "reporting_period": "PER-2026-01",
+    "record_count": "255",
+    "record_unit": "data_rows",
+    "sha256": "b39c475d462d205c28d211eeb6b0d56243349ab4c9a5dd1d972b17311f5a8298",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-11",
+    "filename": "transactions_2026-01.csv",
+    "relative_path": "source_data/transactions_2026-01.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client transactions",
+    "reporting_period": "PER-2026-01",
+    "record_count": "444",
+    "record_unit": "data_rows",
+    "sha256": "eeb7fba173972e97bdd0fad71974a09902cee9d57879e42f3b454beee330e9a0",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-12",
+    "filename": "settlement_batches_2026-01.csv",
+    "relative_path": "source_data/settlement_batches_2026-01.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch headers (generic synthetic format)",
+    "reporting_period": "PER-2026-01",
+    "record_count": "84",
+    "record_unit": "data_rows",
+    "sha256": "e7f72767e8bda5dcc333d21cf01d7f19a31296e20912d35a6c2d2e614aa27d63",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-13",
+    "filename": "settlement_lines_2026-01.csv",
+    "relative_path": "source_data/settlement_lines_2026-01.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch lines",
+    "reporting_period": "PER-2026-01",
+    "record_count": "401",
+    "record_unit": "data_rows",
+    "sha256": "6259bf9651d7ee4acb79c674fc90edaded994a5da7ffd7caa3fad7fd9c4587a2",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-14",
+    "filename": "discrepancy_log_2026-01.csv",
+    "relative_path": "source_data/discrepancy_log_2026-01.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Discrepancy and corrective-action log",
+    "reporting_period": "PER-2026-01",
+    "record_count": "0",
+    "record_unit": "data_rows",
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-GBP-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-GBP-01",
+    "reporting_period": "PER-2026-01",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-EUR-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-EUR-01",
+    "reporting_period": "PER-2026-01",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.1.pdf",
+    "relative_path": "supporting_documents/safeguarding_reconciliation_policy_v1.1.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding reconciliation policy 1.1",
+    "reporting_period": "PER-2026-01",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "9015456f29d64c1d580d0fc956aa7c4964a224cb2a42a1c495dfb69a676d4d6a",
+    "synthetic": "YES"
+   }
+  ],
+  "ops_count": 0
+ },
+ "2026-02": {
+  "seed": 20260242,
+  "opening": {
+   "clients": {
+    "GBP": {
+     "C0001": 2914206,
+     "C0002": 2678981,
+     "C0003": 2646861,
+     "C0004": 3008561,
+     "C0005": 2880178,
+     "C0006": 3093632,
+     "C0007": 2304304,
+     "C0008": 2844902
+    },
+    "EUR": {
+     "C0101": 1844733,
+     "C0102": 1768888,
+     "C0103": 1698292,
+     "C0104": 1856543
+    }
+   },
+   "cash": {
+    "GBP": 22371625,
+    "EUR": 7168456
+   },
+   "bank": {
+    "SGA-GBP-01": 22371625,
+    "SGA-EUR-01": 7168456,
+    "OWN-GBP-01": 50362579,
+    "OWN-EUR-01": 15097125
+   }
+  },
+  "closing": {
+   "clients": {
+    "GBP": {
+     "C0001": 2582582,
+     "C0002": 2993500,
+     "C0003": 2969099,
+     "C0004": 3147080,
+     "C0005": 2608468,
+     "C0006": 2864396,
+     "C0007": 2710003,
+     "C0008": 2783150
+    },
+    "EUR": {
+     "C0101": 1933281,
+     "C0102": 1844582,
+     "C0103": 1857272,
+     "C0104": 1808754
+    }
+   },
+   "cash": {
+    "GBP": 22658278,
+    "EUR": 7443889
+   },
+   "bank": {
+    "SGA-GBP-01": 22658278,
+    "SGA-EUR-01": 7443889,
+    "OWN-GBP-01": 50310725,
+    "OWN-EUR-01": 15084202
+   }
+  },
+  "expect": [
+   {
+    "scenario": "MISSING_EUR_STATEMENT",
+    "date": "2026-02-16",
+    "account": "SGA-EUR-01",
+    "removed": {
+     "IN-07": 1,
+     "IN-08": 1,
+     "IN-09": 5
+    },
+    "financial_impact": "none \u2014 evidence missing for one day; balances continue on the next statement",
+    "expected_engine": "INSUFFICIENT_EVIDENCE on SGA-EUR-01 2026-02-16 (bank evidence); one Critical MISSING_BANK_EVIDENCE exception; evidence_completeness INCOMPLETE; no balance substituted"
+   }
+  ],
+  "documents": [
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.1.pdf",
+    "status": "ILLUSTRATIVE_SYNTHETIC_DOCUMENT",
+    "applies": "2026-02-01 to 2026-02-28",
+    "basis": "assumption A1: no pre-v1.2 policy exists in the project; watermarked illustrative v1.1 with v1.2's rules"
+   },
+   {
+    "file_id": "IN-18",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no governance register for this month exists; the only register is the September 2026 document (allocation from 2026-05-07); not reused or fabricated (optional evidence)"
+   },
+   {
+    "file_id": "IN-19",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no REP027 receipt for the 2026-01 return exists; regulatory receipts are not fabricated (optional evidence)"
+   }
+  ],
+  "recon_days": [
+   "2026-02-02",
+   "2026-02-03",
+   "2026-02-04",
+   "2026-02-05",
+   "2026-02-06",
+   "2026-02-09",
+   "2026-02-10",
+   "2026-02-11",
+   "2026-02-12",
+   "2026-02-13",
+   "2026-02-16",
+   "2026-02-17",
+   "2026-02-18",
+   "2026-02-19",
+   "2026-02-20",
+   "2026-02-23",
+   "2026-02-24",
+   "2026-02-25",
+   "2026-02-26",
+   "2026-02-27"
+  ],
+  "days": 28,
+  "prev_end": "2026-01-31",
+  "topups": {
+   "GBP": 51854,
+   "EUR": 12923
+  },
+  "manifest": [
+   {
+    "file_id": "IN-01",
+    "filename": "recon_calendar_2026-02.csv",
+    "relative_path": "source_data/recon_calendar_2026-02.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Reconciliation-day calendar",
+    "reporting_period": "PER-2026-02",
+    "record_count": "28",
+    "record_unit": "data_rows",
+    "sha256": "5a235c57dcc0a8a8955cf84e0c39d71caead4e88f69b22f04bd162fe60572b4c",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-02",
+    "filename": "account_inventory.csv",
+    "relative_path": "source_data/account_inventory.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Institution and account inventory",
+    "reporting_period": "PER-2026-02",
+    "record_count": "4",
+    "record_unit": "data_rows",
+    "sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-03",
+    "filename": "client_balance_snapshots_2026-02.csv",
+    "relative_path": "source_data/client_balance_snapshots_2026-02.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client balance snapshots at each 17:00 point",
+    "reporting_period": "PER-2026-02",
+    "record_count": "252",
+    "record_unit": "data_rows",
+    "sha256": "e6f6909f86b405f6cd258d6944ec389154bbbfe32cd5703d3c0b3a38e23f84e1",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-04",
+    "filename": "unallocated_register_2026-02.csv",
+    "relative_path": "source_data/unallocated_register_2026-02.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Unallocated receipts register",
+    "reporting_period": "PER-2026-02",
+    "record_count": "1",
+    "record_unit": "data_rows",
+    "sha256": "35a7607dba9e32932b870b4295d36548344e571b64d88cab578e602961918858",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-05",
+    "filename": "internal_recon_records_2026-02.csv",
+    "relative_path": "source_data/internal_recon_records_2026-02.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Internal reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-02",
+    "record_count": "40",
+    "record_unit": "data_rows",
+    "sha256": "65119291b367220e3d4e78c4261e0044182d4068fab1b41f46025f4db538d78f",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-06",
+    "filename": "external_recon_records_2026-02.csv",
+    "relative_path": "source_data/external_recon_records_2026-02.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "External reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-02",
+    "record_count": "40",
+    "record_unit": "data_rows",
+    "sha256": "e36a4e0878e1dfcce73392e4362ee455e76014db8a34c78a14319f80655ddad8",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-07",
+    "filename": "bank_balance_confirmations_2026-02.csv",
+    "relative_path": "source_data/bank_balance_confirmations_2026-02.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank balance confirmations at 17:00",
+    "reporting_period": "PER-2026-02",
+    "record_count": "39",
+    "record_unit": "data_rows",
+    "sha256": "36059dfcc574c4b8c5d7ebd0da1c9f7028de3347d0829a04d7d6bb63095e3b2e",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-08",
+    "filename": "bank_statements_eod_2026-02.csv",
+    "relative_path": "source_data/bank_statements_eod_2026-02.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "End-of-day bank statement headers",
+    "reporting_period": "PER-2026-02",
+    "record_count": "79",
+    "record_unit": "data_rows",
+    "sha256": "c6efb4dd5374c18fed0ce2d9543e7fb94545f2af52ba079ad5cd43e8e5847323",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-09",
+    "filename": "bank_statement_entries_2026-02.csv",
+    "relative_path": "source_data/bank_statement_entries_2026-02.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank statement entries",
+    "reporting_period": "PER-2026-02",
+    "record_count": "274",
+    "record_unit": "data_rows",
+    "sha256": "68bd93eb4f5368efa040103e59acfa61882131fcfdd0591cd09065d2eff63900",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-10",
+    "filename": "sga_cashbook_entries_2026-02.csv",
+    "relative_path": "source_data/sga_cashbook_entries_2026-02.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding-account cash book (firm ledger)",
+    "reporting_period": "PER-2026-02",
+    "record_count": "241",
+    "record_unit": "data_rows",
+    "sha256": "eeee206bc7e3339abec853074f10a16496d5c4bfe2b0f505367319aaa93dd900",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-11",
+    "filename": "transactions_2026-02.csv",
+    "relative_path": "source_data/transactions_2026-02.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client transactions",
+    "reporting_period": "PER-2026-02",
+    "record_count": "421",
+    "record_unit": "data_rows",
+    "sha256": "18e58a805044e04d2a1b2479b5957d5f0de75741a9fa15f0aa402f92668ec0c8",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-12",
+    "filename": "settlement_batches_2026-02.csv",
+    "relative_path": "source_data/settlement_batches_2026-02.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch headers (generic synthetic format)",
+    "reporting_period": "PER-2026-02",
+    "record_count": "80",
+    "record_unit": "data_rows",
+    "sha256": "f6f65035d3d96c7a7a1463138704f7f9b1e94494c6bd02e81ced3771bd467f90",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-13",
+    "filename": "settlement_lines_2026-02.csv",
+    "relative_path": "source_data/settlement_lines_2026-02.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch lines",
+    "reporting_period": "PER-2026-02",
+    "record_count": "382",
+    "record_unit": "data_rows",
+    "sha256": "6c26e0c8e0d2ea3842c3af3eb9622c44a1579434147c22f6380f9ff1d8c940c4",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-14",
+    "filename": "discrepancy_log_2026-02.csv",
+    "relative_path": "source_data/discrepancy_log_2026-02.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Discrepancy and corrective-action log",
+    "reporting_period": "PER-2026-02",
+    "record_count": "0",
+    "record_unit": "data_rows",
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-GBP-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-GBP-01",
+    "reporting_period": "PER-2026-02",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-EUR-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-EUR-01",
+    "reporting_period": "PER-2026-02",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.1.pdf",
+    "relative_path": "supporting_documents/safeguarding_reconciliation_policy_v1.1.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding reconciliation policy 1.1",
+    "reporting_period": "PER-2026-02",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "9015456f29d64c1d580d0fc956aa7c4964a224cb2a42a1c495dfb69a676d4d6a",
+    "synthetic": "YES"
+   }
+  ],
+  "ops_count": 7
+ },
+ "2026-03": {
+  "seed": 20260342,
+  "opening": {
+   "clients": {
+    "GBP": {
+     "C0001": 2582582,
+     "C0002": 2993500,
+     "C0003": 2969099,
+     "C0004": 3147080,
+     "C0005": 2608468,
+     "C0006": 2864396,
+     "C0007": 2710003,
+     "C0008": 2783150
+    },
+    "EUR": {
+     "C0101": 1933281,
+     "C0102": 1844582,
+     "C0103": 1857272,
+     "C0104": 1808754
+    }
+   },
+   "cash": {
+    "GBP": 22658278,
+    "EUR": 7443889
+   },
+   "bank": {
+    "SGA-GBP-01": 22658278,
+    "SGA-EUR-01": 7443889,
+    "OWN-GBP-01": 50310725,
+    "OWN-EUR-01": 15084202
+   }
+  },
+  "closing": {
+   "clients": {
+    "GBP": {
+     "C0001": 2777119,
+     "C0002": 2777052,
+     "C0003": 3044571,
+     "C0004": 2781450,
+     "C0005": 2924206,
+     "C0006": 2633016,
+     "C0007": 3245416,
+     "C0008": 3306764
+    },
+    "EUR": {
+     "C0101": 1836257,
+     "C0102": 1913203,
+     "C0103": 1790766,
+     "C0104": 1819449
+    }
+   },
+   "cash": {
+    "GBP": 23489594,
+    "EUR": 7359675
+   },
+   "bank": {
+    "SGA-GBP-01": 23489594,
+    "SGA-EUR-01": 7359675,
+    "OWN-GBP-01": 50257657,
+    "OWN-EUR-01": 15069288
+   }
+  },
+  "expect": [
+   {
+    "scenario": "UNEXPLAINED_GBP_DIFFERENCE",
+    "account": "SGA-GBP-01",
+    "amount": "-517.30",
+    "bank_reference": "SETTLE 0263",
+    "counterparty": "(blank)",
+    "difference_days": [
+     "2026-03-17",
+     "2026-03-18",
+     "2026-03-19"
+    ],
+    "debit_entry": "BE-GBP-0317-X01",
+    "return_entry": "BE-GBP-0320-X02",
+    "financial_impact": "bank balance 517.30 below the ledger from 2026-03-17 15:20 until the return at 2026-03-20 10:05; nil at month end",
+    "expected_engine": "C08 FAIL \u2212517.30 on 3 day(s) 2026-03-17..2026-03-19 (NOT_EVIDENCED); unmatched bank entries BE-GBP-0317-X01 and BE-GBP-0320-X02; DISC-LOG FAIL (no log); cause unexplained"
+   }
+  ],
+  "documents": [
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.1.pdf",
+    "status": "ILLUSTRATIVE_SYNTHETIC_DOCUMENT",
+    "applies": "2026-03-01 to 2026-03-31",
+    "basis": "assumption A1: no pre-v1.2 policy exists in the project; watermarked illustrative v1.1 with v1.2's rules"
+   },
+   {
+    "file_id": "IN-18",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no governance register for this month exists; the only register is the September 2026 document (allocation from 2026-05-07); not reused or fabricated (optional evidence)"
+   },
+   {
+    "file_id": "IN-19",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no REP027 receipt for the 2026-02 return exists; regulatory receipts are not fabricated (optional evidence)"
+   }
+  ],
+  "recon_days": [
+   "2026-03-02",
+   "2026-03-03",
+   "2026-03-04",
+   "2026-03-05",
+   "2026-03-06",
+   "2026-03-09",
+   "2026-03-10",
+   "2026-03-11",
+   "2026-03-12",
+   "2026-03-13",
+   "2026-03-16",
+   "2026-03-17",
+   "2026-03-18",
+   "2026-03-19",
+   "2026-03-20",
+   "2026-03-23",
+   "2026-03-24",
+   "2026-03-25",
+   "2026-03-26",
+   "2026-03-27",
+   "2026-03-30",
+   "2026-03-31"
+  ],
+  "days": 31,
+  "prev_end": "2026-02-28",
+  "topups": {
+   "GBP": 53068,
+   "EUR": 14914
+  },
+  "manifest": [
+   {
+    "file_id": "IN-01",
+    "filename": "recon_calendar_2026-03.csv",
+    "relative_path": "source_data/recon_calendar_2026-03.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Reconciliation-day calendar",
+    "reporting_period": "PER-2026-03",
+    "record_count": "31",
+    "record_unit": "data_rows",
+    "sha256": "89ff18b7f97be609622a73f3c18989ab316b3cb90b769c5b321c029eab7ef639",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-02",
+    "filename": "account_inventory.csv",
+    "relative_path": "source_data/account_inventory.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Institution and account inventory",
+    "reporting_period": "PER-2026-03",
+    "record_count": "4",
+    "record_unit": "data_rows",
+    "sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-03",
+    "filename": "client_balance_snapshots_2026-03.csv",
+    "relative_path": "source_data/client_balance_snapshots_2026-03.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client balance snapshots at each 17:00 point",
+    "reporting_period": "PER-2026-03",
+    "record_count": "276",
+    "record_unit": "data_rows",
+    "sha256": "ab76aa1e63853ad25e81e1f55ad6a04e33c36b02a78d5aaa08190cc88d7a382a",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-04",
+    "filename": "unallocated_register_2026-03.csv",
+    "relative_path": "source_data/unallocated_register_2026-03.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Unallocated receipts register",
+    "reporting_period": "PER-2026-03",
+    "record_count": "1",
+    "record_unit": "data_rows",
+    "sha256": "6dfb9a80bb8f26178cdd2a540b3c869c95b0e1d51b28df9caa5b31f46d015e7f",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-05",
+    "filename": "internal_recon_records_2026-03.csv",
+    "relative_path": "source_data/internal_recon_records_2026-03.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Internal reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-03",
+    "record_count": "44",
+    "record_unit": "data_rows",
+    "sha256": "50843b56c11d1393804b7dfa417e20aeacfcf56990d4fa86a9bae807aa8412be",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-06",
+    "filename": "external_recon_records_2026-03.csv",
+    "relative_path": "source_data/external_recon_records_2026-03.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "External reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-03",
+    "record_count": "44",
+    "record_unit": "data_rows",
+    "sha256": "7b7ac757ab22986d796b17c1444b184a4094efd278ffaa95fc627d36407a8494",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-07",
+    "filename": "bank_balance_confirmations_2026-03.csv",
+    "relative_path": "source_data/bank_balance_confirmations_2026-03.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank balance confirmations at 17:00",
+    "reporting_period": "PER-2026-03",
+    "record_count": "44",
+    "record_unit": "data_rows",
+    "sha256": "3fda5e42b038ae327fc18b0b7e5568b19c6ecdcb0885791900cb932fe499532d",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-08",
+    "filename": "bank_statements_eod_2026-03.csv",
+    "relative_path": "source_data/bank_statements_eod_2026-03.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "End-of-day bank statement headers",
+    "reporting_period": "PER-2026-03",
+    "record_count": "88",
+    "record_unit": "data_rows",
+    "sha256": "a1ea0fbac49958353a06687d39a6e4005790e868bada56642375e36f176bd473",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-09",
+    "filename": "bank_statement_entries_2026-03.csv",
+    "relative_path": "source_data/bank_statement_entries_2026-03.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank statement entries",
+    "reporting_period": "PER-2026-03",
+    "record_count": "310",
+    "record_unit": "data_rows",
+    "sha256": "184083bab8b3af838b1203afb469487d8c68c8493946d79b3869f2cbf654e933",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-10",
+    "filename": "sga_cashbook_entries_2026-03.csv",
+    "relative_path": "source_data/sga_cashbook_entries_2026-03.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding-account cash book (firm ledger)",
+    "reporting_period": "PER-2026-03",
+    "record_count": "266",
+    "record_unit": "data_rows",
+    "sha256": "72936345f798780e5fd10ed1e942328b13e1ce0777a226f85015231fadf01a66",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-11",
+    "filename": "transactions_2026-03.csv",
+    "relative_path": "source_data/transactions_2026-03.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client transactions",
+    "reporting_period": "PER-2026-03",
+    "record_count": "464",
+    "record_unit": "data_rows",
+    "sha256": "4b67a025f5dfe6d98b346bb166170d1114602db8af1a76cff0e7dbc8ff2d0111",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-12",
+    "filename": "settlement_batches_2026-03.csv",
+    "relative_path": "source_data/settlement_batches_2026-03.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch headers (generic synthetic format)",
+    "reporting_period": "PER-2026-03",
+    "record_count": "88",
+    "record_unit": "data_rows",
+    "sha256": "f7d61e9e57b74c4bef8b351ba4d29c70331c02002112d534df272a1c19a2ca66",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-13",
+    "filename": "settlement_lines_2026-03.csv",
+    "relative_path": "source_data/settlement_lines_2026-03.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch lines",
+    "reporting_period": "PER-2026-03",
+    "record_count": "420",
+    "record_unit": "data_rows",
+    "sha256": "325bd83dfbba13cdb0a52098d0a3b47e8f7fce5b051e5e518d7aae2b5e2f42bb",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-14",
+    "filename": "discrepancy_log_2026-03.csv",
+    "relative_path": "source_data/discrepancy_log_2026-03.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Discrepancy and corrective-action log",
+    "reporting_period": "PER-2026-03",
+    "record_count": "0",
+    "record_unit": "data_rows",
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-GBP-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-GBP-01",
+    "reporting_period": "PER-2026-03",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-EUR-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-EUR-01",
+    "reporting_period": "PER-2026-03",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.1.pdf",
+    "relative_path": "supporting_documents/safeguarding_reconciliation_policy_v1.1.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding reconciliation policy 1.1",
+    "reporting_period": "PER-2026-03",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "9015456f29d64c1d580d0fc956aa7c4964a224cb2a42a1c495dfb69a676d4d6a",
+    "synthetic": "YES"
+   }
+  ],
+  "ops_count": 19
+ },
+ "2026-04": {
+  "seed": 20260442,
+  "opening": {
+   "clients": {
+    "GBP": {
+     "C0001": 2777119,
+     "C0002": 2777052,
+     "C0003": 3044571,
+     "C0004": 2781450,
+     "C0005": 2924206,
+     "C0006": 2633016,
+     "C0007": 3245416,
+     "C0008": 3306764
+    },
+    "EUR": {
+     "C0101": 1836257,
+     "C0102": 1913203,
+     "C0103": 1790766,
+     "C0104": 1819449
+    }
+   },
+   "cash": {
+    "GBP": 23489594,
+    "EUR": 7359675
+   },
+   "bank": {
+    "SGA-GBP-01": 23489594,
+    "SGA-EUR-01": 7359675,
+    "OWN-GBP-01": 50257657,
+    "OWN-EUR-01": 15069288
+   }
+  },
+  "closing": {
+   "clients": {
+    "GBP": {
+     "C0001": 2859187,
+     "C0002": 2863242,
+     "C0003": 2805170,
+     "C0004": 2663778,
+     "C0005": 3165917,
+     "C0006": 2987662,
+     "C0007": 3177962,
+     "C0008": 2813449
+    },
+    "EUR": {
+     "C0101": 1947860,
+     "C0102": 2030135,
+     "C0103": 1755788,
+     "C0104": 1928761
+    }
+   },
+   "cash": {
+    "GBP": 23336367,
+    "EUR": 7662544
+   },
+   "bank": {
+    "SGA-GBP-01": 23336367,
+    "SGA-EUR-01": 7662544,
+    "OWN-GBP-01": 50203335,
+    "OWN-EUR-01": 15053878
+   }
+  },
+  "expect": [],
+  "documents": [
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.1.pdf",
+    "status": "ILLUSTRATIVE_SYNTHETIC_DOCUMENT",
+    "applies": "2026-04-01 to 2026-04-30",
+    "basis": "assumption A1: no pre-v1.2 policy exists in the project; watermarked illustrative v1.1 with v1.2's rules"
+   },
+   {
+    "file_id": "IN-18",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no governance register for this month exists; the only register is the September 2026 document (allocation from 2026-05-07); not reused or fabricated (optional evidence)"
+   },
+   {
+    "file_id": "IN-19",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no REP027 receipt for the 2026-03 return exists; regulatory receipts are not fabricated (optional evidence)"
+   }
+  ],
+  "recon_days": [
+   "2026-04-01",
+   "2026-04-02",
+   "2026-04-07",
+   "2026-04-08",
+   "2026-04-09",
+   "2026-04-10",
+   "2026-04-13",
+   "2026-04-14",
+   "2026-04-15",
+   "2026-04-16",
+   "2026-04-17",
+   "2026-04-20",
+   "2026-04-21",
+   "2026-04-22",
+   "2026-04-23",
+   "2026-04-24",
+   "2026-04-27",
+   "2026-04-28",
+   "2026-04-29",
+   "2026-04-30"
+  ],
+  "days": 30,
+  "prev_end": "2026-03-31",
+  "topups": {
+   "GBP": 54322,
+   "EUR": 15410
+  },
+  "manifest": [
+   {
+    "file_id": "IN-01",
+    "filename": "recon_calendar_2026-04.csv",
+    "relative_path": "source_data/recon_calendar_2026-04.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Reconciliation-day calendar",
+    "reporting_period": "PER-2026-04",
+    "record_count": "30",
+    "record_unit": "data_rows",
+    "sha256": "24e0c567da6322d95aa445d217361e374336d8b4be817476c750f919d91017f5",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-02",
+    "filename": "account_inventory.csv",
+    "relative_path": "source_data/account_inventory.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Institution and account inventory",
+    "reporting_period": "PER-2026-04",
+    "record_count": "4",
+    "record_unit": "data_rows",
+    "sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-03",
+    "filename": "client_balance_snapshots_2026-04.csv",
+    "relative_path": "source_data/client_balance_snapshots_2026-04.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client balance snapshots at each 17:00 point",
+    "reporting_period": "PER-2026-04",
+    "record_count": "252",
+    "record_unit": "data_rows",
+    "sha256": "c200e35750e23e08e2251c0335533182d0fa680ce54601972ba23dd42f647db0",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-04",
+    "filename": "unallocated_register_2026-04.csv",
+    "relative_path": "source_data/unallocated_register_2026-04.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Unallocated receipts register",
+    "reporting_period": "PER-2026-04",
+    "record_count": "1",
+    "record_unit": "data_rows",
+    "sha256": "a9625de4501bbd4957e38c7a975dfdb4ee3b04a901607cf84d58d278e929264e",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-05",
+    "filename": "internal_recon_records_2026-04.csv",
+    "relative_path": "source_data/internal_recon_records_2026-04.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Internal reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-04",
+    "record_count": "40",
+    "record_unit": "data_rows",
+    "sha256": "93189146e6a5b781165dd2e5e1c09bf448e9ea9de70103b59f9ada4eb3f36904",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-06",
+    "filename": "external_recon_records_2026-04.csv",
+    "relative_path": "source_data/external_recon_records_2026-04.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "External reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-04",
+    "record_count": "40",
+    "record_unit": "data_rows",
+    "sha256": "9a707c1b42f0bed08e0cf9b95ee3136542d57f493b39f76b9112596fa0567d89",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-07",
+    "filename": "bank_balance_confirmations_2026-04.csv",
+    "relative_path": "source_data/bank_balance_confirmations_2026-04.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank balance confirmations at 17:00",
+    "reporting_period": "PER-2026-04",
+    "record_count": "40",
+    "record_unit": "data_rows",
+    "sha256": "9b9f517b5fffbb2f4c81ca464fb5011dd5e1d6f0bfbe81a2c5697044904b8168",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-08",
+    "filename": "bank_statements_eod_2026-04.csv",
+    "relative_path": "source_data/bank_statements_eod_2026-04.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "End-of-day bank statement headers",
+    "reporting_period": "PER-2026-04",
+    "record_count": "80",
+    "record_unit": "data_rows",
+    "sha256": "34792549ebb93aaf1a36b22e2756f2ae53965fb0783b38fbdaf7568a53564c8b",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-09",
+    "filename": "bank_statement_entries_2026-04.csv",
+    "relative_path": "source_data/bank_statement_entries_2026-04.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank statement entries",
+    "reporting_period": "PER-2026-04",
+    "record_count": "284",
+    "record_unit": "data_rows",
+    "sha256": "f5e98fdf67f9de81eb96636b8a41ff7d0fe9925dd5f7f62eac1a051dacf22a44",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-10",
+    "filename": "sga_cashbook_entries_2026-04.csv",
+    "relative_path": "source_data/sga_cashbook_entries_2026-04.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding-account cash book (firm ledger)",
+    "reporting_period": "PER-2026-04",
+    "record_count": "246",
+    "record_unit": "data_rows",
+    "sha256": "fc5652e5536322d5bff969a23ce1af6587af9004ca0421d9c64d492cb2625eaa",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-11",
+    "filename": "transactions_2026-04.csv",
+    "relative_path": "source_data/transactions_2026-04.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client transactions",
+    "reporting_period": "PER-2026-04",
+    "record_count": "426",
+    "record_unit": "data_rows",
+    "sha256": "1b254b1050703a06e835fea37209fcaa6fa4cfa3b29d3640532fec4bb826d8a2",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-12",
+    "filename": "settlement_batches_2026-04.csv",
+    "relative_path": "source_data/settlement_batches_2026-04.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch headers (generic synthetic format)",
+    "reporting_period": "PER-2026-04",
+    "record_count": "80",
+    "record_unit": "data_rows",
+    "sha256": "fd22e52ed317b71ad2d12407e9d55d34dc3cca643128156edc67201a643ca322",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-13",
+    "filename": "settlement_lines_2026-04.csv",
+    "relative_path": "source_data/settlement_lines_2026-04.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch lines",
+    "reporting_period": "PER-2026-04",
+    "record_count": "382",
+    "record_unit": "data_rows",
+    "sha256": "442141a6b08e5466849fc2f9a29067e13b2e9fea53d3adffc4cc3897c031af81",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-14",
+    "filename": "discrepancy_log_2026-04.csv",
+    "relative_path": "source_data/discrepancy_log_2026-04.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Discrepancy and corrective-action log",
+    "reporting_period": "PER-2026-04",
+    "record_count": "0",
+    "record_unit": "data_rows",
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-GBP-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-GBP-01",
+    "reporting_period": "PER-2026-04",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-EUR-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-EUR-01",
+    "reporting_period": "PER-2026-04",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.1.pdf",
+    "relative_path": "supporting_documents/safeguarding_reconciliation_policy_v1.1.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding reconciliation policy 1.1",
+    "reporting_period": "PER-2026-04",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "9015456f29d64c1d580d0fc956aa7c4964a224cb2a42a1c495dfb69a676d4d6a",
+    "synthetic": "YES"
+   }
+  ],
+  "ops_count": 0
+ },
+ "2026-05": {
+  "seed": 20260542,
+  "opening": {
+   "clients": {
+    "GBP": {
+     "C0001": 2859187,
+     "C0002": 2863242,
+     "C0003": 2805170,
+     "C0004": 2663778,
+     "C0005": 3165917,
+     "C0006": 2987662,
+     "C0007": 3177962,
+     "C0008": 2813449
+    },
+    "EUR": {
+     "C0101": 1947860,
+     "C0102": 2030135,
+     "C0103": 1755788,
+     "C0104": 1928761
+    }
+   },
+   "cash": {
+    "GBP": 23336367,
+    "EUR": 7662544
+   },
+   "bank": {
+    "SGA-GBP-01": 23336367,
+    "SGA-EUR-01": 7662544,
+    "OWN-GBP-01": 50203335,
+    "OWN-EUR-01": 15053878
+   }
+  },
+  "closing": {
+   "clients": {
+    "GBP": {
+     "C0001": 3003700,
+     "C0002": 2550503,
+     "C0003": 2786823,
+     "C0004": 3386637,
+     "C0005": 3453062,
+     "C0006": 3278889,
+     "C0007": 3092710,
+     "C0008": 2817442
+    },
+    "EUR": {
+     "C0101": 1862923,
+     "C0102": 1993840,
+     "C0103": 1959917,
+     "C0104": 1789101
+    }
+   },
+   "cash": {
+    "GBP": 24369766,
+    "EUR": 7605781
+   },
+   "bank": {
+    "SGA-GBP-01": 24369766,
+    "SGA-EUR-01": 7605781,
+    "OWN-GBP-01": 50158480,
+    "OWN-EUR-01": 15041072
+   }
+  },
+  "expect": [
+   {
+    "scenario": "MISSING_EUR_STATEMENT",
+    "date": "2026-05-15",
+    "account": "SGA-EUR-01",
+    "removed": {
+     "IN-07": 1,
+     "IN-08": 1,
+     "IN-09": 5
+    },
+    "financial_impact": "none \u2014 evidence missing for one day; balances continue on the next statement",
+    "expected_engine": "INSUFFICIENT_EVIDENCE on SGA-EUR-01 2026-05-15 (bank evidence); one Critical MISSING_BANK_EVIDENCE exception; evidence_completeness INCOMPLETE; no balance substituted"
+   },
+   {
+    "scenario": "UNEXPLAINED_GBP_DIFFERENCE",
+    "account": "SGA-GBP-01",
+    "amount": "-1093.65",
+    "bank_reference": "SETTLE 0391",
+    "counterparty": "(blank)",
+    "difference_days": [
+     "2026-05-18",
+     "2026-05-19",
+     "2026-05-20"
+    ],
+    "debit_entry": "BE-GBP-0518-X01",
+    "return_entry": "BE-GBP-0521-X02",
+    "financial_impact": "bank balance 1093.65 below the ledger from 2026-05-18 15:20 until the return at 2026-05-21 10:05; nil at month end",
+    "expected_engine": "C08 FAIL \u22121093.65 on 3 day(s) 2026-05-18..2026-05-20 (NOT_EVIDENCED); unmatched bank entries BE-GBP-0518-X01 and BE-GBP-0521-X02; DISC-LOG FAIL (no log); cause unexplained"
+   }
+  ],
+  "documents": [
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.1.pdf",
+    "status": "ILLUSTRATIVE_SYNTHETIC_DOCUMENT",
+    "applies": "2026-05-01 to 2026-05-06",
+    "basis": "assumption A1: no pre-v1.2 policy exists in the project; watermarked illustrative v1.1 with v1.2's rules"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.2.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "applies": "2026-05-07 to 2026-05-31",
+    "basis": "existing synthetic policy v1.2, effective 2026-05-07"
+   },
+   {
+    "file_id": "IN-18",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no governance register for this month exists; the only register is the September 2026 document (allocation from 2026-05-07); not reused or fabricated (optional evidence)"
+   },
+   {
+    "file_id": "IN-19",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no REP027 receipt for the 2026-04 return exists; regulatory receipts are not fabricated (optional evidence)"
+   }
+  ],
+  "recon_days": [
+   "2026-05-01",
+   "2026-05-05",
+   "2026-05-06",
+   "2026-05-07",
+   "2026-05-08",
+   "2026-05-11",
+   "2026-05-12",
+   "2026-05-13",
+   "2026-05-14",
+   "2026-05-15",
+   "2026-05-18",
+   "2026-05-19",
+   "2026-05-20",
+   "2026-05-21",
+   "2026-05-22",
+   "2026-05-26",
+   "2026-05-27",
+   "2026-05-28",
+   "2026-05-29"
+  ],
+  "days": 31,
+  "prev_end": "2026-04-30",
+  "topups": {
+   "GBP": 44855,
+   "EUR": 12806
+  },
+  "manifest": [
+   {
+    "file_id": "IN-01",
+    "filename": "recon_calendar_2026-05.csv",
+    "relative_path": "source_data/recon_calendar_2026-05.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Reconciliation-day calendar",
+    "reporting_period": "PER-2026-05",
+    "record_count": "31",
+    "record_unit": "data_rows",
+    "sha256": "a3b371cf9f5551c30550a8c0ab62c4c163ee1a6f0df3cdf71bc1fa86d73d4bec",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-02",
+    "filename": "account_inventory.csv",
+    "relative_path": "source_data/account_inventory.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Institution and account inventory",
+    "reporting_period": "PER-2026-05",
+    "record_count": "4",
+    "record_unit": "data_rows",
+    "sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-03",
+    "filename": "client_balance_snapshots_2026-05.csv",
+    "relative_path": "source_data/client_balance_snapshots_2026-05.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client balance snapshots at each 17:00 point",
+    "reporting_period": "PER-2026-05",
+    "record_count": "240",
+    "record_unit": "data_rows",
+    "sha256": "701c940aa243eac6d16db26e030987aa387b85105e3b329a0b3e7965d79ee84b",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-04",
+    "filename": "unallocated_register_2026-05.csv",
+    "relative_path": "source_data/unallocated_register_2026-05.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Unallocated receipts register",
+    "reporting_period": "PER-2026-05",
+    "record_count": "1",
+    "record_unit": "data_rows",
+    "sha256": "f974d953de41734c89456216ee71a0ed1948b169ee9ee78456b3043f3c571ae9",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-05",
+    "filename": "internal_recon_records_2026-05.csv",
+    "relative_path": "source_data/internal_recon_records_2026-05.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Internal reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-05",
+    "record_count": "38",
+    "record_unit": "data_rows",
+    "sha256": "05820e2f012c1c3669b7537bd6840f38732878f5c576c80661aecc6c187d8bbd",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-06",
+    "filename": "external_recon_records_2026-05.csv",
+    "relative_path": "source_data/external_recon_records_2026-05.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "External reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-05",
+    "record_count": "38",
+    "record_unit": "data_rows",
+    "sha256": "5ae7b7fab7dd2c798b48251a453eaead66bb9ce30120e598de806736afa3b49c",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-07",
+    "filename": "bank_balance_confirmations_2026-05.csv",
+    "relative_path": "source_data/bank_balance_confirmations_2026-05.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank balance confirmations at 17:00",
+    "reporting_period": "PER-2026-05",
+    "record_count": "37",
+    "record_unit": "data_rows",
+    "sha256": "dba9a06e8430860de227ea139c8cf8dbd5aa070e73f747b240f8276c6a375469",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-08",
+    "filename": "bank_statements_eod_2026-05.csv",
+    "relative_path": "source_data/bank_statements_eod_2026-05.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "End-of-day bank statement headers",
+    "reporting_period": "PER-2026-05",
+    "record_count": "75",
+    "record_unit": "data_rows",
+    "sha256": "8dbd26cdae225c3c8e539c007b742c304e277ba79349ea4b0e5ee732947e3c0d",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-09",
+    "filename": "bank_statement_entries_2026-05.csv",
+    "relative_path": "source_data/bank_statement_entries_2026-05.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank statement entries",
+    "reporting_period": "PER-2026-05",
+    "record_count": "262",
+    "record_unit": "data_rows",
+    "sha256": "891030d571e6cd84d02361d6bce14117ca035cdde40614ca8030cda42514a25c",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-10",
+    "filename": "sga_cashbook_entries_2026-05.csv",
+    "relative_path": "source_data/sga_cashbook_entries_2026-05.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding-account cash book (firm ledger)",
+    "reporting_period": "PER-2026-05",
+    "record_count": "229",
+    "record_unit": "data_rows",
+    "sha256": "3bdefebb97e8a0592a3fc1d6412dcccc3a744dd94a964658ea54d62301075d78",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-11",
+    "filename": "transactions_2026-05.csv",
+    "relative_path": "source_data/transactions_2026-05.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client transactions",
+    "reporting_period": "PER-2026-05",
+    "record_count": "400",
+    "record_unit": "data_rows",
+    "sha256": "83476bbc6d8395180b238fd547cbf7e2258bac8b02083180b1df9266a87eedd2",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-12",
+    "filename": "settlement_batches_2026-05.csv",
+    "relative_path": "source_data/settlement_batches_2026-05.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch headers (generic synthetic format)",
+    "reporting_period": "PER-2026-05",
+    "record_count": "76",
+    "record_unit": "data_rows",
+    "sha256": "fa48f68c7ec27530e0bb44591af32e6fc092c65d89fc4c99ab73845000bebd58",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-13",
+    "filename": "settlement_lines_2026-05.csv",
+    "relative_path": "source_data/settlement_lines_2026-05.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch lines",
+    "reporting_period": "PER-2026-05",
+    "record_count": "363",
+    "record_unit": "data_rows",
+    "sha256": "dcc25dbeb53261ed9c71868a8597d4b54f8ac2f6d37962f1bb4b54eaca5a5a3f",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-14",
+    "filename": "discrepancy_log_2026-05.csv",
+    "relative_path": "source_data/discrepancy_log_2026-05.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Discrepancy and corrective-action log",
+    "reporting_period": "PER-2026-05",
+    "record_count": "0",
+    "record_unit": "data_rows",
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-GBP-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-GBP-01",
+    "reporting_period": "PER-2026-05",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-EUR-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-EUR-01",
+    "reporting_period": "PER-2026-05",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.1.pdf",
+    "relative_path": "supporting_documents/safeguarding_reconciliation_policy_v1.1.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding reconciliation policy 1.1",
+    "reporting_period": "PER-2026-05",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "9015456f29d64c1d580d0fc956aa7c4964a224cb2a42a1c495dfb69a676d4d6a",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.2.pdf",
+    "relative_path": "supporting_documents/safeguarding_reconciliation_policy_v1.2.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding reconciliation policy 1.2",
+    "reporting_period": "PER-2026-05",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "b136586f843384284da370cedfe17637338e5e9d0bbc485d79b9e82c7de5c561",
+    "synthetic": "YES"
+   }
+  ],
+  "ops_count": 26
+ },
+ "2026-06": {
+  "seed": 20260642,
+  "opening": {
+   "clients": {
+    "GBP": {
+     "C0001": 3003700,
+     "C0002": 2550503,
+     "C0003": 2786823,
+     "C0004": 3386637,
+     "C0005": 3453062,
+     "C0006": 3278889,
+     "C0007": 3092710,
+     "C0008": 2817442
+    },
+    "EUR": {
+     "C0101": 1862923,
+     "C0102": 1993840,
+     "C0103": 1959917,
+     "C0104": 1789101
+    }
+   },
+   "cash": {
+    "GBP": 24369766,
+    "EUR": 7605781
+   },
+   "bank": {
+    "SGA-GBP-01": 24369766,
+    "SGA-EUR-01": 7605781,
+    "OWN-GBP-01": 50158480,
+    "OWN-EUR-01": 15041072
+   }
+  },
+  "closing": {
+   "clients": {
+    "GBP": {
+     "C0001": 3055571,
+     "C0002": 3033834,
+     "C0003": 3000693,
+     "C0004": 2965676,
+     "C0005": 2968722,
+     "C0006": 3193032,
+     "C0007": 2855570,
+     "C0008": 3004199
+    },
+    "EUR": {
+     "C0101": 1862166,
+     "C0102": 2078661,
+     "C0103": 1992400,
+     "C0104": 1912665
+    }
+   },
+   "cash": {
+    "GBP": 24077297,
+    "EUR": 7845892
+   },
+   "bank": {
+    "SGA-GBP-01": 24077297,
+    "SGA-EUR-01": 7845892,
+    "OWN-GBP-01": 50105801,
+    "OWN-EUR-01": 15025587
+   }
+  },
+  "expect": [
+   {
+    "scenario": "INCONSISTENT_SETTLEMENT_REFERENCE",
+    "account": "SGA-GBP-01",
+    "batch_without_bank_reference": "SB-GBP-20260610",
+    "batch_with_two_bank_entries": "SB-GBP-20260601",
+    "bank_entry": "BE-GBP-0610-SB1",
+    "financial_impact": "none \u2014 amount and balances unchanged; only the reference is wrong",
+    "expected_engine": "C11-BATCH-BANK FAIL for SB-GBP-20260610 and SB-GBP-20260601 (no amount-only matching); cash-book link exceptions for the affected references"
+   }
+  ],
+  "documents": [
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.2.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "applies": "2026-06-01 to 2026-06-30",
+    "basis": "existing synthetic policy v1.2, effective 2026-05-07"
+   },
+   {
+    "file_id": "IN-18",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no governance register for this month exists; the only register is the September 2026 document (allocation from 2026-05-07); not reused or fabricated (optional evidence)"
+   },
+   {
+    "file_id": "IN-19",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no REP027 receipt for the 2026-05 return exists; regulatory receipts are not fabricated (optional evidence)"
+   }
+  ],
+  "recon_days": [
+   "2026-06-01",
+   "2026-06-02",
+   "2026-06-03",
+   "2026-06-04",
+   "2026-06-05",
+   "2026-06-08",
+   "2026-06-09",
+   "2026-06-10",
+   "2026-06-11",
+   "2026-06-12",
+   "2026-06-15",
+   "2026-06-16",
+   "2026-06-17",
+   "2026-06-18",
+   "2026-06-19",
+   "2026-06-22",
+   "2026-06-23",
+   "2026-06-24",
+   "2026-06-25",
+   "2026-06-26",
+   "2026-06-29",
+   "2026-06-30"
+  ],
+  "days": 30,
+  "prev_end": "2026-05-31",
+  "topups": {
+   "GBP": 52679,
+   "EUR": 15485
+  },
+  "manifest": [
+   {
+    "file_id": "IN-01",
+    "filename": "recon_calendar_2026-06.csv",
+    "relative_path": "source_data/recon_calendar_2026-06.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Reconciliation-day calendar",
+    "reporting_period": "PER-2026-06",
+    "record_count": "30",
+    "record_unit": "data_rows",
+    "sha256": "93d897febf14bb273313b5327f33266e475dc190bb444f54cfb186ecf0cd1905",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-02",
+    "filename": "account_inventory.csv",
+    "relative_path": "source_data/account_inventory.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Institution and account inventory",
+    "reporting_period": "PER-2026-06",
+    "record_count": "4",
+    "record_unit": "data_rows",
+    "sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-03",
+    "filename": "client_balance_snapshots_2026-06.csv",
+    "relative_path": "source_data/client_balance_snapshots_2026-06.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client balance snapshots at each 17:00 point",
+    "reporting_period": "PER-2026-06",
+    "record_count": "276",
+    "record_unit": "data_rows",
+    "sha256": "11bd0bc69bef475d5f44c539218104713556d4495355def8fc20f465b99b5635",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-04",
+    "filename": "unallocated_register_2026-06.csv",
+    "relative_path": "source_data/unallocated_register_2026-06.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Unallocated receipts register",
+    "reporting_period": "PER-2026-06",
+    "record_count": "1",
+    "record_unit": "data_rows",
+    "sha256": "1719fcb152d4405ea8067a741df0b5c8617401c1ea2ed145d1a40729b622d5ed",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-05",
+    "filename": "internal_recon_records_2026-06.csv",
+    "relative_path": "source_data/internal_recon_records_2026-06.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Internal reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-06",
+    "record_count": "44",
+    "record_unit": "data_rows",
+    "sha256": "7882f0c5eb3eab4a213098e9d06eb4351e9da1c1588504aa82cdc08e84b145b6",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-06",
+    "filename": "external_recon_records_2026-06.csv",
+    "relative_path": "source_data/external_recon_records_2026-06.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "External reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-06",
+    "record_count": "44",
+    "record_unit": "data_rows",
+    "sha256": "31279d4152615e2c98435df9bfb5521fb015663e48058f75db778d779bf11084",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-07",
+    "filename": "bank_balance_confirmations_2026-06.csv",
+    "relative_path": "source_data/bank_balance_confirmations_2026-06.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank balance confirmations at 17:00",
+    "reporting_period": "PER-2026-06",
+    "record_count": "44",
+    "record_unit": "data_rows",
+    "sha256": "778d2a5e095184dd58bf68df47d62cfb060a35d7665f5756e8118452514802fe",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-08",
+    "filename": "bank_statements_eod_2026-06.csv",
+    "relative_path": "source_data/bank_statements_eod_2026-06.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "End-of-day bank statement headers",
+    "reporting_period": "PER-2026-06",
+    "record_count": "88",
+    "record_unit": "data_rows",
+    "sha256": "b7369e26435b186c04736b010e0b46a80bc1517a50b781bc81896bd932dff56f",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-09",
+    "filename": "bank_statement_entries_2026-06.csv",
+    "relative_path": "source_data/bank_statement_entries_2026-06.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank statement entries",
+    "reporting_period": "PER-2026-06",
+    "record_count": "308",
+    "record_unit": "data_rows",
+    "sha256": "ed3fb8053cb18b64809c75934af8730d29b8515996dcb6b404e9d906ae17dad1",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-10",
+    "filename": "sga_cashbook_entries_2026-06.csv",
+    "relative_path": "source_data/sga_cashbook_entries_2026-06.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding-account cash book (firm ledger)",
+    "reporting_period": "PER-2026-06",
+    "record_count": "266",
+    "record_unit": "data_rows",
+    "sha256": "62ea3804f903540447fdd90041312d792c01f4616d6c4769421a038804ea7439",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-11",
+    "filename": "transactions_2026-06.csv",
+    "relative_path": "source_data/transactions_2026-06.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client transactions",
+    "reporting_period": "PER-2026-06",
+    "record_count": "464",
+    "record_unit": "data_rows",
+    "sha256": "ac630dba4e81184b622498c6ae18aab74e3c4b7db5e42b8b32ed4100c56055ef",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-12",
+    "filename": "settlement_batches_2026-06.csv",
+    "relative_path": "source_data/settlement_batches_2026-06.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch headers (generic synthetic format)",
+    "reporting_period": "PER-2026-06",
+    "record_count": "88",
+    "record_unit": "data_rows",
+    "sha256": "68a38f5c80ef8fea9395e8c1a8d7ff17b98ad3a22c73d55a011cdd08364ad44b",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-13",
+    "filename": "settlement_lines_2026-06.csv",
+    "relative_path": "source_data/settlement_lines_2026-06.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch lines",
+    "reporting_period": "PER-2026-06",
+    "record_count": "420",
+    "record_unit": "data_rows",
+    "sha256": "5d5333ed5fad5ff196ab7ca670df75a36f672721b6ca8e3cced851e9c58f3fc5",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-14",
+    "filename": "discrepancy_log_2026-06.csv",
+    "relative_path": "source_data/discrepancy_log_2026-06.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Discrepancy and corrective-action log",
+    "reporting_period": "PER-2026-06",
+    "record_count": "0",
+    "record_unit": "data_rows",
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-GBP-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-GBP-01",
+    "reporting_period": "PER-2026-06",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-EUR-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-EUR-01",
+    "reporting_period": "PER-2026-06",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.2.pdf",
+    "relative_path": "supporting_documents/safeguarding_reconciliation_policy_v1.2.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding reconciliation policy 1.2",
+    "reporting_period": "PER-2026-06",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "b136586f843384284da370cedfe17637338e5e9d0bbc485d79b9e82c7de5c561",
+    "synthetic": "YES"
+   }
+  ],
+  "ops_count": 1
+ },
+ "2026-07": {
+  "seed": 20260742,
+  "opening": {
+   "clients": {
+    "GBP": {
+     "C0001": 3055571,
+     "C0002": 3033834,
+     "C0003": 3000693,
+     "C0004": 2965676,
+     "C0005": 2968722,
+     "C0006": 3193032,
+     "C0007": 2855570,
+     "C0008": 3004199
+    },
+    "EUR": {
+     "C0101": 1862166,
+     "C0102": 2078661,
+     "C0103": 1992400,
+     "C0104": 1912665
+    }
+   },
+   "cash": {
+    "GBP": 24077297,
+    "EUR": 7845892
+   },
+   "bank": {
+    "SGA-GBP-01": 24077297,
+    "SGA-EUR-01": 7845892,
+    "OWN-GBP-01": 50105801,
+    "OWN-EUR-01": 15025587
+   }
+  },
+  "closing": {
+   "clients": {
+    "GBP": {
+     "C0001": 2866906,
+     "C0002": 3089964,
+     "C0003": 2976516,
+     "C0004": 2979201,
+     "C0005": 3072067,
+     "C0006": 3147626,
+     "C0007": 3182496,
+     "C0008": 3347813
+    },
+    "EUR": {
+     "C0101": 1809834,
+     "C0102": 1932678,
+     "C0103": 2090115,
+     "C0104": 2040001
+    }
+   },
+   "cash": {
+    "GBP": 24662589,
+    "EUR": 7872628
+   },
+   "bank": {
+    "SGA-GBP-01": 24662589,
+    "SGA-EUR-01": 7872628,
+    "OWN-GBP-01": 50050858,
+    "OWN-EUR-01": 15011560
+   }
+  },
+  "expect": [
+   {
+    "scenario": "MISSING_EUR_STATEMENT",
+    "date": "2026-07-15",
+    "account": "SGA-EUR-01",
+    "removed": {
+     "IN-07": 1,
+     "IN-08": 1,
+     "IN-09": 5
+    },
+    "financial_impact": "none \u2014 evidence missing for one day; balances continue on the next statement",
+    "expected_engine": "INSUFFICIENT_EVIDENCE on SGA-EUR-01 2026-07-15 (bank evidence); one Critical MISSING_BANK_EVIDENCE exception; evidence_completeness INCOMPLETE; no balance substituted"
+   },
+   {
+    "scenario": "INCONSISTENT_SETTLEMENT_REFERENCE",
+    "account": "SGA-GBP-01",
+    "batch_without_bank_reference": "SB-GBP-20260710",
+    "batch_with_two_bank_entries": "SB-GBP-20260701",
+    "bank_entry": "BE-GBP-0710-SB1",
+    "financial_impact": "none \u2014 amount and balances unchanged; only the reference is wrong",
+    "expected_engine": "C11-BATCH-BANK FAIL for SB-GBP-20260710 and SB-GBP-20260701 (no amount-only matching); cash-book link exceptions for the affected references"
+   }
+  ],
+  "documents": [
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.2.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "applies": "2026-07-01 to 2026-07-31",
+    "basis": "existing synthetic policy v1.2, effective 2026-05-07"
+   },
+   {
+    "file_id": "IN-18",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no governance register for this month exists; the only register is the September 2026 document (allocation from 2026-05-07); not reused or fabricated (optional evidence)"
+   },
+   {
+    "file_id": "IN-19",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no REP027 receipt for the 2026-06 return exists; regulatory receipts are not fabricated (optional evidence)"
+   }
+  ],
+  "recon_days": [
+   "2026-07-01",
+   "2026-07-02",
+   "2026-07-03",
+   "2026-07-06",
+   "2026-07-07",
+   "2026-07-08",
+   "2026-07-09",
+   "2026-07-10",
+   "2026-07-13",
+   "2026-07-14",
+   "2026-07-15",
+   "2026-07-16",
+   "2026-07-17",
+   "2026-07-20",
+   "2026-07-21",
+   "2026-07-22",
+   "2026-07-23",
+   "2026-07-24",
+   "2026-07-27",
+   "2026-07-28",
+   "2026-07-29",
+   "2026-07-30",
+   "2026-07-31"
+  ],
+  "days": 31,
+  "prev_end": "2026-06-30",
+  "topups": {
+   "GBP": 54943,
+   "EUR": 14027
+  },
+  "manifest": [
+   {
+    "file_id": "IN-01",
+    "filename": "recon_calendar_2026-07.csv",
+    "relative_path": "source_data/recon_calendar_2026-07.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Reconciliation-day calendar",
+    "reporting_period": "PER-2026-07",
+    "record_count": "31",
+    "record_unit": "data_rows",
+    "sha256": "db27122a6a6a3085ce328c170f57acbf1b36635b890e5138fd9887b31d97e442",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-02",
+    "filename": "account_inventory.csv",
+    "relative_path": "source_data/account_inventory.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Institution and account inventory",
+    "reporting_period": "PER-2026-07",
+    "record_count": "4",
+    "record_unit": "data_rows",
+    "sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-03",
+    "filename": "client_balance_snapshots_2026-07.csv",
+    "relative_path": "source_data/client_balance_snapshots_2026-07.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client balance snapshots at each 17:00 point",
+    "reporting_period": "PER-2026-07",
+    "record_count": "288",
+    "record_unit": "data_rows",
+    "sha256": "4ced8d6fe7b47a52f24f276fb29739e4077c77c5689a2f75bc7e4608361d6d8b",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-04",
+    "filename": "unallocated_register_2026-07.csv",
+    "relative_path": "source_data/unallocated_register_2026-07.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Unallocated receipts register",
+    "reporting_period": "PER-2026-07",
+    "record_count": "1",
+    "record_unit": "data_rows",
+    "sha256": "5c39dc21d2be3c616141d65650cfda886da2d7c453e40bfd01557c178f75e4ba",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-05",
+    "filename": "internal_recon_records_2026-07.csv",
+    "relative_path": "source_data/internal_recon_records_2026-07.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Internal reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-07",
+    "record_count": "46",
+    "record_unit": "data_rows",
+    "sha256": "d1e6dd4e477bbd0ffda27a47dd0e75c11f1601bb75fae73391074ba7c8ba662b",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-06",
+    "filename": "external_recon_records_2026-07.csv",
+    "relative_path": "source_data/external_recon_records_2026-07.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "External reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-07",
+    "record_count": "46",
+    "record_unit": "data_rows",
+    "sha256": "69faca6792b976a1c0b9a3d29b395cf5ce4a3e430e1306309d3f6ded7336c252",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-07",
+    "filename": "bank_balance_confirmations_2026-07.csv",
+    "relative_path": "source_data/bank_balance_confirmations_2026-07.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank balance confirmations at 17:00",
+    "reporting_period": "PER-2026-07",
+    "record_count": "45",
+    "record_unit": "data_rows",
+    "sha256": "6426e711343dd4b59b2d97c571ab407d2a8159868e621c8c965b6e6ea1cfee05",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-08",
+    "filename": "bank_statements_eod_2026-07.csv",
+    "relative_path": "source_data/bank_statements_eod_2026-07.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "End-of-day bank statement headers",
+    "reporting_period": "PER-2026-07",
+    "record_count": "91",
+    "record_unit": "data_rows",
+    "sha256": "72baf998a078be34846bf3d62e89d09d4479abb0fb65c7a54134f6284075009e",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-09",
+    "filename": "bank_statement_entries_2026-07.csv",
+    "relative_path": "source_data/bank_statement_entries_2026-07.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank statement entries",
+    "reporting_period": "PER-2026-07",
+    "record_count": "311",
+    "record_unit": "data_rows",
+    "sha256": "03d02048ad8378e0033f58866a0132b5059f9ddc205fffd0d09adfd3ad04ca8e",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-10",
+    "filename": "sga_cashbook_entries_2026-07.csv",
+    "relative_path": "source_data/sga_cashbook_entries_2026-07.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding-account cash book (firm ledger)",
+    "reporting_period": "PER-2026-07",
+    "record_count": "272",
+    "record_unit": "data_rows",
+    "sha256": "2b7e6475aaed48484a93dc6430756f17f2e681cc7b6c6e95674222509bac0925",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-11",
+    "filename": "transactions_2026-07.csv",
+    "relative_path": "source_data/transactions_2026-07.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client transactions",
+    "reporting_period": "PER-2026-07",
+    "record_count": "479",
+    "record_unit": "data_rows",
+    "sha256": "67738c9ec908e424bbfe4552ca73690a825f148f81a3ef6dc92467449f1a82a1",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-12",
+    "filename": "settlement_batches_2026-07.csv",
+    "relative_path": "source_data/settlement_batches_2026-07.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch headers (generic synthetic format)",
+    "reporting_period": "PER-2026-07",
+    "record_count": "92",
+    "record_unit": "data_rows",
+    "sha256": "f6a992ac828d618fc49d431d451198c95cd2be65eb166781097edadbcb939f49",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-13",
+    "filename": "settlement_lines_2026-07.csv",
+    "relative_path": "source_data/settlement_lines_2026-07.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch lines",
+    "reporting_period": "PER-2026-07",
+    "record_count": "439",
+    "record_unit": "data_rows",
+    "sha256": "1a6659f0705cd8d3f4212c0152d1c40f3ff997ce2b64a434c8c145d6a4d731a3",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-14",
+    "filename": "discrepancy_log_2026-07.csv",
+    "relative_path": "source_data/discrepancy_log_2026-07.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Discrepancy and corrective-action log",
+    "reporting_period": "PER-2026-07",
+    "record_count": "0",
+    "record_unit": "data_rows",
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-GBP-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-GBP-01",
+    "reporting_period": "PER-2026-07",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-EUR-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-EUR-01",
+    "reporting_period": "PER-2026-07",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.2.pdf",
+    "relative_path": "supporting_documents/safeguarding_reconciliation_policy_v1.2.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding reconciliation policy 1.2",
+    "reporting_period": "PER-2026-07",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "b136586f843384284da370cedfe17637338e5e9d0bbc485d79b9e82c7de5c561",
+    "synthetic": "YES"
+   }
+  ],
+  "ops_count": 8
+ },
+ "2026-08": {
+  "seed": 20260842,
+  "opening": {
+   "clients": {
+    "GBP": {
+     "C0001": 2866906,
+     "C0002": 3089964,
+     "C0003": 2976516,
+     "C0004": 2979201,
+     "C0005": 3072067,
+     "C0006": 3147626,
+     "C0007": 3182496,
+     "C0008": 3347813
+    },
+    "EUR": {
+     "C0101": 1809834,
+     "C0102": 1932678,
+     "C0103": 2090115,
+     "C0104": 2040001
+    }
+   },
+   "cash": {
+    "GBP": 24662589,
+    "EUR": 7872628
+   },
+   "bank": {
+    "SGA-GBP-01": 24662589,
+    "SGA-EUR-01": 7872628,
+    "OWN-GBP-01": 50050858,
+    "OWN-EUR-01": 15011560
+   }
+  },
+  "closing": {
+   "clients": {
+    "GBP": {
+     "C0001": 4000000,
+     "C0002": 3500000,
+     "C0003": 3250000,
+     "C0004": 3000000,
+     "C0005": 3000000,
+     "C0006": 2850000,
+     "C0007": 2750000,
+     "C0008": 2650000
+    },
+    "EUR": {
+     "C0101": 2500000,
+     "C0102": 2000000,
+     "C0103": 1800000,
+     "C0104": 1700000
+    }
+   },
+   "cash": {
+    "GBP": 25000000,
+    "EUR": 8000000
+   },
+   "bank": {
+    "SGA-GBP-01": 25000000,
+    "SGA-EUR-01": 8000000,
+    "OWN-GBP-01": 50000000,
+    "OWN-EUR-01": 15000000
+   }
+  },
+  "expect": [
+   {
+    "scenario": "MISSING_EUR_STATEMENT",
+    "date": "2026-08-17",
+    "account": "SGA-EUR-01",
+    "removed": {
+     "IN-07": 1,
+     "IN-08": 1,
+     "IN-09": 5
+    },
+    "financial_impact": "none \u2014 evidence missing for one day; balances continue on the next statement",
+    "expected_engine": "INSUFFICIENT_EVIDENCE on SGA-EUR-01 2026-08-17 (bank evidence); one Critical MISSING_BANK_EVIDENCE exception; evidence_completeness INCOMPLETE; no balance substituted"
+   },
+   {
+    "scenario": "UNEXPLAINED_GBP_DIFFERENCE",
+    "account": "SGA-GBP-01",
+    "amount": "-276.90",
+    "bank_reference": "SETTLE 0528",
+    "counterparty": "(blank)",
+    "difference_days": [
+     "2026-08-17",
+     "2026-08-18",
+     "2026-08-19"
+    ],
+    "debit_entry": "BE-GBP-0817-X01",
+    "return_entry": "BE-GBP-0820-X02",
+    "financial_impact": "bank balance 276.90 below the ledger from 2026-08-17 15:20 until the return at 2026-08-20 10:05; nil at month end",
+    "expected_engine": "C08 FAIL \u2212276.90 on 3 day(s) 2026-08-17..2026-08-19 (NOT_EVIDENCED); unmatched bank entries BE-GBP-0817-X01 and BE-GBP-0820-X02; DISC-LOG FAIL (no log); cause unexplained"
+   },
+   {
+    "scenario": "INCONSISTENT_SETTLEMENT_REFERENCE",
+    "account": "SGA-GBP-01",
+    "batch_without_bank_reference": "SB-GBP-20260810",
+    "batch_with_two_bank_entries": "SB-GBP-20260803",
+    "bank_entry": "BE-GBP-0810-SB1",
+    "financial_impact": "none \u2014 amount and balances unchanged; only the reference is wrong",
+    "expected_engine": "C11-BATCH-BANK FAIL for SB-GBP-20260810 and SB-GBP-20260803 (no amount-only matching); cash-book link exceptions for the affected references"
+   }
+  ],
+  "documents": [
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.2.pdf",
+    "status": "REUSED_STANDING_DOCUMENT",
+    "applies": "2026-08-01 to 2026-08-31",
+    "basis": "existing synthetic policy v1.2, effective 2026-05-07"
+   },
+   {
+    "file_id": "IN-18",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no governance register for this month exists; the only register is the September 2026 document (allocation from 2026-05-07); not reused or fabricated (optional evidence)"
+   },
+   {
+    "file_id": "IN-19",
+    "filename": "",
+    "status": "UNAVAILABLE",
+    "basis": "no REP027 receipt for the 2026-07 return exists; regulatory receipts are not fabricated (optional evidence)"
+   }
+  ],
+  "recon_days": [
+   "2026-08-03",
+   "2026-08-04",
+   "2026-08-05",
+   "2026-08-06",
+   "2026-08-07",
+   "2026-08-10",
+   "2026-08-11",
+   "2026-08-12",
+   "2026-08-13",
+   "2026-08-14",
+   "2026-08-17",
+   "2026-08-18",
+   "2026-08-19",
+   "2026-08-20",
+   "2026-08-21",
+   "2026-08-24",
+   "2026-08-25",
+   "2026-08-26",
+   "2026-08-27",
+   "2026-08-28"
+  ],
+  "days": 31,
+  "prev_end": "2026-07-31",
+  "topups": {
+   "GBP": 50858,
+   "EUR": 11560
+  },
+  "manifest": [
+   {
+    "file_id": "IN-01",
+    "filename": "recon_calendar_2026-08.csv",
+    "relative_path": "source_data/recon_calendar_2026-08.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Reconciliation-day calendar",
+    "reporting_period": "PER-2026-08",
+    "record_count": "31",
+    "record_unit": "data_rows",
+    "sha256": "f22a7530760a317e5e4ec34947558dd0b460cf8d0dabbf03168a72f0bcc8ca88",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-02",
+    "filename": "account_inventory.csv",
+    "relative_path": "source_data/account_inventory.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Institution and account inventory",
+    "reporting_period": "PER-2026-08",
+    "record_count": "4",
+    "record_unit": "data_rows",
+    "sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-03",
+    "filename": "client_balance_snapshots_2026-08.csv",
+    "relative_path": "source_data/client_balance_snapshots_2026-08.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client balance snapshots at each 17:00 point",
+    "reporting_period": "PER-2026-08",
+    "record_count": "252",
+    "record_unit": "data_rows",
+    "sha256": "acf44d3500038fd870d03203c2b4d36302b1deaa6e124a4c2d3bab3fefcbd08b",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-04",
+    "filename": "unallocated_register_2026-08.csv",
+    "relative_path": "source_data/unallocated_register_2026-08.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Unallocated receipts register",
+    "reporting_period": "PER-2026-08",
+    "record_count": "1",
+    "record_unit": "data_rows",
+    "sha256": "5a386c03ea9e33d1c1f290d944e98b20088e3e3d5cfe66c3c34840061041bb87",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-05",
+    "filename": "internal_recon_records_2026-08.csv",
+    "relative_path": "source_data/internal_recon_records_2026-08.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Internal reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-08",
+    "record_count": "40",
+    "record_unit": "data_rows",
+    "sha256": "de82cfa55f2b50e8ebee5cf67cbf3cedf68c7e7facd32316f3ce3cb92b39f310",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-06",
+    "filename": "external_recon_records_2026-08.csv",
+    "relative_path": "source_data/external_recon_records_2026-08.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "External reconciliation records (as reported by the firm)",
+    "reporting_period": "PER-2026-08",
+    "record_count": "40",
+    "record_unit": "data_rows",
+    "sha256": "7fff3bccc22f60c324822954868c772d01b17ef25816fe608e7ee4aef71e52ee",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-07",
+    "filename": "bank_balance_confirmations_2026-08.csv",
+    "relative_path": "source_data/bank_balance_confirmations_2026-08.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank balance confirmations at 17:00",
+    "reporting_period": "PER-2026-08",
+    "record_count": "39",
+    "record_unit": "data_rows",
+    "sha256": "8ac01072f20bbf0bf56257de5daa33b7620e006f5e48ced145a5e65107c6e04c",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-08",
+    "filename": "bank_statements_eod_2026-08.csv",
+    "relative_path": "source_data/bank_statements_eod_2026-08.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "End-of-day bank statement headers",
+    "reporting_period": "PER-2026-08",
+    "record_count": "79",
+    "record_unit": "data_rows",
+    "sha256": "52c03f4d0afcfb54aa7b1d211e45bf97a23b5740a4613903d584ac158042ebc6",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-09",
+    "filename": "bank_statement_entries_2026-08.csv",
+    "relative_path": "source_data/bank_statement_entries_2026-08.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Bank statement entries",
+    "reporting_period": "PER-2026-08",
+    "record_count": "293",
+    "record_unit": "data_rows",
+    "sha256": "143e66590192fde3a1b2900449dea2644963dcc5950bce9f0cd8203272ebb18a",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-10",
+    "filename": "sga_cashbook_entries_2026-08.csv",
+    "relative_path": "source_data/sga_cashbook_entries_2026-08.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding-account cash book (firm ledger)",
+    "reporting_period": "PER-2026-08",
+    "record_count": "258",
+    "record_unit": "data_rows",
+    "sha256": "34b423e769ff97fc33a6895b13d318ae1e29f88daee7739cbe441a60cc4af00e",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-11",
+    "filename": "transactions_2026-08.csv",
+    "relative_path": "source_data/transactions_2026-08.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Client transactions",
+    "reporting_period": "PER-2026-08",
+    "record_count": "438",
+    "record_unit": "data_rows",
+    "sha256": "e1a6200a795cfedd7e27eed845329d00da3575301380062a1f6b70eb03637c91",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-12",
+    "filename": "settlement_batches_2026-08.csv",
+    "relative_path": "source_data/settlement_batches_2026-08.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch headers (generic synthetic format)",
+    "reporting_period": "PER-2026-08",
+    "record_count": "80",
+    "record_unit": "data_rows",
+    "sha256": "c730928a18becbb805d95ddebedf52c5a866bb19933137e34f385faac4510839",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-13",
+    "filename": "settlement_lines_2026-08.csv",
+    "relative_path": "source_data/settlement_lines_2026-08.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Settlement batch lines",
+    "reporting_period": "PER-2026-08",
+    "record_count": "382",
+    "record_unit": "data_rows",
+    "sha256": "ec4325900f611556b6702a0767b4a02cc67580c812a555c5de7ff63135116fc1",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-14",
+    "filename": "discrepancy_log_2026-08.csv",
+    "relative_path": "source_data/discrepancy_log_2026-08.csv",
+    "format": "CSV",
+    "evidence_kind": "RAW_SOURCE",
+    "requirement": "REQUIRED",
+    "description": "Discrepancy and corrective-action log",
+    "reporting_period": "PER-2026-08",
+    "record_count": "0",
+    "record_unit": "data_rows",
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-15",
+    "filename": "ack_letter_SGA-GBP-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-GBP-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-GBP-01",
+    "reporting_period": "PER-2026-08",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-16",
+    "filename": "ack_letter_SGA-EUR-01.pdf",
+    "relative_path": "supporting_documents/ack_letter_SGA-EUR-01.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Acknowledgement letter, SGA-EUR-01",
+    "reporting_period": "PER-2026-08",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4",
+    "synthetic": "YES"
+   },
+   {
+    "file_id": "IN-17",
+    "filename": "safeguarding_reconciliation_policy_v1.2.pdf",
+    "relative_path": "supporting_documents/safeguarding_reconciliation_policy_v1.2.pdf",
+    "format": "PDF",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "requirement": "REQUIRED",
+    "description": "Safeguarding reconciliation policy 1.2",
+    "reporting_period": "PER-2026-08",
+    "record_count": "1",
+    "record_unit": "pages",
+    "sha256": "b136586f843384284da370cedfe17637338e5e9d0bbc485d79b9e82c7de5c561",
+    "synthetic": "YES"
+   }
+  ],
+  "ops_count": 27
+ }
+}

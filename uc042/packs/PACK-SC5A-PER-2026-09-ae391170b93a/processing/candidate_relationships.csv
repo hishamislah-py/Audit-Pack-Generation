@@ -1,0 +1,2 @@
+candidate_id,exception_ids,basis,detail,label,evidence
+CAND-SC5A-01,EXC-SC5A-01; EXC-SC5A-02,DATE_AND_AMOUNT_COINCIDENCE,"line SL-SB-GBP-20260915-0003 references TX-0915-00009 (443.55), absent from the transaction export; C0002's roll-forward on 2026-09-15 differs by the same amount. No record links the transaction to this client.",UNVERIFIED — NOT EVIDENCE-BACKED; not an investigation group,IN-13:settlement_lines_2026-09.csv#L201; IN-03:client_balance_snapshots_2026-09.csv#L123

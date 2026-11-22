@@ -1,0 +1,109 @@
+{
+ "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA — DEMONSTRATION ONLY — NOT REAL MOORWAND FINANCIAL RECORDS",
+ "period_id": "PER-2026-06",
+ "scenario_types": [
+  "Inconsistent settlement reference"
+ ],
+ "expected_discrepancy_types": 1,
+ "planted": [
+  {
+   "scenario": "INCONSISTENT_SETTLEMENT_REFERENCE",
+   "account": "SGA-GBP-01",
+   "batch_without_bank_reference": "SB-GBP-20260610",
+   "batch_with_two_bank_entries": "SB-GBP-20260601",
+   "bank_entry": "BE-GBP-0610-SB1",
+   "financial_impact": "none — amount and balances unchanged; only the reference is wrong",
+   "expected_engine": "C11-BATCH-BANK FAIL for SB-GBP-20260610 and SB-GBP-20260601 (no amount-only matching); cash-book link exceptions for the affected references"
+  }
+ ],
+ "expected_missing_records": [],
+ "expected_reconciliation_outcome": {
+  "case_status": "EXCEPTIONS_OPEN",
+  "evidence_completeness": "COMPLETE",
+  "exceptions": 4,
+  "exception_root_causes": [
+   "C11-BATCH-BANK|SB-GBP-20260601",
+   "C11-BATCH-BANK|SB-GBP-20260610",
+   "CASH-BANK-LINK|LE-GBP-0601-0005",
+   "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0610-0005"
+  ],
+  "investigation_groups": [
+   "EXC-CASE-01; EXC-CASE-03",
+   "EXC-CASE-02; EXC-CASE-04"
+  ],
+  "all_exceptions_open": true
+ },
+ "evidence_relationships": "All planted records keep the project's reference keys: bank_reference / end_to_end_ref ↔ cash-book payment_reference; batch expected_bank_reference ↔ bank entry; settlement line txn_id ↔ transaction; refund original_txn_id.",
+ "basis_of_expectations": "Scenario design (generator mutations) confirmed by PRE-VALIDATION: the existing project engine run with the period patched in memory. Claude Code must reproduce these with the real period-configured engine.",
+ "pre_validation_observed": {
+  "case_status": "EXCEPTIONS_OPEN",
+  "results_by_outcome": {
+   "PASS": 1873,
+   "NOT_APPLICABLE": 92,
+   "FAIL": 4
+  },
+  "exceptions": [
+   {
+    "exception_id": "EXC-CASE-01",
+    "severity": "High",
+    "category": "C11-BATCH-BANK",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260601",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-01"
+   },
+   {
+    "exception_id": "EXC-CASE-02",
+    "severity": "High",
+    "category": "C11-BATCH-BANK",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260610",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-02"
+   },
+   {
+    "exception_id": "EXC-CASE-03",
+    "severity": "High",
+    "category": "CASH-BANK-LINK",
+    "root_cause": "CASH-BANK-LINK|LE-GBP-0601-0005",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-01"
+   },
+   {
+    "exception_id": "EXC-CASE-04",
+    "severity": "High",
+    "category": "Cash-book entry with no bank entry",
+    "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0610-0005",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-02"
+   }
+  ],
+  "groups": [
+   {
+    "group_id": "GRP-CASE-01",
+    "exception_ids": "EXC-CASE-01; EXC-CASE-03",
+    "link_types": "L1 REFERENCE"
+   },
+   {
+    "group_id": "GRP-CASE-02",
+    "exception_ids": "EXC-CASE-02; EXC-CASE-04",
+    "link_types": "L1 REFERENCE"
+   }
+  ],
+  "policy_file_used": "safeguarding_reconciliation_policy_v1.2.pdf"
+ }
+}

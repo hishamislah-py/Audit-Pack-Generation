@@ -1,0 +1,877 @@
+{
+ "results": {
+  "feb_final_pack_hash_before": "1b22b1ea10745da99f656173f8964f1ec765ea8ff49fe063d9ea1fa99fc74af9",
+  "T1_create_jan": [
+   201,
+   "PER-2026-01",
+   "January 2026 Audit19 Test",
+   "NO_DATA"
+  ],
+  "T1_duplicate_jan": [
+   200,
+   "January 2026 Audit19 Test"
+  ],
+  "T1_future_dec": [
+   422,
+   "FUTURE_PERIOD",
+   "a reconciliation period cannot be opened for a future month"
+  ],
+  "T1_create_oct": [
+   201,
+   "PER-2026-10"
+  ],
+  "T1_rename": [
+   200,
+   "January 2026 Audit19 Retitled",
+   "STORED"
+  ],
+  "T1_rename_too_short": [
+   422,
+   "VALIDATION_ERROR"
+  ],
+  "T2_upload_jan": [
+   201,
+   17,
+   "VALIDATED",
+   "VALID",
+   {
+    "ERROR": 0,
+    "VALID": 17,
+    "WARNING": 0
+   },
+   [],
+   [],
+   []
+  ],
+  "T2_identified": [
+   [
+    "account_inventory.csv",
+    "IN-02",
+    "VALID"
+   ],
+   [
+    "ack_letter_SGA-EUR-01.pdf",
+    "IN-16",
+    "VALID"
+   ],
+   [
+    "ack_letter_SGA-GBP-01.pdf",
+    "IN-15",
+    "VALID"
+   ],
+   [
+    "bank_balance_confirmations_2026-01.csv",
+    "IN-07",
+    "VALID"
+   ],
+   [
+    "bank_statement_entries_2026-01.csv",
+    "IN-09",
+    "VALID"
+   ],
+   [
+    "bank_statements_eod_2026-01.csv",
+    "IN-08",
+    "VALID"
+   ],
+   [
+    "client_balance_snapshots_2026-01.csv",
+    "IN-03",
+    "VALID"
+   ],
+   [
+    "discrepancy_log_2026-01.csv",
+    "IN-14",
+    "VALID"
+   ],
+   [
+    "external_recon_records_2026-01.csv",
+    "IN-06",
+    "VALID"
+   ],
+   [
+    "internal_recon_records_2026-01.csv",
+    "IN-05",
+    "VALID"
+   ],
+   [
+    "recon_calendar_2026-01.csv",
+    "IN-01",
+    "VALID"
+   ],
+   [
+    "safeguarding_reconciliation_policy_v1.1.pdf",
+    "IN-17",
+    "VALID"
+   ],
+   [
+    "settlement_batches_2026-01.csv",
+    "IN-12",
+    "VALID"
+   ],
+   [
+    "settlement_lines_2026-01.csv",
+    "IN-13",
+    "VALID"
+   ],
+   [
+    "sga_cashbook_entries_2026-01.csv",
+    "IN-10",
+    "VALID"
+   ],
+   [
+    "transactions_2026-01.csv",
+    "IN-11",
+    "VALID"
+   ],
+   [
+    "unallocated_register_2026-01.csv",
+    "IN-04",
+    "VALID"
+   ]
+  ],
+  "T2_process_before_confirm": [
+   409,
+   "BATCH_NOT_CONFIRMED"
+  ],
+  "T2_reconcile_before_confirm": [
+   409,
+   "NO_CONFIRMED_DOCUMENTS"
+  ],
+  "T3_wrong_period": [
+   201,
+   "INVALID",
+   [
+    [
+     "ERROR",
+     "WRONG_PERIOD"
+    ],
+    [
+     "WARNING",
+     "SAME_CONTENT_AS_OTHER_PERIOD"
+    ]
+   ]
+  ],
+  "T4_confirm": [
+   200,
+   "CONFIRMED",
+   null
+  ],
+  "T4_process_start": [
+   202,
+   "RUNNING",
+   null
+  ],
+  "T4_process_result": [
+   "SUCCEEDED",
+   "PACK-CASE-PER-2026-01-be868a82a6e4",
+   "PUBLISHED",
+   0,
+   "CLEAN",
+   "",
+   "NOT_VERIFIABLE"
+  ],
+  "T4_reconcile_endpoint_initial": [
+   202,
+   "QUEUED"
+  ],
+  "T4_reconcile_endpoint_result": [
+   "SUCCEEDED",
+   "PACK-CASE-PER-2026-01-be868a82a6e4",
+   "ALREADY_EXISTS"
+  ],
+  "T4_reassess_nothing": [
+   409,
+   "NOTHING_TO_REASSESS"
+  ],
+  "T4_period_after": [
+   "DETERMINISTIC_PACK_AVAILABLE",
+   1,
+   0,
+   "PROCESSED"
+  ],
+  "T5_duplicate": [
+   201,
+   "WARNINGS",
+   [
+    [
+     "WARNING",
+     "DUPLICATE_OF_EARLIER_UPLOAD"
+    ]
+   ],
+   true
+  ],
+  "T5_confirm_with_pending_decision": [
+   409,
+   "DECISIONS_PENDING"
+  ],
+  "T5_exclude_decision": [
+   200,
+   "EXCLUDE"
+  ],
+  "T5_confirm_after_decision": [
+   200,
+   "CONFIRMED"
+  ],
+  "T6_correction": [
+   201,
+   "CORRECTION",
+   true,
+   [
+    "NO_RECORDS",
+    "REPLACES_DOCUMENT",
+    "DUPLICATE_OF_EARLIER_UPLOAD"
+   ]
+  ],
+  "T6_correction_two_files": [
+   422,
+   "INVALID_SUBMISSION"
+  ],
+  "T6_evidence_no_reason": [
+   422,
+   "REASON_REQUIRED"
+  ],
+  "T7_feb_evidence": [
+   201,
+   "INVALID",
+   [
+    [
+     "INFO",
+     "PDF_STORED_AS_ORIGINAL"
+    ],
+    [
+     "INFO",
+     "RECEIVED_AFTER_PUBLICATION"
+    ],
+    [
+     "ERROR",
+     "LETTER_NOT_MATCHED"
+    ],
+    [
+     "WARNING",
+     "SAME_CONTENT_AS_OTHER_PERIOD"
+    ]
+   ]
+  ],
+  "T7_feb_status_after": [
+   "ADDITIONAL_EVIDENCE_RECEIVED",
+   true,
+   1
+  ],
+  "T7_confirm": [
+   409,
+   "BATCH_INVALID"
+  ],
+  "T7_reassessment": [
+   409,
+   "NO_CONFIRMED_DOCUMENTS",
+   "the period has no confirmed upload batch to reconcile; upload, validate and confirm documents first"
+  ],
+  "T7_process_via_ui_path": [
+   409,
+   "BATCH_NOT_CONFIRMED",
+   "confirm the batch before processing"
+  ],
+  "feb_final_pack_hash_after_upload": "1b22b1ea10745da99f656173f8964f1ec765ea8ff49fe063d9ea1fa99fc74af9",
+  "T8_open_case": [
+   201,
+   "CASE-82e854da701f6e92bcc1fe90",
+   "OPEN",
+   "UNRESOLVED"
+  ],
+  "T8_open_again": [
+   200,
+   true
+  ],
+  "T8_invalid_evidence_ref": [
+   422,
+   "VALIDATION_ERROR"
+  ],
+  "T8_note": [
+   422,
+   null
+  ],
+  "T8_case_ai_request": [
+   503,
+   "PROVIDER_NOT_CONFIGURED"
+  ],
+  "T8_start_investigation": [
+   503,
+   "PROVIDER_NOT_CONFIGURED"
+  ],
+  "T8_feb_investigations_isolated": [
+   [
+    "INV-EXC-H202602-01-6b1425b437f4",
+    false,
+    [
+     "publication registry: not in the investigation publication registry (unregistered artefact)"
+    ]
+   ],
+   [
+    "INV-EXC-H202602-01-a3fd3fd2e9ed",
+    false,
+    [
+     "publication registry: not in the investigation publication registry (unregistered artefact)"
+    ]
+   ]
+  ],
+  "T9_open_review": [
+   201,
+   "RS-0cc0dea64bdf4ec80652666d",
+   "OPEN",
+   [
+    {
+     "code": "PREVIEW_REQUIRED",
+     "detail": "generate a preview (with the closing summary) before deciding"
+    }
+   ],
+   [],
+   [
+    "NO_EXCEPTIONS"
+   ]
+  ],
+  "T9_generate_without_preview": [
+   409,
+   "PREVIEW_REQUIRED"
+  ],
+  "T9_preview": [
+   "COMPLETED",
+   "UNAVAILABLE",
+   [
+    "CLOSING_SUMMARY_UNAVAILABLE"
+   ],
+   true
+  ],
+  "T9_preview_html": [
+   200,
+   "text/html; charset=utf-8",
+   51574
+  ],
+  "T9_preview_pdf": [
+   200,
+   "application/pdf",
+   37724
+  ],
+  "T9_preview_json": [
+   200,
+   "application/json",
+   119558
+  ],
+  "T9_hold": [
+   201,
+   null
+  ],
+  "T9_after_hold": [
+   "ON_HOLD",
+   false
+  ],
+  "T9_generate_without_summary_ack": [
+   422,
+   "SUMMARY_UNAVAILABLE_ACK_REQUIRED"
+  ],
+  "T9_generate": [
+   201,
+   "FAP-CASE-PER-2026-01-v1-ee0b03fcf6cc",
+   null
+  ],
+  "T9_verify": [
+   200,
+   true,
+   []
+  ],
+  "T9_download_json": [
+   200,
+   "application/json",
+   120459
+  ],
+  "T9_download_html": [
+   200,
+   "text/html; charset=utf-8",
+   52565
+  ],
+  "T9_download_pdf": [
+   200,
+   "application/pdf",
+   39208
+  ],
+  "T9_decide_after_generated": [
+   409,
+   "SESSION_CLOSED"
+  ],
+  "T9_open_review_after_generated": [
+   201,
+   true,
+   "OPEN"
+  ],
+  "T9_period_after": [
+   "FINAL_PACK_PUBLISHED",
+   1
+  ],
+  "T10_feb_review_open": [
+   201,
+   "OPEN",
+   [
+    {
+     "code": "NOT_INVESTIGATED_WITH_ELIGIBLE",
+     "detail": "EXC-H202602-01: a verified investigation exists; include it (if registered) or exclude it with a reason"
+    },
+    {
+     "code": "PREVIEW_REQUIRED",
+     "detail": "generate a preview (with the closing summary) before deciding"
+    }
+   ]
+  ],
+  "T11_feb_verify": [
+   200,
+   true,
+   []
+  ],
+  "T11_feb_json": [
+   200,
+   "application/json",
+   195013,
+   true
+  ],
+  "T11_feb_html": [
+   200,
+   "text/html; charset=utf-8",
+   111395,
+   true
+  ],
+  "T11_feb_pdf": [
+   200,
+   "application/pdf",
+   78866,
+   true
+  ],
+  "T11_document_download": [
+   200,
+   "text/csv; charset=utf-8",
+   true
+  ],
+  "feb_final_pack_hash_end": "1b22b1ea10745da99f656173f8964f1ec765ea8ff49fe063d9ea1fa99fc74af9",
+  "feb_final_pack_unchanged": true
+ },
+ "calls": [
+  {
+   "test": "T1",
+   "request": "POST /periods",
+   "status": 201,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T1",
+   "request": "POST /periods",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T1",
+   "request": "POST /periods",
+   "status": 422,
+   "code": "FUTURE_PERIOD",
+   "detail": "a reconciliation period cannot be opened for a future month"
+  },
+  {
+   "test": "T1",
+   "request": "POST /periods",
+   "status": 201,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T1",
+   "request": "PATCH /periods/PER-2026-01",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T1",
+   "request": "PATCH /periods/PER-2026-01",
+   "status": 422,
+   "code": "VALIDATION_ERROR",
+   "detail": "the request is not valid"
+  },
+  {
+   "test": "T2",
+   "request": "POST /periods/PER-2026-01/uploads",
+   "status": 201,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T2",
+   "request": "POST /uploads/UPL-651ce44eac253bc2b1884834/process",
+   "status": 409,
+   "code": "BATCH_NOT_CONFIRMED",
+   "detail": "confirm the batch before processing"
+  },
+  {
+   "test": "T2",
+   "request": "POST /periods/PER-2026-01/reconciliation",
+   "status": 409,
+   "code": "NO_CONFIRMED_DOCUMENTS",
+   "detail": "the period has no confirmed upload batch to reconcile; upload, validate and confirm documents first"
+  },
+  {
+   "test": "T3",
+   "request": "POST /periods/PER-2026-10/uploads",
+   "status": 201,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T4",
+   "request": "POST /uploads/UPL-651ce44eac253bc2b1884834/confirm",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T4",
+   "request": "POST /uploads/UPL-651ce44eac253bc2b1884834/process",
+   "status": 202,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T4",
+   "request": "GET /processing-runs/RUN-a24bb762836dc499040357f5",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T4",
+   "request": "GET /processing-runs/RUN-a24bb762836dc499040357f5",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T4",
+   "request": "POST /periods/PER-2026-01/reconciliation",
+   "status": 202,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T4",
+   "request": "GET /processing-runs/RUN-b4e0bf52215b76984b6f8cc5",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T4",
+   "request": "GET /processing-runs/RUN-b4e0bf52215b76984b6f8cc5",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T4",
+   "request": "POST /periods/PER-2026-01/reconciliation",
+   "status": 409,
+   "code": "NOTHING_TO_REASSESS",
+   "detail": "nothing to reassess: no evidence was received after the period's latest final audit pack"
+  },
+  {
+   "test": "T4",
+   "request": "GET /periods/PER-2026-01",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T5",
+   "request": "POST /periods/PER-2026-01/uploads",
+   "status": 201,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T5",
+   "request": "POST /uploads/UPL-7f517a9ca23a66708cb01256/confirm",
+   "status": 409,
+   "code": "DECISIONS_PENDING",
+   "detail": "flagged documents need an INCLUDE or EXCLUDE decision first"
+  },
+  {
+   "test": "T5",
+   "request": "POST /documents/DOC-f9cf2f855ae30d6a8a730dfc/review",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T5",
+   "request": "POST /uploads/UPL-7f517a9ca23a66708cb01256/confirm",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T6",
+   "request": "GET /periods/PER-2026-01",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T6",
+   "request": "POST /periods/PER-2026-01/uploads",
+   "status": 201,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T6",
+   "request": "POST /periods/PER-2026-01/uploads",
+   "status": 422,
+   "code": "INVALID_SUBMISSION",
+   "detail": "a correction replaces exactly one earlier document: upload one file"
+  },
+  {
+   "test": "T6",
+   "request": "POST /periods/PER-2026-01/uploads",
+   "status": 422,
+   "code": "REASON_REQUIRED",
+   "detail": "a reason is required when adding evidence or a correction"
+  },
+  {
+   "test": "T7",
+   "request": "POST /periods/PER-2026-02/uploads",
+   "status": 201,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T7",
+   "request": "GET /periods/PER-2026-02",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T7",
+   "request": "POST /documents/DOC-90d8091df969aca9939f07b3/review",
+   "status": 409,
+   "code": "DOCUMENT_HAS_ERRORS",
+   "detail": "a document with validation errors cannot be included"
+  },
+  {
+   "test": "T7",
+   "request": "POST /uploads/UPL-c4215012d933f163a7b60145/confirm",
+   "status": 409,
+   "code": "BATCH_INVALID",
+   "detail": "the batch has no usable document"
+  },
+  {
+   "test": "T7",
+   "request": "POST /periods/PER-2026-02/reconciliation",
+   "status": 409,
+   "code": "NO_CONFIRMED_DOCUMENTS",
+   "detail": "the period has no confirmed upload batch to reconcile; upload, validate and confirm documents first"
+  },
+  {
+   "test": "T7",
+   "request": "POST /uploads/UPL-c4215012d933f163a7b60145/process",
+   "status": 409,
+   "code": "BATCH_NOT_CONFIRMED",
+   "detail": "confirm the batch before processing"
+  },
+  {
+   "test": "T8",
+   "request": "POST /packs/PACK-H202602-PER-2026-02-195df2e1f216/exceptions/EXC-H202602-01/case",
+   "status": 201,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T8",
+   "request": "POST /packs/PACK-H202602-PER-2026-02-195df2e1f216/exceptions/EXC-H202602-01/case",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T8",
+   "request": "POST /cases/CASE-82e854da701f6e92bcc1fe90/entries",
+   "status": 422,
+   "code": "VALIDATION_ERROR",
+   "detail": "the request is not valid"
+  },
+  {
+   "test": "T8",
+   "request": "POST /cases/CASE-82e854da701f6e92bcc1fe90/entries",
+   "status": 422,
+   "code": "VALIDATION_ERROR",
+   "detail": "the request is not valid"
+  },
+  {
+   "test": "T8",
+   "request": "POST /cases/CASE-82e854da701f6e92bcc1fe90/ai-investigation",
+   "status": 503,
+   "code": "PROVIDER_NOT_CONFIGURED",
+   "detail": "the AI provider is not configured: OPENAI_API_KEY is not set; live investigation cannot run"
+  },
+  {
+   "test": "T8",
+   "request": "POST /packs/PACK-H202602-PER-2026-02-195df2e1f216/exceptions/EXC-H202602-01/investigations",
+   "status": 503,
+   "code": "PROVIDER_NOT_CONFIGURED",
+   "detail": "the AI provider is not configured: OPENAI_API_KEY is not set; live investigation cannot run"
+  },
+  {
+   "test": "T8",
+   "request": "GET /packs/PACK-H202602-PER-2026-02-195df2e1f216/exceptions/EXC-H202602-01/investigations",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "POST /packs/PACK-CASE-PER-2026-01-be868a82a6e4/reviews",
+   "status": 201,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "POST /reviews/RS-0cc0dea64bdf4ec80652666d/decision",
+   "status": 409,
+   "code": "PREVIEW_REQUIRED",
+   "detail": "no current preview; generate and read a preview first"
+  },
+  {
+   "test": "T9",
+   "request": "POST /reviews/RS-0cc0dea64bdf4ec80652666d/preview",
+   "status": 202,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "GET /jobs/JOB-e4223aed16c302416cd83d07",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "GET /jobs/JOB-e4223aed16c302416cd83d07",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "GET /reviews/RS-0cc0dea64bdf4ec80652666d",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "POST /reviews/RS-0cc0dea64bdf4ec80652666d/decision",
+   "status": 201,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "GET /reviews/RS-0cc0dea64bdf4ec80652666d",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "POST /reviews/RS-0cc0dea64bdf4ec80652666d/preview",
+   "status": 202,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "GET /jobs/JOB-1cd5bd24618e6891ee5df368",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "GET /jobs/JOB-1cd5bd24618e6891ee5df368",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "GET /reviews/RS-0cc0dea64bdf4ec80652666d",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "POST /reviews/RS-0cc0dea64bdf4ec80652666d/decision",
+   "status": 422,
+   "code": "SUMMARY_UNAVAILABLE_ACK_REQUIRED",
+   "detail": "the AI closing summary is unavailable; GENERATE requires acknowledging that"
+  },
+  {
+   "test": "T9",
+   "request": "POST /reviews/RS-0cc0dea64bdf4ec80652666d/decision",
+   "status": 201,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "GET /final-packs/FAP-CASE-PER-2026-01-v1-ee0b03fcf6cc/verify",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "POST /reviews/RS-0cc0dea64bdf4ec80652666d/decision",
+   "status": 409,
+   "code": "SESSION_CLOSED",
+   "detail": "this review has already produced a final pack"
+  },
+  {
+   "test": "T9",
+   "request": "POST /packs/PACK-CASE-PER-2026-01-be868a82a6e4/reviews",
+   "status": 201,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T9",
+   "request": "GET /periods/PER-2026-01",
+   "status": 200,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T10",
+   "request": "POST /packs/PACK-H202602-PER-2026-02-195df2e1f216/reviews",
+   "status": 201,
+   "code": null,
+   "detail": null
+  },
+  {
+   "test": "T11",
+   "request": "GET /final-packs/FAP-H202602-PER-2026-02-v1-b8dd53bd2449/verify",
+   "status": 200,
+   "code": null,
+   "detail": null
+  }
+ ]
+}

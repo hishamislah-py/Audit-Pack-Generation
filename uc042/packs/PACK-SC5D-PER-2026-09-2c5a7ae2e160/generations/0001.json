@@ -1,0 +1,11 @@
+{
+ "generated_at": "2026-10-30T12:14:22+00:00",
+ "status": "GENERATED",
+ "outcome": "PUBLISHED",
+ "case_dir": "uc042_dataset/scn_SC5D_closing_snapshot_mismatch",
+ "pack_id": "PACK-SC5D-PER-2026-09-2c5a7ae2e160",
+ "processing_run_id": "RUN-954782928fee444a",
+ "pack_content_sha256": "2c5a7ae2e16091ce080a9830dd6781be1cfcf424c1646a09a0bf552eef7fa627",
+ "validation_findings": [],
+ "python": "3.12.3"
+}

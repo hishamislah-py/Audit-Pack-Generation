@@ -1,0 +1,11 @@
+{
+ "generated_at": "2026-10-30T12:14:21+00:00",
+ "status": "GENERATED",
+ "outcome": "PUBLISHED",
+ "case_dir": "uc042_dataset/scn_S02_missing_eur_statement",
+ "pack_id": "PACK-S02-PER-2026-09-f3dfa52766bb",
+ "processing_run_id": "RUN-b4aeaca792c50690",
+ "pack_content_sha256": "f3dfa52766bb260916a148f2826a46cfecc26474143e192beb61984d5b20e63d",
+ "validation_findings": [],
+ "python": "3.12.3"
+}

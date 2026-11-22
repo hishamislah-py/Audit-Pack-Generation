@@ -1,0 +1,43 @@
+{
+  "scenario_id": "SC5A",
+  "description": "Transaction TX-0915-00009 (C0002 spend 443.55) missing from the transaction export",
+  "non_passing_results": [
+    [
+      "C11-BATCH-ARITH",
+      "SB-GBP-20260915",
+      "FAIL"
+    ],
+    [
+      "CBAL-ROLLFWD",
+      "GBP/C0002 2026-09-15",
+      "FAIL"
+    ]
+  ],
+  "exceptions": [
+    {
+      "exception_id": "EXC-SC5A-01",
+      "severity": "High",
+      "root_cause": "C11-BATCH-ARITH|SB-GBP-20260915",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC5A-02",
+      "severity": "High",
+      "root_cause": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+      "affected_results": 1
+    }
+  ],
+  "evidence_statuses": {},
+  "investigation_groups": [],
+  "candidate_relationships": [
+    [
+      "EXC-SC5A-01",
+      "EXC-SC5A-02"
+    ]
+  ],
+  "expected_outcome_basis": "scenario design; engine changes E1 (timing evidence) and E2 (investigation groups) implemented",
+  "target_outcome": "Two separate exceptions and NO confirmed investigation group: the missing transaction's ID appears only on a settlement line, which carries no client, so no record links it to C0002. One candidate relationship is recorded, labelled UNVERIFIED (basis: same date and the 443.55 amount), for the human reviewer.",
+  "engine_limitations": [
+    "Evidence limitation, not an engine defect: the relationship cannot be confirmed without matching by amount"
+  ]
+}

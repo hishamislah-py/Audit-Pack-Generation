@@ -1,0 +1,54 @@
+{
+ "investigation_mode": "tools",
+ "workflow_version": "uc042-investigation-graph/2.0-tools",
+ "prompt_version": "uc042-investigator-prompt/2.0-tools",
+ "trace": [
+  {
+   "node": "load_investigation_case",
+   "seconds": 0.125,
+   "ok": true
+  },
+  {
+   "node": "identify_investigation_scope",
+   "seconds": 0.0
+  },
+  {
+   "node": "route_investigation",
+   "seconds": 0.0,
+   "route": "bank_ledger_mismatch"
+  },
+  {
+   "node": "retrieve_relevant_evidence[bank_ledger_mismatch]",
+   "seconds": 0.047,
+   "records": 47
+  },
+  {
+   "node": "build_evidence_packet",
+   "seconds": 0.0,
+   "records": 47,
+   "citable_ids": 65
+  },
+  {
+   "node": "ai_investigation[tools]",
+   "seconds": 50.235,
+   "ok": true,
+   "llm_calls": 2,
+   "tool_calls": 2,
+   "rounds": 1,
+   "stop": "final_answer"
+  },
+  {
+   "node": "validate_findings",
+   "seconds": 0.0,
+   "status": "VALID",
+   "errors": 0
+  }
+ ],
+ "route": "bank_ledger_mismatch",
+ "artefact_sha256": {
+  "evidence_ledger.json": "4a36456755b3d5fdfbf8f8d00e7aec486c8302a3e72bb69a63dabf9001732c26",
+  "tool_calls.json": "883fe0d3436deed43d4ec1f7dc326baa33f9f68ad901c024b498f14524f18933"
+ },
+ "recorded_at": "2026-11-02T11:59:21+00:00",
+ "outcome": "PUBLISHED"
+}

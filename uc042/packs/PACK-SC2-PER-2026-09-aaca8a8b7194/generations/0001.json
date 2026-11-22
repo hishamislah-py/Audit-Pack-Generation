@@ -1,0 +1,11 @@
+{
+ "generated_at": "2026-10-30T12:14:19+00:00",
+ "status": "GENERATED",
+ "outcome": "PUBLISHED",
+ "case_dir": "uc042_dataset/scn_SC2_settlement_timing",
+ "pack_id": "PACK-SC2-PER-2026-09-aaca8a8b7194",
+ "processing_run_id": "RUN-e629d002c787219e",
+ "pack_content_sha256": "aaca8a8b7194f34b3122dfc2a3727d5c54e72593f4b23c306851889cc4fc2b2d",
+ "validation_findings": [],
+ "python": "3.12.3"
+}

@@ -1,0 +1,53 @@
+[
+ {
+  "op": "delete_record",
+  "file_id": "IN-07",
+  "key": "ST-SGA-EUR-01-20260715-1700",
+  "why": "17:00 confirmation missing"
+ },
+ {
+  "op": "delete_record",
+  "file_id": "IN-08",
+  "key": "ST-SGA-EUR-01-20260715-EOD",
+  "why": "end-of-day statement missing"
+ },
+ {
+  "op": "delete_record",
+  "file_id": "IN-09",
+  "key": "BE-EUR-0715-L01",
+  "why": "entries of the missing statement"
+ },
+ {
+  "op": "delete_record",
+  "file_id": "IN-09",
+  "key": "BE-EUR-0715-AQ1",
+  "why": "entries of the missing statement"
+ },
+ {
+  "op": "delete_record",
+  "file_id": "IN-09",
+  "key": "BE-EUR-0715-TU1",
+  "why": "entries of the missing statement"
+ },
+ {
+  "op": "delete_record",
+  "file_id": "IN-09",
+  "key": "BE-EUR-0715-SB1",
+  "why": "entries of the missing statement"
+ },
+ {
+  "op": "delete_record",
+  "file_id": "IN-09",
+  "key": "BE-EUR-0715-R01",
+  "why": "entries of the missing statement"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-09",
+  "key": "BE-GBP-0710-SB1",
+  "field": "bank_reference",
+  "old": "SB-GBP-20260710",
+  "new": "SB-GBP-20260701",
+  "why": "bank entry for this batch carries an earlier batch's reference (amount unchanged)"
+ }
+]

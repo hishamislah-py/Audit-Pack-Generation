@@ -1,0 +1,32 @@
+...FF.......F.....
+======================================================================
+FAIL: test_duplicate_hidden_by_an_excluded_invalid_row_is_insufficient (tests.test_rules_c06_c08_c09.C09Allocation.test_duplicate_hidden_by_an_excluded_invalid_row_is_insufficient)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_rules_c06_c08_c09.py", line 159, in test_duplicate_hidden_by_an_excluded_invalid_row_is_insufficient
+    self.assertEqual(r["outcome"], "INSUFFICIENT_EVIDENCE", r["note"])
+AssertionError: 'PASS' != 'INSUFFICIENT_EVIDENCE'
+- PASS
++ INSUFFICIENT_EVIDENCE
+ : allocated by the next business day (CASS 15.2.5R)
+
+======================================================================
+FAIL: test_duplicate_transaction_id_for_another_client_is_insufficient (tests.test_rules_c06_c08_c09.C09Allocation.test_duplicate_transaction_id_for_another_client_is_insufficient)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_rules_c06_c08_c09.py", line 168, in test_duplicate_transaction_id_for_another_client_is_insufficient
+    self.assertNotEqual(r["outcome"], "PASS", r["note"])
+AssertionError: 'PASS' == 'PASS' : allocated by the next business day (CASS 15.2.5R)
+
+======================================================================
+FAIL: test_whitespace_only_reference_is_no_payment_reference (tests.test_rules_c06_c08_c09.C09Allocation.test_whitespace_only_reference_is_no_payment_reference)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_rules_c06_c08_c09.py", line 142, in test_whitespace_only_reference_is_no_payment_reference
+    self.assertIn("the receipt has no payment reference", r["note"])
+AssertionError: 'the receipt has no payment reference' not found in 'receipt does not match exactly one bank credit; allocation transaction missing or inconsistent: no bank-load transaction carries the payment reference'
+
+----------------------------------------------------------------------
+Ran 18 tests in 2.192s
+
+FAILED (failures=3)

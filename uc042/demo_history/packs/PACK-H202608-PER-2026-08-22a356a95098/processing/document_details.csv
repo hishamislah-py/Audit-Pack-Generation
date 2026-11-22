@@ -1,0 +1,20 @@
+file_id,label,value
+IN-15,Account name,Synthetic EMI Ltd Safeguarding Account (GBP)
+IN-15,Account number,****4471
+IN-15,Currency,GBP
+IN-15,Institution,Example Bank plc
+IN-15,Letter date,2024-03-01
+IN-15,Letter reference,ACK-INST01-4471
+IN-16,Account name,Synthetic EMI Ltd Safeguarding Account (EUR)
+IN-16,Account number,****8823
+IN-16,Currency,EUR
+IN-16,Institution,Example Bank plc
+IN-16,Letter date,2024-03-01
+IN-16,Letter reference,ACK-INST01-8823
+IN-17,Document version,1.2
+IN-17,Effective date,2026-05-07
+IN-17,Frequency,Each reconciliation day
+IN-17,Internal reconciliation basis,Per currency
+IN-17,Reconciliation method,STANDARD
+IN-17,Reconciliation point,17:00 Europe/London
+IN-17,Safeguarding method,SEGREGATION

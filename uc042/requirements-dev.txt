@@ -1,0 +1,7 @@
+# Complete dependency set for local development and the full test suite (resolved and verified 2 Nov 2026, Python 3.11).
+pypdf==5.9.0            # runtime: the deterministic engine reads the supporting PDFs (uc042lib/validate.py, prepare.py)
+reportlab==4.4.10       # tests regenerate the synthetic baseline into temporary folders (uc042lib/generate.py)
+tzdata==2026.6          # runtime on Windows: zoneinfo has no system time-zone database there (Europe/London)
+pypdfium2==5.14.0       # dev/test only: rasterises final-pack PDFs for visual QA (test skips if absent); not a runtime dependency
+httpx==0.28.1           # dev/test only: FastAPI TestClient (already installed with openai)
+-r requirements-api.txt # fastapi, uvicorn, and requirements-ai.txt (langgraph, pydantic, openai, python-dotenv, anthropic)

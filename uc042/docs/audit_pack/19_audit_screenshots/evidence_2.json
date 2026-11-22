@@ -1,0 +1,86 @@
+{
+ "T8b_fabricated_ref": [
+  422,
+  "INVALID_EVIDENCE_REF"
+ ],
+ "T8b_note": [
+  201,
+  "NOTE"
+ ],
+ "T8b_stale_revision": [
+  409,
+  "CASE_CHANGED"
+ ],
+ "T8b_observation_without_evidence": [
+  422,
+  "EVIDENCE_REQUIRED"
+ ],
+ "T8b_decision": [
+  201,
+  "DECISION",
+  null
+ ],
+ "T8b_case_after": [
+  "OPEN",
+  "ESCALATED",
+  2,
+  [
+   "NOTE",
+   "DECISION"
+  ]
+ ],
+ "T8b_pack_exception_unchanged": [
+  "OPEN",
+  "AWAITING_HUMAN_REVIEW"
+ ],
+ "T7b_upload": [
+  201,
+  "INCOMPLETE",
+  null,
+  "Supporting evidence (not a reconciliation input)",
+  [
+   [
+    "WARNING",
+    "SUPPORTING_EVIDENCE"
+   ],
+   [
+    "INFO",
+    "RECEIVED_AFTER_PUBLICATION"
+   ]
+  ]
+ ],
+ "T7b_confirm": [
+  200,
+  "CONFIRMED"
+ ],
+ "T7b_process_ui_path": [
+  409,
+  "INCOMPLETE",
+  "required evidence is missing for this period: IN-01, IN-02, IN-03, IN-04, IN-05, IN-06, IN-07, IN-08, IN-09, IN-10, IN-11, IN-12, IN-13, IN-14, IN-15, IN-16, IN-17"
+ ],
+ "T7b_reassessment": [
+  409,
+  "INCOMPLETE",
+  "required evidence is missing for this period: IN-01, IN-02, IN-03, IN-04, IN-05, IN-06, IN-07, IN-08, IN-09, IN-10, IN-11, IN-12, IN-13, IN-14, IN-15, IN-16, IN-17"
+ ],
+ "T7b_feb_after": [
+  "ADDITIONAL_EVIDENCE_RECEIVED",
+  true,
+  2,
+  0,
+  null
+ ],
+ "activity_actions": [
+  "BATCH_CONFIRMED",
+  "CASE_DECISION_RECORDED",
+  "CASE_NOTE_ADDED",
+  "CASE_OPENED",
+  "DOCUMENTS_UPLOADED",
+  "DOCUMENT_EXCLUDED",
+  "PERIOD_OPENED",
+  "PERIOD_REGISTERED_FROM_PACKS",
+  "PERIOD_RETITLED",
+  "PROCESSING_STARTED",
+  "PROCESSING_SUCCEEDED"
+ ]
+}

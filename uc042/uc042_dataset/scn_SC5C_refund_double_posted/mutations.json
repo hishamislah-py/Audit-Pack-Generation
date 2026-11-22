@@ -1,0 +1,434 @@
+[
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260909-C0002-GBP",
+    "field": "balance",
+    "old": "43719.60",
+    "new": "43779.60",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260909",
+    "field": "requirement_reported",
+    "old": "303696.81",
+    "new": "303756.81",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260909",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260910-C0002-GBP",
+    "field": "balance",
+    "old": "43814.71",
+    "new": "43874.71",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260910",
+    "field": "requirement_reported",
+    "old": "307169.12",
+    "new": "307229.12",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260910",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260911-C0002-GBP",
+    "field": "balance",
+    "old": "45310.76",
+    "new": "45370.76",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260911",
+    "field": "requirement_reported",
+    "old": "313081.31",
+    "new": "313141.31",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260911",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260914-C0002-GBP",
+    "field": "balance",
+    "old": "48492.79",
+    "new": "48552.79",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260914",
+    "field": "requirement_reported",
+    "old": "322733.29",
+    "new": "322793.29",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260914",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260915-C0002-GBP",
+    "field": "balance",
+    "old": "47813.53",
+    "new": "47873.53",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260915",
+    "field": "requirement_reported",
+    "old": "328310.94",
+    "new": "328370.94",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260915",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260916-C0002-GBP",
+    "field": "balance",
+    "old": "48168.79",
+    "new": "48228.79",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260916",
+    "field": "requirement_reported",
+    "old": "334413.00",
+    "new": "334473.00",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260916",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260917-C0002-GBP",
+    "field": "balance",
+    "old": "49608.15",
+    "new": "49668.15",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260917",
+    "field": "requirement_reported",
+    "old": "341484.46",
+    "new": "341544.46",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260917",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260918-C0002-GBP",
+    "field": "balance",
+    "old": "47597.96",
+    "new": "47657.96",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260918",
+    "field": "requirement_reported",
+    "old": "346075.68",
+    "new": "346135.68",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260918",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260921-C0002-GBP",
+    "field": "balance",
+    "old": "50150.37",
+    "new": "50210.37",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260921",
+    "field": "requirement_reported",
+    "old": "351541.68",
+    "new": "351601.68",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260921",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260922-C0002-GBP",
+    "field": "balance",
+    "old": "48621.03",
+    "new": "48681.03",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260922",
+    "field": "requirement_reported",
+    "old": "355960.22",
+    "new": "356020.22",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260922",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260923-C0002-GBP",
+    "field": "balance",
+    "old": "50478.77",
+    "new": "50538.77",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260923",
+    "field": "requirement_reported",
+    "old": "363313.17",
+    "new": "363373.17",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260923",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260924-C0002-GBP",
+    "field": "balance",
+    "old": "49175.18",
+    "new": "49235.18",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260924",
+    "field": "requirement_reported",
+    "old": "370603.29",
+    "new": "370663.29",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260924",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260925-C0002-GBP",
+    "field": "balance",
+    "old": "48729.97",
+    "new": "48789.97",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260925",
+    "field": "requirement_reported",
+    "old": "375461.46",
+    "new": "375521.46",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260925",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260928-C0002-GBP",
+    "field": "balance",
+    "old": "46198.32",
+    "new": "46258.32",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260928",
+    "field": "requirement_reported",
+    "old": "378706.65",
+    "new": "378766.65",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260928",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260929-C0002-GBP",
+    "field": "balance",
+    "old": "46198.32",
+    "new": "46258.32",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260929",
+    "field": "requirement_reported",
+    "old": "388744.47",
+    "new": "388804.47",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260929",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-03",
+    "key": "CBS-20260930-C0002-GBP",
+    "field": "balance",
+    "old": "47960.09",
+    "new": "48020.09",
+    "why": "refund TX-0909-0R001 posted twice in the client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260930",
+    "field": "requirement_reported",
+    "old": "395844.86",
+    "new": "395904.86",
+    "why": "firm's reconciliation used its client ledger"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-05",
+    "key": "IRR-EMONEY-GBP-20260930",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-60.00",
+    "why": ""
+  }
+]

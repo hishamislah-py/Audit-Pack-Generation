@@ -1,0 +1,140 @@
+{
+  "scenario_id": "SC3C",
+  "description": "Unexplained gross-to-net: AQ-GBP-20260908 credited 9,950.00 against reported net 9,954.50; -4.50 persists 17 days",
+  "non_passing_results": [
+    [
+      "C08-DIFFERENCE",
+      "2026-09-08/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-09/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-10/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-11/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-14/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-15/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-16/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-17/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-18/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-21/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-22/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-23/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-24/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-25/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-28/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-29/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-30/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C11-BATCH-BANK",
+      "AQ-GBP-20260908",
+      "FAIL"
+    ],
+    [
+      "CASH-BANK-LINK",
+      "LE-GBP-0908-0003",
+      "FAIL"
+    ],
+    [
+      "DISC-LOG",
+      "SGA-GBP-01 from 2026-09-08",
+      "FAIL"
+    ]
+  ],
+  "exceptions": [
+    {
+      "exception_id": "EXC-SC3C-01",
+      "severity": "Critical",
+      "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-09-08|-4.50",
+      "affected_results": 18
+    },
+    {
+      "exception_id": "EXC-SC3C-02",
+      "severity": "High",
+      "root_cause": "C11-BATCH-BANK|AQ-GBP-20260908",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-SC3C-03",
+      "severity": "High",
+      "root_cause": "CASH-BANK-LINK|LE-GBP-0908-0003",
+      "affected_results": 1
+    }
+  ],
+  "evidence_statuses": {
+    "EXC-SC3C-01": "NOT_EVIDENCED"
+  },
+  "investigation_groups": [
+    [
+      "EXC-SC3C-01",
+      "EXC-SC3C-02",
+      "EXC-SC3C-03"
+    ]
+  ],
+  "candidate_relationships": [],
+  "expected_outcome_basis": "scenario design; engine changes E1 (timing evidence) and E2 (investigation groups) implemented",
+  "target_outcome": "Three individual exceptions kept, linked in one investigation group (reference AQ-GBP-20260908; bank entry BE-GBP-0908-AQ1 inside the 8 Sep balance where the difference begins). The -4.50 is NOT_EVIDENCED as timing and stays unexplained: 9,954.50 expected (10,000.00 - 45.50), 9,950.00 received; own-funds top-up indicated; awaiting human review.",
+  "engine_limitations": []
+}

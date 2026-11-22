@@ -1,0 +1,11 @@
+{
+ "generated_at": "2026-10-30T12:14:20+00:00",
+ "status": "GENERATED",
+ "outcome": "PUBLISHED",
+ "case_dir": "uc042_dataset/scn_SC3B_fee_not_itemised",
+ "pack_id": "PACK-SC3B-PER-2026-09-137351796028",
+ "processing_run_id": "RUN-d6c2ee3754b0bd9f",
+ "pack_content_sha256": "1373517960281cc87048f66b98f9dffdaae55ca239b7a4a303f716d4a998f678",
+ "validation_findings": [],
+ "python": "3.12.3"
+}

@@ -1,0 +1,44 @@
+[
+ {
+  "op": "delete_record",
+  "file_id": "IN-07",
+  "key": "ST-SGA-EUR-01-20260216-1700",
+  "why": "17:00 confirmation missing"
+ },
+ {
+  "op": "delete_record",
+  "file_id": "IN-08",
+  "key": "ST-SGA-EUR-01-20260216-EOD",
+  "why": "end-of-day statement missing"
+ },
+ {
+  "op": "delete_record",
+  "file_id": "IN-09",
+  "key": "BE-EUR-0216-L01",
+  "why": "entries of the missing statement"
+ },
+ {
+  "op": "delete_record",
+  "file_id": "IN-09",
+  "key": "BE-EUR-0216-AQ1",
+  "why": "entries of the missing statement"
+ },
+ {
+  "op": "delete_record",
+  "file_id": "IN-09",
+  "key": "BE-EUR-0216-TU1",
+  "why": "entries of the missing statement"
+ },
+ {
+  "op": "delete_record",
+  "file_id": "IN-09",
+  "key": "BE-EUR-0216-SB1",
+  "why": "entries of the missing statement"
+ },
+ {
+  "op": "delete_record",
+  "file_id": "IN-09",
+  "key": "BE-EUR-0216-R01",
+  "why": "entries of the missing statement"
+ }
+]
