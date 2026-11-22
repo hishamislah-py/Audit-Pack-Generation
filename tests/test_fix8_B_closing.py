@@ -498,3 +498,39 @@ def test_a_job_that_raises_unexpectedly_ends_failed_and_releases_its_state(tmp_p
     assert j["state"] == "failed" and "PermissionError" in j["error"]
     after = svc._load(ref, run)
     assert after["pack"]["status"] == "UNAVAILABLE" and "unexpected error" in after["pack"]["reason"]
+
+
+def test_four_readers_and_one_writer_on_the_same_closure_file_never_fail(tmp_path):
+    """R2 (lead, 23 Nov 2026): with readers polling the file, retries alone starved the writer (PermissionError after the
+    retries). Readers and writers of one path now serialise on an in-process per-path lock. Deterministic stress: 4
+    reader threads + 1 writer, 1500 writes, every read sees a complete document, zero errors. OFFLINE, real files."""
+    import threading
+    p = tmp_path / "registry.json"
+    closure_mod._write_json(p, {"n": 0, "pad": "x" * 4000})
+    errors, stop, reads = [], threading.Event(), [0]
+
+    def reader():
+        while not stop.is_set():
+            try:
+                d = closure_mod._read_json(p)
+                assert d is not None and len(d["pad"]) == 4000, d     # never "missing", never partial
+                reads[0] += 1
+            except Exception as e:                                   # noqa: BLE001 - every error is a failure here
+                errors.append(f"read {type(e).__name__}: {e}")
+
+    ts = [threading.Thread(target=reader, daemon=True) for _ in range(4)]
+    for t in ts:
+        t.start()
+    try:
+        for n in range(1, 1501):
+            closure_mod._write_json(p, {"n": n, "pad": "x" * 4000})
+            closure_mod._append(tmp_path / "log.jsonl", {"n": n})
+    except Exception as e:                                           # noqa: BLE001
+        errors.append(f"write {type(e).__name__}: {e}")
+    finally:
+        stop.set()
+        for t in ts:
+            t.join(10)
+    assert errors == [], errors[:5]
+    assert closure_mod._read_json(p)["n"] == 1500 and len(closure_mod._jsonl(tmp_path / "log.jsonl")) == 1500
+    assert reads[0] > 0

@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import threading
 import traceback
@@ -79,17 +80,35 @@ class ClosureError(Exception):
         self.status, self.code, self.message, self.extra = status, code, message, extra
 
 
+# Windows: replacing a file that another thread has open (reading it) fails with a sharing violation (PermissionError,
+# WinError 5). Retrying alone can starve a writer when several readers poll the same file. So every closure JSON / JSONL
+# file is read and written under ONE in-process lock per path (readers and writers of the same file serialise; the lock
+# is only ever held for the file operation itself, never while taking another lock). _retry_sharing stays as the
+# second line of defence for access from outside this process.
+_PATH_LOCKS: dict = {}
+_PATH_LOCKS_GUARD = threading.Lock()
+
+
+def _path_lock(p: Path) -> threading.Lock:
+    key = os.path.normcase(os.path.abspath(str(p)))
+    with _PATH_LOCKS_GUARD:
+        lk = _PATH_LOCKS.get(key)
+        if lk is None:
+            lk = _PATH_LOCKS[key] = threading.Lock()
+        return lk
+
+
 def _write_json(p: Path, doc) -> None:
     p.parent.mkdir(parents=True, exist_ok=True)
     tmp = p.with_name(p.name + f".tmp-{uuid.uuid4().hex[:6]}")
     tmp.write_text(json.dumps(doc, indent=1, ensure_ascii=False, default=str), encoding="utf-8")
-    # Windows: replacing a file another thread is reading at that instant is a transient sharing violation
-    # (PermissionError, WinError 5); retried briefly, a persistent one propagates (packages.store._retry_sharing).
-    _retry_sharing(lambda: tmp.replace(p))
+    with _path_lock(p):
+        _retry_sharing(lambda: tmp.replace(p))
 
 
 def _read_text(p: Path) -> str:
-    return _retry_sharing(lambda: p.read_text(encoding="utf-8"))
+    with _path_lock(p):
+        return _retry_sharing(lambda: p.read_text(encoding="utf-8"))
 
 
 def _read_json(p: Path, default=None):
@@ -103,14 +122,23 @@ def _read_json(p: Path, default=None):
 
 def _append(p: Path, rec: dict) -> None:
     p.parent.mkdir(parents=True, exist_ok=True)
-    with open(p, "a", encoding="utf-8", newline="\n") as f:
-        f.write(json.dumps(rec, ensure_ascii=False, default=str) + "\n")
+    line = json.dumps(rec, ensure_ascii=False, default=str) + "\n"
+
+    def write():
+        with open(p, "a", encoding="utf-8", newline="\n") as f:
+            f.write(line)
+    with _path_lock(p):
+        _retry_sharing(write)
 
 
 def _jsonl(p: Path) -> list[dict]:
     out = []
-    if p.is_file():
-        for line in _read_text(p).splitlines():
+    try:
+        text = _read_text(p)
+    except FileNotFoundError:
+        return out
+    if text:
+        for line in text.splitlines():
             try:
                 out.append(json.loads(line))
             except ValueError:
