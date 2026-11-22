@@ -26,8 +26,11 @@ UNEXPLAINED_EVIDENCE_STATUSES = ("NOT_EVIDENCED", "TIMING_PARTIAL", "TIMING_UNVE
 
 
 class FinalPackValidationError(Exception):
-    def __init__(self, errors):
+    """`diagnostics` (optional, structured): why validation refused the pack, e.g. {"rejected_text_leaks": [...]}."""
+
+    def __init__(self, errors, diagnostics=None):
         self.errors = list(errors)
+        self.diagnostics = dict(diagnostics or {})
         super().__init__("final pack failed validation: " + "; ".join(self.errors[:10]))
 
 
@@ -277,7 +280,9 @@ def assemble(snapshot, closing_summary, review=None, generation=None, preview=Fa
     final["final_content_sha256"] = digest
     errors = validate_final_pack(final, snapshot, closing_summary, review, preview=preview)
     if errors:
-        raise FinalPackValidationError(errors)
+        from .validate import rejected_text_diagnostics
+        raise FinalPackValidationError(errors, {"errors": errors,
+                                                "rejected_text_leaks": rejected_text_diagnostics(final, snapshot)})
     return final
 
 
