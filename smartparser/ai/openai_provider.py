@@ -69,6 +69,7 @@ class OpenAIMappingProposer:
         self._client = client
         self.requests = 0                                   # actual HTTP requests attempted by this adapter
         self.last_usage: dict | None = None
+        self.last_call: dict | None = None                  # Fix8 D1: ids of the last request (no content, no key)
         self.usage_log: list[dict] = []                     # one entry per request: tokens as reported, status
 
     def request_kwargs(self, request: ProposalRequest) -> dict:
@@ -114,11 +115,17 @@ class OpenAIMappingProposer:
         meta = {"category": request.category,
                 "sent_headers": [c["source_header"] for c in sent["unresolved_columns"]],
                 "value_shapes_in_payload": any(c.get("value_shapes") for c in sent["unresolved_columns"])}
+        self.last_usage, self.last_call = None, None
         try:
             resp = self._client.responses.create(**kwargs)
         except Exception as exc:                            # sanitised: never the provider's message text
             kind, status = self._kind(exc)
-            self.usage_log.append({"status": "ERROR", "kind": kind, "http_status": status, **meta})
+            rid = getattr(exc, "request_id", None)
+            self.last_call = {"status": "ERROR", "error_kind": kind, "http_status": status,
+                              "request_id": rid if isinstance(rid, str) else None, "response_id": None,
+                              "response_model": None}
+            self.usage_log.append({"status": "ERROR", "kind": kind, "http_status": status,
+                                   "request_id": self.last_call["request_id"], **meta})
             raise ProviderCallError(kind, status) from None
         u = getattr(resp, "usage", None)
         details = getattr(u, "output_tokens_details", None) if u is not None else None
@@ -127,7 +134,14 @@ class OpenAIMappingProposer:
             "total_tokens": getattr(u, "total_tokens", None),
             "reasoning_tokens": getattr(details, "reasoning_tokens", None) if details is not None else None}
         status = getattr(resp, "status", None)
+        rid = getattr(resp, "_request_id", None)
+        resp_id = getattr(resp, "id", None)
+        self.last_call = {"status": status, "error_kind": None, "http_status": None,
+                          "request_id": rid if isinstance(rid, str) else None,
+                          "response_id": resp_id if isinstance(resp_id, str) else None,
+                          "response_model": getattr(resp, "model", None)}
         self.usage_log.append({"status": status, "usage": self.last_usage, "response_model": getattr(resp, "model", None),
+                               "request_id": self.last_call["request_id"], "response_id": self.last_call["response_id"],
                                **meta})
         if status != "completed":
             reason = getattr(getattr(resp, "incomplete_details", None), "reason", None)

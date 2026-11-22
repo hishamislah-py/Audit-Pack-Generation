@@ -44,7 +44,9 @@ def decide_all(ctx, pid, vid):
         if not row.get("read_only"):
             want = TRUTH[row["source_header"]]
             R(ctx, "POST", f"review/{pid}/{vid}/decision", {
-                "action": "MAP" if row["suggested_field"] == want else "CHANGE", "source_index": row["source_index"],
+                # Fix8 D4: the money column (AMBIGUOUS proposal) needs an explicit field choice, never a one-click MAP
+                "action": "MAP" if row["suggested_field"] == want and want != "amount" else "CHANGE",
+                "source_index": row["source_index"],
                 "canonical_field": want, "reason": "TEST-ONLY synthetic ground truth"})
 
 

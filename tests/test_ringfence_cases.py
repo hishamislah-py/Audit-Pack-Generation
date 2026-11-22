@@ -418,7 +418,9 @@ def test_proposal_review_partial_decisions_survive_and_ai_proposals_can_be_chang
         ["posting_dt", "txn_amt"]
     for h in ("posting_dt", "txn_amt"):
         x = next(y for y in rv["rows"] if y["source_header"] == h)
-        R(ctx2, "POST", f"cases/{ref}/review/{vid}/decision", {"action": "CHANGE", "source_index": x["source_index"],
+        # Fix8 D4: the AMBIGUOUS money proposal offers CLARIFY (explicit field) instead of Map / Change
+        R(ctx2, "POST", f"cases/{ref}/review/{vid}/decision", {"action": "CLARIFY" if h == "txn_amt" else "CHANGE",
+                                                              "source_index": x["source_index"],
                                                               "canonical_field": {"posting_dt": "posted_ts",
                                                                                   "txn_amt": "amount"}[h]})
     d = R(ctx2, "POST", f"cases/{ref}/review/{vid}/confirm")

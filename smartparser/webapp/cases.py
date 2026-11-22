@@ -31,6 +31,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+from ..mapping import financial
 from ..packages import review_api
 from ..packages.models import NEEDS_NEW_VERSION
 from . import identity
@@ -506,20 +507,27 @@ class CaseService:
             pass
         fields = {f["name"]: f for f in d["canonical_fields"]}
         mech = d.get("mechanism")
+        schema = self.ctx.reg.get(d["evidence_category"])
+        values = self._map_values(pid, vid)
         rows = []
         for r in d["rows"]:
             att = needs_attention(r, mech)
             f = fields.get((r.get("decision") or {}).get("canonical_field") or r.get("suggested_field") or "")
             dup = bool(r.get("duplicate_claim") or r.get("same_header_positions"))
+            # Fix8 D4: an AI proposal onto an ambiguous / interchangeable financial field needs an explicit choice
+            clar = financial.clarification(schema, r) if att else None
             acts = []
             if att and d["editable"]:
-                if r.get("suggested_field"):
-                    acts.append("MAP")
-                # a column whose header deterministically matches a field (canonical name or case/whitespace/alias
-                # variant) can only be mapped to that field, ignored, or the file rejected (backend RULE_CONTRADICTION)
-                if not (mech == "column_review_case" and r.get("suggested_field")
-                        and r.get("suggestion_basis") in ("deterministic", "diagnostic_name_match")):
-                    acts.append("CHANGE")
+                if clar:
+                    acts.append("CLARIFY")
+                else:
+                    if r.get("suggested_field"):
+                        acts.append("MAP")
+                    # a column whose header deterministically matches a field (canonical name or case/whitespace/alias
+                    # variant) can only be mapped to that field, ignored, or the file rejected (RULE_CONTRADICTION)
+                    if not (mech == "column_review_case" and r.get("suggested_field")
+                            and r.get("suggestion_basis") in ("deterministic", "diagnostic_name_match")):
+                        acts.append("CHANGE")
                 if mech == "column_review_case":
                     acts.append("IGNORE")
             dec = r.get("decision")
@@ -535,9 +543,24 @@ class CaseService:
                          "field_type": f["type"] if f else None, "field_required": f["required"] if f else None,
                          "financial": bool(f and f["type"] in ("amount", "signed")),
                          "samples": (prof.get(r["source_index"]) or {}).get("samples", []),
-                         "available_actions": acts})
+                         "available_actions": acts,
+                         # Fix8 D1/D4: where the suggestion comes from, what the validator said, why, and checks
+                         "proposal_source": self._map_source(r, d), "proposal_class": r.get("validation"),
+                         "proposal_explanation": r.get("proposal_explanation"),
+                         "proposal_alternatives": r.get("proposal_alternatives") or [],
+                         "decision_source": None if not dec or dec.get("action") == "DETERMINISTIC" else
+                         ("analyst" if dec.get("action") == "CHANGE" else self._map_source(r, d)),
+                         "clarification_required": bool(clar), "clarification_reason": clar,
+                         "value_check": self._map_value_check(schema, r, values) if att else None})
         attention = [r for r in rows if r["needs_attention"]]
         remaining = [r for r in attention if not r["decided"]]
+        try:
+            fin = review_api.financial_view(self.ctx.svc, pid, vid)
+        except Exception as exc:                                   # shown, never hidden
+            fin = {"relationships_defined": None, "error": f"{type(exc).__name__}: {exc}"[:300]}
+        extra = {"proposal_id": d.get("proposal_id"), "proposal_provider_id": d.get("proposal_provider_id"),
+                 "unresolved_headers": d.get("unresolved_headers") or [], "financial_checks": fin,
+                 "clarifications_required": sum(1 for r in remaining if r["clarification_required"])}
         return {"case_ref": ref, "package_id": pid, "file_version_id": vid, "evidence_category": d["evidence_category"],
                 "category_title": d["category_title"], "original_filename": d["original_filename"],
                 "version_number": d["version_number"], "version_status": d["version_status"],
@@ -547,7 +570,44 @@ class CaseService:
                                          "remaining": len(remaining), "recognised": len(rows) - len(attention)},
                 "required_not_covered": d.get("summary", {}).get("required_not_covered", []),
                 "can_confirm": d["editable"] and not remaining,
-                "file_actions": ["CONFIRM", "REJECT"] if d["editable"] else []}
+                "file_actions": ["CONFIRM", "REJECT"] if d["editable"] else [], **extra}
+
+    # ---------------------------------------------------------------------------------------- Fix8 mapping helpers
+    def _map_values(self, pid: str, vid: str) -> dict[int, list[str]]:
+        """Every cell value per source column of the stored original (SHA-256 verified); local only."""
+        v = self.ctx.svc.load(pid).versions[vid]
+        try:
+            data = self.ctx.svc.evidence.read_original(v.source_sha256)
+            if data is None or hashlib.sha256(data).hexdigest() != v.source_sha256 or data[:5] == b"%PDF-":
+                return {}
+            return financial.read_columns(data, v.original_filename)[1]
+        except Exception:
+            return {}
+
+    @staticmethod
+    def _map_source(r: dict, d: dict) -> str | None:
+        b = r.get("suggestion_basis")
+        if b == "proposal":
+            prov = d.get("proposal_provider_id") or ""
+            return "AI (recorded test fixture)" if prov.startswith("recorded_stub") or not prov and \
+                d.get("review_kind") == "PROPOSAL_REVIEW" else "AI"
+        if b in ("deterministic", "diagnostic_name_match"):
+            return "deterministic"
+        return None
+
+    @staticmethod
+    def _map_value_check(schema, r: dict, values: dict[int, list[str]]) -> dict | None:
+        """The field rule of the column's current target (decision, else suggestion) over EVERY value of the column."""
+        from ..classify.content_check import _value_error
+        fld = (r.get("decision") or {}).get("canonical_field") or r.get("suggested_field")
+        f = schema.field(fld) if fld else None
+        vals = values.get(r["source_index"])
+        if f is None or vals is None:
+            return None
+        bad = [x for x in vals if x != "" and _value_error(f.source_type, f.constraints.pattern,
+                                                            f.constraints.allowed_values, x)]
+        return {"field": fld, "rows": len(vals), "failed": len(bad), "empty": sum(1 for x in vals if x == ""),
+                "status": "PASS" if not bad else "FAIL", "examples": bad[:3]}
 
     def decide(self, ref: str, vid: str, action: str, source_index: int, canonical_field: str | None) -> dict:
         with self.lock:
@@ -565,14 +625,24 @@ class CaseService:
                                                                                              "ignored)")
             elif action == "MAP":
                 backend, field, others = "MAP", None, None
-            elif action == "CHANGE":
+            elif action in ("CHANGE", "CLARIFY"):
                 if not canonical_field:
-                    raise CaseError(400, "INVALID", "CHANGE needs the canonical field")
+                    raise CaseError(400, "INVALID", f"{action} needs the canonical field (an explicit choice)")
                 backend, field, others = "CHANGE", canonical_field, None
             else:
                 backend, field, others = "IGNORE_COLUMN", None, None
             with self.ctx.lock:
                 review_api.decide(self.ctx.svc, self.ctx.reviewer, pid, vid, backend, source_index, reason, field, others)
+                if action == "CLARIFY":
+                    # Fix8 D4: recorded after the decision succeeded (the explicit choice and what was proposed)
+                    after = self._review(c, vid)
+                    self._audit("ANALYST_MAPPING_CLARIFIED", c, file_version_id=vid, source_index=source_index,
+                                source_header=row["source_header"], proposed_field=row["suggested_field"],
+                                proposal_class=row.get("proposal_class"), chosen_field=canonical_field,
+                                clarification_reason=row.get("clarification_reason"),
+                                accepted_as_proposed=canonical_field == row["suggested_field"],
+                                financial_checks=[{k: r.get(k) for k in ("relationship", "status", "detail")}
+                                                  for r in (after.get("financial_checks") or {}).get("current", [])])
             c["last_activity_at"] = now()
             self._save(c)
             return self.review(ref, vid)
@@ -589,14 +659,21 @@ class CaseService:
                 raise CaseError(409, "DECISIONS_OUTSTANDING", f"{d['counts']['remaining']} column(s) still need a "
                                 "decision")
             with self.ctx.lock:
+                # Fix8 D2: pre-validate the whole effective mapping, then apply atomically (review_api.confirm restores
+                # the review state on any failure); ANALYST_REVIEW_CONFIRMED is recorded only after it took effect.
+                try:
+                    res = review_api.confirm(self.ctx.svc, self.ctx.reviewer, pid, vid,
+                                             REASON.format(action="CONFIRM_FILE"),
+                                             REASON.format(action="CONFIRM_FILE (recognised column)"))
+                except review_api.ApiError as exc:
+                    self._audit("ANALYST_REVIEW_CONFIRMATION_FAILED", c, file_version_id=vid, error=exc.code,
+                                reason=exc.message[:1500], problems=exc.problems[:20],
+                                recognised_columns=d["counts"]["recognised"], decisions_left_unchanged=True)
+                    raise CaseError(exc.status, exc.code, exc.message) from None
                 self._audit("ANALYST_REVIEW_CONFIRMED", c, file_version_id=vid,
-                            recognised_columns_confirmed=d["counts"]["recognised"])
-                if d["review_kind"] != "PROPOSAL_REVIEW":
-                    for r in d["rows"]:
-                        if not r["needs_attention"] and not r["decided"]:
-                            review_api.decide(self.ctx.svc, self.ctx.reviewer, pid, vid, "MAP", r["source_index"],
-                                              REASON.format(action="CONFIRM_FILE (recognised column)"))
-                review_api.complete(self.ctx.svc, self.ctx.reviewer, pid, vid, REASON.format(action="CONFIRM_FILE"))
+                            recognised_columns_confirmed=len(res["recognised_mapped"]),
+                            recognised_positions=[i + 1 for i in res["recognised_mapped"]],
+                            version_status=res["version_status"])
                 self.ctx.svc.validate(pid)
             c["last_activity_at"] = now()
             self._save(c)

@@ -76,11 +76,21 @@ class WorkflowResult:
 class MappingOrchestrator:
     def __init__(self, registry, store: RuleStore, evidence: EvidenceStore, gateway: ProposalGateway,
                  poc_policy: PocAutoAcceptPolicy, log: AuditLog, preview_dir: str | Path | None = None,
-                 handoff_policy: HandoffPolicy = HandoffPolicy()):
+                 handoff_policy: HandoffPolicy = HandoffPolicy(), manual_review_fallback: bool = False,
+                 proposals_as_cases: bool = False):
         if evidence.root is None:
             raise ValueError("the orchestrator needs a persistent evidence store (originals are reprocessed)")
         self.registry, self.store, self.evidence, self.gateway = registry, store, evidence, gateway
         self.poc, self.log, self.preview_dir, self.handoff_policy = poc_policy, log, preview_dir, handoff_policy
+        # Fix8 D1 / DEF-A1 (opt-in; the analyst application enables both):
+        #   manual_review_fallback - a controlled CSV with a supplied category whose unresolved columns get NO usable
+        #     proposal (AI off, budget denied, provider failure, malformed / invalid / rejected proposal) opens a
+        #     MANUAL_MAPPING column-review case (CHANGE / IGNORE / reject) naming those columns, instead of a HOLD that
+        #     the package service records as FAILED_VALIDATION with no way forward but a new file;
+        #   proposals_as_cases - a validated proposal that needs a person is reviewed in an AI_PROPOSAL column-review case
+        #     (MAP = accept, CHANGE = correct, IGNORE, reject the file) instead of a proposal session.
+        # Nothing is ever applied without a person; the POC auto-accept policy is untouched.
+        self.manual_review_fallback, self.proposals_as_cases = manual_review_fallback, proposals_as_cases
 
     # ------------------------------------------------------------------ main entry
     def process(self, data: bytes, filename: str, reporting_period: str | None = None,
@@ -128,6 +138,8 @@ class MappingOrchestrator:
             wr.reasons = [oc.reason]
             if dup:     # 3B-7: duplicate claims go to a person even when no proposal can be made
                 return self._open_conflict_case(wr, res, category, rules, dup, None)
+            if self._manual_fallback_applies(res, category):
+                return self._open_manual_case(wr, res, category, rules, oc, [oc.reason])
             return wr
         pd = decide(oc.record, self.poc, error=None if oc.record else oc.reason)
         if dup and pd.decision != Decision.HUMAN_REVIEW:
@@ -149,6 +161,11 @@ class MappingOrchestrator:
             # 3B-11: UNMAPPABLE -> one column-review case (MAP / CHANGE / IGNORE / LEAVE_UNRESOLVED / REJECT) seeded with
             # the deterministic matches and the validated proposal; no parallel proposal session
             return self._open_unmappable_case(wr, res, category, rules, oc.record, no_match)
+        if pd.decision == Decision.HUMAN_REVIEW and self.proposals_as_cases and not dup and oc.record is not None \
+                and not oc.record.response_error:
+            return self._open_ai_proposal_case(wr, res, category, rules, oc)
+        if pd.decision == Decision.REJECT_OR_HOLD and self._manual_fallback_applies(res, category):
+            return self._open_manual_case(wr, res, category, rules, oc, pd.reasons)
         if pd.decision == Decision.HUMAN_REVIEW:
             if oc.record is not None and not oc.record.response_error and oc.request is not None:
                 wr.review_session = start_session(oc.record, oc.request, list(res.csv_extraction.raw_headers),
@@ -256,7 +273,9 @@ class MappingOrchestrator:
                                    schema, raw, rules.without_file_identity(), self.log, suggestions=sugg,
                                    content_classification=content,
                                    proposal_id=usable.proposal_id if usable else None,
-                                   proposal_columns=usable.columns if usable else None, review_reason=reason)
+                                   proposal_columns=usable.columns if usable else None, review_reason=reason,
+                                   proposal_provider_id=usable.provider_id if usable else None,
+                                   unresolved_headers=wr.unresolved_headers)
         wr.decision, wr.route = Decision.HUMAN_REVIEW, "HEADER_VARIANT"
         wr.reasons = [reason] + [r for r in wr.reasons if r != reason]
         return wr
@@ -273,8 +292,60 @@ class MappingOrchestrator:
         wr.intake_case = open_case("UNMAPPABLE_PROPOSAL", wr.intake_id, wr.source_sha256,
                                    res.metadata.original_filename, schema, raw, rules, self.log, suggestions=sugg,
                                    proposal_id=record.proposal_id, proposal_columns=record.columns,
-                                   review_reason=reason)
+                                   review_reason=reason, proposal_provider_id=record.provider_id,
+                                   unresolved_headers=wr.unresolved_headers)
         wr.decision = Decision.HUMAN_REVIEW
+        wr.reasons = [reason] + [r for r in wr.reasons if r != reason]
+        return wr
+
+    # ------------------------------------------------------------------ Fix8 D1 / DEF-A1
+    def _manual_fallback_applies(self, res: EvidenceResult, category: str | None) -> bool:
+        schema = self.registry.get(category) if category else None
+        return bool(self.manual_review_fallback and schema is not None and is_controlled(schema)
+                    and res.csv_extraction is not None and res.csv_extraction.raw_headers)
+
+    def _open_manual_case(self, wr: WorkflowResult, res: EvidenceResult, category: str, rules, oc: ProposalOutcome,
+                          why: list[str]) -> WorkflowResult:
+        """No usable proposal: the analyst maps the unresolved columns by hand (CHANGE / IGNORE) or rejects the file.
+        Deterministic matches are kept as suggestions; a usable part of an invalid proposal is shown, never applied."""
+        schema = self.registry.get(category)
+        raw = list(res.csv_extraction.raw_headers)
+        record = oc.record if oc.record is not None and not oc.record.response_error else None
+        base_rules = rules.without_file_identity()
+        sugg = deterministic_suggestions(raw, schema, base_rules, record.columns if record else None)
+        unresolved = wr.unresolved_headers or [raw[i] for i, (f, _) in enumerate(sugg) if f is None]
+        reason = ("no usable AI proposal for the column(s) the deterministic rules could not map: " +
+                  ", ".join(repr(h) for h in unresolved) + " - map each by hand (choose the field) or ignore it, or "
+                  "reject the file. Why no proposal: " + "; ".join(r for r in why if r)[:600])
+        cls = res.classification
+        content = {"category": cls.category, "method": cls.method.value}             if cls and cls.category and cls.method and cls.category == category else None
+        wr.intake_case = open_case("MANUAL_MAPPING", wr.intake_id, wr.source_sha256, res.metadata.original_filename,
+                                   schema, raw, base_rules, self.log, suggestions=sugg,
+                                   content_classification=content,
+                                   proposal_id=record.proposal_id if record else None,
+                                   proposal_columns=record.columns if record else None, review_reason=reason,
+                                   proposal_provider_id=record.provider_id if record else None,
+                                   unresolved_headers=unresolved)
+        wr.decision, wr.route = Decision.HUMAN_REVIEW, "MANUAL_REVIEW"
+        wr.reasons = [reason] + [r for r in wr.reasons if r != reason]
+        return wr
+
+    def _open_ai_proposal_case(self, wr: WorkflowResult, res: EvidenceResult, category: str, rules,
+                               oc: ProposalOutcome) -> WorkflowResult:
+        schema = self.registry.get(category)
+        raw = list(res.csv_extraction.raw_headers)
+        rec = oc.record
+        base_rules = rules.without_file_identity()
+        sugg = deterministic_suggestions(raw, schema, base_rules, rec.columns)
+        listed = ", ".join(f"{c.source_header!r} -> {c.proposed_field or 'no field'} ({c.validation_class})"
+                           for c in rec.columns)
+        reason = (f"AI proposal {rec.proposal_id} ({rec.provider_id}) for the column(s) the deterministic rules could "
+                  f"not map: {listed}; an analyst accepts, corrects or ignores each proposed column")
+        wr.intake_case = open_case("AI_PROPOSAL", wr.intake_id, wr.source_sha256, res.metadata.original_filename,
+                                   schema, raw, base_rules, self.log, suggestions=sugg,
+                                   proposal_id=rec.proposal_id, proposal_columns=rec.columns, review_reason=reason,
+                                   proposal_provider_id=rec.provider_id, unresolved_headers=wr.unresolved_headers)
+        wr.decision, wr.route = Decision.HUMAN_REVIEW, "AI_PROPOSAL_REVIEW"
         wr.reasons = [reason] + [r for r in wr.reasons if r != reason]
         return wr
 

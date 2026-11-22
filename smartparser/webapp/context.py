@@ -76,6 +76,7 @@ class AppContext:
     lock: threading.RLock = field(default_factory=threading.RLock)
     jobs: dict = field(default_factory=dict)
     job_listeners: list = field(default_factory=list)      # callables(job) run after a job reaches a final state
+    mapping_ai: object = None                               # Fix8 D1: ai.live_config.MappingAISettings (None = off)
 
     def __post_init__(self):
         self.root = Path(self.root).resolve()
@@ -88,15 +89,23 @@ class AppContext:
             gw = ProposalGateway(proposer=self.stub, config=AIConfig(enabled=True, provider="recorded_stub"), log=self.log)
             self.llm_mode = {"mode": "RECORDED", "label": "Recorded LLM responses (offline test fixtures)",
                              "fixtures": [Path(p).name for p in self.recorded]}
+        elif self.mapping_ai is not None and self.mapping_ai.enabled:
+            self.stub = None
+            gw, self.llm_mode = self._live_mapping_gateway()
         else:
             self.stub = None
             gw = ProposalGateway(proposer=DisabledLiveProvider(), config=AIConfig(), log=self.log)
             self.llm_mode = {"mode": "DISABLED", "label": "AI proposals disabled", "fixtures": []}
+        self.gateway = gw
         rules_dir = self.root / "rules"
         rules = RuleStore(rules_dir, reg) if rules_dir.is_dir() and any(rules_dir.iterdir()) else \
             RuleStore.initialise(rules_dir, reg)          # a workspace copy of the packaged rules (never written back)
+        # Fix8 D1/DEF-A1: a file whose unresolved columns get no usable proposal (AI off, denied, provider failure,
+        # invalid proposal) opens a MANUAL column review instead of a FAILED_VALIDATION dead end; a live AI proposal is
+        # reviewed in a column-review case (MAP / CHANGE / IGNORE / reject). The POC auto-accept policy is unchanged.
         orch = MappingOrchestrator(reg, rules, EvidenceStore(self.root / "evidence"), gw, PocAutoAcceptPolicy.load(),
-                                   self.log)
+                                   self.log, manual_review_fallback=True,
+                                   proposals_as_cases=self.llm_mode.get("mode") == "LIVE")
         self.authority = AuthorityPolicy.load(self.authority_path) if self.authority_path else AuthorityPolicy.load()
         self.svc = PackageService(PackageStore(self.root / "pk"), orch, self.authority)
         self.staging = self.root / "staging"
@@ -114,6 +123,13 @@ class AppContext:
                 pass
         from .cases import CaseService                            # Ringfence case registry (additive)
         self.cases = CaseService(self)
+
+    def _live_mapping_gateway(self):
+        """Fix8 D1: the existing ProposalGateway around the existing OpenAI mapping proposer, configured from the
+        server's AI env file (exact allowlist). The usage ledger is kept in the workspace, so the daily cap survives
+        a restart."""
+        from ..ai.live_config import build_mapping_gateway
+        return build_mapping_gateway(self.mapping_ai, self.log, self.root / "ai_mapping_usage.json")
 
     # ============================================================================================ identity (Fix8 D6, I-1)
     @property

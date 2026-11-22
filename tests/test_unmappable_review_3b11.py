@@ -243,7 +243,11 @@ def test_api_session_flow_for_ambiguous_proposals(ws):
     base = f"/api/review/{idx['B']['package_id']}/{idx['B']['file_version_id']}"
     st, err = call(a, "POST", base + "/decision", {"action": "IGNORE_COLUMN", "source_index": 4, "reason": "x"})
     assert st == 400 and err["error"] == "UNSUPPORTED_ACTION"
-    assert call(a, "POST", base + "/decision", {"action": "MAP", "source_index": 4, "reason": "signed amount checked"})[0] == 200
+    # Fix8 D4: an AMBIGUOUS money proposal is never a one-click MAP; the analyst names the field explicitly (CHANGE)
+    st, err = call(a, "POST", base + "/decision", {"action": "MAP", "source_index": 4, "reason": "signed amount checked"})
+    assert st == 400 and err["error"] == "CLARIFICATION_REQUIRED"
+    assert call(a, "POST", base + "/decision", {"action": "CHANGE", "source_index": 4, "reason": "signed amount checked",
+                                                "canonical_field": "amount"})[0] == 200
     assert call(a, "POST", base + "/decision", {"action": "MAP", "source_index": 7, "reason": "reference checked"})[0] == 200
     st, d = call(a, "POST", base + "/complete", {"basis": "proposal confirmed"})
     assert st == 200 and d["outcome"]["version_status"] == "VALIDATED" and len(d["outcome"]["handoff"]["checks"]) == 14

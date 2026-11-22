@@ -86,6 +86,9 @@ class CaseColumn(_Strict):
     proposal_assessment: str | None = None            # the proposer's own assessment (CLEAR / ... / UNMAPPABLE)
     validation_class: str | None = None               # the deterministic validator's class (CLEAR ... NO_MATCH)
     proposal_note: str | None = None
+    # Fix8 D1: the proposer's own explanation and valid alternatives, shown to the analyst (advisory text only)
+    proposal_explanation: str | None = None
+    proposal_alternatives: list[str] = Field(default_factory=list)
 
 
 class CaseDecision(_Strict):
@@ -113,7 +116,10 @@ class CaseTransition(_Strict):
 
 class ColumnReviewCase(_Strict):
     case_id: str
-    kind: Literal["HEADER_COUNT_MISMATCH", "DETERMINISTIC_CONFLICT", "UNMAPPABLE_PROPOSAL", "HEADER_VARIANT"]
+    # Fix8 D1: MANUAL_MAPPING = unresolved columns with no usable proposal (AI off / denied / provider failure / invalid
+    # proposal); AI_PROPOSAL = a validated live AI proposal reviewed column by column
+    kind: Literal["HEADER_COUNT_MISMATCH", "DETERMINISTIC_CONFLICT", "UNMAPPABLE_PROPOSAL", "HEADER_VARIANT",
+                  "MANUAL_MAPPING", "AI_PROPOSAL"]
     review_reason: str = ""
     intake_id: str
     source_sha256: str
@@ -132,6 +138,8 @@ class ColumnReviewCase(_Strict):
     potential_duplicate_claims: dict[str, list[int]]   # canonical field -> positions suggested for it
     content_classification: dict | None = None         # e.g. the file's header exactly matches another category
     proposal_id: str | None = None
+    proposal_provider_id: str | None = None             # Fix8 D1: who proposed (e.g. openai-responses/<model>)
+    unresolved_headers: list[str] = Field(default_factory=list)   # Fix8 D1: columns the deterministic rules left open
     state: CaseState = CaseState.OPEN
     decisions: list[CaseDecision] = Field(default_factory=list)       # append-only history
     history: list[CaseTransition] = Field(default_factory=list)
@@ -176,7 +184,8 @@ def name_diagnostics(raw_headers: list[str], schema, rules: MappingRules) -> lis
 def open_case(kind: str, intake_id: str, source_sha256: str, original_filename: str | None, schema, raw_headers: list[str],
               rules: MappingRules, log: AuditLog, suggestions: list[tuple[str | None, str]] | None = None,
               content_classification: dict | None = None, proposal_id: str | None = None,
-              proposal_columns=None, review_reason: str = "") -> ColumnReviewCase:
+              proposal_columns=None, review_reason: str = "", proposal_provider_id: str | None = None,
+              unresolved_headers: list[str] | None = None) -> ColumnReviewCase:
     suggestions = suggestions or name_diagnostics(raw_headers, schema, rules)
     findings = {}
     for pc in proposal_columns or []:                 # 3B-11: show the reviewer what the proposal concluded
@@ -185,7 +194,9 @@ def open_case(kind: str, intake_id: str, source_sha256: str, original_filename: 
                 "no valid canonical field was proposed" if vc == "NO_MATCH" else
                 f"proposal {pc.proposed_field} ({pc.proposer_assessment}) validated as {vc}")
         findings[pc.source_index] = dict(proposal_field=pc.proposed_field, proposal_assessment=pc.proposer_assessment,
-                                         validation_class=vc, proposal_note=note)
+                                         validation_class=vc, proposal_note=note,
+                                         proposal_explanation=(pc.explanation or None),
+                                         proposal_alternatives=list(pc.alternatives_valid or []))
     same: dict[str, list[int]] = {}
     for i, h in enumerate(raw_headers):
         same.setdefault(h, []).append(i)
@@ -208,9 +219,11 @@ def open_case(kind: str, intake_id: str, source_sha256: str, original_filename: 
                                   for c in cols if not c.suggested_field],
         duplicate_incoming_headers={h: p for h, p in same.items() if len(p) > 1},
         potential_duplicate_claims={f: p for f, p in claims.items() if len(p) > 1},
-        content_classification=content_classification, proposal_id=proposal_id, review_reason=review_reason)
+        content_classification=content_classification, proposal_id=proposal_id, review_reason=review_reason,
+        proposal_provider_id=proposal_provider_id, unresolved_headers=list(unresolved_headers or []))
     log.append("INTAKE_CASE_OPENED", intake_id=intake_id, source_sha256=source_sha256, proposal_id=proposal_id,
                details={"case_id": case.case_id, "kind": kind, "category": schema.category,
+                        "unresolved_headers": case.unresolved_headers, "proposal_provider_id": proposal_provider_id,
                         "incoming_header_count": case.incoming_header_count,
                         "expected_field_count": case.expected_field_count,
                         "duplicate_incoming_headers": case.duplicate_incoming_headers,
@@ -237,6 +250,28 @@ def case_context(case: ColumnReviewCase, evidence, registry, rules: MappingRules
 
 
 # ------------------------------------------------------------------------------------------------ decisions
+def recognised_positions(case: ColumnReviewCase) -> dict[int, str]:
+    """Fix8 D2: columns that are confirmed WITH THE FILE (no per-column decision): the header is exactly the canonical
+    field name it is deterministically suggested for, and no other column claims that field or shares the header (the
+    same rule as the analyst application's `needs_attention`, owner decision O2). Until the file is confirmed these
+    columns have no decision, but they already claim their field: a conflicting decision is refused when it is made."""
+    out = {}
+    for c in case.columns:
+        if c.suggested_field and c.source_header == c.suggested_field and \
+                c.suggestion_basis in ("deterministic", "diagnostic_name_match") and not c.same_header_positions and \
+                len(case.potential_duplicate_claims.get(c.suggested_field, [])) < 2:
+            out[c.source_index] = c.suggested_field
+    return out
+
+
+def effective_mapping(case: ColumnReviewCase, include_recognised: bool = True) -> dict[int, str]:
+    """Position -> field as the file would be mapped now: decided columns plus (undecided) recognised columns."""
+    eff = case.effective()
+    out = {i: f for i, f in recognised_positions(case).items() if i not in eff} if include_recognised else {}
+    out.update(case.mapped())
+    return out
+
+
 def _move(case: ColumnReviewCase, to: CaseState, actor: str, log: AuditLog, note: str = "") -> None:
     if to not in TRANSITIONS[case.state]:
         raise ReviewError(f"invalid transition {case.state} -> {to}")
@@ -263,6 +298,14 @@ def _check_field(case: ColumnReviewCase, ctx: CaseContext, pos: int, fld: str, a
                                                                 f.constraints.allowed_values, v)]
     if bad:
         raise ReviewError(f"VALUE_INCOMPATIBLE: {len(bad)} sample value(s) of column {pos} break the {fld} rule")
+    eff = case.effective()
+    recognised = [i for i, m in recognised_positions(case).items()
+                  if m == fld and i != pos and i not in allow_positions and i not in eff]
+    if recognised:
+        # Fix8 D2: an undecided recognised column already claims its field (it is confirmed with the file)
+        named = ", ".join(f"#{i + 1} {case.headers[i]!r}" for i in recognised)
+        raise ReviewError(f"DUPLICATE_TARGET: {fld} is already claimed by the recognised column {named}, which is "
+                          f"confirmed with the file; choose another field for column #{pos + 1} or ignore it")
 
 
 def _record(case, log, reviewer, kind, pos, action, fld, reason, group_id=None) -> CaseDecision:
@@ -328,6 +371,47 @@ def decide(case: ColumnReviewCase, action: str, reviewer: Reviewer, reason: str,
                            f"({next(c.source_header for c in case.columns if c.source_index == source_index)}): {others_reason}",
                            gid))
     return out
+
+
+def prevalidate(case: ColumnReviewCase, ctx: CaseContext, registry) -> list[str]:
+    """Fix8 D2: what finalise_case would refuse for the EFFECTIVE mapping (decisions + recognised columns), computed
+    without writing a decision, an audit event or a rule. [] = the confirmation can be applied."""
+    if case.state not in (CaseState.OPEN, CaseState.UNDER_REVIEW, CaseState.HELD):
+        return [f"REVIEW_STATE: the case is {case.state}"]
+    problems = []
+    schema = registry.get(case.category)
+    if definition_sha256(schema) != case.registry_definition_sha256:
+        problems.append("REGISTRY_CHANGED: the registry definition changed since the case was opened")
+    if ctx.raw_headers != case.headers:
+        problems.append("SOURCE_CHANGED: the stored file's header differs from the case")
+    eff = case.effective()
+    rec = recognised_positions(case)
+    undecided = [i for i in range(len(case.headers)) if i not in eff and i not in rec]
+    if undecided:
+        problems.append(f"DECISIONS_OUTSTANDING: columns without a decision: {[i + 1 for i in undecided]}")
+    mapping = effective_mapping(case)
+    by_field: dict[str, list[int]] = {}
+    for i, f in mapping.items():
+        by_field.setdefault(f, []).append(i)
+    for f, ps in sorted(by_field.items()):
+        if len(ps) > 1:
+            named = ", ".join(f"#{i + 1} {case.headers[i]!r}" for i in sorted(ps))
+            problems.append(f"DUPLICATE_TARGET: {f} would be mapped from columns {named}")
+    for pos, fld in sorted(mapping.items()):
+        f = ctx.schema.field(fld)
+        if f is None:
+            problems.append(f"INVALID_FIELD: {fld!r} is not a field of {case.category}")
+            continue
+        det = ctx.deterministic.get(pos)
+        if det is not None and det != fld:
+            problems.append(f"RULE_CONTRADICTION: column #{pos + 1} ({case.headers[pos]!r}) matches {det!r} "
+                            f"deterministically, not {fld!r}")
+        bad = [v for v in ctx.samples.get(pos, []) if _value_error(f.source_type, f.constraints.pattern,
+                                                                    f.constraints.allowed_values, v)]
+        if bad:
+            problems.append(f"VALUE_INCOMPATIBLE: {len(bad)} sample value(s) of column #{pos + 1} "
+                            f"({case.headers[pos]!r}) break the {fld} rule")
+    return problems
 
 
 def reject_case(case: ColumnReviewCase, reviewer: Reviewer, reason: str, policy: AuthorityPolicy,

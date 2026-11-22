@@ -272,6 +272,7 @@ def controlled_map(raw_headers: list[str], schema: SchemaDefinition, rules: Mapp
     for pos, h in enumerate(raw_headers):
         found = targets.get(_key(h, pol), [])
         fields = {f for f, _, _ in found}
+        approved_by = None
         if pos in override:
             o_field, o_kind, o_id, o_disp, o_reason = override[pos]
             if o_disp == "IGNORE":
@@ -289,6 +290,11 @@ def controlled_map(raw_headers: list[str], schema: SchemaDefinition, rules: Mapp
                     unexpected.append(h)          # left unmapped by the reviewer: still unexpected under the policy
                     continue
                 found, fields = [(o_field, o_kind, o_id)], {o_field}
+            elif len(fields) == 1 and o_field in fields:
+                # Fix8 D3: the deterministic match agrees with the approved rule for this exact header list; the
+                # approved rule is what governs the column (a person decided it), so it is attributed to that rule.
+                # The deterministic variant (exact / case / whitespace / alias) is kept as the match detail.
+                approved_by = (o_kind, o_id)
         if not found:
             unexpected.append(h)
             continue
@@ -312,10 +318,13 @@ def controlled_map(raw_headers: list[str], schema: SchemaDefinition, rules: Mapp
             variations.add(how)
         claims.setdefault(fld, []).append(h)
         rule_id = alias_id if kind in ("alias", "layout", "file_mapping") else None
-        mappings.append({"source_header": h, "source_position": pos, "canonical_field": fld,
-                         "canonical_position": canon[fld], "match": how,
-                         "alias_id": alias_id if kind == "alias" else None,
-                         "rule_id": rule_id, "rule_version": versions.get(rule_id) if rule_id else None})
+        entry = {"source_header": h, "source_position": pos, "canonical_field": fld,
+                 "canonical_position": canon[fld], "match": how,
+                 "alias_id": alias_id if kind == "alias" else None,
+                 "rule_id": rule_id, "rule_version": versions.get(rule_id) if rule_id else None}
+        if approved_by is not None:
+            entry.update(approved_by=approved_by[0], rule_id=approved_by[1], rule_version=versions.get(approved_by[1]))
+        mappings.append(entry)
     duplicates = {f: hs for f, hs in claims.items() if len(hs) > 1}
     missing = [f.name for f in schema.fields if f.name not in claims]
     reordered = [m["canonical_position"] for m in mappings] != sorted(m["canonical_position"] for m in mappings)
@@ -353,7 +362,8 @@ def to_mapping_result(mappings: list[dict], schema: SchemaDefinition, trimmed_he
     for m in mappings:
         res.mappings.append(ColumnMapping(
             source_column=keys[m["source_position"]], source_index=m["source_position"],
-            canonical_field=m["canonical_field"], method=_METHOD[m["match"]], variation=m["match"],
+            canonical_field=m["canonical_field"], method=_METHOD[m.get("approved_by") or m["match"]],
+            variation=m["match"],
             original_header=m["source_header"], alias_id=m["alias_id"], rule_id=m.get("rule_id"),
             rule_version=m.get("rule_version")))
     return res

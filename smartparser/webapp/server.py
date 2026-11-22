@@ -8,11 +8,15 @@
 Binds to 127.0.0.1 only. Authentication (auth.py): username/password checked server-side against a local credentials
 file of PBKDF2 hashes; a server-side session is held in an HttpOnly SameSite=Strict cookie. Every /api route except
 /api/auth/login and /api/auth/session answers 401 UNAUTHENTICATED without a valid session. The server refuses to
-start without credentials unless --insecure-no-auth is given. The reviewer identity used for review actions is still
-fixed at start-up and every review action still
+start without credentials unless --insecure-no-auth is given. Identity (Fix8 D6, identity.py): every authenticated
+request runs as the SIGNED-IN user, who is the actor recorded on its actions; case mutations are limited to the case
+owner or a supervisor (authz.py). The server reviewer (--reviewer-id/--reviewer-role/--reviewer-kind) acts only for
+system work (job threads without a request, closure auto jobs) and, with --insecure-no-auth, for every request
+(harness mode: no user, authorisation not enforced). Every review action still
 goes through the AuthorityPolicy (the shipped production policy authorises nobody). Every POST must carry the header
 `X-Smartparser-Client: webapp` (a custom header cannot be sent cross-site without a CORS preflight, which this server
-never grants). No live LLM provider exists in this server: proposals come from recorded fixtures or are disabled.
+never grants). Mapping proposals: disabled (default), recorded fixtures (--recorded-llm), or LIVE (--mapping-ai on with
+--ai-env-file; Fix8 D1) - deterministic mapping first, only unresolved headers sent, every proposal decided by a person.
 """
 from __future__ import annotations
 
@@ -53,6 +57,8 @@ class App:
         # auth=None means no authentication (unit tests that drive App directly, or --insecure-no-auth).
         self.ctx = ctx
         self.auth = auth
+        # Fix8 D6/D7: user roles (api.user_profile) come from THIS authenticator instance, not a module registry
+        ctx.authenticator = auth
 
     def handle(self, method: str, raw_path: str, headers, body: bytes) -> tuple[int, str, bytes]:
         return self.handle_ex(method, raw_path, headers, body)[:3]
@@ -68,8 +74,8 @@ class App:
             sess = self.auth.session(self.auth.token_from(headers))      # validated once (refreshes the idle timer)
             if sess is None:
                 return (*self._json({"error": "UNAUTHENTICATED", "message": "Sign in to continue."}, 401), [])
-        # The signed-in username only filters the Work Queue (?assigned=me). Actions are still recorded under the
-        # reviewer identity fixed at start-up (--reviewer-id); the two are not linked per session.
+        # The signed-in username is the request's identity (api.acting / identity.py): it is the recorded actor of every
+        # action and is checked against case ownership. Without a session (--insecure-no-auth) the server reviewer acts.
         r = self._handle(method, raw_path, headers, body, user=sess.username if sess else None)
         return (r[0], r[1], r[2], list(r[3]) if len(r) > 3 else [])
 
@@ -213,6 +219,17 @@ def serve(ctx: AppContext, port: int = 8780, auth: "auth_mod.Authenticator | Non
     return httpd
 
 
+def _mapping_ai_settings(a):
+    from ..ai.live_config import MappingAISettings
+    pricing = json.loads(Path(a.ai_pricing_file).read_text(encoding="utf-8")) if a.ai_pricing_file else None
+    return MappingAISettings(enabled=a.mapping_ai == "on", env_file=a.ai_env_file,
+                             max_calls_per_day=a.mapping_ai_max_calls_per_day,
+                             max_output_tokens=a.mapping_ai_max_output_tokens,
+                             max_cost_per_day=a.mapping_ai_max_cost_per_day,
+                             timeout_seconds=a.mapping_ai_timeout_seconds, max_retries=max(0, a.mapping_ai_max_retries),
+                             send_value_shapes=a.mapping_ai_send_value_shapes, pricing=pricing)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", required=True, help="workspace folder (created if missing)")
@@ -241,7 +258,26 @@ def main():
                                                             "without it cost is null")
     ap.add_argument("--ai-max-requests-per-operation", type=int, default=None,
                     help="hard cap of AI requests per investigation / closing summary (default: the library's own limits)")
+    # Fix8 D1: live AI mapping proposals (deterministic mapping always runs first; a person decides every proposal)
+    ap.add_argument("--mapping-ai", choices=["on", "off"], default="off",
+                    help="live AI proposals for columns the deterministic rules leave unresolved (needs --ai-env-file; "
+                         "default off)")
+    ap.add_argument("--mapping-ai-max-calls-per-day", type=int, default=20,
+                    help="hard daily cap of mapping provider calls (ledger kept in the workspace)")
+    ap.add_argument("--mapping-ai-max-output-tokens", type=int, default=4000)
+    ap.add_argument("--mapping-ai-max-cost-per-day", type=float, default=1.0,
+                    help="daily cost cap (enforced only when --ai-pricing-file prices the model)")
+    ap.add_argument("--mapping-ai-timeout-seconds", type=float, default=None,
+                    help="per-call timeout (default UC042_LLM_TIMEOUT_SECONDS from the env file, else 60)")
+    ap.add_argument("--mapping-ai-max-retries", type=int, default=1)
+    ap.add_argument("--mapping-ai-send-value-shapes", action="store_true",
+                    help="also send character-class value shapes (never values); owner default: off")
     a = ap.parse_args()
+    if a.mapping_ai == "on" and a.recorded_llm:
+        ap.error("--mapping-ai on and --recorded-llm are mutually exclusive")
+    for n in ("mapping_ai_max_calls_per_day", "mapping_ai_max_output_tokens"):
+        if getattr(a, n) < 1:
+            ap.error(f"--{n.replace('_', '-')} must be at least 1")
     auth = None
     if not a.insecure_no_auth:
         path = auth_mod.resolve_auth_file(a.auth_file)
@@ -256,7 +292,7 @@ def main():
     ctx = AppContext(root=Path(a.root), authority_path=Path(a.authority) if a.authority else None,
                      reviewer=Reviewer(reviewer_id=a.reviewer_id, role=a.reviewer_role, kind=a.reviewer_kind),
                      uc042_root=Path(a.uc042_root).resolve() if a.uc042_root else None,
-                     recorded=[Path(p) for p in a.recorded_llm])
+                     recorded=[Path(p) for p in a.recorded_llm], mapping_ai=_mapping_ai_settings(a))
     if a.demo_scenarios:
         from .demo import DemoScenarios
         ctx.demo = DemoScenarios(Path(a.demo_scenarios))
