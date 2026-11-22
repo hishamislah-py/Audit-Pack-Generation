@@ -32,7 +32,7 @@ from decimal import Decimal
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from . import schema
+from . import enrichment, schema
 from .money import batch_net_signed, parse_signed, parse_unsigned, signed
 from .period import MONTH_TOKEN, PeriodConfig, bank_holidays, resolve
 from .period import business_day_after as _business_day_after
@@ -55,20 +55,30 @@ class EngineRules:
     17 Nov 2026: PASS. Packs published before that date were generated with NOT_APPLICABLE; they are immutable, and the
     reproducibility tests rebuild them under PUBLISHED_RULES_BEFORE_17_NOV_2026."""
     zero_difference_outcome: str = PASS
+    # Workstream 3 reconciliation enrichment (uc042lib.enrichment): duplicate claims, structured amount comparison and
+    # outlier source, transaction/timing/duplicate/snapshot lineage, line-sum common-cause candidates and a stricter
+    # L3(b). Off by default (owner decision): with it off every output is byte-identical to the approved rules.
+    enrichment_v1: bool = False
 
     def __post_init__(self):
         if self.zero_difference_outcome not in (PASS, NA):
             raise ValueError(f"zero_difference_outcome must be {PASS} or {NA}")
+        if not isinstance(self.enrichment_v1, bool):
+            raise TypeError("enrichment_v1 must be a bool")
 
     def recorded(self):
         """The rule configuration as recorded in a pack's configuration_fingerprint: every departure from the behaviour
         the published (pre-17-Nov-2026) packs were generated with. The published rules record nothing, so those packs'
         fingerprints stay byte-reproducible; a pack built under the approved rule records it."""
-        return {} if self.zero_difference_outcome == NA else {"c06_c08_zero_difference": self.zero_difference_outcome}
+        out = {} if self.zero_difference_outcome == NA else {"c06_c08_zero_difference": self.zero_difference_outcome}
+        if self.enrichment_v1:
+            out["reconciliation_enrichment"] = "v1"
+        return out
 
 
 APPROVED_RULES = EngineRules()
 PUBLISHED_RULES_BEFORE_17_NOV_2026 = EngineRules(zero_difference_outcome=NA)
+ENRICHED_RULES = EngineRules(enrichment_v1=True)  # approved rules + Workstream 3 enrichment (not yet approved as default)
 CONTROL_OF = {"C03-POLICY": "C03", "C03-POINT": "C03", "C01-COVER": "C01", "C07-COVER": "C07", "C14-COVER": "C14",
               "DQ23-STATEMENT": "DQ23", "DQ22-CONTINUITY": "DQ22", "BC-VS-EOD": "C07", "CASH-BANK-LINK": "C05/C07",
               "BANK-CASH-LINK": "C05/C07", "C04-REQUIREMENT": "C04", "C05-RESOURCE": "C05", "C06-DIFFERENCE": "C06",
@@ -114,6 +124,7 @@ class Validator:
         self.exceptions = []
         self.groups = []
         self.candidates = []
+        self.enrichment = None  # uc042lib.enrichment state when rules.enrichment_v1 is on
 
     # --- result helpers -------------------------------------------------
     def ref(self, fid, row=None):
@@ -450,7 +461,11 @@ class Validator:
         self.check_designation()
         self.check_discrepancy_log()
         self.check_checklist()
+        if self.rules.enrichment_v1:
+            enrichment.apply_record_checks(self)
         self.group_exceptions()
+        if self.rules.enrichment_v1:
+            enrichment.annotate_exceptions(self)
         self.correlate_exceptions()
         return self.results
 
@@ -1319,6 +1334,8 @@ def _group_exceptions(self):
             related = sorted(i for i in unmatched if i in entry and entry[i]["account_id"] == acct and entry[i]["booking_date"] == parts[2])
         if kind in FILE_ROOTS:
             flags.append(f"{parts[1]} {FILE_ROOTS[kind]}: dependent checks were not run on incomplete evidence")
+        if kind in (enrichment.DUP_CASH, enrichment.DUP_TXN):  # only produced with rules.enrichment_v1
+            acct, dates, amount = enrichment.duplicate_exception_scope(self, kind, parts[1]) or (acct, dates, amount)
         if kind == "UNMATCHED_BANK_ENTRY" and parts[1] in entry:
             e = entry[parts[1]]
             acct, dates = e["account_id"], [e["booking_date"]]
@@ -1329,7 +1346,8 @@ def _group_exceptions(self):
                 if x not in evidence:
                     evidence.append(x)
         exceptions.append({
-            "severity": severity, "status": "OPEN", "category": CATEGORY.get(kind, rs[0]["check_id"]), "root_cause": root,
+            "severity": severity, "status": "OPEN", "category": CATEGORY.get(kind, enrichment.CATEGORY.get(kind, rs[0]["check_id"])),
+            "root_cause": root,
             "account_id": acct, "currency": self.ccy_of.get(acct, ""), "first_date": dates[0] if dates else "",
             "last_date": dates[-1] if dates else "", "amount": amount, "affected_results": len(rs),
             "affected": "; ".join(f"{r['check_id']} {r['scope']} [{r['outcome']}]" for r in rs),
@@ -1369,7 +1387,8 @@ def _correlate_exceptions(self):
     Groups never set a cause, change a status, merge exceptions or close anything. Relationships that rest only on
     matching dates and amounts are recorded separately as unverified candidates (D-E2a), never as groups."""
     exc = self.exceptions
-    if len(exc) < 2:
+    enriched = self.rules.enrichment_v1
+    if len(exc) < 2 and not enriched:
         return
     by_root = {x["root_cause"]: x for x in exc}
     rows_of = defaultdict(list)
@@ -1408,6 +1427,7 @@ def _correlate_exceptions(self):
         return keys, ents, cites
 
     info = {x["exception_id"]: refs_and_entries(rows_of[x["exception_id"]]) for x in exc}
+    ctx = enrichment.CorrelationContext(self, exc, rows_of) if enriched else None
     links = []
 
     def link(a, b, kind, basis, cites):
@@ -1452,6 +1472,8 @@ def _correlate_exceptions(self):
                     yccy, rest = sc.split("/")
                     client, yd = rest.split(" ")
                     if yccy == ccy and yd == d:
+                        if ctx is not None and not ctx.allow_snapshot_lineage(x["exception_id"], y["exception_id"]):
+                            continue  # enrichment F: only an evidence-backed snapshot input links (G-18)
                         snap = next((r for r in self.rows("IN-03") if r["recon_date"] == d and r["currency"] == ccy and r["client_id"] == client), None)
                         link(x["exception_id"], y["exception_id"], "L3 LINEAGE",
                              f"snapshot of {client} on {d} fails the roll-forward and is an input to the {ccy} requirement on {d}",
@@ -1462,6 +1484,9 @@ def _correlate_exceptions(self):
                         link(x["exception_id"], y["exception_id"], "L3 LINEAGE",
                              f"the internal difference for {d}/{ccy} uses the recomputed requirement for the same scope",
                              [rows_of[y["exception_id"]][0]["evidence"].split(";")[0]])
+    if ctx is not None:  # enrichment C/D: transaction, duplicate, timing and snapshot lineage (CONFIRMED only)
+        for a, b, k, basis, cites in ctx.links():
+            link(a, b, k, basis, cites)
     # connected components (deterministic)
     parent = {i: i for i in ids}
 
@@ -1490,7 +1515,7 @@ def _correlate_exceptions(self):
             "group_id": gid, "exception_ids": "; ".join(m), "primary_exception_id": m[0], "size": len(m),
             "link_types": "; ".join(sorted({t[2] for t in glinks})),
             "links": " | ".join(f"{a}—{b} {k}: {basis} [{', '.join(c)}]" for a, b, k, basis, c in glinks),
-            "status": "OPEN", "review_status": "AWAITING_HUMAN_REVIEW", "cause": "", "correlation_version": "deterministic-v1"})
+            "status": "OPEN", "review_status": "AWAITING_HUMAN_REVIEW", "cause": "", "correlation_version": enrichment.CORRELATION_VERSION if enriched else "deterministic-v1"})
     # D-E2a: unverified candidates (dates and amounts only), never grouped
     txn_ids = {t["txn_id"] for t in self.rows("IN-11")}
     lines = defaultdict(list)
@@ -1521,6 +1546,8 @@ def _correlate_exceptions(self):
                                        "No record links the transaction to this client."),
                             "label": "UNVERIFIED — NOT EVIDENCE-BACKED; not an investigation group",
                             "evidence": f"{self.ref('IN-13', ln)}; {r['evidence'].split(';')[0]}"})
+    if ctx is not None:  # enrichment E/F: line-sum candidates, common causes, rejected coincidences, summaries
+        ctx.finish()
 
 
 def _scenario_id(self):
@@ -1585,7 +1612,8 @@ def compare_answer_key(root, results, exceptions, candidates=None):
 
 
 
-def write_outputs(root, results, exceptions=(), status="", groups=(), candidates=(), documents=None, period=None, rules=None):
+def write_outputs(root, results, exceptions=(), status="", groups=(), candidates=(), documents=None, period=None, rules=None,
+                  enrichment_state=None):
     root = Path(root)
     period = period or resolve(root)
     (root / "validation").mkdir(exist_ok=True)
@@ -1610,6 +1638,9 @@ def write_outputs(root, results, exceptions=(), status="", groups=(), candidates
             w = csv.DictWriter(f, fieldnames=cols_, lineterminator="\n")
             w.writeheader()
             w.writerows(rows_)
+    if enrichment_state is not None:  # only with rules.enrichment_v1: default outputs are unchanged
+        (root / "validation" / "enrichment.json").write_text(json.dumps(enrichment_state, indent=2, sort_keys=True) + "\n",
+                                                             encoding="utf-8")
     summary = defaultdict(lambda: defaultdict(int))
     for r in results:
         summary[r["check_id"]][r["outcome"]] += 1
@@ -1664,6 +1695,8 @@ def write_outputs(root, results, exceptions=(), status="", groups=(), candidates
         lines.append("None.")
     lines += ["", "## Candidate relationships (UNVERIFIED — not evidence-backed; not groups)", ""]
     lines += [f"- {c['candidate_id']}: {c['exception_ids']} — {c['basis']}: {c['detail']} [{c['evidence']}]" for c in candidates] or ["None."]
+    if enrichment_state is not None:
+        lines += enrichment.report_lines(enrichment_state)
     matched, diffs = compare_answer_key(root, results, exceptions, candidates)
     if matched is not None:
         lines += ["", "## Answer key", "", "MATCH: results and exceptions are exactly as expected." if matched else "MISMATCH:"]
@@ -1690,11 +1723,14 @@ def write_outputs(root, results, exceptions=(), status="", groups=(), candidates
 
 
 def main():
-    root = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_SET
-    v = Validator(root, sys.argv[2] if len(sys.argv) > 2 else None)  # optional PER-YYYY-MM
+    args = [a for a in sys.argv[1:] if a != "--enrichment"]  # --enrichment: ENRICHED_RULES (Workstream 3)
+    rules = ENRICHED_RULES if "--enrichment" in sys.argv[1:] else None
+    root = Path(args[0]) if args else DEFAULT_SET
+    v = Validator(root, args[1] if len(args) > 1 else None, rules=rules)  # optional PER-YYYY-MM
     results = v.run()
     status = case_status(v)
-    totals = write_outputs(root, results, v.exceptions, status, v.groups, v.candidates, v.pdf, v.period, v.rules)
+    totals = write_outputs(root, results, v.exceptions, status, v.groups, v.candidates, v.pdf, v.period, v.rules,
+                           enrichment_state=v.enrichment)
     print(f"{root.name}: {len(results)} check results: " + ", ".join(f"{k} {v_}" for k, v_ in sorted(totals.items())))
     print(f"Case status: {status}")
     for x in v.exceptions:
