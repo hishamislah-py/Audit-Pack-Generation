@@ -5,6 +5,8 @@ from typing import Annotated, Literal, Optional
 from pydantic import BaseModel, ConfigDict, Field, WithJsonSchema, model_serializer
 
 EvidenceAssessment = Literal["EVIDENCE_SUFFICIENT", "PARTIALLY_SUFFICIENT", "INSUFFICIENT_EVIDENCE", "CONFLICTING_EVIDENCE"]
+EVIDENCE_BASES = ("SOURCE_EVIDENCE", "CONTROL_RESULT", "EVIDENCE_ABSENCE")
+EvidenceBasis = Literal["SOURCE_EVIDENCE", "CONTROL_RESULT", "EVIDENCE_ABSENCE"]
 
 
 class _Strict(BaseModel):
@@ -31,6 +33,23 @@ class ConfirmedFinding(_Strict):
     audit_relevance: _explanation("Why this observation matters to the discrepancy") = Field(default=None, min_length=10)
     establishes: _explanation("What the cited evidence establishes, and nothing more") = Field(default=None, min_length=10)
     does_not_establish: _explanation("What the evidence does not establish (for example the cause)") = Field(default=None, min_length=10)
+    # Findings schema 1.5: what kind of evidence the finding rests on. Required (enum) in model output; None means 'not
+    # supplied' (artefacts written under schema 1.4 or earlier, offline/scripted adapters) and is then omitted when
+    # serialised, so those findings keep their exact bytes and investigation IDs. validation.py checks the declared basis
+    # against what is actually cited; a declaration never makes a citation acceptable on its own.
+    evidence_basis: Annotated[Optional[EvidenceBasis], WithJsonSchema({
+        "type": "string", "enum": list(EVIDENCE_BASES),
+        "description": "SOURCE_EVIDENCE: what recorded activity shows (cite source records). CONTROL_RESULT: what the "
+                       "engine's control outcomes show (cite control results). EVIDENCE_ABSENCE: that expected evidence "
+                       "is not available or could not be assessed (cite NOT_FOUND searches, INSUFFICIENT_EVIDENCE control "
+                       "results and the MISS- completeness item)."})] = None
+
+    @model_serializer(mode="wrap")
+    def _omit_unsupplied_basis(self, handler):
+        data = handler(self)
+        if isinstance(data, dict) and data.get("evidence_basis") is None:
+            data.pop("evidence_basis", None)
+        return data
 
 
 class Hypothesis(_Strict):

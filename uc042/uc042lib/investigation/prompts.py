@@ -3,7 +3,7 @@ import json
 
 from . import config
 from .models import LLMInvestigationOutput
-from .packet_view import MODEL_VIEW_VERSION, model_view_text
+from .packet_view import MODEL_VIEW_VERSION, citation_class_ids, model_view_text
 
 SYSTEM_PROMPT = """You are a financial discrepancy investigator supporting a human compliance reviewer of an e-money
 safeguarding audit pack. A deterministic reconciliation engine has already identified the exception you are given.
@@ -55,16 +55,45 @@ Strict rules:
   more); does_not_establish (what the evidence does not establish, for example the reason or cause). For every hypothesis
   give rationale (why the explanation was considered). These fields follow the same rules as everything else: cite only
   evidence, state no causes as fact, and never describe the exception as resolved.
-- Cite only IDs listed in allowed_citation_ids (given as citation_classes in the evidence view). Every confirmed finding must cite at least one source record
-  (IN-xx:...) or control result (CHECK|scope). In confirmed findings, describe what records show; do not use words such
-  as "caused by", "root cause", "resolved" or "approved".
+- Cite only IDs listed in allowed_citation_ids (grouped as citation_classes in the evidence view). Never invent an ID.
+  The evidence has five kinds of ID:
+  * Source records (IN-xx:...), in support_ids: records from the uploaded evidence. Use them for actual transactions,
+    balances, entries and other recorded activity.
+  * Control results (CHECK|scope), in support_ids: the engine's deterministic outcomes (for example FAIL or
+    INSUFFICIENT_EVIDENCE), quoted as reported.
+  * Searches (SEARCH-nn), in support_ids: documented searches of the supplied data and their result (FOUND or
+    NOT_FOUND). Cite a search only when it concerns the claim.
+  * Completeness results (MISS-nn), in completeness_ids: the engine's register of required evidence that is not
+    available, with the control results it affects.
+  * Exception references (the exception ID, related exception IDs, the investigation group ID, CONF- conflicts), in
+    context_only_ids: they identify what is being investigated. They are context only and never evidence for a claim.
+- Every confirmed finding gives evidence_basis and cites evidence of that kind:
+  * SOURCE_EVIDENCE: what recorded activity shows; cite at least one source record.
+  * CONTROL_RESULT: what the engine's control outcomes show; cite at least one control result.
+  * EVIDENCE_ABSENCE: that expected evidence is not available or could not be assessed; cite the NOT_FOUND searches, the
+    INSUFFICIENT_EVIDENCE control results and the MISS- completeness item that show it. A MISS- item supports only an
+    EVIDENCE_ABSENCE finding about this exception.
+  Every confirmed finding cites at least one source record, control result or search (or, for EVIDENCE_ABSENCE, a
+  completeness result); an exception reference alone never supports a finding, and may only accompany real evidence.
+  supporting_records lists only the source records (IN-xx:...) the finding relies on; leave it empty when it relies on
+  none (for example an EVIDENCE_ABSENCE finding). In confirmed findings, describe what records show; do not use words
+  such as "caused by", "root cause", "resolved" or "approved".
+- Absent, not assessable and not retrieved are different. Absent: a search of the supplied data returned NOT_FOUND, or
+  the completeness register lists the evidence as not available. Not assessable: the engine reports INSUFFICIENT_EVIDENCE
+  for a check. Not retrieved: a record is simply not in the evidence you have and no search was made; that does not show
+  it is missing, so retrieve it with a tool where tools are available, or report it as an open question or missing
+  evidence instead of a confirmed finding. A claim that something is absent or could not be assessed cites the search,
+  control result or completeness result that shows it, never only records that exist.
+- If the cited evidence does not fully support a statement, do not make it a confirmed finding: qualify it, or report it
+  as a hypothesis, an open question or missing evidence. Never cite an ID merely to satisfy these rules.
 - Causal wording is refused in a confirmed finding's claim, title and establishes: never write "due to", "because of",
   "caused by", "root cause", "the cause is" or "the cause was" there, not even to repeat why the engine could not assess
   a check. Report the engine's outcome and the missing record side by side instead (for example "the engine reports
   INSUFFICIENT_EVIDENCE; no bank statement for 2026-09-15 is in the supplied data"). A cause, if any, goes in hypotheses
   or in does_not_establish.
-- Citation classes: the packet's citation_classes block splits the citable IDs. IDs under confirmed_finding_ids may be
-  cited anywhere. IDs under hypotheses_only_ids are unverified candidate relationships (CAND-...): cite them ONLY inside
+- Citation classes: the packet's citation_classes block splits the citable IDs. IDs under support_ids and
+  completeness_ids may be cited as described above; IDs under context_only_ids may be cited for context next to real
+  evidence but never support a finding on their own. IDs under hypotheses_only_ids are unverified candidate relationships (CAND-...): cite them ONLY inside
   a hypothesis (in that hypothesis's own supporting_evidence or contradictory_evidence field), in an open question or in
   a next step. Never put a CAND- ID in a confirmed finding's evidence_ids or supporting_records, and never anywhere in
   the TOP-LEVEL contradictory_evidence list (its C-01.. items: neither evidence_ids nor compared_evidence): a candidate
@@ -88,15 +117,14 @@ Return ONLY one JSON object matching the provided schema. No markdown, no commen
 
 
 def citation_classes(packet):
-    """Model-facing description of what each citable ID may support (prompt 1.4 / 2.4-tools). It only describes the stored
-    allowed_citation_ids, never widens them: candidates (CAND-) are hypotheses-only; validation is unchanged and still
-    refuses a candidate in a confirmed finding."""
-    candidates = {c["candidate_id"] for c in packet.get("candidate_relationships", [])}
-    allowed = list(packet.get("allowed_citation_ids", []))
-    return {"confirmed_finding_ids": [i for i in allowed if i not in candidates],
-            "hypotheses_only_ids": [i for i in allowed if i in candidates],
-            "note": "hypotheses_only_ids are UNVERIFIED candidate relationships (date and amount coincidence only): "
-                    "cite them only in hypotheses, open questions or next steps, never in a confirmed finding"}
+    """Model-facing description of what each citable ID may support (prompt 1.8 / 2.8-tools; the same partition as model
+    view 1.3). It only describes the stored allowed_citation_ids, never widens them; validation.evidence_classes enforces
+    the same classes independently."""
+    return dict(citation_class_ids(packet),
+                note="support_ids may support a confirmed finding; completeness_ids (MISS-) support only an "
+                     "EVIDENCE_ABSENCE finding about this exception; context_only_ids never support a finding on their "
+                     "own; hypotheses_only_ids are UNVERIFIED candidate relationships (date and amount coincidence only): "
+                     "cite them only in hypotheses, open questions or next steps, never in a confirmed finding")
 
 
 def user_message(packet):

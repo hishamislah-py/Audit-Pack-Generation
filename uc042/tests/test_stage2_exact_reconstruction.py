@@ -38,8 +38,8 @@ def det_packets():
 
 
 class ExactReconstruction(unittest.TestCase):
-    def test_version_is_1_2(self):
-        self.assertEqual(MODEL_VIEW_VERSION, "uc042-model-view/1.2")
+    def test_version_is_1_2(self):  # name kept; 1.3 (20 Nov 2026) changes only the citation classes
+        self.assertEqual(MODEL_VIEW_VERSION, "uc042-model-view/1.3")
 
     def test_all_76_packets_reconstruct_exactly_with_matching_hashes(self):
         self.assertEqual(len(PACKETS), 76)

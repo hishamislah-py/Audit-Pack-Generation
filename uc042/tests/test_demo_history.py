@@ -106,6 +106,14 @@ PROTECTED = {
     #                                  Published packs are unaffected (verify_final_pack does not re-run validation).
     #                                  Previous pin c2dc8804...0dda8 (20 files).
     "uc042lib/final_pack": ("92a91055b6c3fd33a43f6951c6cc9ad454974c62a7df7b5c61127416597071bf", 20),
+    # 20 Nov 2026 (owner-approved CF-1 correction, RINGFENCE_AI_MISSING_EVIDENCE_CITATION_IMPLEMENTATION_REPORT): validate.py
+    #                                  FV7/FV8 uses the investigation validator's support rule (findings schema 1.5): a
+    #                                  completeness result (MISS-) supports a confirmed observation only when the finding declares
+    #                                  EVIDENCE_ABSENCE and the item is traceable to INSUFFICIENT_EVIDENCE results of the same
+    #                                  exception; nothing else changes. All 91 published final packs on disk re-verified with
+    #                                  identical results. Previous pin c2dc8804...0dda8 (20 files).
+    # 23 Nov 2026 (Session 1 citation fix, branch fix/S1-citation): CF-1 above is merged with the D5 change. The pin above is
+    #                                  NOT updated: the combined digest awaits owner approval (test fails until then).
 }
 SEPTEMBER_PACKS = {"PACK-S01-PER-2026-09-577b06a1d894", "PACK-S02-PER-2026-09-f3dfa52766bb", "PACK-S05-PER-2026-09-ddd0fdc8b731",
                    "PACK-SC2-PER-2026-09-aaca8a8b7194", "PACK-SC3B-PER-2026-09-137351796028", "PACK-SC3C-PER-2026-09-28bb49134f15",

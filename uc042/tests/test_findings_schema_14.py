@@ -48,7 +48,7 @@ class SchemaCompatibility(unittest.TestCase):
             iid = make_investigation("SC5A", "EXC-SC5A-01", tmp)
             d = next(tmp.rglob(iid))
             stored = json.loads((d / "findings.json").read_text())
-            self.assertEqual(stored["model_metadata"]["findings_schema_version"], "uc042-investigation-findings/1.4")
+            self.assertEqual(stored["model_metadata"]["findings_schema_version"], "uc042-investigation-findings/1.5")  # 1.4 fields kept in 1.5
             f = stored["confirmed_findings"][0]
             self.assertTrue(all(isinstance(f[k], str) and f[k] for k in NEW_FINDING_FIELDS))
             self.assertTrue(stored["hypotheses"][0]["rationale"])
@@ -88,7 +88,7 @@ class SchemaCompatibility(unittest.TestCase):
 
     def test_prompts_and_versions(self):
         self.assertEqual((config.PROMPT_VERSION, config.TOOLS_PROMPT_VERSION, config.FINDINGS_SCHEMA_VERSION),
-                         ("uc042-investigator-prompt/1.7", "uc042-investigator-prompt/2.7-tools", "uc042-investigation-findings/1.4"))
+                         ("uc042-investigator-prompt/1.8", "uc042-investigator-prompt/2.8-tools", "uc042-investigation-findings/1.5"))
         for prompt in (SYSTEM_PROMPT, TOOLS_SYSTEM_PROMPT):
             for word in ("audit_relevance", "does_not_establish", "rationale", "title"):
                 self.assertIn(word, prompt)

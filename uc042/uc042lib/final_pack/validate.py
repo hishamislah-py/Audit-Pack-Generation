@@ -3,7 +3,7 @@ of how assemble.py built the document; any problem prevents publication. Errors 
 import re
 import unicodedata
 
-from ..investigation.validation import CAUSE_PATTERNS, RESOLUTION_PATTERNS, claims_nonexistence
+from ..investigation.validation import CAUSE_PATTERNS, RESOLUTION_PATTERNS, claims_nonexistence, evidence_classes
 from .content import cited_ids
 from .model import (ACKNOWLEDGEMENT_TEXT, CURRENT_RENDERER_VERSION, FINAL_PACK_ID_RE, FINAL_PACK_SCHEMA_VERSION,
                     OUTCOME_FINAL_PACK_SCHEMA_VERSION, SUPPORTED_PACK_SCHEMAS)
@@ -87,7 +87,14 @@ def _investigation_checks(final, snapshot):
             if s is None or s.claim != f["description"] or f["finding_id"] in src_hyps:
                 errors.append(f"{f['ref']}: confirmed observation is not a validated confirmed finding of {iid}")
                 continue
-            if not set(f["evidence_refs"]) & (record_ids | result_ids | search_ids):
+            # Findings schema 1.5 (20 Nov 2026, CF-1): the same support rule as the investigation validator
+            # (validation.evidence_classes): a completeness result (MISS-) supports a finding only when the finding
+            # declares EVIDENCE_ABSENCE and the item is traceable to INSUFFICIENT_EVIDENCE control results of the same
+            # exception present in the evidence. Exception references never support; other findings are unchanged.
+            support = record_ids | result_ids | search_ids
+            if s.evidence_basis == "EVIDENCE_ABSENCE":
+                support |= evidence_classes(evidence)["traceable_completeness"]
+            if not set(f["evidence_refs"]) & support:
                 errors.append(f"{f['ref']}: confirmed observation has no supporting source record, control result or search")
             if f["class"] != "EVIDENCE_CONFIRMED_OBSERVATION":
                 errors.append(f"{f['ref']}: wrong classification {f['class']}")

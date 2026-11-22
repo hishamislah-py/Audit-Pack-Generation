@@ -103,8 +103,9 @@ class CandidatesHypothesesOnly(unittest.TestCase):
             cands = {c["candidate_id"] for c in p["candidate_relationships"]}
             cc = v["citation_classes"]
             self.assertEqual(set(cc["hypotheses_only_ids"]), cands, label)
-            self.assertFalse(cands & set(cc["confirmed_finding_ids"]), label)
-            self.assertEqual(sorted(cc["confirmed_finding_ids"] + cc["hypotheses_only_ids"]), p["allowed_citation_ids"], label)  # never broadened
+            others = cc["support_ids"] + cc["completeness_ids"] + cc["context_only_ids"]  # view 1.3 classes
+            self.assertFalse(cands & set(others), label)
+            self.assertEqual(sorted(others + cc["hypotheses_only_ids"]), p["allowed_citation_ids"], label)  # never broadened
             self.assertEqual(v["candidate_relationships_HYPOTHESES_ONLY"], p["candidate_relationships"])
             seen += bool(cands)
         self.assertGreater(seen, 0)
