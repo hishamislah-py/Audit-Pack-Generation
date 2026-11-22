@@ -308,3 +308,123 @@ def test_reconciliation_survives_transient_sharing_violations_on_every_run_file(
     assert any(k.endswith(".manifest.json") for k in injected)
     rec = json.loads((ctx.runs / j["run_id"] / "reconciliation_run.json").read_text(encoding="utf-8"))
     assert all(rec["checks"].values())
+
+
+# ======================================================================================= 5. case record I/O (cases.py)
+def _case(tmp_path):
+    ctx = ctx_for(tmp_path)
+    ref = R(ctx, "POST", "cases", {"customer_name": "Harbourline Payments Ltd", "reporting_period": "2026-09",
+                                   "zip_name": "submission.zip", "zip_b64": base64.b64encode(make_zip()).decode()})["case_ref"]
+    return ctx, ref
+
+
+def test_case_load_retries_a_transient_sharing_violation_and_never_reports_missing(tmp_path, monkeypatch):
+    ctx, ref = _case(tmp_path)
+    target = f"{ref}.json"
+    real_read, seen = pathlib.Path.read_text, {"n": 0}
+
+    def locked_three_times(self, *a, **kw):
+        if self.name == target and seen["n"] < 3:
+            seen["n"] += 1
+            raise PermissionError(13, "Permission denied")         # what the race investigator captured under load
+        return real_read(self, *a, **kw)
+    monkeypatch.setattr(pathlib.Path, "read_text", locked_three_times)
+    assert ctx.cases.load(ref)["case_ref"] == ref and seen["n"] == 3
+
+    # persistent: PermissionError propagates - never NOT_FOUND
+    monkeypatch.setattr(cases_mod, "_retry_sharing", _retry_fast)
+    monkeypatch.setattr(pathlib.Path, "read_text",
+                        lambda self, *a, **kw: (_ for _ in ()).throw(PermissionError(13, "Permission denied"))
+                        if self.name == target else real_read(self, *a, **kw))
+    with pytest.raises(PermissionError):
+        ctx.cases.load(ref)
+
+
+def test_case_save_uses_a_unique_temp_file_retries_and_never_tears_the_record(tmp_path, monkeypatch):
+    ctx, ref = _case(tmp_path)
+    p = ctx.cases.root / f"{ref}.json"
+    before = json.loads(p.read_text(encoding="utf-8"))
+    real_replace, tmps, n = pathlib.Path.replace, [], {"k": 0}
+
+    def flaky_replace(self, target):
+        tmps.append(self.name)
+        n["k"] += 1
+        if n["k"] <= 2:
+            raise PermissionError(13, "Permission denied")
+        return real_replace(self, target)
+    monkeypatch.setattr(pathlib.Path, "replace", flaky_replace)
+    c = ctx.cases.load(ref)
+    c["last_activity_at"] = "x"
+    ctx.cases._save(c)
+    assert n["k"] == 3 and json.loads(p.read_text(encoding="utf-8"))["last_activity_at"] == "x"
+    assert tmps[0].startswith(f"{ref}.json.") and tmps[0].endswith(".tmp") and tmps[0] != f"{ref}.tmp"
+
+    # persistent violation: raises, previous complete record intact, no temp left; refs() unaffected
+    monkeypatch.setattr(cases_mod, "_retry_sharing", _retry_fast)
+    monkeypatch.setattr(pathlib.Path, "replace",
+                        lambda self, t: (_ for _ in ()).throw(PermissionError(13, "Permission denied")))
+    c["last_activity_at"] = "y"
+    with pytest.raises(PermissionError):
+        ctx.cases._save(c)
+    assert json.loads(p.read_text(encoding="utf-8"))["last_activity_at"] == "x"
+    assert list(ctx.cases.root.glob("*.tmp")) == [] and ctx.cases.refs() == [ref]
+    assert before["case_ref"] == ref
+
+
+def test_concurrent_case_reads_and_saves_never_fail(tmp_path):
+    """One writer saving, four readers loading the same case record (the closure/_locate + view pattern)."""
+    ctx, ref = _case(tmp_path)
+    errors, stop = [], threading.Event()
+
+    def writer():
+        while not stop.is_set():
+            try:
+                with ctx.cases.lock:
+                    c = ctx.cases.load(ref)
+                    ctx.cases._save(c)
+            except Exception as e:
+                errors.append(f"write {type(e).__name__}: {e}")
+
+    def reader():
+        while not stop.is_set():
+            try:
+                assert ctx.cases.load(ref)["case_ref"] == ref
+            except Exception as e:
+                errors.append(f"read {type(e).__name__}: {e}")
+    ts = [threading.Thread(target=writer)] + [threading.Thread(target=reader) for _ in range(4)]
+    for t in ts:
+        t.start()
+    time.sleep(4)
+    stop.set()
+    for t in ts:
+        t.join(30)
+    assert errors == []
+    assert list(ctx.cases.root.glob("*.tmp")) == []
+
+
+# ======================================================================================= 6. settled => persisted
+def test_when_a_view_shows_the_intake_finished_its_records_are_already_final_on_disk(tmp_path, monkeypatch):
+    """Root cause of test_ringfence_api_contract::test_state_survives_restart... ('COMPLETED' == 'FAILED'): settle()
+    returned as soon as the in-memory job was terminal, but the job thread had not yet written its terminal record nor
+    run the case listener; those late writes then overwrote the test's simulated 'running' job / PROCESSING run. A
+    slow terminal job write (disk under load) is injected; once a view shows the run finished, the job and case
+    records on disk must already be final and the job thread must have nothing left to write."""
+    ctx, ref = _case(tmp_path)
+    real_save = ctx._save_job
+
+    def slow_terminal_save(j):
+        if j.get("kind") == "intake" and j.get("state") in ("completed", "failed"):
+            time.sleep(1.5)
+        real_save(j)
+    monkeypatch.setattr(ctx, "_save_job", slow_terminal_save)
+    R(ctx, "POST", f"cases/{ref}/start")
+    d = settle(ctx, ref, 300)
+    job_id = d["runs"][0]["intake_job_id"]
+    disk_job = json.loads((ctx.jobdir / f"{job_id}.json").read_text(encoding="utf-8"))
+    disk_case = json.loads((ctx.cases.root / f"{ref}.json").read_text(encoding="utf-8"))
+    assert disk_job["state"] == "completed" and disk_job["finished_at"]
+    assert disk_case["runs"][0]["status"] == "COMPLETED"
+    mtimes = {p.name: p.stat().st_mtime_ns for p in (ctx.jobdir / f"{job_id}.json", ctx.cases.root / f"{ref}.json")}
+    time.sleep(2.0)                                                   # nothing is written after the view said done
+    assert {p.name: p.stat().st_mtime_ns for p in (ctx.jobdir / f"{job_id}.json",
+                                                    ctx.cases.root / f"{ref}.json")} == mtimes

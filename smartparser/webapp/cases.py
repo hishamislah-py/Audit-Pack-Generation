@@ -34,6 +34,7 @@ from pathlib import Path
 from ..mapping import financial
 from ..packages import review_api
 from ..packages.models import NEEDS_NEW_VERSION
+from ..packages.store import _retry_sharing
 from . import identity
 
 STATUSES = ("WAITING", "IN_PROGRESS", "PENDING", "COMPLETED")
@@ -55,6 +56,18 @@ READ_ERROR_TEXT = {"CRC_FAILURE": "CRC failure", "DECOMPRESSION_ERROR": "decompr
 
 def now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+_PATH_LOCKS: dict[str, threading.Lock] = {}
+_PATH_LOCKS_GUARD = threading.Lock()
+
+
+def _path_lock(p: Path) -> threading.Lock:
+    """Fix8 D-recon-io: one in-process lock per case file, shared by readers and the replace (Windows refuses to
+    replace a file another thread has open, and a reader can be refused while the replace runs)."""
+    key = str(p).lower()
+    with _PATH_LOCKS_GUARD:
+        return _PATH_LOCKS.setdefault(key, threading.Lock())
 
 
 class CaseError(Exception):
@@ -99,17 +112,34 @@ class CaseService:
         return self.root / f"{ref}.json"
 
     def load(self, ref: str) -> dict:
+        """Fix8 D-recon-io: read under the case file's in-process lock (never concurrently with this process's own
+        replace of it) and retry a transient Windows sharing violation (another process: indexer, antivirus). A
+        persistent violation raises PermissionError - it is never reported as a missing case."""
         p = self._path(ref)
-        if not p.is_file():
-            raise CaseError(404, "NOT_FOUND", f"unknown case {ref}")
-        return json.loads(p.read_text(encoding="utf-8"))
+        with _path_lock(p):
+            if not p.is_file():
+                raise CaseError(404, "NOT_FOUND", f"unknown case {ref}")
+            text = _retry_sharing(lambda: p.read_text(encoding="utf-8"))
+        return json.loads(text)
 
     def _save(self, c: dict) -> None:
+        """Fix8 D-recon-io: serialise, write a PRIVATE temporary file (unique name: two writers never share or clobber
+        one), then replace the record under the case file's lock, retrying transient sharing violations. A failure
+        leaves the previous complete record and no temporary file; it propagates."""
         c["revision"] = int(c.get("revision", 0)) + 1                 # optimistic-concurrency token for the frontend
         p = self._path(c["case_ref"])
-        tmp = p.with_suffix(".tmp")
-        tmp.write_text(json.dumps(c, indent=1), encoding="utf-8")
-        tmp.replace(p)
+        text = json.dumps(c, indent=1)
+        tmp = p.with_name(f"{p.name}.{uuid.uuid4().hex[:8]}.tmp")
+        try:
+            _retry_sharing(lambda: tmp.write_text(text, encoding="utf-8"))
+            with _path_lock(p):
+                _retry_sharing(lambda: tmp.replace(p))
+        finally:
+            if tmp.exists():
+                try:
+                    tmp.unlink()
+                except OSError:
+                    pass
 
     def refs(self) -> list[str]:
         return sorted(p.stem for p in self.root.glob("RF-*.json"))
