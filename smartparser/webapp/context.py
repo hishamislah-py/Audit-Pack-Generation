@@ -5,12 +5,15 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import os
 import shutil
+import sys
 import threading
 import traceback
 import uuid
 import zipfile
 import zlib
+from contextlib import nullcontext
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
@@ -25,7 +28,7 @@ from ..mapping.rule_store import RuleStore
 from ..orchestration.orchestrator import MappingOrchestrator
 from ..orchestration.policy import PocAutoAcceptPolicy
 from ..packages.service import PackageService, Submission
-from ..packages.store import PackageStore
+from ..packages.store import PackageStore, _read_text, _retry_sharing
 from ..reconciliation.uc042_adapter import run_reconciliation
 from ..review.audit import AuditLog
 from ..review.authority import AuthorityPolicy, Reviewer
@@ -113,14 +116,15 @@ class AppContext:
         self.jobdir = self.root / "jobs"
         for d in (self.staging, self.runs, self.jobdir):
             d.mkdir(exist_ok=True)
-        for p in self.jobdir.glob("*.json"):                      # job records survive a restart (read-only)
-            try:
-                j = json.loads(p.read_text(encoding="utf-8"))
+        self.job_load_errors = []                                 # unreadable job records: kept visible, never guessed
+        for p in sorted(self.jobdir.glob("*.json")):              # job records survive a restart (read-only)
+            try:                                                  # (*.tmp files of an interrupted write never match)
+                j = json.loads(_read_text(p))                     # Fix8 D-recon-io: a sharing violation is retried
                 if j.get("state") in ("queued", "running"):
                     j["state"], j["error"] = "interrupted", "the server stopped while this job was running"
                 self.jobs[j["job_id"]] = j
-            except (OSError, json.JSONDecodeError):
-                pass
+            except (OSError, ValueError, KeyError) as exc:
+                self.job_load_errors.append({"file": p.name, "error": f"{type(exc).__name__}: {exc}"[:300]})
         from .cases import CaseService                            # Ringfence case registry (additive)
         self.cases = CaseService(self)
 
@@ -213,7 +217,10 @@ class AppContext:
         p = self.log.path
         if not p.is_file():
             return out
-        for line in p.read_text(encoding="utf-8").splitlines():
+        # Fix8 D-recon-io: a transient Windows sharing violation is retried; a half-appended (possibly mid-character)
+        # last line decodes with a replacement character, fails json and ends the read like any partial line.
+        raw = _retry_sharing(lambda: p.read_bytes())
+        for line in raw.decode("utf-8", errors="replace").splitlines():
             try:
                 out.append(json.loads(line))
             except json.JSONDecodeError:
@@ -226,15 +233,66 @@ class AppContext:
 
     # ============================================================================================ jobs
     def _save_job(self, j: dict) -> None:
-        (self.jobdir / f"{j['job_id']}.json").write_text(json.dumps(j, indent=1, default=str), encoding="utf-8")
+        """Fix8 D-recon-io: ATOMIC job-record write. The record is serialised first, written to a private temporary
+        file and moved into place with os.replace, so a reader (restart recovery, a tool) only ever sees the previous
+        or the new complete record - never a truncated one. Transient Windows sharing violations (PermissionError on
+        open/replace while another process - indexer, antivirus, a reader - holds the file) are retried; a persistent
+        failure propagates to the caller and the temporary file is removed."""
+        p = self.jobdir / f"{j['job_id']}.json"
+        text = json.dumps(j, indent=1, default=str)
+        tmp = p.with_name(f"{p.name}.{uuid.uuid4().hex[:8]}.tmp")
+        try:
+            _retry_sharing(lambda: tmp.write_text(text, encoding="utf-8"))
+            _retry_sharing(lambda: os.replace(tmp, p))
+        finally:
+            if tmp.exists():
+                try:
+                    tmp.unlink()
+                except OSError:
+                    pass
 
     def _new_job(self, kind: str, package_id: str, **extra) -> dict:
         j = {"job_id": f"JOB-{uuid.uuid4().hex[:10]}", "kind": kind, "package_id": package_id, "state": "queued",
              "created_at": now(), "started_at": None, "finished_at": None, "error": None,
              "audit_seq_start": self.last_seq() + 1, "audit_seq_end": None, **extra}
-        self.jobs[j["job_id"]] = j
-        self._save_job(j)
+        self._save_job(j)                       # persisted first: a job that cannot be recorded is never registered
+        self.jobs[j["job_id"]] = j              # (else it would stay 'queued' in memory and look busy forever)
         return j
+
+    def _case_view_lock(self):
+        """The case registry's lock (Fix8 D-recon-io). CaseService.detail() decides the case status (_refresh) and
+        then computes progress/current_operation under this lock, both from the LIVE job dicts. A job therefore
+        publishes its terminal state - and runs the listeners that act on it - under the same lock, so a case view
+        sees either 'job running' or 'job finished AND the case refreshed', never the torn mix 'no running job, case
+        still IN_PROGRESS' (observed under load). Lock order stays case lock -> ctx.lock: a job takes it only after it
+        has released ctx.lock."""
+        cases = getattr(self, "cases", None)
+        return getattr(cases, "lock", None) or nullcontext()
+
+    def _job_running(self, j: dict) -> None:
+        j["state"], j["started_at"] = "running", now()
+        self._save_job(j)
+
+    def _job_finish(self, j: dict, **terminal) -> None:
+        """Publish a job's terminal state (completed / failed) atomically for case views, persist it, then notify the
+        listeners. A persistence or audit-read failure here never leaves the job looking busy and never skips the
+        listeners: the in-memory terminal state stands, the failure is kept on the record (persist_error) and on
+        stderr, and on a restart the on-disk 'running' record is reported as interrupted."""
+        with self._case_view_lock():
+            try:
+                seq = self.last_seq()
+            except Exception as exc:                                # recorded, never hidden
+                seq = None
+                j["persist_error"] = f"audit read: {type(exc).__name__}: {exc}"[:300]
+            j.update(terminal)
+            j["finished_at"], j["audit_seq_end"] = now(), seq
+            try:
+                self._save_job(j)
+            except Exception as exc:
+                j["persist_error"] = f"{type(exc).__name__}: {exc}"[:300]
+                print(f"[job {j['job_id']}] terminal state {j['state']} could not be persisted: {j['persist_error']}",
+                      file=sys.stderr, flush=True)
+            self._notify(j)
 
     def start_intake(self, package_id: str, items: list[dict], resubmission: dict | None = None) -> dict:
         """items: [{staging_id, declared_category}] (initial intake) - or one item with resubmission={category, reason}.
@@ -274,9 +332,8 @@ class AppContext:
                 "review": "case" if v and v.review_case_id else "proposal" if v and v.review_session_id else None}
 
     def _run_intake(self, j: dict) -> None:
-        j["state"], j["started_at"] = "running", now()
-        self._save_job(j)
         try:
+            self._job_running(j)                # inside the try: a job that cannot start ends 'failed', never stuck
             for f in j["files"]:
                 f["state"], f["started_at"] = "running", now()
                 self._save_job(j)
@@ -298,15 +355,13 @@ class AppContext:
             self._save_job(j)
             with self.lock:
                 res = self.svc.validate(j["package_id"])           # the real PV-01..PV-09 over the current candidate
-            j["validation"] = {"validation_id": res.validation_id, "passed": res.passed, "at": res.at,
-                               "failed": [c.check_id for c in res.checks if not c.passed]}
-            j["state"] = "completed"
+            terminal = {"state": "completed",
+                        "validation": {"validation_id": res.validation_id, "passed": res.passed, "at": res.at,
+                                       "failed": [c.check_id for c in res.checks if not c.passed]}}
         except Exception as exc:
-            j["state"], j["error"] = "failed", f"{type(exc).__name__}: {exc}"[:800]
-            j["trace"] = traceback.format_exc()[-2000:]
-        j["finished_at"], j["audit_seq_end"] = now(), self.last_seq()
-        self._save_job(j)
-        self._notify(j)
+            terminal = {"state": "failed", "error": f"{type(exc).__name__}: {exc}"[:800],
+                        "trace": traceback.format_exc()[-2000:]}
+        self._job_finish(j, **terminal)
 
     def _notify(self, j: dict) -> None:
         """Tell listeners (the case registry) that a job reached a final state. A listener failure never changes the
@@ -316,7 +371,10 @@ class AppContext:
                 fn(j)
             except Exception as exc:                                # recorded, never hidden
                 j.setdefault("listener_errors", []).append(f"{type(exc).__name__}: {exc}"[:300])
-                self._save_job(j)
+                try:
+                    self._save_job(j)
+                except Exception as exc2:                           # the remaining listeners still run
+                    j["persist_error"] = f"{type(exc2).__name__}: {exc2}"[:300]
 
     def start_reconciliation(self, package_id: str, snapshot_id: str) -> dict:
         if self.uc042_root is None:
@@ -329,20 +387,20 @@ class AppContext:
         return j
 
     def _run_recon(self, j: dict) -> None:
-        j["state"], j["started_at"] = "running", now()
-        self._save_job(j)
+        """Fix8 D-recon-io: the run id, result and 'completed' are published together (_job_finish, under the case
+        view lock) - never 'completed' first and the case refresh later - and any exception, including one while
+        recording 'running', ends the job 'failed' with its error and trace."""
         try:
+            self._job_running(j)
             with self.lock:
                 rec = run_reconciliation(self.svc, j["package_id"], j["snapshot_id"], self.uc042_root, self.runs)
-            j["run_id"] = rec["run_id"]
-            j["result"] = {"case_status": rec["result"]["case_status"], "outcomes": rec["result"]["outcomes"],
-                           "exceptions": len(rec["result"]["exceptions"]), "checks": rec["checks"]}
-            j["state"] = "completed"
+            terminal = {"state": "completed", "run_id": rec["run_id"],
+                        "result": {"case_status": rec["result"]["case_status"], "outcomes": rec["result"]["outcomes"],
+                                   "exceptions": len(rec["result"]["exceptions"]), "checks": rec["checks"]}}
         except Exception as exc:
-            j["state"], j["error"] = "failed", f"{type(exc).__name__}: {exc}"[:800]
-        j["finished_at"], j["audit_seq_end"] = now(), self.last_seq()
-        self._save_job(j)
-        self._notify(j)
+            terminal = {"state": "failed", "error": f"{type(exc).__name__}: {exc}"[:800],
+                        "trace": traceback.format_exc()[-2000:]}
+        self._job_finish(j, **terminal)
 
     # ============================================================================================ review support
     def column_profile(self, package_id: str, file_version_id: str) -> dict:
