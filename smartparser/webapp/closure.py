@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import threading
 import traceback
@@ -34,8 +35,9 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
+from ..packages.store import _retry_sharing
 from ..reconciliation.closure_runner import ClosureRunner, ClosureRunnerError
-from . import results
+from . import identity, results
 
 CLOSURE_JOB_KINDS = ("audit_pack", "investigation", "closing_preview", "final_pack")
 ACTIVE = ("queued", "running")
@@ -78,30 +80,65 @@ class ClosureError(Exception):
         self.status, self.code, self.message, self.extra = status, code, message, extra
 
 
+# Windows: replacing a file that another thread has open (reading it) fails with a sharing violation (PermissionError,
+# WinError 5). Retrying alone can starve a writer when several readers poll the same file. So every closure JSON / JSONL
+# file is read and written under ONE in-process lock per path (readers and writers of the same file serialise; the lock
+# is only ever held for the file operation itself, never while taking another lock). _retry_sharing stays as the
+# second line of defence for access from outside this process.
+_PATH_LOCKS: dict = {}
+_PATH_LOCKS_GUARD = threading.Lock()
+
+
+def _path_lock(p: Path) -> threading.Lock:
+    key = os.path.normcase(os.path.abspath(str(p)))
+    with _PATH_LOCKS_GUARD:
+        lk = _PATH_LOCKS.get(key)
+        if lk is None:
+            lk = _PATH_LOCKS[key] = threading.Lock()
+        return lk
+
+
 def _write_json(p: Path, doc) -> None:
     p.parent.mkdir(parents=True, exist_ok=True)
     tmp = p.with_name(p.name + f".tmp-{uuid.uuid4().hex[:6]}")
     tmp.write_text(json.dumps(doc, indent=1, ensure_ascii=False, default=str), encoding="utf-8")
-    tmp.replace(p)
+    with _path_lock(p):
+        _retry_sharing(lambda: tmp.replace(p))
+
+
+def _read_text(p: Path) -> str:
+    with _path_lock(p):
+        return _retry_sharing(lambda: p.read_text(encoding="utf-8"))
 
 
 def _read_json(p: Path, default=None):
+    """`default` only when the file does not exist (or is not JSON). A sharing violation is retried and, when it
+    persists, RAISED: it is never mistaken for a missing record."""
     try:
-        return json.loads(p.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+        return json.loads(_read_text(p))
+    except (FileNotFoundError, NotADirectoryError, ValueError):
         return default
 
 
 def _append(p: Path, rec: dict) -> None:
     p.parent.mkdir(parents=True, exist_ok=True)
-    with open(p, "a", encoding="utf-8", newline="\n") as f:
-        f.write(json.dumps(rec, ensure_ascii=False, default=str) + "\n")
+    line = json.dumps(rec, ensure_ascii=False, default=str) + "\n"
+
+    def write():
+        with open(p, "a", encoding="utf-8", newline="\n") as f:
+            f.write(line)
+    with _path_lock(p):
+        _retry_sharing(write)
 
 
 def _jsonl(p: Path) -> list[dict]:
     out = []
-    if p.is_file():
-        for line in p.read_text(encoding="utf-8").splitlines():
+    try:
+        text = _read_text(p)
+    except FileNotFoundError:
+        return out
+    if text:
+        for line in text.splitlines():
             try:
                 out.append(json.loads(line))
             except ValueError:
@@ -115,6 +152,61 @@ def job_view(j: dict) -> dict:
                                   "case_ref", "recon_run_id", "exception_id", "review_id", "result")}
 
 
+# ======================================================================================= mapping provenance (contract I-3)
+MAPPING_PROVENANCE_SCHEMA = "ringfence-mapping-provenance/1.0"
+MAPPING_DISPOSITIONS = ("MAPPED", "IGNORED", "UNRESOLVED")
+MAPPING_METHODS = ("DETERMINISTIC_EXACT", "DETERMINISTIC_POLICY", "AI_PROPOSED", "ANALYST_DEFINED", "ANALYST_IGNORED", "RULE")
+MAPPING_VALIDATION = ("PASS", "FAIL", "NOT_RECORDED")
+_MAPPING_FILE_KEYS = ("evidence_category", "file_version_id", "version_number", "original_filename", "source_sha256",
+                      "intake_id", "version_status", "review_kind", "columns")
+_MAPPING_COLUMN_KEYS = ("source_position", "source_header", "canonical_field", "disposition", "method", "rule_id",
+                        "rule_version", "proposal_id", "proposal_class", "decided_by", "decided_at", "confirmed_by",
+                        "confirmed_at", "validation", "audit_event_seqs")
+
+
+def _mapping_unavailable(reason: str) -> dict:
+    return {"schema": MAPPING_PROVENANCE_SCHEMA, "status": "UNAVAILABLE", "reason": reason, "files": [], "notes": []}
+
+
+def mapping_provenance_problems(doc, package_id: str, snapshot_id: str) -> list[str]:
+    """Contract I-3 checks on what the mapping provenance service returned (rendered only when this is empty)."""
+    if not isinstance(doc, dict):
+        return ["not an object"]
+    out = []
+    if doc.get("schema") != MAPPING_PROVENANCE_SCHEMA:
+        out.append(f"schema {doc.get('schema')!r} is not {MAPPING_PROVENANCE_SCHEMA}")
+    if doc.get("package_id") != package_id or doc.get("snapshot_id") != snapshot_id:
+        out.append(f"it describes {doc.get('package_id')}/{doc.get('snapshot_id')}, not {package_id}/{snapshot_id}")
+    if not isinstance(doc.get("files"), list) or not isinstance(doc.get("notes", []), list):
+        return out + ["files / notes must be lists"]
+    for i, f in enumerate(doc["files"]):
+        if not isinstance(f, dict) or any(k not in f for k in _MAPPING_FILE_KEYS) or not isinstance(f.get("columns"), list):
+            out.append(f"files[{i}] lacks a contract field")
+            continue
+        for j, col in enumerate(f["columns"]):
+            if not isinstance(col, dict) or any(k not in col for k in _MAPPING_COLUMN_KEYS):
+                out.append(f"files[{i}].columns[{j}] lacks a contract field")
+            elif col["disposition"] not in MAPPING_DISPOSITIONS or col["method"] not in MAPPING_METHODS \
+                    or col["validation"] not in MAPPING_VALIDATION:
+                out.append(f"files[{i}].columns[{j}] has a value outside the contract enumerations")
+    return out
+
+
+def mapping_provenance_sentence(mp: dict) -> str:
+    """Fixed-format sentence for the GENERATE comment (system text, not analyst free text)."""
+    if mp.get("status") != "AVAILABLE":
+        return (f"Column mapping provenance: UNAVAILABLE ({mp.get('reason')}); the supplement records this "
+                "(ringfence_provenance.json, mapping_provenance).")
+    cols = [col for f in mp["files"] for col in f["columns"]]
+    by = Counter(col["disposition"] for col in cols)
+    methods = Counter(col["method"] for col in cols)
+    return (f"Column mapping provenance: {len(mp['files'])} file(s), {len(cols)} column(s) ("
+            + ", ".join(f"{by[d]} {d}" for d in MAPPING_DISPOSITIONS) + "; methods: "
+            + (", ".join(f"{n} {m}" for m, n in sorted(methods.items())) or "none") + "); per-column source, rule or "
+            "proposal, decision and confirmation in the Ringfence provenance supplement (ringfence_provenance.json, "
+            "mapping_provenance).")
+
+
 class ClosureService:
     def __init__(self, ctx, runner: ClosureRunner):
         self.ctx = ctx
@@ -122,6 +214,7 @@ class ClosureService:
         self.root = ctx.root / "closure"
         self.root.mkdir(parents=True, exist_ok=True)
         self._locks: dict = {}
+        self._auto_done: dict = {}                             # (ref, run) -> final automatic-investigation status
         self._guard = threading.Lock()
         self.ai_lane = threading.BoundedSemaphore(1)          # one AI request stream at a time (investigations + summary)
         ctx.job_listeners.append(self._on_job_finished)
@@ -166,16 +259,30 @@ class ClosureService:
 
     # ============================================================================================ audit / identity
     def _actor(self, user: str | None) -> str:
-        return user or self.ctx.reviewer.reviewer_id
+        return user or self._system_reviewer_id()
 
-    def _audit(self, event_type: str, c: dict, actor: str | None, **details) -> None:
+    def _audit(self, event_type: str, c: dict, actor: str | None, system: bool = False, **details) -> None:
         """Appended only AFTER the corresponding state write succeeded."""
         d = {"case_ref": c["case_ref"], "recon_run_id": c["recon_run_id"], "snapshot_id": c.get("snapshot_id"),
              "package_id": c.get("package_id"), "pack_id": (c.get("pack") or {}).get("pack_id"),
-             "system_reviewer_id": self.ctx.reviewer.reviewer_id}
+             "system_reviewer_id": self._system_reviewer_id()}
         d.update({k: v for k, v in details.items() if v is not None})
-        self.ctx.log.append(event_type, actor_id=actor or SYSTEM_ACTOR, actor_role="analyst" if actor else "system",
-                            details=d)
+        if system or not actor:                      # automatic closure work: the system, with the human in details
+            actor_id, role = SYSTEM_ACTOR, identity.SYSTEM_ROLE
+        else:
+            actor_id, role = actor, self._role_of(actor)
+        self.ctx.log.append(event_type, actor_id=actor_id, actor_role=role, details=d)
+
+    def _system_reviewer_id(self) -> str:
+        """The server's fixed reviewer identity (--reviewer-id). After I-1 `ctx.reviewer` is the signed-in user inside a
+        request; the SYSTEM reviewer is always `ctx.server_reviewer` (older contexts without it: ctx.reviewer)."""
+        return getattr(self.ctx, "server_reviewer", self.ctx.reviewer).reviewer_id
+
+    @staticmethod
+    def _role_of(actor: str) -> str:
+        """The access role of `actor` when it is the acting identity (supervisor shows as supervisor), else analyst."""
+        user, role = identity.current_actor()
+        return role if user == actor and role and role != identity.SYSTEM_ROLE else identity.ANALYST
 
     # ============================================================================================ jobs
     def _job(self, kind: str, c: dict, **extra) -> dict:
@@ -199,13 +306,45 @@ class ClosureService:
         return sorted(out, key=lambda j: (j.get("created_at") or "", j["job_id"]))
 
     def _thread(self, fn, *args) -> None:
-        threading.Thread(target=self._safe, args=(fn, *args), daemon=True).start()
+        threading.Thread(target=identity.bind(self._safe), args=(fn, *args), daemon=True).start()
 
-    @staticmethod
-    def _safe(fn, *args):
+    def _safe(self, fn, *args):
         try:
             fn(*args)
-        except Exception:                                    # a background failure is kept on its job, never raised
+        except Exception as e:                               # a background failure is kept on its job, never raised
+            traceback.print_exc()
+            j = args[0] if args and isinstance(args[0], dict) and args[0].get("job_id") else None
+            if j is not None:
+                self._fail_unexpected(j, f"unexpected error: {type(e).__name__}: {str(e)[:500]}")
+
+    def _fail_unexpected(self, j: dict, err: str) -> None:
+        """A job whose code raised unexpectedly ends FAILED (never stuck 'running'), and the closure state it owned is
+        released: a pending audit pack becomes UNAVAILABLE, a generating review GENERATION_FAILED. Best effort."""
+        try:
+            if j.get("state") in ACTIVE:
+                self._job_end(j, "failed", None, err)
+            ref, run = j.get("case_ref"), j.get("recon_run_id")
+            if not ref or not run:
+                return
+            with self._lock(ref, run):
+                c = self._load(ref, run)
+                changed = False
+                if j.get("kind") == "audit_pack" and (c.get("pack") or {}).get("status") == "PENDING":
+                    c["pack"].update(status="UNAVAILABLE", reason=err)
+                    changed = True
+                if c.get("auto_investigation") == "STARTING" and j.get("kind") == "audit_pack":
+                    c["auto_investigation"] = "FAILED"
+                    changed = True
+                s = self._session(c)
+                if j.get("kind") == "final_pack" and s and s["status"] == "GENERATING":
+                    s["status"] = "GENERATION_FAILED"
+                    self._save_session(c, s)
+                    c["last_generation_failure"] = {"at": now(), "error": err[:1500], "job_id": j["job_id"],
+                                                    "final_pack_id": None}
+                    changed = True
+                if changed:
+                    self._save(c)
+        except Exception:
             traceback.print_exc()
 
     # ============================================================================================ creation / auto start
@@ -264,29 +403,72 @@ class ClosureService:
         except ClosureRunnerError as e:
             pack = {"status": "UNAVAILABLE", "pack_id": None, "findings": [], "reason": str(e)}
             state, err = "failed", str(e)
+        plan, excs, cfg = None, [], {}
         with self._lock(ref, run):
             c = self._load(ref, run)
             c["pack"] = dict(pack, job_id=j["job_id"])
-            if pack["status"] == "GENERATED":     # INVESTIGATING until the automatic investigations are queued
-                c["auto_investigation"] = "STARTING"
+            if pack["status"] == "GENERATED":
+                # One atomic save decides what happens next, so the view never shows a transient state (QA E-15: a
+                # clean case showed INVESTIGATING and bumped the revision twice). STARTING (shown as INVESTIGATING) only
+                # when investigations will actually be queued.
+                plan, excs, cfg = self._auto_plan(c, j.get("requested_by"))
+                c["auto_investigation"] = plan
             self._save(c)
         actor = j.get("requested_by")
         if pack["status"] == "GENERATED":
-            self._audit("AUDIT_PACK_GENERATED", c, actor, job_id=j["job_id"], outcome=pack.get("outcome"))
+            self._audit("AUDIT_PACK_GENERATED", c, None, system=True, requested_by=actor, job_id=j["job_id"],
+                        outcome=pack.get("outcome"), auto_investigation=c.get("auto_investigation"))
         else:
-            self._audit("AUDIT_PACK_UNAVAILABLE", c, actor, job_id=j["job_id"], reason=pack["reason"][:1000])
+            self._audit("AUDIT_PACK_UNAVAILABLE", c, None, system=True, requested_by=actor, job_id=j["job_id"],
+                        reason=pack["reason"][:1000])
         self._job_end(j, state, {"status": pack["status"], "pack_id": pack["pack_id"], "reason": pack["reason"]}, err)
-        if pack["status"] == "GENERATED":
+        if plan == "REFUSED":
+            self._refuse_auto_investigation(c, actor, excs, cfg)
+        elif plan == "STARTING":
             self._auto_investigations(ref, run, actor)
 
+    @staticmethod
+    def _auto_details(j: dict) -> dict:
+        """An automatic investigation's outcome is system work; the human who started reconciliation stays recorded."""
+        return {"system": True, "requested_by": j.get("requested_by")} if j.get("automatic") else {}
+
+    def _auto_plan(self, c: dict, requested_by: str | None) -> tuple[str, list, dict]:
+        """NOT_REQUIRED (no exception in the published pack: no AI at all), REFUSED (AI unavailable or no recorded
+        requester) or STARTING (investigations will be queued)."""
+        try:
+            excs = [x["exception_id"] for x in self._pack(c)["exception_register"]["exceptions"]]
+        except ClosureError:
+            return "STARTING", [], {}                       # unreadable here: the queueing step decides and records it
+        if not excs:
+            return "NOT_REQUIRED", [], {}
+        cfg = self.runner.ai_configuration()
+        if not cfg["available"] or not requested_by:
+            return "REFUSED", excs, cfg
+        return "STARTING", excs, cfg
+
+    def _refuse_auto_investigation(self, c: dict, requested_by: str | None, excs: list, cfg: dict) -> None:
+        reason = cfg.get("problem") or "the user who started the reconciliation is not recorded"
+        auth = self._record_authorization(c, "AUTO_INVESTIGATION", "REFUSED", requested_by, cfg, reason=reason,
+                                          exceptions=excs)
+        self._audit("AI_AUTHORIZATION_REFUSED", c, None, system=True, authorized_by=requested_by,
+                    authorization_id=auth["authorization_id"], kind="AUTO_INVESTIGATION", reason=reason)
+
     def _auto_investigations(self, ref: str, run: str, requested_by: str | None) -> None:
+        status = "FAILED"
         try:
             status = self._auto_investigations_inner(ref, run, requested_by)
-        except Exception:
-            status = "FAILED"
-            raise
         finally:
-            self._bump(ref, run, auto_investigation=status)
+            for i in range(3):
+                try:
+                    self._bump(ref, run, auto_investigation=status)
+                    break
+                except Exception:
+                    if i == 2:
+                        # The record could not be written: remember the outcome in memory so the view never shows
+                        # STARTING (INVESTIGATING) for a step that has ended; recover() turns a persisted STARTING
+                        # into INTERRUPTED at the next start.
+                        self._auto_done[(ref, run)] = status
+                        traceback.print_exc()
 
     def _auto_investigations_inner(self, ref: str, run: str, requested_by: str | None) -> str:
         c = self._load(ref, run)
@@ -295,24 +477,21 @@ class ClosureService:
             return "NOT_REQUIRED"                            # a clean case: no AI at all
         cfg = self.runner.ai_configuration()
         if not cfg["available"] or not requested_by:
-            reason = cfg["problem"] or "the user who started the reconciliation is not recorded"
-            auth = self._record_authorization(c, "AUTO_INVESTIGATION", "REFUSED", requested_by, cfg, reason=reason,
-                                              exceptions=excs)
-            self._audit("AI_AUTHORIZATION_REFUSED", c, requested_by, authorization_id=auth["authorization_id"],
-                        kind="AUTO_INVESTIGATION", reason=reason)
+            self._refuse_auto_investigation(c, requested_by, excs, cfg)
             return "REFUSED"
         auth = self._record_authorization(c, "AUTO_INVESTIGATION", "AUTHORIZED", requested_by, cfg, exceptions=excs)
-        self._audit("AI_AUTHORIZED", c, requested_by, authorization_id=auth["authorization_id"],
-                    kind="AUTO_INVESTIGATION", provider=cfg["provider"], model=cfg["model"], exceptions=excs)
+        self._audit("AI_AUTHORIZED", c, None, system=True, authorized_by=requested_by,
+                    authorization_id=auth["authorization_id"], kind="AUTO_INVESTIGATION", provider=cfg["provider"],
+                    model=cfg["model"], exceptions=excs)
         for e in excs:
-            self._queue_investigation(ref, run, e, auth["authorization_id"], requested_by, None)
+            self._queue_investigation(ref, run, e, auth["authorization_id"], requested_by, None, auto=True)
         return "QUEUED"
 
     def _record_authorization(self, c: dict, kind: str, status: str, user: str | None, cfg: dict, **extra) -> dict:
         rec = {"authorization_id": _new_id("AIA"), "kind": kind, "status": status, "authorized_by": user,
                "recorded_at": now(), "provider": cfg.get("provider"), "model": cfg.get("model"),
                "reasoning_effort": cfg.get("reasoning_effort"), "store": False, "data_notice": cfg.get("data_notice"),
-               "system_reviewer_id": self.ctx.reviewer.reviewer_id, **extra}
+               "system_reviewer_id": self._system_reviewer_id(), **extra}
         with self._lock(c["case_ref"], c["recon_run_id"]):
             _append(self._dir(c["case_ref"], c["recon_run_id"]) / "ai_authorizations.jsonl", rec)
             self._save(self._load(c["case_ref"], c["recon_run_id"]))
@@ -320,21 +499,33 @@ class ClosureService:
 
     # ============================================================================================ investigations
     def _queue_investigation(self, ref: str, run: str, exc: str, authorization_id: str, user: str | None,
-                             retry_of: str | None) -> dict:
+                             retry_of: str | None, auto: bool = False) -> dict:
         with self._lock(ref, run):
             c = self._load(ref, run)
             attempt = len(self._jobs(c, "investigation", exc)) + 1
             j = self._job("investigation", c, exception_id=exc, authorization_id=authorization_id, retry_of=retry_of,
-                          attempt=attempt, requested_by=user)
+                          attempt=attempt, requested_by=user, automatic=auto)
             self._save(c)
-        self._audit("AI_INVESTIGATION_QUEUED", c, user, exception_id=exc, job_id=j["job_id"],
+        self._audit("AI_INVESTIGATION_QUEUED", c, None if auto else user, system=auto,
+                    **({"requested_by": user} if auto else {}), exception_id=exc, job_id=j["job_id"],
                     authorization_id=authorization_id, retry_of=retry_of, attempt=attempt)
         self._thread(self._run_investigation, j)
         return j
 
     def _registry(self, c: dict) -> dict:
-        return _read_json(self._dir(c["case_ref"], c["recon_run_id"]) / "registry.json",
-                          {"investigations": {}, "attempts": []})
+        """The registry of published investigations. Missing = empty (nothing published yet). Any other problem (a
+        persistent sharing violation, unreadable or invalid JSON) RAISES: the registry is read and written back, so an
+        empty default would wipe every published investigation."""
+        p = self._dir(c["case_ref"], c["recon_run_id"]) / "registry.json"
+        try:
+            text = _read_text(p)
+        except FileNotFoundError:
+            return {"investigations": {}, "attempts": []}
+        doc = json.loads(text)                                  # ValueError propagates
+        if not isinstance(doc, dict) or not isinstance(doc.get("investigations"), dict) \
+                or not isinstance(doc.get("attempts"), list):
+            raise ValueError(f"{p.name} is not a valid investigation registry")
+        return doc
 
     def _run_investigation(self, j: dict) -> None:
         ref, run, exc = j["case_ref"], j["recon_run_id"], j["exception_id"]
@@ -388,15 +579,15 @@ class ClosureService:
             self._save(c)
         common = dict(exception_id=exc, job_id=j["job_id"], authorization_id=j.get("authorization_id"))
         if published:
-            self._audit("AI_INVESTIGATION_PUBLISHED", c, j.get("requested_by"), investigation_id=out["investigation_id"],
+            self._audit("AI_INVESTIGATION_PUBLISHED", c, j.get("requested_by"), **self._auto_details(j), investigation_id=out["investigation_id"],
                         eligible=not (out.get("eligibility_reasons") or []), requests=len(calls), **common)
             self._job_end(j, "completed", {"outcome": "PUBLISHED", "investigation_id": out["investigation_id"]})
         elif out is not None:
-            self._audit("AI_INVESTIGATION_NOT_PUBLISHED", c, j.get("requested_by"), reason=attempt["reason"][:800],
+            self._audit("AI_INVESTIGATION_NOT_PUBLISHED", c, j.get("requested_by"), **self._auto_details(j), reason=attempt["reason"][:800],
                         record=attempt["not_published_record"], requests=len(calls), **common)
             self._job_end(j, "completed", {"outcome": "NOT_PUBLISHED", "reason": attempt["reason"][:800]})
         else:
-            self._audit("AI_INVESTIGATION_FAILED", c, j.get("requested_by"), reason=err[:800], requests=len(calls),
+            self._audit("AI_INVESTIGATION_FAILED", c, j.get("requested_by"), **self._auto_details(j), reason=err[:800], requests=len(calls),
                         **common)
             self._job_end(j, "failed", {"outcome": "FAILED"}, err)
 
@@ -530,7 +721,7 @@ class ClosureService:
                    "comment": "", "rejection_reason": FIXED["REJECT"] if decision == "REJECT" else "",
                    "reviewer": {"user_id": actor, "display_name": actor}, "decided_at": now(),
                    "revision": (prev["revision"] + 1) if prev else 1, "decided_by": actor,
-                   "system_reviewer_id": self.ctx.reviewer.reviewer_id, "supersedes": prev["analyst_review_id"] if prev else None}
+                   "system_reviewer_id": self._system_reviewer_id(), "supersedes": prev["analyst_review_id"] if prev else None}
             _append(self._dir(ref, run) / "investigation_reviews.jsonl", rec)
             c = self._save(c)
         self._audit("ANALYST_INVESTIGATION_ACCEPTED" if decision == "ACCEPT" else "ANALYST_INVESTIGATION_REJECTED", c,
@@ -821,7 +1012,20 @@ class ClosureService:
                     "closing_summary_unavailable_reason": meta["closing_summary"].get("unavailable_reason") or None,
                     "reused": bool(meta.get("reused")), "created_at": meta["created_at"],
                     "stale": meta["inputs_fingerprint"] != inputs["fingerprint"]},
+                "last_preview_failure": self._last_preview_failure(c, s),
                 "decisions": _jsonl(self._session_dir(c, s["review_id"]) / "decisions.jsonl") if s else []}
+
+    def _last_preview_failure(self, c: dict, s: dict | None) -> dict | None:
+        """The most recent failed preview of this review (Fix8 D5): what failed and why, kept for the analyst and audit."""
+        if not s:
+            return None
+        recs = [r for r in (_read_json(p) for p in (self._session_dir(c, s["review_id"]) / "preview_failures")
+                            .glob("PVF-*.json")) if r]
+        if not recs:
+            return None
+        r = max(recs, key=lambda x: x.get("at") or "")
+        return {"failure_id": r["failure_id"], "at": r["at"], "job_id": r.get("job_id"), "error": (r.get("error") or "")[:800],
+                "error_kind": r.get("error_kind"), "rejected_text_leaks": r.get("rejected_text_leaks") or []}
 
     # ============================================================================================ preview
     def request_preview(self, ref: str, confirm_ai: bool, expected_revision, user: str | None) -> dict:
@@ -904,7 +1108,7 @@ class ClosureService:
             inputs = self._inputs(c, s)
             pv = _new_id("PV")
             out_dir = self._session_dir(c, s["review_id"]) / "previews" / pv
-            calls, err, res = [], None, None
+            calls, err, res, err_kind, diag = [], None, None, None, {}
             try:
                 res = self.runner.preview(pack_id=c["pack"]["pack_id"], packs_root=P["packs"],
                                           investigations_root=P["investigations"],
@@ -913,16 +1117,22 @@ class ClosureService:
                                           out_dir=out_dir, scratch=P["scratch"])
                 calls = res.pop("ai_requests", [])
             except ClosureRunnerError as e:
-                err, calls = str(e), e.ai_requests
+                err, calls, err_kind, diag = str(e), e.ai_requests, e.kind, e.diagnostics or {}
         finally:
             if lane:
                 lane.release()
         self._record_usage(c, calls, "closing_summary", j["job_id"], None,
-                           ((res or {}).get("closing_summary") or {}).get("prompt_version"))
+                           ((res or {}).get("closing_summary") or {}).get("prompt_version")
+                           or (((diag.get("closing_summary") or {}).get("model_metadata")) or {}).get("prompt_version"))
         if res is None:
+            failure = self._record_preview_failure(c, s, j, inputs, err, err_kind, diag)
+            leaks = [{"investigation_id": k.get("investigation_id"), "text": (k.get("text") or "")[:240],
+                      "rejected_source": k.get("rejected_source"), "found_at": (k.get("found_at") or [])[:5]}
+                     for k in failure["rejected_text_leaks"][:5]]
             self._audit("CLOSING_PREVIEW_FAILED", c, j.get("requested_by"), review_id=s["review_id"], job_id=j["job_id"],
-                        reason=err[:800])
-            self._job_end(j, "failed", None, err)
+                        reason=err[:800], failure_id=failure["failure_id"], error_kind=err_kind,
+                        **({"rejected_text_leaks": leaks} if leaks else {}))
+            self._job_end(j, "failed", {"failure_id": failure["failure_id"]}, err)
             return
         meta = {"preview_id": pv, "review_id": s["review_id"], "created_at": now(), "created_by": j.get("requested_by"),
                 "job_id": j["job_id"], "inputs_fingerprint": inputs["fingerprint"],
@@ -943,6 +1153,24 @@ class ClosureService:
                     closing_summary_status=res["closing_summary"]["status"], current=current)
         self._job_end(j, "completed", {"preview_id": pv, "snapshot_sha256": res["snapshot_sha256"],
                                        "closing_summary_status": res["closing_summary"]["status"], "current": current})
+
+    def _record_preview_failure(self, c: dict, s: dict, j: dict, inputs: dict, err: str, kind, diag: dict) -> dict:
+        """Write-once diagnostics of a failed preview (Fix8 D5): the error, the library's structured reasons (e.g. which
+        rejected text was found where), the refused closing summary and the inputs. Never reused as a preview."""
+        rec = {"failure_id": _new_id("PVF"), "at": now(), "job_id": j["job_id"], "review_id": s["review_id"],
+               "requested_by": j.get("requested_by"), "summary_mode": j.get("summary_mode"),
+               "authorization_id": j.get("authorization_id"), "inputs_fingerprint": inputs["fingerprint"],
+               "selections": inputs["library_selections"],
+               "analyst_review_ids": [r["analyst_review_id"] for r in inputs["reviews"]],
+               "error": err, "error_kind": kind, "stage": diag.get("stage"),
+               "validation_errors": diag.get("errors") or [],
+               "rejected_text_leaks": diag.get("rejected_text_leaks") or [],
+               "closing_summary": diag.get("closing_summary")}
+        try:
+            _write_json(self._session_dir(c, s["review_id"]) / "preview_failures" / f"{rec['failure_id']}.json", rec)
+        except OSError:                                              # diagnostics never mask the failure itself
+            traceback.print_exc()
+        return rec
 
     def preview_file(self, ref: str, fmt: str) -> tuple:
         c, _ = self._locate(ref)
@@ -999,24 +1227,50 @@ class ClosureService:
                 rec = self._decision_record(c, s, "GENERATE", actor, meta, body, comment)
                 rec["comment_ascii"] = comment_ascii
                 _append(self._session_dir(c, s["review_id"]) / "decisions.jsonl", rec)
-                s["status"] = "GENERATING"
-                self._save_session(c, s)
-                c = self._load(ref, run)
-                job = self._job("final_pack", c, review_id=s["review_id"], requested_by=actor,
-                                review_decision_id=rec["review_decision_id"], preview_id=meta["preview_id"])
-                c = self._save(c)
+                job = None
+                try:
+                    job = self._job("final_pack", c, review_id=s["review_id"], requested_by=actor,
+                                    review_decision_id=rec["review_decision_id"], preview_id=meta["preview_id"])
+                    s["status"] = "GENERATING"
+                    self._save_session(c, s)
+                    c = self._save(self._load(ref, run))
+                except Exception as e:                           # never GENERATING without a running job
+                    self._generation_not_started(ref, run, s, job, f"{type(e).__name__}: {str(e)[:500]}")
+                    raise
         if decision == "HOLD":
             self._audit("CLOSING_REVIEW_HELD", c, actor, review_id=s["review_id"],
                         review_decision_id=rec["review_decision_id"], comment=rec["comment"])
             return {"decision": rec, "job_id": None, "closure": self.view(ref)}
-        self._thread(self._run_final, job)
+        try:
+            self._thread(self._run_final, job)
+        except Exception as e:
+            with self._lock(ref, run):
+                self._generation_not_started(ref, run, self._session(self._load(ref, run)), job,
+                                             f"{type(e).__name__}: {str(e)[:500]}")
+            raise
         return {"decision": {k: v for k, v in rec.items() if k != "comment_ascii"}, "job_id": job["job_id"],
                 "closure": self.view(ref)}
+
+    def _generation_not_started(self, ref: str, run: str, s: dict, job: dict | None, err: str) -> None:
+        """GENERATE was recorded but its job could not be started: the job (if any) ends FAILED and the review is
+        GENERATION_FAILED with the reason, so it is never stuck GENERATING. Best effort (the caller re-raises)."""
+        try:
+            if job is not None and job.get("state") in ACTIVE:
+                self._job_end(job, "failed", None, "final-pack generation could not be started: " + err)
+            c = self._load(ref, run)
+            s = self._session(c) or s
+            s["status"] = "GENERATION_FAILED"
+            self._save_session(c, s)
+            c["last_generation_failure"] = {"at": now(), "error": "final-pack generation could not be started: " + err,
+                                            "job_id": (job or {}).get("job_id"), "final_pack_id": None}
+            self._save(c)
+        except Exception:
+            traceback.print_exc()
 
     def _decision_record(self, c, s, decision, actor, meta, body, comment) -> dict:
         return {"review_decision_id": _new_id("RD"), "review_id": s["review_id"], "decision": decision,
                 "decided_at": now(), "reviewer": {"user_id": actor, "display_name": actor}, "decided_by": actor,
-                "system_reviewer_id": self.ctx.reviewer.reviewer_id, "comment": comment,
+                "system_reviewer_id": self._system_reviewer_id(), "comment": comment,
                 "acknowledgement_accepted": bool(body.get("acknowledgement_accepted")) if decision == "GENERATE" else False,
                 "acknowledged_summary_unavailable": bool(body.get("acknowledged_summary_unavailable")),
                 "snapshot_sha256": (meta or {}).get("snapshot_sha256", ""), "preview_id": (meta or {}).get("preview_id", ""),
@@ -1036,11 +1290,31 @@ class ClosureService:
         def text(dash, arrow):
             head = (f"Ringfence provenance {dash} case {c['case_ref']}; reconciliation run {c['recon_run_id']}; snapshot "
                     f"{c['snapshot_id']}; original ZIP {z.get('filename')} sha256 {z.get('sha256')}; generated by {actor} "
-                    f"(system reviewer {self.ctx.reviewer.reviewer_id}); source files: ")
+                    f"(system reviewer {self._system_reviewer_id()}); source files: ")
             body = "; ".join(f"{f['evidence_category']} {f['canonical_name']} {arrow} {f['original_filename']} "
                              f"({f['file_version_id']}, {f['source_sha256']})" for f in files)
-            return head + body + ". Full list also in the Ringfence provenance supplement (ringfence_provenance.json)."
+            return (head + body + ". Full list also in the Ringfence provenance supplement (ringfence_provenance.json). "
+                    + mapping_sentence)
+        mapping_sentence = mapping_provenance_sentence(self._mapping_provenance(c))
         return text("—", "→"), text("-", "->")
+
+    def _mapping_provenance(self, c: dict) -> dict:
+        """Column-mapping provenance of the case's package (contract I-3, provided by
+        smartparser/webapp/mapping_provenance.py). Guarded: when the module is absent, fails or breaks the contract, the
+        supplement says so visibly (status UNAVAILABLE with the reason); nothing is ever invented or back-filled."""
+        try:
+            from . import mapping_provenance as mp_mod
+        except ImportError as e:                                   # no local paths in text that reaches the pack
+            return _mapping_unavailable(f"the mapping provenance module is not installed ({type(e).__name__})")
+        try:
+            doc = mp_mod.build_mapping_provenance(self.ctx, c["package_id"], c["snapshot_id"])
+        except Exception as e:                                     # recorded, never hidden; generation is not blocked
+            msg = re.sub(r"(?:[A-Za-z]:)?[\\/][^\s'\"]*[\\/][^\s'\"]*", "<path>", str(e))[:300]
+            return _mapping_unavailable(f"mapping provenance could not be built: {type(e).__name__}: {msg}")
+        problems = mapping_provenance_problems(doc, c["package_id"], c["snapshot_id"])
+        if problems:
+            return _mapping_unavailable("mapping provenance does not satisfy contract I-3: " + "; ".join(problems[:5]))
+        return dict(doc, status="AVAILABLE", reason=None)
 
     def _run_final(self, j: dict) -> None:
         ref, run = j["case_ref"], j["recon_run_id"]
@@ -1128,13 +1402,17 @@ class ClosureService:
         doc = {"schema": "ringfence-provenance/1.0", "final_pack_id": res["final_pack_id"], "case_ref": c["case_ref"],
                "recon_run_id": c["recon_run_id"], "snapshot_id": c["snapshot_id"], "package_id": c["package_id"],
                "pack_id": c["pack"]["pack_id"], "period": c["period"], "zip": c.get("zip"),
-               "authorised_by": rec["reviewer"]["user_id"], "system_reviewer_id": self.ctx.reviewer.reviewer_id,
+               "authorised_by": rec["reviewer"]["user_id"], "system_reviewer_id": self._system_reviewer_id(),
                "generated_at": res["generated_at"], "review_id": s["review_id"],
                "review_decision_id": rec["review_decision_id"], "final_content_sha256": res["final_content_sha256"],
                "source_files": self._source_files(c), "decisions": hist,
+               "mapping_provenance": self._mapping_provenance(c),
                "statement": "System-generated Ringfence provenance supplement (write-once). It maps the engine's "
-                            "canonical evidence files back to the customer's uploaded files and records who took each "
-                            "closure decision. It is not part of the library's final pack and does not change it."}
+                            "canonical evidence files back to the customer's uploaded files, records how each source "
+                            "column was mapped to a canonical field (method, rule or AI proposal, who decided and "
+                            "confirmed it, validation; values not recorded at the time are shown as not recorded, never "
+                            "inferred) and who took each closure decision. It is not part of the library's final pack "
+                            "and does not change it."}
         pj = d / "ringfence_provenance.json"
         pj.write_text(json.dumps(doc, indent=1, ensure_ascii=False), encoding="utf-8")
         pp = d / "ringfence_provenance.pdf"
@@ -1151,15 +1429,20 @@ class ClosureService:
                 return {"final_pack_id": fail.get("final_pack_id"), "status": "GENERATION_FAILED", "verified": False,
                         "problems": [fail["error"]], "files": [], "authorised_by": None, "generated_at": None}
             raise ClosureError(404, "NO_FINAL_PACK", "no final pack has been generated for this closure")
-        problems = self._check_files(fp)
+        integ = self._integrity(fp)
         files = []
         for key in ("pdf", "html", "json", "manifest", "provenance.pdf", "provenance.json"):
-            p = self._final_path(fp, key)
-            files.append({"key": key, "name": p.name, "size_bytes": p.stat().st_size if p.is_file() else None,
-                          "sha256": _sha(p.read_bytes()) if p.is_file() else None,
-                          "url": f"/api/cases/{ref}/closure/final-pack/{key}"})
-        return {"final_pack_id": fp["final_pack_id"], "status": fp["status"], "verified": fp["verified"] and not problems,
-                "problems": problems, "files": files, "authorised_by": fp["authorised_by"],
+            try:
+                p = self._final_path(fp, key)
+                files.append({"key": key, "name": p.name, "size_bytes": p.stat().st_size if p.is_file() else None,
+                              "sha256": _sha(p.read_bytes()) if p.is_file() else None,
+                              "url": f"/api/cases/{ref}/closure/final-pack/{key}"})
+            except (OSError, KeyError, TypeError):
+                files.append({"key": key, "name": None, "size_bytes": None, "sha256": None,
+                              "url": f"/api/cases/{ref}/closure/final-pack/{key}"})
+        return {"final_pack_id": fp["final_pack_id"], "status": fp["status"], "verified": integ["verified"],
+                "integrity": integ["status"], "integrity_checked_at": integ["checked_at"],
+                "problems": integ["problems"], "files": files, "authorised_by": fp["authorised_by"],
                 "generated_at": fp["generated_at"], "version": fp.get("version"),
                 "final_content_sha256": fp.get("final_content_sha256")}
 
@@ -1171,24 +1454,55 @@ class ClosureService:
         return Path(fp["path"]) / FINAL_FILES[key][0]
 
     def _check_files(self, fp: dict) -> list[str]:
-        d = Path(fp["path"])
+        """Integrity of a generated final pack, from the files on disk NOW (never from a stored flag): the manifest is
+        the one recorded at generation, every manifest file matches its SHA-256, the report files are listed, and the
+        provenance supplement matches the hashes recorded at generation. Read-only: nothing is repaired or re-signed.
+        Any unexpected content (a tampered, malformed manifest) is a problem, never an exception."""
         problems = []
         try:
+            d = Path(fp["path"])
             mb = (d / "manifest.json").read_bytes()
-            manifest = json.loads(mb)
-        except (OSError, ValueError) as e:
+        except (OSError, KeyError, TypeError) as e:
             return [f"manifest unreadable: {e}"]
         if _sha(mb) != fp.get("manifest_sha256"):
             problems.append("manifest.json differs from the manifest recorded at generation")
-        for name, info in manifest["files"].items():
-            p = d / name
-            if not p.is_file() or _sha(p.read_bytes()) != info["sha256"]:
+        try:
+            manifest = json.loads(mb)
+            listed = manifest["files"]
+            if not isinstance(listed, dict):
+                raise TypeError("'files' is not an object")
+        except (ValueError, KeyError, TypeError) as e:
+            return problems + [f"manifest unreadable: {type(e).__name__}: {e}"]
+        for name, info in listed.items():
+            p = d / str(name)
+            try:
+                ok = (Path(str(name)).name == str(name) and p.is_file() and isinstance(info, dict)
+                      and _sha(p.read_bytes()) == info.get("sha256"))
+            except OSError:
+                ok = False
+            if not ok:
                 problems.append(f"{name} does not match its manifest SHA-256")
+        for key in ("pdf", "html", "json"):
+            if FINAL_FILES[key][0] not in listed:
+                problems.append(f"{FINAL_FILES[key][0]} is not listed in the manifest")
+        prov = fp.get("provenance") or {}
         for k in ("json", "pdf"):
-            p = Path(fp["provenance"][k])
-            if not p.is_file() or _sha(p.read_bytes()) != fp["provenance"][f"{k}_sha256"]:
+            try:
+                p = Path(prov[k])
+                ok = p.is_file() and _sha(p.read_bytes()) == prov[f"{k}_sha256"]
+            except (OSError, KeyError, TypeError):
+                ok = False
+            if not ok:
                 problems.append(f"provenance {k} does not match the SHA-256 recorded at generation")
         return problems
+
+    def _integrity(self, fp: dict) -> dict:
+        """Current integrity of a generated final pack (Fix8 D8): recomputed from the files on every read. The flag stored
+        at generation is only an upper bound (a pack that failed then never verifies later)."""
+        problems = self._check_files(fp)
+        verified = bool(fp.get("verified")) and not problems
+        return {"verified": verified, "status": "VERIFIED" if verified else "FAILED", "problems": problems,
+                "checked_at": now()}
 
     def final_file(self, ref: str, key: str, download: bool) -> tuple:
         c, _ = self._locate(ref)
@@ -1439,8 +1753,17 @@ class ClosureService:
 
     # ============================================================================================ ClosureView
     def view(self, ref: str) -> dict:
-        c, _ = self._locate(ref)
-        return self._view(c)
+        """A consistent snapshot: the closure record is read first and job states (in memory) later, so a job that
+        saved the closure and then ended in between would make the view look settled with the PREVIOUS revision (the
+        next action then gets 409 CLOSURE_CHANGED). The view is rebuilt until the record's revision did not move while
+        it was being built (bounded; no lock is held, so no deadlock with job threads)."""
+        v = None
+        for _ in range(20):
+            c, run = self._locate(ref)
+            v = self._view(c)
+            if self._load(ref, run)["revision"] == c["revision"]:
+                return v
+        return v
 
     def _view(self, c: dict) -> dict:
         cfg = self.runner.ai_configuration()
@@ -1463,15 +1786,17 @@ class ClosureService:
         inputs = self._inputs(c, s) if pack.get("status") == "GENERATED" else None
         review = self._review_view(c, inputs)
         rd = review["readiness"]
-        active_inv = any(j["state"] in ACTIVE for j in self._jobs(c, "investigation"))             or c.get("auto_investigation") == "STARTING"
+        active_inv = any(j["state"] in ACTIVE for j in self._jobs(c, "investigation")) \
+            or (c.get("auto_investigation") == "STARTING" and (c["case_ref"], c["recon_run_id"]) not in self._auto_done)
         fp = c.get("final_pack")
+        integ = self._integrity(fp) if fp else None          # D8: from the files now, never the stored flag
         cur = review.get("current_preview")
         if pack.get("status") == "PENDING":
             state = "PACK_PENDING"
         elif pack.get("status") != "GENERATED":
             state = "PACK_UNAVAILABLE"
         elif fp and fp.get("status") == "GENERATED":
-            state = "GENERATED"
+            state = "GENERATED" if integ["verified"] else "INTEGRITY_FAILED"
         elif s and s["status"] == "GENERATING":
             state = "GENERATING"
         elif s and s["status"] == "GENERATION_FAILED":
@@ -1518,7 +1843,10 @@ class ClosureService:
                        "problem": cfg["problem"]},
                 "usage": self._usage(c), "exceptions": rows, "review": review,
                 "final_pack": None if not fp else {"final_pack_id": fp["final_pack_id"], "status": fp["status"],
-                                                   "verified": fp["verified"], "authorised_by": fp["authorised_by"],
+                                                   "verified": integ["verified"], "integrity": integ["status"],
+                                                   "problems": integ["problems"],
+                                                   "integrity_checked_at": integ["checked_at"],
+                                                   "authorised_by": fp["authorised_by"],
                                                    "generated_at": fp["generated_at"]},
                 "last_generation_failure": c.get("last_generation_failure"), "actions": actions}
 

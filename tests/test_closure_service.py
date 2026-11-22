@@ -108,7 +108,8 @@ def reconcile(ctx, data: bytes, customer="Closure Test Ltd", period="2026-09") -
     R(ctx, "POST", f"cases/{ref}/activate", {"confirm": True})
     R(ctx, "POST", f"cases/{ref}/reconcile")
     d = settle(ctx, ref, 900)
-    assert d["status"] == "COMPLETED"
+    # diagnostics on failure (Fix8 B: a load-only failure was otherwise unexplained)
+    assert d["status"] == "COMPLETED", (d["status"], d["progress"].get("reconciliation"), [(j.get("kind"), j.get("state"), j.get("error")) for j in ctx.jobs.values() if j.get("kind") == "reconciliation"])
     return ref
 
 
@@ -282,7 +283,9 @@ def test_exceptions_case_investigations_decisions_preview_hold_generate_freeze_a
     assert v["pack"]["status"] == "GENERATED" and len(v["exceptions"]) >= 2
     excs = v["exceptions"]
     auth = [e for e in ctx.events() if e["event_type"] == "AI_AUTHORIZED"]
-    assert len(auth) == 1 and auth[0]["actor_id"] == USER and auth[0]["details"]["kind"] == "AUTO_INVESTIGATION"
+    assert len(auth) == 1 and auth[0]["details"]["kind"] == "AUTO_INVESTIGATION"
+    # automatic work is the system; the user who started reconciliation stays recorded (Fix8 B identity follow-up)
+    assert (auth[0]["actor_id"], auth[0]["actor_role"], auth[0]["details"]["authorized_by"]) == ("ringfence-closure-service", "system", USER)
     assert len([e for e in ctx.events() if e["event_type"] == "AI_INVESTIGATION_QUEUED"]) == len(excs)
     pub = [x for x in excs if x["ai_state"] == "PUBLISHED"]
     assert len(pub) >= 2, [(x["exception_id"], x["ai_state"]) for x in excs]
