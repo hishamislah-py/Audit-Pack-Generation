@@ -559,6 +559,38 @@ def _gap_parts(f):
     return out
 
 
+GROUP_VERDICT_KIND = {"EVIDENCE_BACKED": "assessment", "UNVERIFIED": "hypothesis", "COINCIDENCE_REJECTED": "rejected"}
+GROUP_VERDICT_TEXT = {"EVIDENCE_BACKED": "EVIDENCE-BACKED RELATIONSHIP", "UNVERIFIED": "UNVERIFIED RELATIONSHIP",
+                      "COINCIDENCE_REJECTED": "COINCIDENCE - RELATIONSHIP REJECTED"}
+
+
+def _group_assessment_blocks(o):
+    """Closing-summary schema 1.2 group assessments. Absent (a summary written before 1.2): nothing is rendered, so stored
+    packs re-render byte for byte. Present: every assessment is rendered (none can disappear), an empty list says so."""
+    if o.get("group_assessments") is None:
+        return []
+    gas = o["group_assessments"]
+    out = [_para("Group assessments (related exceptions and possible common causes; AI-generated, a common cause is always a "
+                 "hypothesis):")]
+    if not gas:
+        return out + [_para("No investigation group or candidate relationship was supplied for this pack, so no relationship "
+                            "between exceptions was assessed.")]
+    for a in gas:
+        out.append({"type": "item", "kind": GROUP_VERDICT_KIND.get(a["relationship_verdict"], "info"),
+                    "heading": f"{a['group_id']}: {', '.join(a['exception_ids'])}",
+                    "badge": GROUP_VERDICT_TEXT.get(a["relationship_verdict"], a["relationship_verdict"]), "fields": [
+                        ("Related exceptions", ", ".join(a["exception_ids"] + [x for x in a["related_exception_ids"]
+                                                                               if x not in a["exception_ids"]])),
+                        ("Relationship verdict", f"{a['relationship_verdict']} (confidence {a['confidence']})"),
+                        ("Likely common cause (HYPOTHESIS - NOT ESTABLISHED)", a["common_cause_hypothesis"]),
+                        ("Supporting evidence (source records)", ", ".join(a["supporting_evidence"]) or "None cited."),
+                        ("Contradicting evidence (source records)", ", ".join(a["contradicting_evidence"]) or "None cited."),
+                        ("Missing evidence", "; ".join(a["missing_evidence"]) or "None stated."),
+                        ("Recommended analyst action (not done)", a["analyst_action"]),
+                        ("Rationale", a["rationale"])]})
+    return out
+
+
 def _closing_summary_blocks(f):
     s = f["closing_summary"]
     if s["status"] == "NOT_REQUIRED":
@@ -581,6 +613,7 @@ def _closing_summary_blocks(f):
                   _para("Most important evidence-supported observations:"), {"type": "bullets", "items": items(o["key_observations"])},
                   _para("Important unresolved exceptions:"),
                   {"type": "bullets", "items": [f"{u['exception_id']}: {u['text']}" for u in o["unresolved_items"]] or ["None."]},
+                  *_group_assessment_blocks(o),
                   _para("Hypotheses that remain unverified:"), {"type": "bullets", "items": items(o["unverified_hypotheses"])},
                   _para("Material evidence gaps:"), {"type": "bullets", "items": items(o["evidence_gaps"])},
                   _para("Suggested next actions (recommendations, not completed actions):"), {"type": "bullets", "items": items(o["suggested_next_steps"])},
