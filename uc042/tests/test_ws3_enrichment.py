@@ -21,6 +21,9 @@ FROZEN = ["set_01_clean_baseline", "scn_S02_missing_eur_statement", "scn_S05_une
           "scn_SC2_settlement_timing", "scn_SC3B_fee_not_itemised", "scn_SC3C_short_settlement",
           "scn_SC5A_missing_transaction", "scn_SC5C_refund_double_posted", "scn_SC5D_closing_snapshot_mismatch"]
 TC_SNAPSHOT = Path(r"C:\u42v\enrich_20261123\outputs\tc_snapshot_0205")
+# TC03 in that snapshot is the superseded Saturday 25->26 Sep version; Session 2 is replacing it (Thu 24 -> Fri 25 Sep,
+# AQ-GBP-20260924). It is excluded until the revised, validated dataset is delivered.
+SUPERSEDED_TCS = {"TC03"}
 SKIP_TREE = {"validation", "VALIDATION_REPORT.md"}
 
 
@@ -546,6 +549,8 @@ class T_TestSuiteV2Snapshot(unittest.TestCase):
     def setUpClass(cls):
         cls.cases = {}
         for d in sorted(TC_SNAPSHOT.glob("TC0*")):
+            if d.name[:4] in SUPERSEDED_TCS:
+                continue
             root = copy_case(d / "initial_submission", f"t_{d.name}")
             pred = json.loads((d / "expected_results" / "engine_predicted_initial.json").read_text(encoding="utf-8"))
             cls.cases[d.name[:4]] = (root, pred, run(root, APPROVED_RULES), run(root))
@@ -566,10 +571,6 @@ class T_TestSuiteV2Snapshot(unittest.TestCase):
         v = c["TC02"][3]
         self.assertEqual(len(v.groups), 1)
         self.assertEqual(result(v, "RC4-DIRECT", "TX-0908-00002")["structured"]["comparison"]["outlier"]["source"], "IN-11")
-        v = c["TC03"][3]
-        (t,) = v.enrichment["timing_traces"]
-        self.assertEqual((t["evidence_class"], t["resolves_exception"]), ("EVIDENCED", False))
-        self.assertEqual(t["items"][0]["batch"]["batch_id"], "AQ-GBP-20260925")
         v = c["TC04"][3]
         self.assertEqual(len(v.enrichment["unmatched_credits"]), 1)
         v = c["TC05"][3]
