@@ -34,13 +34,15 @@ from pathlib import Path
 from ..mapping import financial
 from ..packages import review_api
 from ..packages.models import NEEDS_NEW_VERSION
+from . import identity
 
 STATUSES = ("WAITING", "IN_PROGRESS", "PENDING", "COMPLETED")
 MAX_ZIP_BYTES = 50 * 1024 * 1024
 PERIOD_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
-# Case assignment is a plain case attribute recorded at registration. `assigned_to` is a sign-in username used only to
-# filter the Work Queue ("My cases"); it does not change the queue's date-based order, it does not decide who may act
-# on a case and it is not the reviewer identity recorded on actions (that identity is still fixed at server start-up).
+# Case assignment: `assigned_to` is the sign-in username of the case OWNER, recorded at registration (the registering
+# user by default) or by an audited claim / supervisor reassignment (CASE_ASSIGNED). It filters the Work Queue ("My
+# cases") without changing its date-based order and, since Fix8 D7, decides who may act on the case (authz.py: the
+# owner, or a supervisor as an audited override). Actions are recorded under the signed-in user (identity.py).
 USERNAME_MAX = 256
 REF_RE = re.compile(r"^RF-\d{4}-\d{2}-\d{3}$")
 RUNNING = ("queued", "running")
@@ -113,8 +115,15 @@ class CaseService:
         return sorted(p.stem for p in self.root.glob("RF-*.json"))
 
     def _audit(self, event_type: str, c: dict, **details) -> None:
-        r = self.ctx.reviewer
-        self.ctx.log.append(event_type, actor_id=r.reviewer_id, actor_role=r.role,                # appends serialised
+        # Fix8 D6 (I-1): the acting identity - the signed-in user of this request (or of the request that started the
+        # job), the system actor for system-detected events, else the server reviewer (no request context).
+        a = identity.current()
+        if a is not None:
+            actor_id, role = a.user, a.role
+        else:
+            r = self.ctx.reviewer
+            actor_id, role = r.reviewer_id, r.role
+        self.ctx.log.append(event_type, actor_id=actor_id, actor_role=role,                        # appends serialised
                             details={"case_ref": c["case_ref"], "package_id": self._pid(c), **details})
 
     def _history(self, c: dict, status: str, note: str) -> None:
@@ -196,7 +205,13 @@ class CaseService:
         return "COMPLETED", None
 
     def _refresh(self, c: dict) -> dict:
-        """Bring the stored case up to date with what the services and jobs actually recorded."""
+        """Bring the stored case up to date with what the services and jobs actually recorded. The events recorded
+        here (run failed, case completed, a requested deferral taking effect) are detected by the system, whoever
+        happens to be viewing the case, so they are recorded under the system actor (Fix8 D6)."""
+        with identity.acting_as_system():
+            return self._refresh_inner(c)
+
+    def _refresh_inner(self, c: dict) -> dict:
         changed = False
         for run in c["runs"]:
             st, failure = self._run_state(run)
@@ -339,7 +354,8 @@ class CaseService:
                 return self.detail(ref)
             running = self._running(c)
             if running:                           # never interrupted: completed when the last job ends (O9: a finished
-                c["deferral"] = {"requested_at": now(), "waiting_for": [   # reconciliation supersedes it)
+                c["deferral"] = {"requested_at": now(), "requested_by": self.ctx.reviewer.reviewer_id,
+                                 "waiting_for": [                            # reconciliation supersedes it)
                     {"job_id": j["job_id"], "kind": j["kind"], "state": j["state"]} for j in running]}
                 c["last_activity_at"] = now()
                 self._save(c)
@@ -352,12 +368,14 @@ class CaseService:
 
     def _finalise_deferral(self, c: dict) -> None:
         requested = (c.get("deferral") or {}).get("requested_at")
+        c["deferral_requested_by"] = (c.get("deferral") or {}).get("requested_by")
         c["deferral"] = None
         c["deferred_at"] = now()
         self._history(c, "PENDING", "deferred by the analyst" + (f" (requested {requested}; the running operation "
                                                                   "finished first)" if requested else ""))
         snap = self._progress(c)
         self._audit("CASE_DEFERRED", c, requested_at=requested,
+                    requested_by=(c.get("deferral_requested_by") or None),
                     progress={k: snap.get(k) for k in ("decisions_outstanding", "decisions_made", "files_awaiting_review")})
 
     def resume(self, ref: str) -> dict:
@@ -852,7 +870,12 @@ class CaseService:
         failed = bool(run and run["status"] == "FAILED")
         other = self._active(exclude=c["case_ref"]) if st in ("WAITING", "PENDING") else None
 
+        from . import authz
+        denied = authz.case_access(c)["reason"]          # Fix8 D7: not the owner (reads stay open)
+
         def a(ok, why):
+            if denied:
+                return {"enabled": False, "reason": denied}
             return {"enabled": bool(ok), "reason": None if ok else why}
         idle_reason = ("a case action needs the case IN_PROGRESS" if not active else
                        "the latest run failed: retry it from the beginning" if failed else
@@ -883,6 +906,8 @@ class CaseService:
         return {k: c[k] for k in ("case_ref", "customer_id", "customer_name", "reporting_period", "created_at",
                                    "status", "last_activity_at", "zip")} | {
             "assigned_to": c.get("assigned_to"),          # None for cases registered before assignment existed
+            "assignment_history": c.get("assignment_history") or [],
+            "access": self._access(c),                    # Fix8 D7: the viewer's access (owner / supervisor / reason)
             "deferring": bool(c.get("deferral")), "deferral": c.get("deferral"), "deferred_at": c.get("deferred_at"),
             "started": c.get("started"), "completed": c.get("completed"),
             "current_run": None if run is None else {k: run.get(k) for k in ("run_id", "run_no", "status", "package_id",
@@ -1048,6 +1073,31 @@ class CaseService:
                 "cases": sorted(mine, key=lambda x: (x["reporting_period"], x["created_at"]), reverse=True),
                 "reconciliation_history": [{"case_ref": x["case_ref"], "reporting_period": x["reporting_period"],
                                             **(x["completed"] or {})} for x in mine if x["completed"]]}
+
+    @staticmethod
+    def _access(c: dict) -> dict:
+        from . import authz
+        return authz.case_access(c)
+
+    def assign(self, ref: str, assignee: str, how: str, expected_revision=None) -> dict:
+        """Record a new owner (CLAIM of an unassigned case, or a supervisor REASSIGN / supervisor claim). Who may do
+        which is decided by api.py (authz); this only validates, persists and audits CASE_ASSIGNED."""
+        if not (isinstance(assignee, str) and assignee.strip() and len(assignee) <= USERNAME_MAX):
+            raise CaseError(400, "INVALID", "assigned_to must be a non-empty username")
+        assignee = assignee.strip()
+        with self.lock:
+            self.check_revision(ref, expected_revision)
+            c = self.load(ref)
+            previous = c.get("assigned_to")
+            if previous == assignee:
+                return self.detail(ref)                     # idempotent: nothing recorded
+            c["assigned_to"] = assignee
+            c.setdefault("assignment_history", []).append({"assigned_to": assignee, "previous": previous,
+                                                           "how": how, "by": identity.current_actor()[0], "at": now()})
+            c["last_activity_at"] = now()
+            self._save(c)
+            self._audit("CASE_ASSIGNED", c, assigned_to=assignee, previous_assigned_to=previous, how=how)
+            return self.detail(ref)
 
     def check_revision(self, ref: str, expected) -> None:
         """Stale-action guard: a mutation that names the revision it was based on is refused if the case changed."""

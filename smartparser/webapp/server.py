@@ -8,8 +8,11 @@
 Binds to 127.0.0.1 only. Authentication (auth.py): username/password checked server-side against a local credentials
 file of PBKDF2 hashes; a server-side session is held in an HttpOnly SameSite=Strict cookie. Every /api route except
 /api/auth/login and /api/auth/session answers 401 UNAUTHENTICATED without a valid session. The server refuses to
-start without credentials unless --insecure-no-auth is given. The reviewer identity used for review actions is still
-fixed at start-up and every review action still
+start without credentials unless --insecure-no-auth is given. Identity (Fix8 D6, identity.py): every authenticated
+request runs as the SIGNED-IN user, who is the actor recorded on its actions; case mutations are limited to the case
+owner or a supervisor (authz.py). The server reviewer (--reviewer-id/--reviewer-role/--reviewer-kind) acts only for
+system work (job threads without a request, closure auto jobs) and, with --insecure-no-auth, for every request
+(harness mode: no user, authorisation not enforced). Every review action still
 goes through the AuthorityPolicy (the shipped production policy authorises nobody). Every POST must carry the header
 `X-Smartparser-Client: webapp` (a custom header cannot be sent cross-site without a CORS preflight, which this server
 never grants). Mapping proposals: disabled (default), recorded fixtures (--recorded-llm), or LIVE (--mapping-ai on with
@@ -54,6 +57,8 @@ class App:
         # auth=None means no authentication (unit tests that drive App directly, or --insecure-no-auth).
         self.ctx = ctx
         self.auth = auth
+        # Fix8 D6/D7: user roles (api.user_profile) come from THIS authenticator instance, not a module registry
+        ctx.authenticator = auth
 
     def handle(self, method: str, raw_path: str, headers, body: bytes) -> tuple[int, str, bytes]:
         return self.handle_ex(method, raw_path, headers, body)[:3]
@@ -69,8 +74,8 @@ class App:
             sess = self.auth.session(self.auth.token_from(headers))      # validated once (refreshes the idle timer)
             if sess is None:
                 return (*self._json({"error": "UNAUTHENTICATED", "message": "Sign in to continue."}, 401), [])
-        # The signed-in username only filters the Work Queue (?assigned=me). Actions are still recorded under the
-        # reviewer identity fixed at start-up (--reviewer-id); the two are not linked per session.
+        # The signed-in username is the request's identity (api.acting / identity.py): it is the recorded actor of every
+        # action and is checked against case ownership. Without a session (--insecure-no-auth) the server reviewer acts.
         r = self._handle(method, raw_path, headers, body, user=sess.username if sess else None)
         return (r[0], r[1], r[2], list(r[3]) if len(r) > 3 else [])
 

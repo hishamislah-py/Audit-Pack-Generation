@@ -12,8 +12,11 @@ from ..packages.models import NEEDS_NEW_VERSION
 from ..packages.service import PackageError
 from ..packages.store import PackageStoreError
 from ..review.audit import AuditError
+from . import auth as auth_mod
+from . import authz
 from . import closure as closure_mod
 from . import demo as demo_mod
+from . import identity
 from . import results
 from .cases import CaseError
 from .context import AppContext
@@ -261,14 +264,92 @@ def _recon_job_view(ctx, j):
             "stages": stages, "events": [{k: e[k] for k in ("seq", "event_type", "at", "actor_id")} for e in ev]}
 
 
-# ================================================================================================ handlers
+# ================================================================================================ identity (I-1) + authorisation (I-2)
+def user_profile(ctx, user: str | None) -> dict:
+    """Access roles of a signed-in user, from the credentials file loaded by the server (auth.py)."""
+    a = getattr(ctx, "authenticator", None)
+    return a.profile(user) if a is not None else auth_mod.registered_profile(user)
+
+
+def acting(ctx, user: str | None):
+    """The identity a request runs under. `user` comes ONLY from the server-side session validated by server.py
+    (never from a request field). Without authentication the server reviewer acts and nothing is enforced."""
+    if user:
+        prof = user_profile(ctx, user)
+        return identity.acting_as(user, roles=prof.get("roles") or (), reviewer_role=prof.get("reviewer_role"))
+    srv = ctx.server_reviewer
+    return identity.acting_as(srv.reviewer_id, role=srv.role, authenticated=False)
+
+
+CASE_MUTATIONS = ("start", "defer", "resume", "retry", "evidence", "validate", "activate", "reconcile")
+PACKAGE_MUTATIONS = ("intake", "resubmit", "validate", "activate", "reconcile")
+REVIEW_MUTATIONS = ("decision", "reject", "complete")
+
+
+def restricted_target(ctx, method: str, P: list[str]):
+    """(case, action name) when this request is a restricted mutation of a case (I-2), else None. Every case,
+    closure, review and upload mutation is restricted - including the generic /api/packages and /api/review
+    mutations of a package that belongs to a case. Reads, registration, staging and claim are not."""
+    if method != "POST":
+        return None
+    if P[:1] == ["cases"] and len(P) >= 3:
+        rest = P[2:]
+        if len(rest) == 1 and rest[0] in CASE_MUTATIONS:
+            return ctx.cases.load(P[1]), "case/" + rest[0]
+        if rest[:1] == ["closure"]:
+            return ctx.cases.load(P[1]), "case/" + "/".join(rest)
+        if rest[:1] == ["review"] and len(rest) == 3 and rest[2] in ("decision", "confirm", "reject"):
+            return ctx.cases.load(P[1]), "case/review/" + rest[2]
+        if rest == ["claim"]:                       # claim has its own audited ownership rules (api.claim)
+            return None
+        # Lead hardening (fail closed): any other POST under a case is restricted as well, so a mutation route added
+        # later can never be reachable by a non-owner merely because it is missing from the lists above.
+        return ctx.cases.load(P[1]), "case/" + "/".join(rest)
+    pid = action = None
+    if P[:1] == ["packages"] and len(P) == 3 and P[2] in PACKAGE_MUTATIONS:
+        pid, action = P[1], "package/" + P[2]
+    elif P[:1] == ["review"] and len(P) == 4 and P[3] in REVIEW_MUTATIONS:
+        pid, action = P[1], "review/" + P[3]
+    if pid is None:
+        return None
+    own = ctx.cases.owner_of(pid)
+    return (own[0], action) if own else None
+
+
 def route(ctx: AppContext, method: str, parts: list[str], q: dict, body: dict, *, user: str | None = None):
-    """`user` is the signed-in username (None when the server runs without authentication). It is used only to
-    resolve `GET /api/cases?assigned=me`; it is not the reviewer identity recorded on actions."""
+    """`user` is the signed-in username of the validated server-side session (None when the server runs without
+    authentication). Every request runs under that identity (identity.py, I-1): it is the actor of every action and
+    audit event. Every restricted mutation is authorised first (authz.py, I-2): the case owner, or a supervisor as an
+    audited override; anyone else gets 403 NOT_CASE_OWNER + ACCESS_DENIED and nothing is delegated."""
+    with acting(ctx, user):
+        target = restricted_target(ctx, method, parts) if authz.enforced() else None
+        if target is None:
+            out = _route(ctx, method, parts, q, body, user=user)
+        else:
+            out = authz.guarded(ctx, target[0], target[1], lambda: _route(ctx, method, parts, q, body, user=user),
+                                to_code=lambda e: to_http(e).code)
+        if authz.enforced() and method == "GET" and parts[:1] == ["cases"] and len(parts) >= 3 \
+                and parts[2] == "closure" and isinstance(out, dict):
+            acc = authz.case_access(ctx.cases.load(parts[1]))      # reads stay open; closure actions mirror I-2
+            out["access"] = acc
+            if not acc["can_act"]:
+                authz.restrict_actions(out, acc["reason"])
+        return out
+
+
+def _route(ctx: AppContext, method: str, parts: list[str], q: dict, body: dict, *, user: str | None = None):
     svc = ctx.svc
     P = parts
     if P == ["app"] and method == "GET":
+        a = identity.current()
         return {"reviewer": {"reviewer_id": ctx.reviewer.reviewer_id, "role": ctx.reviewer.role, "kind": ctx.reviewer.kind},
+                "user": {"username": user, "roles": sorted(a.roles), "supervisor": a.supervisor, "role": a.role}
+                if user else None,
+                "system_reviewer": {"reviewer_id": ctx.server_reviewer.reviewer_id, "role": ctx.server_reviewer.role,
+                                    "kind": ctx.server_reviewer.kind},
+                "authorization": {"enforced": bool(user), "model": "case owner (assigned_to) or audited supervisor "
+                                  "override; reads open to signed-in users" if user else
+                                  "not enforced (server runs without authentication)"},
                 "authority_policy": ctx.authority.policy_id, "authority_status": ctx.authority.status,
                 "llm": ctx.llm_mode, "engine_configured": ctx.uc042_root is not None,
                 "demo_scenarios": getattr(ctx, "demo", None) is not None,
@@ -560,11 +641,22 @@ def case_route(ctx: AppContext, method: str, P: list[str], q: dict, body: dict, 
                 data = base64.b64decode(body.get("zip_b64") or "", validate=True)
             except (ValueError, TypeError):
                 raise HttpError(400, "INVALID", "zip_b64 is not valid base64") from None
+            assignee = body.get("assigned_to") or None
+            if authz.enforced():                                # R-P0-1: registration assigns the signed-in user
+                a = identity.current()
+                if assignee is None:
+                    assignee = a.user
+                elif assignee != a.user and not a.supervisor:
+                    raise authz.deny(ctx, None, "case/register", "only a supervisor can register a case for another "
+                                     "user", code="ASSIGNMENT_NOT_PERMITTED", requested_assignee=str(assignee)[:256])
+                elif assignee != a.user and not _known_user(ctx, assignee):
+                    raise HttpError(400, "UNKNOWN_USER", f"{assignee!r} is not a user of this server")
             c = cs.create(body.get("customer_name", ""), body.get("reporting_period", ""), body.get("zip_name", ""),
-                          data, body.get("customer_id") or None,
-                          assigned_to=body.get("assigned_to") or None)
+                          data, body.get("customer_id") or None, assigned_to=assignee)
             return cs.detail(c["case_ref"])
     ref, rest = P[0], P[1:]
+    if rest == ["claim"] and method == "POST":
+        return claim(ctx, ref, body)
     if not rest and method == "GET":
         return cs.detail(ref)                                   # opening a case never changes its status
     if rest[:1] == ["closure"]:                                 # closure has its OWN revision (expected_revision)
@@ -617,6 +709,46 @@ def case_route(ctx: AppContext, method: str, P: list[str], q: dict, body: dict, 
     if rest[:1] == ["runs"] and len(rest) == 2 and method == "GET":
         return cs.run(ref, rest[1])
     raise HttpError(404, "NOT_FOUND", "/api/cases/" + "/".join(P))
+
+
+def _known_user(ctx, username) -> bool:
+    a = getattr(ctx, "authenticator", None)
+    if a is not None:
+        return a.known(username)
+    return username in auth_mod._ROLE_REGISTRY
+
+
+def claim(ctx, ref: str, body: dict) -> dict:
+    """POST /api/cases/{ref}/claim {assigned_to?, expected_revision?} - the explicit, audited ownership change
+    (CASE_ASSIGNED).
+
+    * Any signed-in analyst may claim an UNASSIGNED case for themselves.
+    * Claiming a case you already own changes nothing.
+    * A case owned by someone else can be claimed or reassigned (assigned_to = any known user) only by a supervisor;
+      that is audited SUPERVISOR_OVERRIDE as well as CASE_ASSIGNED. An analyst gets 403 NOT_CASE_OWNER + ACCESS_DENIED.
+    * An analyst may not assign a case to someone else (403 ASSIGNMENT_NOT_PERMITTED + ACCESS_DENIED).
+    * Without authentication there is no user to claim for: 400 NO_SIGNED_IN_USER."""
+    if not authz.enforced():
+        raise HttpError(400, "NO_SIGNED_IN_USER", "claiming a case needs a signed-in user "
+                        "(this server runs without authentication)")
+    a = identity.current()
+    c = ctx.cases.load(ref)
+    owner = c.get("assigned_to")
+    target = body.get("assigned_to") or a.user
+    if not isinstance(target, str) or not _known_user(ctx, target):
+        raise HttpError(400, "UNKNOWN_USER", f"{target!r} is not a user of this server")
+    if target != a.user and not a.supervisor:
+        raise authz.deny(ctx, c, "case/claim", "only a supervisor can assign a case to another user",
+                         code="ASSIGNMENT_NOT_PERMITTED", requested_assignee=target)
+    if owner == target:
+        return ctx.cases.detail(ref)
+    if owner is None and target == a.user:
+        return ctx.cases.assign(ref, target, "CLAIM", body.get("expected_revision"))
+    if not a.supervisor:                                   # owned by someone else
+        raise authz.deny(ctx, c, "case/claim", authz.case_access(c)["reason"])
+    return authz.guarded(ctx, c, "case/reassign",
+                         lambda: ctx.cases.assign(ref, target, "REASSIGN", body.get("expected_revision")),
+                         to_code=lambda e: to_http(e).code)
 
 
 # ================================================================================================ Ringfence closure

@@ -30,6 +30,7 @@ from ..reconciliation.uc042_adapter import run_reconciliation
 from ..review.audit import AuditLog
 from ..review.authority import AuthorityPolicy, Reviewer
 from ..schemas import SchemaRegistry
+from . import identity
 
 MAX_FILE_BYTES = 50 * 1024 * 1024
 MAX_ZIP_ENTRIES = 500
@@ -129,6 +130,12 @@ class AppContext:
         a restart."""
         from ..ai.live_config import build_mapping_gateway
         return build_mapping_gateway(self.mapping_ai, self.log, self.root / "ai_mapping_usage.json")
+
+    # ============================================================================================ identity (Fix8 D6, I-1)
+    @property
+    def server_reviewer(self) -> Reviewer:
+        """The reviewer fixed at server start-up (--reviewer-id/--reviewer-role/--reviewer-kind)."""
+        return self.__dict__["_server_reviewer"]
 
     # ============================================================================================ staging
     def stage(self, name: str, data: bytes) -> list[dict]:
@@ -245,8 +252,16 @@ class AppContext:
         files.sort(key=lambda f: f["name"].lower().endswith(".pdf") or f["kind"] == "PDF")
         j = self._new_job("resubmission" if resubmission else "intake", package_id, files=files,
                           resubmission=resubmission, validation=None)
-        threading.Thread(target=self._run_intake, args=(j,), daemon=True).start()
+        self._spawn(self._run_intake, j)
         return j
+
+    def _spawn(self, fn, j: dict) -> None:
+        """Fix8 D6 (I-1): the job thread runs under the actor captured at job creation (the analyst whose request
+        started it, or the system actor when nothing did). The actor is also recorded on the job record."""
+        target = identity.bind(fn)
+        j["actor"] = target.actor.as_record()
+        self._save_job(j)
+        threading.Thread(target=target, args=(j,), daemon=True).start()
 
     def _outcome(self, o) -> dict:
         v = o.file_version
@@ -310,7 +325,7 @@ class AppContext:
         if not pkg.active_snapshot_id or snapshot_id != pkg.active_snapshot_id:
             raise ValueError(f"NOT_ELIGIBLE: {snapshot_id} is not the active snapshot ({pkg.active_snapshot_id})")
         j = self._new_job("reconciliation", package_id, snapshot_id=snapshot_id, run_id=None, result=None)
-        threading.Thread(target=self._run_recon, args=(j,), daemon=True).start()
+        self._spawn(self._run_recon, j)
         return j
 
     def _run_recon(self, j: dict) -> None:
@@ -355,3 +370,20 @@ class AppContext:
                          "first_line": 2})
         return {"kind": "CSV", "encoding": ident.encoding, "delimiter": ident.delimiter, "rows": len(t.rows),
                 "columns": cols, "source_sha256": v.source_sha256, "intake_id": v.intake_id}
+
+
+def _reviewer_get(self) -> Reviewer:
+    """I-1: while a request (or a job started by one) runs as a user, the reviewer is that user with the server's
+    reviewer role (or the user's configured reviewer_role) and kind; otherwise the server reviewer."""
+    srv = self.__dict__["_server_reviewer"]
+    a = identity.current()
+    if a is None or a.system or a.user == srv.reviewer_id:
+        return srv
+    return Reviewer(reviewer_id=a.user, role=a.reviewer_role or srv.role, kind=srv.kind)
+
+
+def _reviewer_set(self, r: Reviewer) -> None:
+    self.__dict__["_server_reviewer"] = r
+
+
+AppContext.reviewer = property(_reviewer_get, _reviewer_set)   # the dataclass __init__ assigns through the setter
