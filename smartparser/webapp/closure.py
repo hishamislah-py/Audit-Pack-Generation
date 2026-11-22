@@ -214,6 +214,7 @@ class ClosureService:
         self.root = ctx.root / "closure"
         self.root.mkdir(parents=True, exist_ok=True)
         self._locks: dict = {}
+        self._auto_done: dict = {}                             # (ref, run) -> final automatic-investigation status
         self._guard = threading.Lock()
         self.ai_lane = threading.BoundedSemaphore(1)          # one AI request stream at a time (investigations + summary)
         ctx.job_listeners.append(self._on_job_finished)
@@ -453,13 +454,21 @@ class ClosureService:
                     authorization_id=auth["authorization_id"], kind="AUTO_INVESTIGATION", reason=reason)
 
     def _auto_investigations(self, ref: str, run: str, requested_by: str | None) -> None:
+        status = "FAILED"
         try:
             status = self._auto_investigations_inner(ref, run, requested_by)
-        except Exception:
-            status = "FAILED"
-            raise
         finally:
-            self._bump(ref, run, auto_investigation=status)
+            for i in range(3):
+                try:
+                    self._bump(ref, run, auto_investigation=status)
+                    break
+                except Exception:
+                    if i == 2:
+                        # The record could not be written: remember the outcome in memory so the view never shows
+                        # STARTING (INVESTIGATING) for a step that has ended; recover() turns a persisted STARTING
+                        # into INTERRUPTED at the next start.
+                        self._auto_done[(ref, run)] = status
+                        traceback.print_exc()
 
     def _auto_investigations_inner(self, ref: str, run: str, requested_by: str | None) -> str:
         c = self._load(ref, run)
@@ -504,8 +513,19 @@ class ClosureService:
         return j
 
     def _registry(self, c: dict) -> dict:
-        return _read_json(self._dir(c["case_ref"], c["recon_run_id"]) / "registry.json",
-                          {"investigations": {}, "attempts": []})
+        """The registry of published investigations. Missing = empty (nothing published yet). Any other problem (a
+        persistent sharing violation, unreadable or invalid JSON) RAISES: the registry is read and written back, so an
+        empty default would wipe every published investigation."""
+        p = self._dir(c["case_ref"], c["recon_run_id"]) / "registry.json"
+        try:
+            text = _read_text(p)
+        except FileNotFoundError:
+            return {"investigations": {}, "attempts": []}
+        doc = json.loads(text)                                  # ValueError propagates
+        if not isinstance(doc, dict) or not isinstance(doc.get("investigations"), dict) \
+                or not isinstance(doc.get("attempts"), list):
+            raise ValueError(f"{p.name} is not a valid investigation registry")
+        return doc
 
     def _run_investigation(self, j: dict) -> None:
         ref, run, exc = j["case_ref"], j["recon_run_id"], j["exception_id"]
@@ -1207,19 +1227,45 @@ class ClosureService:
                 rec = self._decision_record(c, s, "GENERATE", actor, meta, body, comment)
                 rec["comment_ascii"] = comment_ascii
                 _append(self._session_dir(c, s["review_id"]) / "decisions.jsonl", rec)
-                s["status"] = "GENERATING"
-                self._save_session(c, s)
-                c = self._load(ref, run)
-                job = self._job("final_pack", c, review_id=s["review_id"], requested_by=actor,
-                                review_decision_id=rec["review_decision_id"], preview_id=meta["preview_id"])
-                c = self._save(c)
+                job = None
+                try:
+                    job = self._job("final_pack", c, review_id=s["review_id"], requested_by=actor,
+                                    review_decision_id=rec["review_decision_id"], preview_id=meta["preview_id"])
+                    s["status"] = "GENERATING"
+                    self._save_session(c, s)
+                    c = self._save(self._load(ref, run))
+                except Exception as e:                           # never GENERATING without a running job
+                    self._generation_not_started(ref, run, s, job, f"{type(e).__name__}: {str(e)[:500]}")
+                    raise
         if decision == "HOLD":
             self._audit("CLOSING_REVIEW_HELD", c, actor, review_id=s["review_id"],
                         review_decision_id=rec["review_decision_id"], comment=rec["comment"])
             return {"decision": rec, "job_id": None, "closure": self.view(ref)}
-        self._thread(self._run_final, job)
+        try:
+            self._thread(self._run_final, job)
+        except Exception as e:
+            with self._lock(ref, run):
+                self._generation_not_started(ref, run, self._session(self._load(ref, run)), job,
+                                             f"{type(e).__name__}: {str(e)[:500]}")
+            raise
         return {"decision": {k: v for k, v in rec.items() if k != "comment_ascii"}, "job_id": job["job_id"],
                 "closure": self.view(ref)}
+
+    def _generation_not_started(self, ref: str, run: str, s: dict, job: dict | None, err: str) -> None:
+        """GENERATE was recorded but its job could not be started: the job (if any) ends FAILED and the review is
+        GENERATION_FAILED with the reason, so it is never stuck GENERATING. Best effort (the caller re-raises)."""
+        try:
+            if job is not None and job.get("state") in ACTIVE:
+                self._job_end(job, "failed", None, "final-pack generation could not be started: " + err)
+            c = self._load(ref, run)
+            s = self._session(c) or s
+            s["status"] = "GENERATION_FAILED"
+            self._save_session(c, s)
+            c["last_generation_failure"] = {"at": now(), "error": "final-pack generation could not be started: " + err,
+                                            "job_id": (job or {}).get("job_id"), "final_pack_id": None}
+            self._save(c)
+        except Exception:
+            traceback.print_exc()
 
     def _decision_record(self, c, s, decision, actor, meta, body, comment) -> dict:
         return {"review_decision_id": _new_id("RD"), "review_id": s["review_id"], "decision": decision,
@@ -1707,8 +1753,17 @@ class ClosureService:
 
     # ============================================================================================ ClosureView
     def view(self, ref: str) -> dict:
-        c, _ = self._locate(ref)
-        return self._view(c)
+        """A consistent snapshot: the closure record is read first and job states (in memory) later, so a job that
+        saved the closure and then ended in between would make the view look settled with the PREVIOUS revision (the
+        next action then gets 409 CLOSURE_CHANGED). The view is rebuilt until the record's revision did not move while
+        it was being built (bounded; no lock is held, so no deadlock with job threads)."""
+        v = None
+        for _ in range(20):
+            c, run = self._locate(ref)
+            v = self._view(c)
+            if self._load(ref, run)["revision"] == c["revision"]:
+                return v
+        return v
 
     def _view(self, c: dict) -> dict:
         cfg = self.runner.ai_configuration()
@@ -1731,7 +1786,8 @@ class ClosureService:
         inputs = self._inputs(c, s) if pack.get("status") == "GENERATED" else None
         review = self._review_view(c, inputs)
         rd = review["readiness"]
-        active_inv = any(j["state"] in ACTIVE for j in self._jobs(c, "investigation"))             or c.get("auto_investigation") == "STARTING"
+        active_inv = any(j["state"] in ACTIVE for j in self._jobs(c, "investigation")) \
+            or (c.get("auto_investigation") == "STARTING" and (c["case_ref"], c["recon_run_id"]) not in self._auto_done)
         fp = c.get("final_pack")
         integ = self._integrity(fp) if fp else None          # D8: from the files now, never the stored flag
         cur = review.get("current_preview")

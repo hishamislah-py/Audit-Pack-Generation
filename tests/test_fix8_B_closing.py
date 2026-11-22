@@ -534,3 +534,126 @@ def test_four_readers_and_one_writer_on_the_same_closure_file_never_fail(tmp_pat
     assert errors == [], errors[:5]
     assert closure_mod._read_json(p)["n"] == 1500 and len(closure_mod._jsonl(tmp_path / "log.jsonl")) == 1500
     assert reads[0] > 0
+
+
+# ============================================================================================ open items A/B/C (23 Nov 2026)
+def _bare_closure(ctx, ref="RF-2026-09-001", run="RECON-TEST-2", **fields):
+    svc = ctx.closure
+    svc._dir(ref, run).mkdir(parents=True, exist_ok=True)
+    c = {"case_ref": ref, "recon_run_id": run, "snapshot_id": "SNAP-X", "package_id": "PKG-X",
+         "pack": {"status": "GENERATED", "pack_id": "PACK-X", "reason": None}, "revision": 0, **fields}
+    return svc._save(c)
+
+
+def test_a_view_revision_equals_disk_when_a_save_lands_while_the_view_is_built(tmp_path, monkeypatch):
+    """(A) Torn view: a job saves the closure (and ends) while the view is being built. The returned revision must be the
+    on-disk revision, never the previous one (which made the next action fail with 409 CLOSURE_CHANGED)."""
+    ctx = ctx_for(tmp_path)
+    svc = ctx.closure
+    c0 = _bare_closure(ctx)
+    ref, run = c0["case_ref"], c0["recon_run_id"]
+    monkeypatch.setattr(svc, "_locate", lambda r: (svc._load(ref, run), run))
+    calls = []
+
+    def view_with_concurrent_save(c):
+        calls.append(c["revision"])
+        if len(calls) == 1:                                       # deterministic: one save while the first view builds
+            svc._save(svc._load(ref, run))
+        return {"revision": c["revision"]}
+    monkeypatch.setattr(svc, "_view", view_with_concurrent_save)
+    v = svc.view(ref)
+    assert v["revision"] == svc._load(ref, run)["revision"] == c0["revision"] + 1, (v, calls)
+
+
+@needs_closure
+def test_b_auto_investigation_bump_failing_every_time_never_leaves_investigating(tmp_path, monkeypatch):
+    """(B) The final _bump of the automatic-investigation step raises on every try: the view must not stay INVESTIGATING
+    and every job must have ended."""
+    from .test_closure_service import scenario_zip
+    ctx = ctx_for(tmp_path)
+    attempts = []
+
+    def bump_fails(*a, **k):
+        attempts.append(k)
+        raise PermissionError(5, "Access is denied")
+    monkeypatch.setattr(ctx.closure, "_bump", bump_fails)
+    data, customer, period = scenario_zip("scenario_2")
+    ref = reconcile(ctx, data, customer, period)
+    v = wait_closure(ctx, ref, lambda v: v["state"] not in ("PACK_PENDING", "INVESTIGATING"), timeout=300)
+    assert attempts, "the automatic step never tried to record its outcome"
+    assert v["state"] != "INVESTIGATING"
+    jobs = [j for j in ctx.jobs.values() if j.get("case_ref") == ref]
+    assert jobs and all(j["state"] not in ("queued", "running") for j in jobs), [(j["kind"], j["state"]) for j in jobs]
+
+
+def _ready_clean_case(ctx):
+    ref = reconcile(ctx, make_zip())
+    v = wait_closure(ctx, ref, lambda v: v["state"] != "PACK_PENDING")
+    pv = R(ctx, "POST", f"cases/{ref}/closure/review/preview", {"expected_revision": v["revision"]})
+    assert wait_job(ctx, pv["job_id"])["state"] == "completed"
+    return ref, R(ctx, "GET", f"cases/{ref}/closure")
+
+
+@needs_closure
+def test_c_generate_whose_job_cannot_start_is_generation_failed_never_generating(tmp_path, monkeypatch):
+    """(C) decide_review GENERATE: (1) _job raises; (2) the job exists but its thread cannot start. Each time the error is
+    re-raised, the review is GENERATION_FAILED (never GENERATING) and a created job is 'failed'."""
+    ctx = ctx_for(tmp_path)
+    svc = ctx.closure
+    ref, v = _ready_clean_case(ctx)
+    run = v["recon_run_id"]
+    body = lambda v: {"decision": "GENERATE", "acknowledgement_accepted": True,                # noqa: E731
+                      "snapshot_sha256": v["review"]["current_preview"]["snapshot_sha256"], "expected_revision": v["revision"]}
+    real_job = svc._job
+
+    def job_fails(kind, c, **extra):
+        if kind == "final_pack":
+            raise RuntimeError("injected: job store unavailable")
+        return real_job(kind, c, **extra)
+    monkeypatch.setattr(svc, "_job", job_fails)
+    with pytest.raises(RuntimeError, match="injected: job store unavailable"):
+        svc.decide_review(ref, body(v), USER)
+    c = svc._load(ref, run)
+    assert svc._session(c)["status"] == "GENERATION_FAILED" and "injected" in c["last_generation_failure"]["error"]
+    assert not [j for j in ctx.jobs.values() if j.get("kind") == "final_pack" and j.get("case_ref") == ref]
+    assert R(ctx, "GET", f"cases/{ref}/closure")["state"] == "GENERATION_FAILED"
+    # (2) the job is created, its thread cannot start
+    monkeypatch.setattr(svc, "_job", real_job)
+    v = R(ctx, "GET", f"cases/{ref}/closure")
+    if v["review"]["current_preview"] is None or v["review"]["current_preview"]["stale"]:
+        pv = R(ctx, "POST", f"cases/{ref}/closure/review/preview", {"expected_revision": v["revision"]})
+        if pv.get("job_id"):
+            assert wait_job(ctx, pv["job_id"])["state"] == "completed"
+        v = R(ctx, "GET", f"cases/{ref}/closure")
+
+    def thread_fails(fn, *args):
+        raise RuntimeError("injected: cannot start thread")
+    monkeypatch.setattr(svc, "_thread", thread_fails)
+    with pytest.raises(RuntimeError, match="injected: cannot start thread"):
+        svc.decide_review(ref, body(v), USER)
+    c = svc._load(ref, run)
+    assert svc._session(c)["status"] == "GENERATION_FAILED"
+    fj = [j for j in ctx.jobs.values() if j.get("kind") == "final_pack" and j.get("case_ref") == ref]
+    assert len(fj) == 1 and fj[0]["state"] == "failed" and "could not be started" in fj[0]["error"]
+    assert R(ctx, "GET", f"cases/{ref}/closure")["state"] == "GENERATION_FAILED"
+
+
+def test_d_registry_corrupt_raises_missing_is_empty_and_a_corrupt_file_is_never_overwritten(tmp_path, monkeypatch):
+    """(D) _registry: a missing file is an empty registry; a corrupt one raises. An investigation job that finishes while
+    the registry is corrupt must not write it back (the old default would have wiped every published investigation)."""
+    ctx = ctx_for(tmp_path)
+    svc = ctx.closure
+    c = _bare_closure(ctx)
+    assert svc._registry(c) == {"investigations": {}, "attempts": []}          # missing: empty
+    reg = svc._dir(c["case_ref"], c["recon_run_id"]) / "registry.json"
+    corrupt = b'{"investigations": {"INV-1": {"exception_id": "EXC-1"}}, "attempts": [  <truncated'
+    reg.write_bytes(corrupt)
+    with pytest.raises(ValueError):
+        svc._registry(c)
+    monkeypatch.setattr(svc.runner, "investigate", lambda **kw: {"persist_outcome": "NOT_PUBLISHED", "ai_requests": [],
+                                                                  "failure_reason": "test double: not published"})
+    j = ctx._new_job("investigation", None, case_ref=c["case_ref"], recon_run_id=c["recon_run_id"],
+                     exception_id="EXC-1", attempt=1, result=None)
+    svc._safe(svc._run_investigation, j)
+    assert reg.read_bytes() == corrupt                                          # never overwritten
+    assert j["state"] == "failed"
