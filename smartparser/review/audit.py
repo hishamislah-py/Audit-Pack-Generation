@@ -54,6 +54,8 @@ EVENT_TYPES = Literal[
     "ANALYST_MAPPING_CLARIFIED",
     # D7 - a restricted action refused for lack of authorisation, and an audited supervisor override
     "ACCESS_DENIED", "SUPERVISOR_OVERRIDE",
+    # D7 - an unassigned case claimed by an analyst, or a case reassigned by a supervisor
+    "CASE_ASSIGNED",
 ]
 GENESIS = "0" * 64
 

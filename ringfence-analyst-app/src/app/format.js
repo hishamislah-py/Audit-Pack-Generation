@@ -60,10 +60,20 @@ export function fmtAgo(iso, nowMs) {
 }
 export const catTitle = (app, id) => { const c = app && app.categories && app.categories.find((x) => x.category === id); return c ? c.title : id; };
 export const catInfo = (app, id) => (app && app.categories && app.categories.find((x) => x.category === id)) || { category: id, title: id, required: false, format: '' };
-export const analystOf = (app) => {
+/* The signed-in identity for the top bar and profile menu (Fix8 D6). With authentication it is the session user
+   (store auth.user, confirmed by GET /api/app `user`), never the server's fixed reviewer; without authentication
+   (--insecure-no-auth or the mock) it falls back to the reviewer reported by GET /api/app. */
+export const analystOf = (app, authUser) => {
+  const u = (app && app.user) || null;
+  const username = (authUser && authUser.username) || (u && u.username) || null;
   const r = (app && app.reviewer) || {};
-  const name = r.name || (r.reviewer_id || 'Analyst').split(/[._-]/).map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-  return { name, initials: name.split(' ').map((w) => w.charAt(0)).join('').slice(0, 2).toUpperCase(), role: (r.role ? r.role.charAt(0).toUpperCase() + r.role.slice(1) : 'Analyst') + (r.kind ? ' · ' + r.kind : ''), email: r.reviewer_id || '' };
+  const id = username || r.reviewer_id || 'Analyst';
+  const local = String(id).split('@')[0];
+  const name = (!username && r.name) || local.split(/[._-]/).filter(Boolean).map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  const sup = !!(u && u.supervisor);
+  const role = username ? (sup ? 'Supervisor' : 'Analyst') + (r.kind ? ' · ' + r.kind : '')
+    : (r.role ? r.role.charAt(0).toUpperCase() + r.role.slice(1) : 'Analyst') + (r.kind ? ' · ' + r.kind : '');
+  return { name, initials: name.split(' ').map((w) => w.charAt(0)).join('').slice(0, 2).toUpperCase(), role, email: id === 'Analyst' ? '' : id, username, supervisor: sup };
 };
 /* Contract step keys → labels, and step state → CaseProgress state. */
 export const STEP_KEYS = ['smart_parser', 'review', 'validation', 'activation', 'reconciliation'];

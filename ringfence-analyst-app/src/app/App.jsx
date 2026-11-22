@@ -36,7 +36,7 @@ function Shell({ st, store }) {
   else if (r.view === 'demo') body = <QueueScreen {...props} focusDemo />; // old #/demo link: the queue's Demo scenarios section
   else if (r.view === 'case') body = <CaseWorkspace key={r.ref} {...props} />;
   else body = <QueueScreen {...props} />;
-  return <div className={store.kind === 'mock' ? 'rf-app--mock' : undefined}><AppShell analyst={analystOf(st.app)} active={r.view === 'customers' || r.view === 'customer' ? 'customers' : 'queue'} demo={!!(st.app && st.app.demo_scenarios)}
+  return <div className={store.kind === 'mock' ? 'rf-app--mock' : undefined}><AppShell analyst={analystOf(st.app, st.auth && st.auth.user)} active={r.view === 'customers' || r.view === 'customer' ? 'customers' : 'queue'} demo={!!(st.app && st.app.demo_scenarios)}
     activeCase={ac ? { ref: ac.case_ref, customer: ac.customer_name, period: fmtPeriod(ac.reporting_period) } : null}
     onNav={store.nav} menuOpen={st.menuOpen} onMenu={() => store.setMenu(!st.menuOpen)} onSignOut={store.signOut}
     overlay={<><ServiceBar /><Toasts /></>}>{body}</AppShell></div>;

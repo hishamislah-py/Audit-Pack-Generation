@@ -13,6 +13,7 @@ export const METHODS = [
   ['listCases', 'GET', '/api/cases[?status=]', null, '{ items: CaseSummary[], counts, active_case_ref, active_case, ordering }'],
   ['registerCase', 'POST', '/api/cases', '{ customer_name, reporting_period, zip_name, zip_b64, customer_id? }', 'CaseDetail'],
   ['getCase', 'GET', '/api/cases/{ref}', null, 'CaseDetail'],
+  ['claimCase', 'POST', '/api/cases/{ref}/claim', '{ assigned_to?, expected_revision? }', 'CaseDetail (audited CASE_ASSIGNED)'],
   ['startCase', 'POST', '/api/cases/{ref}/start', '{ expected_revision? }', 'CaseDetail'],
   ['deferCase', 'POST', '/api/cases/{ref}/defer', '{ expected_revision? }', 'CaseDetail'],
   ['resumeCase', 'POST', '/api/cases/{ref}/resume', '{ expected_revision? }', 'CaseDetail'],
