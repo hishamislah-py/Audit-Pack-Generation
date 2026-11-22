@@ -35,7 +35,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from ..reconciliation.closure_runner import ClosureRunner, ClosureRunnerError
-from . import results
+from . import identity, results
 
 CLOSURE_JOB_KINDS = ("audit_pack", "investigation", "closing_preview", "final_pack")
 ACTIVE = ("queued", "running")
@@ -221,16 +221,30 @@ class ClosureService:
 
     # ============================================================================================ audit / identity
     def _actor(self, user: str | None) -> str:
-        return user or self.ctx.reviewer.reviewer_id
+        return user or self._system_reviewer_id()
 
-    def _audit(self, event_type: str, c: dict, actor: str | None, **details) -> None:
+    def _audit(self, event_type: str, c: dict, actor: str | None, system: bool = False, **details) -> None:
         """Appended only AFTER the corresponding state write succeeded."""
         d = {"case_ref": c["case_ref"], "recon_run_id": c["recon_run_id"], "snapshot_id": c.get("snapshot_id"),
              "package_id": c.get("package_id"), "pack_id": (c.get("pack") or {}).get("pack_id"),
-             "system_reviewer_id": self.ctx.reviewer.reviewer_id}
+             "system_reviewer_id": self._system_reviewer_id()}
         d.update({k: v for k, v in details.items() if v is not None})
-        self.ctx.log.append(event_type, actor_id=actor or SYSTEM_ACTOR, actor_role="analyst" if actor else "system",
-                            details=d)
+        if system or not actor:                      # automatic closure work: the system, with the human in details
+            actor_id, role = SYSTEM_ACTOR, identity.SYSTEM_ROLE
+        else:
+            actor_id, role = actor, self._role_of(actor)
+        self.ctx.log.append(event_type, actor_id=actor_id, actor_role=role, details=d)
+
+    def _system_reviewer_id(self) -> str:
+        """The server's fixed reviewer identity (--reviewer-id). After I-1 `ctx.reviewer` is the signed-in user inside a
+        request; the SYSTEM reviewer is always `ctx.server_reviewer` (older contexts without it: ctx.reviewer)."""
+        return getattr(self.ctx, "server_reviewer", self.ctx.reviewer).reviewer_id
+
+    @staticmethod
+    def _role_of(actor: str) -> str:
+        """The access role of `actor` when it is the acting identity (supervisor shows as supervisor), else analyst."""
+        user, role = identity.current_actor()
+        return role if user == actor and role and role != identity.SYSTEM_ROLE else identity.ANALYST
 
     # ============================================================================================ jobs
     def _job(self, kind: str, c: dict, **extra) -> dict:
@@ -254,7 +268,7 @@ class ClosureService:
         return sorted(out, key=lambda j: (j.get("created_at") or "", j["job_id"]))
 
     def _thread(self, fn, *args) -> None:
-        threading.Thread(target=self._safe, args=(fn, *args), daemon=True).start()
+        threading.Thread(target=identity.bind(self._safe), args=(fn, *args), daemon=True).start()
 
     @staticmethod
     def _safe(fn, *args):
@@ -319,20 +333,55 @@ class ClosureService:
         except ClosureRunnerError as e:
             pack = {"status": "UNAVAILABLE", "pack_id": None, "findings": [], "reason": str(e)}
             state, err = "failed", str(e)
+        plan, excs, cfg = None, [], {}
         with self._lock(ref, run):
             c = self._load(ref, run)
             c["pack"] = dict(pack, job_id=j["job_id"])
-            if pack["status"] == "GENERATED":     # INVESTIGATING until the automatic investigations are queued
-                c["auto_investigation"] = "STARTING"
+            if pack["status"] == "GENERATED":
+                # One atomic save decides what happens next, so the view never shows a transient state (QA E-15: a
+                # clean case showed INVESTIGATING and bumped the revision twice). STARTING (shown as INVESTIGATING) only
+                # when investigations will actually be queued.
+                plan, excs, cfg = self._auto_plan(c, j.get("requested_by"))
+                c["auto_investigation"] = plan
             self._save(c)
         actor = j.get("requested_by")
         if pack["status"] == "GENERATED":
-            self._audit("AUDIT_PACK_GENERATED", c, actor, job_id=j["job_id"], outcome=pack.get("outcome"))
+            self._audit("AUDIT_PACK_GENERATED", c, None, system=True, requested_by=actor, job_id=j["job_id"],
+                        outcome=pack.get("outcome"), auto_investigation=c.get("auto_investigation"))
         else:
-            self._audit("AUDIT_PACK_UNAVAILABLE", c, actor, job_id=j["job_id"], reason=pack["reason"][:1000])
+            self._audit("AUDIT_PACK_UNAVAILABLE", c, None, system=True, requested_by=actor, job_id=j["job_id"],
+                        reason=pack["reason"][:1000])
         self._job_end(j, state, {"status": pack["status"], "pack_id": pack["pack_id"], "reason": pack["reason"]}, err)
-        if pack["status"] == "GENERATED":
+        if plan == "REFUSED":
+            self._refuse_auto_investigation(c, actor, excs, cfg)
+        elif plan == "STARTING":
             self._auto_investigations(ref, run, actor)
+
+    @staticmethod
+    def _auto_details(j: dict) -> dict:
+        """An automatic investigation's outcome is system work; the human who started reconciliation stays recorded."""
+        return {"system": True, "requested_by": j.get("requested_by")} if j.get("automatic") else {}
+
+    def _auto_plan(self, c: dict, requested_by: str | None) -> tuple[str, list, dict]:
+        """NOT_REQUIRED (no exception in the published pack: no AI at all), REFUSED (AI unavailable or no recorded
+        requester) or STARTING (investigations will be queued)."""
+        try:
+            excs = [x["exception_id"] for x in self._pack(c)["exception_register"]["exceptions"]]
+        except ClosureError:
+            return "STARTING", [], {}                       # unreadable here: the queueing step decides and records it
+        if not excs:
+            return "NOT_REQUIRED", [], {}
+        cfg = self.runner.ai_configuration()
+        if not cfg["available"] or not requested_by:
+            return "REFUSED", excs, cfg
+        return "STARTING", excs, cfg
+
+    def _refuse_auto_investigation(self, c: dict, requested_by: str | None, excs: list, cfg: dict) -> None:
+        reason = cfg.get("problem") or "the user who started the reconciliation is not recorded"
+        auth = self._record_authorization(c, "AUTO_INVESTIGATION", "REFUSED", requested_by, cfg, reason=reason,
+                                          exceptions=excs)
+        self._audit("AI_AUTHORIZATION_REFUSED", c, None, system=True, authorized_by=requested_by,
+                    authorization_id=auth["authorization_id"], kind="AUTO_INVESTIGATION", reason=reason)
 
     def _auto_investigations(self, ref: str, run: str, requested_by: str | None) -> None:
         try:
@@ -350,24 +399,21 @@ class ClosureService:
             return "NOT_REQUIRED"                            # a clean case: no AI at all
         cfg = self.runner.ai_configuration()
         if not cfg["available"] or not requested_by:
-            reason = cfg["problem"] or "the user who started the reconciliation is not recorded"
-            auth = self._record_authorization(c, "AUTO_INVESTIGATION", "REFUSED", requested_by, cfg, reason=reason,
-                                              exceptions=excs)
-            self._audit("AI_AUTHORIZATION_REFUSED", c, requested_by, authorization_id=auth["authorization_id"],
-                        kind="AUTO_INVESTIGATION", reason=reason)
+            self._refuse_auto_investigation(c, requested_by, excs, cfg)
             return "REFUSED"
         auth = self._record_authorization(c, "AUTO_INVESTIGATION", "AUTHORIZED", requested_by, cfg, exceptions=excs)
-        self._audit("AI_AUTHORIZED", c, requested_by, authorization_id=auth["authorization_id"],
-                    kind="AUTO_INVESTIGATION", provider=cfg["provider"], model=cfg["model"], exceptions=excs)
+        self._audit("AI_AUTHORIZED", c, None, system=True, authorized_by=requested_by,
+                    authorization_id=auth["authorization_id"], kind="AUTO_INVESTIGATION", provider=cfg["provider"],
+                    model=cfg["model"], exceptions=excs)
         for e in excs:
-            self._queue_investigation(ref, run, e, auth["authorization_id"], requested_by, None)
+            self._queue_investigation(ref, run, e, auth["authorization_id"], requested_by, None, auto=True)
         return "QUEUED"
 
     def _record_authorization(self, c: dict, kind: str, status: str, user: str | None, cfg: dict, **extra) -> dict:
         rec = {"authorization_id": _new_id("AIA"), "kind": kind, "status": status, "authorized_by": user,
                "recorded_at": now(), "provider": cfg.get("provider"), "model": cfg.get("model"),
                "reasoning_effort": cfg.get("reasoning_effort"), "store": False, "data_notice": cfg.get("data_notice"),
-               "system_reviewer_id": self.ctx.reviewer.reviewer_id, **extra}
+               "system_reviewer_id": self._system_reviewer_id(), **extra}
         with self._lock(c["case_ref"], c["recon_run_id"]):
             _append(self._dir(c["case_ref"], c["recon_run_id"]) / "ai_authorizations.jsonl", rec)
             self._save(self._load(c["case_ref"], c["recon_run_id"]))
@@ -375,14 +421,15 @@ class ClosureService:
 
     # ============================================================================================ investigations
     def _queue_investigation(self, ref: str, run: str, exc: str, authorization_id: str, user: str | None,
-                             retry_of: str | None) -> dict:
+                             retry_of: str | None, auto: bool = False) -> dict:
         with self._lock(ref, run):
             c = self._load(ref, run)
             attempt = len(self._jobs(c, "investigation", exc)) + 1
             j = self._job("investigation", c, exception_id=exc, authorization_id=authorization_id, retry_of=retry_of,
-                          attempt=attempt, requested_by=user)
+                          attempt=attempt, requested_by=user, automatic=auto)
             self._save(c)
-        self._audit("AI_INVESTIGATION_QUEUED", c, user, exception_id=exc, job_id=j["job_id"],
+        self._audit("AI_INVESTIGATION_QUEUED", c, None if auto else user, system=auto,
+                    **({"requested_by": user} if auto else {}), exception_id=exc, job_id=j["job_id"],
                     authorization_id=authorization_id, retry_of=retry_of, attempt=attempt)
         self._thread(self._run_investigation, j)
         return j
@@ -443,15 +490,15 @@ class ClosureService:
             self._save(c)
         common = dict(exception_id=exc, job_id=j["job_id"], authorization_id=j.get("authorization_id"))
         if published:
-            self._audit("AI_INVESTIGATION_PUBLISHED", c, j.get("requested_by"), investigation_id=out["investigation_id"],
+            self._audit("AI_INVESTIGATION_PUBLISHED", c, j.get("requested_by"), **self._auto_details(j), investigation_id=out["investigation_id"],
                         eligible=not (out.get("eligibility_reasons") or []), requests=len(calls), **common)
             self._job_end(j, "completed", {"outcome": "PUBLISHED", "investigation_id": out["investigation_id"]})
         elif out is not None:
-            self._audit("AI_INVESTIGATION_NOT_PUBLISHED", c, j.get("requested_by"), reason=attempt["reason"][:800],
+            self._audit("AI_INVESTIGATION_NOT_PUBLISHED", c, j.get("requested_by"), **self._auto_details(j), reason=attempt["reason"][:800],
                         record=attempt["not_published_record"], requests=len(calls), **common)
             self._job_end(j, "completed", {"outcome": "NOT_PUBLISHED", "reason": attempt["reason"][:800]})
         else:
-            self._audit("AI_INVESTIGATION_FAILED", c, j.get("requested_by"), reason=err[:800], requests=len(calls),
+            self._audit("AI_INVESTIGATION_FAILED", c, j.get("requested_by"), **self._auto_details(j), reason=err[:800], requests=len(calls),
                         **common)
             self._job_end(j, "failed", {"outcome": "FAILED"}, err)
 
@@ -585,7 +632,7 @@ class ClosureService:
                    "comment": "", "rejection_reason": FIXED["REJECT"] if decision == "REJECT" else "",
                    "reviewer": {"user_id": actor, "display_name": actor}, "decided_at": now(),
                    "revision": (prev["revision"] + 1) if prev else 1, "decided_by": actor,
-                   "system_reviewer_id": self.ctx.reviewer.reviewer_id, "supersedes": prev["analyst_review_id"] if prev else None}
+                   "system_reviewer_id": self._system_reviewer_id(), "supersedes": prev["analyst_review_id"] if prev else None}
             _append(self._dir(ref, run) / "investigation_reviews.jsonl", rec)
             c = self._save(c)
         self._audit("ANALYST_INVESTIGATION_ACCEPTED" if decision == "ACCEPT" else "ANALYST_INVESTIGATION_REJECTED", c,
@@ -1108,7 +1155,7 @@ class ClosureService:
     def _decision_record(self, c, s, decision, actor, meta, body, comment) -> dict:
         return {"review_decision_id": _new_id("RD"), "review_id": s["review_id"], "decision": decision,
                 "decided_at": now(), "reviewer": {"user_id": actor, "display_name": actor}, "decided_by": actor,
-                "system_reviewer_id": self.ctx.reviewer.reviewer_id, "comment": comment,
+                "system_reviewer_id": self._system_reviewer_id(), "comment": comment,
                 "acknowledgement_accepted": bool(body.get("acknowledgement_accepted")) if decision == "GENERATE" else False,
                 "acknowledged_summary_unavailable": bool(body.get("acknowledged_summary_unavailable")),
                 "snapshot_sha256": (meta or {}).get("snapshot_sha256", ""), "preview_id": (meta or {}).get("preview_id", ""),
@@ -1128,7 +1175,7 @@ class ClosureService:
         def text(dash, arrow):
             head = (f"Ringfence provenance {dash} case {c['case_ref']}; reconciliation run {c['recon_run_id']}; snapshot "
                     f"{c['snapshot_id']}; original ZIP {z.get('filename')} sha256 {z.get('sha256')}; generated by {actor} "
-                    f"(system reviewer {self.ctx.reviewer.reviewer_id}); source files: ")
+                    f"(system reviewer {self._system_reviewer_id()}); source files: ")
             body = "; ".join(f"{f['evidence_category']} {f['canonical_name']} {arrow} {f['original_filename']} "
                              f"({f['file_version_id']}, {f['source_sha256']})" for f in files)
             return (head + body + ". Full list also in the Ringfence provenance supplement (ringfence_provenance.json). "
@@ -1240,7 +1287,7 @@ class ClosureService:
         doc = {"schema": "ringfence-provenance/1.0", "final_pack_id": res["final_pack_id"], "case_ref": c["case_ref"],
                "recon_run_id": c["recon_run_id"], "snapshot_id": c["snapshot_id"], "package_id": c["package_id"],
                "pack_id": c["pack"]["pack_id"], "period": c["period"], "zip": c.get("zip"),
-               "authorised_by": rec["reviewer"]["user_id"], "system_reviewer_id": self.ctx.reviewer.reviewer_id,
+               "authorised_by": rec["reviewer"]["user_id"], "system_reviewer_id": self._system_reviewer_id(),
                "generated_at": res["generated_at"], "review_id": s["review_id"],
                "review_decision_id": rec["review_decision_id"], "final_content_sha256": res["final_content_sha256"],
                "source_files": self._source_files(c), "decisions": hist,

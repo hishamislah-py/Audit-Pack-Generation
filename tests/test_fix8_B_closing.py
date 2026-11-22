@@ -326,3 +326,121 @@ def test_tampered_manifest_shows_integrity_failed_and_mapping_unavailable_is_vis
     ctx2 = AppContext(root=tmp_path / "ws", authority_path=TEST_POLICY, reviewer=ANALYST, uc042_root=UC042_ROOT)
     ctx2.closure = ClosureService(ctx2, DoubleRunner(UC042_ROOT, CLOSURE_PY))
     _assert_integrity_failed(ctx2, ref, "manifest.json differs from the manifest recorded at generation")
+
+
+# ============================================================================================ lead items (23 Nov 2026)
+def _record_transitions(ctx):
+    """Hooks ClosureService._save: every closure write as (revision, the state it implies). The state is derived from
+    the written record with _view's own rules for these fields (the hook must not call _view: _save runs under the
+    closure lock and _view reads the case store, which other threads lock while waiting for the closure lock)."""
+    seen, orig = [], ctx.closure._save
+
+    def implied(c):
+        pk = (c.get("pack") or {}).get("status")
+        if pk == "PENDING":
+            return "PACK_PENDING"
+        if pk != "GENERATED":
+            return "PACK_UNAVAILABLE"
+        return "INVESTIGATING" if c.get("auto_investigation") == "STARTING" else f"AUTO_{c.get('auto_investigation')}"
+
+    def save(c):
+        out = orig(c)
+        seen.append((out["revision"], implied(out)))
+        return out
+    ctx.closure._save = save
+    return seen
+
+
+@needs_closure
+def test_clean_case_goes_pack_pending_to_ready_with_one_revision_bump(tmp_path):
+    """QA E-15 / lead item 2: a clean case never shows INVESTIGATING and its revision does not move after READY
+    (previously: pack GENERATED + auto_investigation STARTING, then a second write NOT_REQUIRED)."""
+    import threading
+    import time as _t
+    ctx = ctx_for(tmp_path)
+    seen = _record_transitions(ctx)
+    polled, stop = [], threading.Event()
+    ref = reconcile(ctx, make_zip())
+
+    def poll():                                                          # an independent tight reader of the API view
+        while not stop.is_set():
+            try:
+                v = R(ctx, "GET", f"cases/{ref}/closure")
+                polled.append((v["revision"], v["state"]))
+            except Exception:
+                pass
+    t = threading.Thread(target=poll, daemon=True); t.start()
+    v = wait_closure(ctx, ref, lambda v: v["state"] not in ("PACK_PENDING",))
+    _t.sleep(2.0)                                                        # anything still to come would land now
+    stop.set(); t.join(5)
+    v2 = R(ctx, "GET", f"cases/{ref}/closure")
+    states = [s for _, s in seen]
+    assert states == ["PACK_PENDING", "AUTO_NOT_REQUIRED"], seen       # created, then ONE write publishes the pack
+    assert "INVESTIGATING" not in {s for _, s in polled}, sorted(set(polled))
+    assert v["state"] == "READY" and v2["revision"] == v["revision"] == seen[-1][0]
+    assert ctx.closure._load(ref, v["recon_run_id"])["auto_investigation"] == "NOT_REQUIRED"
+    pack_ev = [e for e in ctx.events() if e["event_type"] == "AUDIT_PACK_GENERATED"][-1]
+    assert (pack_ev["actor_role"], pack_ev["details"]["requested_by"], pack_ev["details"]["auto_investigation"]) == \
+        ("system", USER, "NOT_REQUIRED")
+
+
+class NoAiRunner(DoubleRunner):
+    def ai_configuration(self):
+        return dict(ClosureRunner.ai_configuration(self), available=False, problem="AI is not configured (test)")
+
+
+@needs_closure
+def test_exceptions_case_without_ai_is_refused_in_the_same_write(tmp_path):
+    from .test_closure_service import scenario_zip
+    data, customer, period = scenario_zip("scenario_2")
+    ctx = ctx_for(tmp_path, runner_cls=NoAiRunner)
+    seen = _record_transitions(ctx)
+    ref = reconcile(ctx, data, customer, period)
+    v = wait_closure(ctx, ref, lambda v: v["state"] != "PACK_PENDING")
+    assert "INVESTIGATING" not in [s for _, s in seen], seen
+    assert ctx.closure._load(ref, v["recon_run_id"])["auto_investigation"] == "REFUSED"
+    ev = [e for e in ctx.events() if e["event_type"] == "AI_AUTHORIZATION_REFUSED"][-1]
+    assert (ev["actor_role"], ev["details"]["authorized_by"], ev["details"]["kind"]) == ("system", USER, "AUTO_INVESTIGATION")
+
+
+@needs_closure
+def test_system_reviewer_is_the_server_identity_and_roles_are_recorded(tmp_path):
+    """Lead item 1 (I-1 follow-up): system_reviewer_id is ctx.server_reviewer everywhere (never the signed-in user);
+    a supervisor's closure action is recorded with actor_role supervisor; automatic work is the system."""
+    from smartparser.webapp import api, auth
+    from .test_closure_service import scenario_zip
+    alice, sup = "fix8.alice@ringfence.test", "fix8.supervisor@ringfence.test"
+    data, customer, period = scenario_zip("scenario_2")
+    ctx = ctx_for(tmp_path)
+    h = auth.hash_password("pw-test", 1000)
+    ctx.authenticator = auth.Authenticator({alice: h, sup: h}, profiles={sup: {"roles": ["supervisor"]}})
+
+    def RU(method, path, body=None, user=alice):
+        return api.route(ctx, method, [p for p in path.split("/") if p], {}, body or {}, user=user)
+    import base64
+    ref = RU("POST", "cases", {"customer_name": customer, "reporting_period": period, "zip_name": "u.zip",
+                               "zip_b64": base64.b64encode(data).decode()})["case_ref"]
+    from .test_ringfence_cases import settle
+    RU("POST", f"cases/{ref}/start"); settle(ctx, ref, 300)
+    RU("POST", f"cases/{ref}/activate", {"confirm": True}); RU("POST", f"cases/{ref}/reconcile"); settle(ctx, ref, 900)
+    v = wait_closure(ctx, ref, lambda v: v["state"] not in ("PACK_PENDING", "INVESTIGATING"))
+    RU("POST", f"cases/{ref}/closure/review", {"expected_revision": v["revision"]}, user=alice)
+    v = RU("GET", f"cases/{ref}/closure")
+    x = next(x for x in v["exceptions"] if x["ai_state"] == "PUBLISHED")
+    RU("POST", f"cases/{ref}/closure/review/selections", {"expected_revision": v["revision"], "selections": [
+        {"exception_id": x["exception_id"], "inclusion": "EXCLUDED_BY_ANALYST"}]}, user=sup)
+    server = ctx.server_reviewer.reviewer_id
+    run_events = [e for e in ctx.events() if (e.get("details") or {}).get("recon_run_id") == v["recon_run_id"]]
+    assert run_events and all(e["details"]["system_reviewer_id"] == server for e in run_events), \
+        {(e["event_type"], e["details"]["system_reviewer_id"]) for e in run_events}
+    by = {e["event_type"]: e for e in run_events}
+    assert (by["CLOSING_REVIEW_OPENED"]["actor_id"], by["CLOSING_REVIEW_OPENED"]["actor_role"]) == (alice, "analyst")
+    assert (by["CLOSING_SELECTIONS_CHANGED"]["actor_id"], by["CLOSING_SELECTIONS_CHANGED"]["actor_role"]) == (sup, "supervisor")
+    for t in ("AUDIT_PACK_GENERATED", "AI_AUTHORIZED", "AI_INVESTIGATION_QUEUED", "AI_INVESTIGATION_PUBLISHED"):
+        assert by[t]["actor_role"] == "system" and alice in (by[t]["details"].get("requested_by"),
+                                                             by[t]["details"].get("authorized_by")), (t, by[t])
+    c = ctx.closure._load(ref, v["recon_run_id"])
+    auths = [json.loads(l) for l in (ctx.closure._dir(ref, c["recon_run_id"]) / "ai_authorizations.jsonl")
+             .read_text(encoding="utf-8").splitlines() if l]
+    assert auths and all(a["system_reviewer_id"] == server for a in auths)
+    assert all(r["system_reviewer_id"] == server for r in ctx.closure._reviews(c))
