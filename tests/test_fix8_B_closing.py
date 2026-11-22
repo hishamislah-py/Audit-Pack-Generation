@@ -444,3 +444,57 @@ def test_system_reviewer_is_the_server_identity_and_roles_are_recorded(tmp_path)
              .read_text(encoding="utf-8").splitlines() if l]
     assert auths and all(a["system_reviewer_id"] == server for a in auths)
     assert all(r["system_reviewer_id"] == server for r in ctx.closure._reviews(c))
+
+
+# ============================================================================================ Windows sharing violations
+def test_write_and_read_retry_sharing_violations_and_never_treat_them_as_missing(tmp_path, monkeypatch):
+    """Lead item (23 Nov 2026): a transient PermissionError (WinError 5) on replace or read is retried; a persistent one
+    propagates; only a missing file yields the default. OFFLINE (monkeypatched Path methods)."""
+    import smartparser.packages.store as store
+    monkeypatch.setattr(store.time, "sleep", lambda s: None)
+    p = tmp_path / "closure.json"
+    real_replace, real_read = Path.replace, Path.read_text
+    fails = {"replace": 3, "read": 3}
+
+    def flaky_replace(self, target):
+        if fails["replace"] > 0:
+            fails["replace"] -= 1
+            raise PermissionError(5, "Access is denied")
+        return real_replace(self, target)
+
+    def flaky_read(self, *a, **k):
+        if self.name == "closure.json" and fails["read"] > 0:
+            fails["read"] -= 1
+            raise PermissionError(5, "Access is denied")
+        return real_read(self, *a, **k)
+    monkeypatch.setattr(Path, "replace", flaky_replace)
+    monkeypatch.setattr(Path, "read_text", flaky_read)
+    closure_mod._write_json(p, {"revision": 7})
+    assert fails["replace"] == 0 and closure_mod._read_json(p) == {"revision": 7} and fails["read"] == 0
+    fails["read"] = 10 ** 6                                           # persistent: raised, not "missing"
+    with pytest.raises(PermissionError):
+        closure_mod._read_json(p, default="MISSING")
+    fails["replace"] = 10 ** 6
+    with pytest.raises(PermissionError):
+        closure_mod._write_json(p, {"revision": 8})
+    fails["read"] = 0
+    assert closure_mod._read_json(tmp_path / "absent.json", default="MISSING") == "MISSING"
+
+
+def test_a_job_that_raises_unexpectedly_ends_failed_and_releases_its_state(tmp_path):
+    ctx = ctx_for(tmp_path)
+    svc = ctx.closure
+    ref, run = "RF-2026-09-001", "RECON-TEST-1"
+    c = {"case_ref": ref, "recon_run_id": run, "pack": {"status": "PENDING", "pack_id": None, "reason": None},
+         "auto_investigation": None, "revision": 0}
+    svc._dir(ref, run).mkdir(parents=True)
+    svc._save(c)
+    j = ctx._new_job("audit_pack", None, case_ref=ref, recon_run_id=run, result=None)
+    j["state"] = "running"
+
+    def boom(job):
+        raise PermissionError(5, "Access is denied")              # e.g. a sharing violation that outlived the retries
+    svc._safe(boom, j)
+    assert j["state"] == "failed" and "PermissionError" in j["error"]
+    after = svc._load(ref, run)
+    assert after["pack"]["status"] == "UNAVAILABLE" and "unexpected error" in after["pack"]["reason"]

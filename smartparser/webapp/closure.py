@@ -34,6 +34,7 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
+from ..packages.store import _retry_sharing
 from ..reconciliation.closure_runner import ClosureRunner, ClosureRunnerError
 from . import identity, results
 
@@ -82,13 +83,21 @@ def _write_json(p: Path, doc) -> None:
     p.parent.mkdir(parents=True, exist_ok=True)
     tmp = p.with_name(p.name + f".tmp-{uuid.uuid4().hex[:6]}")
     tmp.write_text(json.dumps(doc, indent=1, ensure_ascii=False, default=str), encoding="utf-8")
-    tmp.replace(p)
+    # Windows: replacing a file another thread is reading at that instant is a transient sharing violation
+    # (PermissionError, WinError 5); retried briefly, a persistent one propagates (packages.store._retry_sharing).
+    _retry_sharing(lambda: tmp.replace(p))
+
+
+def _read_text(p: Path) -> str:
+    return _retry_sharing(lambda: p.read_text(encoding="utf-8"))
 
 
 def _read_json(p: Path, default=None):
+    """`default` only when the file does not exist (or is not JSON). A sharing violation is retried and, when it
+    persists, RAISED: it is never mistaken for a missing record."""
     try:
-        return json.loads(p.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+        return json.loads(_read_text(p))
+    except (FileNotFoundError, NotADirectoryError, ValueError):
         return default
 
 
@@ -101,7 +110,7 @@ def _append(p: Path, rec: dict) -> None:
 def _jsonl(p: Path) -> list[dict]:
     out = []
     if p.is_file():
-        for line in p.read_text(encoding="utf-8").splitlines():
+        for line in _read_text(p).splitlines():
             try:
                 out.append(json.loads(line))
             except ValueError:
@@ -270,11 +279,43 @@ class ClosureService:
     def _thread(self, fn, *args) -> None:
         threading.Thread(target=identity.bind(self._safe), args=(fn, *args), daemon=True).start()
 
-    @staticmethod
-    def _safe(fn, *args):
+    def _safe(self, fn, *args):
         try:
             fn(*args)
-        except Exception:                                    # a background failure is kept on its job, never raised
+        except Exception as e:                               # a background failure is kept on its job, never raised
+            traceback.print_exc()
+            j = args[0] if args and isinstance(args[0], dict) and args[0].get("job_id") else None
+            if j is not None:
+                self._fail_unexpected(j, f"unexpected error: {type(e).__name__}: {str(e)[:500]}")
+
+    def _fail_unexpected(self, j: dict, err: str) -> None:
+        """A job whose code raised unexpectedly ends FAILED (never stuck 'running'), and the closure state it owned is
+        released: a pending audit pack becomes UNAVAILABLE, a generating review GENERATION_FAILED. Best effort."""
+        try:
+            if j.get("state") in ACTIVE:
+                self._job_end(j, "failed", None, err)
+            ref, run = j.get("case_ref"), j.get("recon_run_id")
+            if not ref or not run:
+                return
+            with self._lock(ref, run):
+                c = self._load(ref, run)
+                changed = False
+                if j.get("kind") == "audit_pack" and (c.get("pack") or {}).get("status") == "PENDING":
+                    c["pack"].update(status="UNAVAILABLE", reason=err)
+                    changed = True
+                if c.get("auto_investigation") == "STARTING" and j.get("kind") == "audit_pack":
+                    c["auto_investigation"] = "FAILED"
+                    changed = True
+                s = self._session(c)
+                if j.get("kind") == "final_pack" and s and s["status"] == "GENERATING":
+                    s["status"] = "GENERATION_FAILED"
+                    self._save_session(c, s)
+                    c["last_generation_failure"] = {"at": now(), "error": err[:1500], "job_id": j["job_id"],
+                                                    "final_pack_id": None}
+                    changed = True
+                if changed:
+                    self._save(c)
+        except Exception:
             traceback.print_exc()
 
     # ============================================================================================ creation / auto start
