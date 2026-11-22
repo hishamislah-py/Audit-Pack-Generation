@@ -108,7 +108,8 @@ def reconcile(ctx, data: bytes, customer="Closure Test Ltd", period="2026-09") -
     R(ctx, "POST", f"cases/{ref}/activate", {"confirm": True})
     R(ctx, "POST", f"cases/{ref}/reconcile")
     d = settle(ctx, ref, 900)
-    assert d["status"] == "COMPLETED"
+    # diagnostics on failure (Fix8 B: a load-only failure was otherwise unexplained)
+    assert d["status"] == "COMPLETED", (d["status"], d["progress"].get("reconciliation"), [(j.get("kind"), j.get("state"), j.get("error")) for j in ctx.jobs.values() if j.get("kind") == "reconciliation"])
     return ref
 
 
