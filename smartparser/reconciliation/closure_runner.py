@@ -178,7 +178,12 @@ def op_preview(req):
                                                   [redact(str(x)) for x in getattr(e, "findings", [])])
     else:
         summary = unavailable_closing_summary(snap, req.get("unavailable_reason") or "AI is not configured")
-    preview = assemble_preview(snap, summary)
+    try:
+        preview = assemble_preview(snap, summary)
+    except Exception as e:  # keep WHY the preview was refused, and the summary that was refused (Fix8 D5)
+        e.diagnostics = dict(getattr(e, "diagnostics", None) or {}, stage="assemble_preview",
+                             closing_summary=json.loads(redact(json.dumps(summary.model_dump(), default=str))))
+        raise
     glyphs = unsupported_characters(preview)
     if glyphs:
         raise ValueError(f"PDF_GLYPHS_UNSUPPORTED: the preview contains characters the PDF fonts cannot draw: {glyphs[:6]}")
@@ -242,6 +247,61 @@ def op_verify_final(req):
     return {"verify_problems": verify_final_pack(Path(req["path"]))}
 
 
+def _mapping_flow(mp, P, st, small, mm, Table, TableStyle, Spacer, colors):
+    """Readable per-file column mapping table (contract I-3): source column -> canonical field, method, rule / proposal,
+    who decided and confirmed it and when, validation. Unknown values are printed as 'not recorded', never inferred."""
+    if not mp:
+        return [P("Not recorded: this supplement was written before column mapping provenance existed.", small)]
+    if mp.get("status") != "AVAILABLE":
+        return [P(f"UNAVAILABLE: {mp.get('reason') or 'no reason recorded'}", small)]
+    nr = "not recorded"
+    method_label = {"DETERMINISTIC_EXACT": "deterministic (exact header)", "DETERMINISTIC_POLICY": "deterministic (policy)",
+                    "AI_PROPOSED": "AI proposal", "ANALYST_DEFINED": "defined by analyst",
+                    "ANALYST_IGNORED": "ignored by analyst", "RULE": "rule"}
+    tiny = small.clone("tiny", fontSize=6.3, leading=7.6)
+    out = [P(f"Schema {mp.get('schema')}; package {mp.get('package_id')}; snapshot {mp.get('snapshot_id')}", small)]
+    if not mp.get("files"):
+        out.append(P("No mapped files were recorded for this package.", small))
+
+    from xml.sax.saxutils import escape as _esc
+    from reportlab.platypus import Paragraph as _Para
+
+    def who(by, at):  # one line each: an e-mail address is never broken across lines
+        if not by and not at:
+            return P(nr, tiny)
+        return _Para(f"{_esc(str(by or nr))}<br/>{_esc(str(at or nr))}", tiny)
+    for f in mp.get("files") or []:
+        out += [Spacer(1, 2 * mm),
+                P(f"{f.get('evidence_category')} {f.get('original_filename')} - file version {f.get('file_version_id')} "
+                  f"(v{f.get('version_number')}, {f.get('version_status')}); intake {f.get('intake_id') or nr}; review "
+                  f"{f.get('review_kind') or 'none'}; source sha256 {f.get('source_sha256')}", small)]
+        rows = [[P(h, tiny) for h in ("#", "Source column", "Canonical field", "Disposition / method", "Rule / proposal",
+                                      "Decided by, at", "Confirmed by, at", "Validation")]]
+        for col in f.get("columns") or []:
+            rule = "; ".join(x for x in (
+                f"rule {col.get('rule_id')}" + (f" v{col.get('rule_version')}" if col.get("rule_version") else "")
+                if col.get("rule_id") else "",
+                f"proposal {col.get('proposal_id')}" + (f" ({col.get('proposal_class')})" if col.get("proposal_class") else "")
+                if col.get("proposal_id") else "") if x) or "-"
+            seqs = col.get("audit_event_seqs") or []
+            rows.append([P(col.get("source_position"), tiny), P(col.get("source_header"), tiny),
+                         P(col.get("canonical_field") or "-", tiny),
+                         P(f"{col.get('disposition')}: {method_label.get(col.get('method'), col.get('method'))}", tiny),
+                         P(rule, tiny),
+                         who(col.get("decided_by"), col.get("decided_at")),
+                         who(col.get("confirmed_by"), col.get("confirmed_at")),
+                         P({"NOT_RECORDED": nr}.get(col.get("validation"), col.get("validation"))
+                           + (f" (audit #{', #'.join(str(s) for s in seqs)})" if seqs else ""),
+                           tiny)])
+        t = Table(rows, colWidths=[6 * mm, 26 * mm, 24 * mm, 25 * mm, 25 * mm, 33 * mm, 33 * mm, 14 * mm], repeatRows=1)
+        t.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.grey), ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                               ("BACKGROUND", (0, 0), (-1, 0), colors.whitesmoke)]))
+        out.append(t)
+    for n in mp.get("notes") or []:
+        out.append(P(f"Note: {n}", small))
+    return out
+
+
 def op_provenance_pdf(req):
     """A small, plain PDF of the Ringfence provenance supplement (reportlab; the library's renderer is not involved)."""
     from xml.sax.saxutils import escape
@@ -265,7 +325,9 @@ def op_provenance_pdf(req):
                                                   "file_version_id", "source_sha256")] for f in doc["source_files"]]
     t = Table(rows, colWidths=[16 * mm, 40 * mm, 40 * mm, 36 * mm, 48 * mm], repeatRows=1)
     t.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.grey), ("VALIGN", (0, 0), (-1, -1), "TOP")]))
-    flow += [t, Spacer(1, 4 * mm), P("Closure decisions", st["Heading2"])]
+    flow += [t, Spacer(1, 4 * mm), P("Column mapping provenance", st["Heading2"])]
+    flow += _mapping_flow(doc.get("mapping_provenance"), P, st, small, mm, Table, TableStyle, Spacer, colors)
+    flow += [Spacer(1, 4 * mm), P("Closure decisions", st["Heading2"])]
     for d in doc["decisions"]:
         flow.append(P(f"{d.get('at')} - {d.get('what')} - by {d.get('by')}", small))
     flow += [Spacer(1, 4 * mm), P(doc["statement"], small)]
@@ -289,6 +351,9 @@ def main():
     except BaseException as e:
         out = {"ok": False, "error_type": type(e).__name__, "error": redact(f"{e}")[:2000],
                "trace": redact(traceback.format_exc())[-3000:]}
+        diag = getattr(e, "diagnostics", None)
+        if isinstance(diag, dict) and diag:
+            out["diagnostics"] = json.loads(redact(json.dumps(diag, default=str)))
     out["ai_requests"] = CALLS
     out["ai_requests_sent"] = len(SENT)
     Path(resp_path).write_text(json.dumps(out, default=str), encoding="utf-8")
@@ -302,9 +367,11 @@ RUNNER_SCRIPT = RUNNER_DEFS + RUNNER_MAIN
 class ClosureRunnerError(RuntimeError):
     """The subprocess failed (technical) or the library refused the operation. `kind` is the library exception type."""
 
-    def __init__(self, message: str, kind: str = "error", ai_requests: list | None = None):
+    def __init__(self, message: str, kind: str = "error", ai_requests: list | None = None,
+                 diagnostics: dict | None = None):
         super().__init__(message)
         self.kind, self.ai_requests = kind, ai_requests or []
+        self.diagnostics = diagnostics or {}   # structured "why" from the library (e.g. rejected_text_leaks); may be {}
 
 
 _SECRET_RE = re.compile(r"(sk-[A-Za-z0-9_\-*]{4,}|sk_[A-Za-z0-9_\-*]{4,}|gsk_[A-Za-z0-9_\-*]{4,}|Bearer\s+[A-Za-z0-9._\-]+)")
@@ -446,8 +513,11 @@ class ClosureRunner:
                 except OSError:
                     pass
         if not out.get("ok"):
+            diag = out.get("diagnostics") or {}
+            if diag:
+                diag = json.loads(self._redact(json.dumps(diag)))
             raise ClosureRunnerError(self._redact(out.get("error", "")), out.get("error_type", "error"),
-                                     out.get("ai_requests"))
+                                     out.get("ai_requests"), diag)
         return out
 
     # ------------------------------------------------------------------------------------------------ operations

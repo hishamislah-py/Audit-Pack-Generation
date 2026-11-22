@@ -38,7 +38,8 @@ def test_closure_mutations_owner_only_supervisor_override_and_system_jobs(tmp_pa
     # system jobs ran: audit pack + automatic investigations (authorised by the user who started reconciliation)
     assert v["pack"]["status"] == "GENERATED"
     auto = [e for e in ctx.events() if e["event_type"] == "AI_AUTHORIZED"]
-    assert auto and auto[0]["actor_id"] == ALICE and auto[0]["details"]["kind"] == "AUTO_INVESTIGATION"
+    assert auto and auto[0]["details"]["authorized_by"] == ALICE and auto[0]["details"]["kind"] == "AUTO_INVESTIGATION"
+    assert (auto[0]["actor_id"], auto[0]["actor_role"]) == ("ringfence-closure-service", "system")   # Fix8 B (lead item 1)
     pub = [x for x in v["exceptions"] if x["ai_state"] == "PUBLISHED"]
     assert pub, [(x["exception_id"], x["ai_state"]) for x in v["exceptions"]]
     # Bob reads the closure; every action is disabled with the owner reason
