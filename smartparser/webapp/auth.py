@@ -11,6 +11,15 @@ Create or change a user (prompts for the password; never pass it on the command 
     py -3.11 -m smartparser.webapp.auth set-password --file %USERPROFILE%\\.ringfence\\auth.json --username alice
 
 Non-interactive (test harnesses): ``--password-env NAME`` reads the password from that environment variable.
+
+Access roles (Fix8 D7, optional and backward compatible): a user entry may carry ``"roles": ["supervisor"]``. A user
+without ``roles`` is an analyst. A supervisor may act on any case (each such action is audited SUPERVISOR_OVERRIDE).
+An optional ``"reviewer_role"`` overrides the server's --reviewer-role presented to the AuthorityPolicy for that user.
+
+    py -3.11 -m smartparser.webapp.auth set-roles --file auth.json --username carol --roles supervisor
+    py -3.11 -m smartparser.webapp.auth set-roles --file auth.json --username carol --roles ""      (back to analyst)
+
+``set-password`` keeps a user's roles.
 """
 from __future__ import annotations
 
@@ -37,8 +46,20 @@ MAX_FIELD = 256                      # longest accepted username / password (bou
 FAIL_LIMIT, FAIL_WINDOW, LOCK_SECONDS = 5, 300.0, 60.0
 
 
+ROLES = ("analyst", "supervisor")      # access roles accepted in the credentials file
+
+
 class AuthConfigError(Exception):
     pass
+
+
+# Roles of the users of the most recently constructed Authenticator(s), by username. api.py reads it to resolve the
+# signed-in user's roles (the server hands api.route only the username of the validated session).
+_ROLE_REGISTRY: dict[str, dict] = {}
+
+
+def registered_profile(username: str | None) -> dict:
+    return _ROLE_REGISTRY.get(username or "", {"roles": (), "reviewer_role": None})
 
 
 # ---------------------------------------------------------------- password hashing
@@ -83,13 +104,57 @@ def load_users(path: Path) -> dict[str, str]:
     return users
 
 
+def load_profiles(path: Path) -> dict[str, dict]:
+    """{username: {"roles": (...), "reviewer_role": str | None}} - optional fields; absent roles = analyst."""
+    load_users(path)                                     # same validation / errors
+    doc = json.loads(Path(path).read_text(encoding="utf-8"))
+    out = {}
+    for u in doc.get("users") or []:
+        roles = u.get("roles") or []
+        if not (isinstance(roles, list) and all(isinstance(r, str) and r in ROLES for r in roles)):
+            raise AuthConfigError(f"credentials file {path}: 'roles' of {u.get('username')} must be a list of {ROLES}")
+        rr = u.get("reviewer_role")
+        if rr is not None and not (isinstance(rr, str) and rr.strip()):
+            raise AuthConfigError(f"credentials file {path}: 'reviewer_role' of {u.get('username')} must be a string")
+        out[u["username"]] = {"roles": tuple(roles), "reviewer_role": rr}
+    return out
+
+
+def _write(path: Path, doc: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def set_roles(path: Path, username: str, roles: list[str]) -> None:
+    """Set (or clear, with []) the access roles of an EXISTING user; the password hash is untouched."""
+    bad = [r for r in roles if r not in ROLES]
+    if bad:
+        raise AuthConfigError(f"unknown role(s) {bad}; allowed: {ROLES}")
+    path = Path(path)
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    entry = next((u for u in doc.get("users", []) if u.get("username") == username), None)
+    if entry is None:
+        raise AuthConfigError(f"no user {username!r} in {path} (create it with set-password first)")
+    if roles:
+        entry["roles"] = list(dict.fromkeys(roles))
+    else:
+        entry.pop("roles", None)
+    _write(path, doc)
+
+
 def set_password(path: Path, username: str, password: str) -> None:
     path = Path(path)
     doc = {"users": []}
     if path.exists():
         doc = json.loads(path.read_text(encoding="utf-8"))
-    users = [u for u in doc.get("users", []) if u.get("username") != username]
-    users.append({"username": username, "password_hash": hash_password(password)})
+    users = doc.get("users", [])
+    entry = next((u for u in users if u.get("username") == username), None)
+    if entry is None:
+        users.append({"username": username, "password_hash": hash_password(password)})
+    else:
+        entry["password_hash"] = hash_password(password)    # other fields (roles, reviewer_role) are kept
     doc["users"] = users
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
@@ -110,8 +175,11 @@ class Authenticator:
     """Credential check + in-memory session store. Thread-safe (the server is a ThreadingHTTPServer)."""
 
     def __init__(self, users: dict[str, str], idle_seconds: float = 30 * 60, max_seconds: float = 8 * 3600,
-                 cookie_secure: bool = False, clock=time.time):
+                 cookie_secure: bool = False, clock=time.time, profiles: dict[str, dict] | None = None):
         self._users = dict(users)
+        self._profiles = {u: {"roles": tuple((profiles or {}).get(u, {}).get("roles") or ()),
+                              "reviewer_role": (profiles or {}).get(u, {}).get("reviewer_role")} for u in self._users}
+        _ROLE_REGISTRY.update(self._profiles)
         self.idle, self.max_age, self.secure, self._clock = idle_seconds, max_seconds, cookie_secure, clock
         self._sessions: dict[str, Session] = {}
         self._fails: dict[str, list[float]] = {}
@@ -125,7 +193,13 @@ class Authenticator:
 
     @classmethod
     def from_file(cls, path: Path, **kw) -> "Authenticator":
-        return cls(load_users(path), **kw)
+        return cls(load_users(path), profiles=load_profiles(path), **kw)
+
+    def profile(self, username: str | None) -> dict:
+        return self._profiles.get(username or "", {"roles": (), "reviewer_role": None})
+
+    def known(self, username: str | None) -> bool:
+        return username in self._users
 
     # -- login / logout
     def locked_out(self, username: str) -> bool:
@@ -212,10 +286,22 @@ def main(argv=None):
     sp.add_argument("--file", default=None, help=f"credentials JSON (default: ${ENV_FILE})")
     sp.add_argument("--username", required=True)
     sp.add_argument("--password-env", default=None, help="read the password from this environment variable")
+    sr = sub.add_parser("set-roles", help="set the access roles of an existing user (supervisor); empty = analyst")
+    sr.add_argument("--file", default=None, help=f"credentials JSON (default: ${ENV_FILE})")
+    sr.add_argument("--username", required=True)
+    sr.add_argument("--roles", required=True, help=f"comma-separated, from {ROLES}; \"\" clears")
     a = ap.parse_args(argv)
     path = resolve_auth_file(a.file)
     if path is None:
         ap.error(f"--file or ${ENV_FILE} is required")
+    if a.cmd == "set-roles":
+        try:
+            set_roles(path, a.username, [r.strip() for r in a.roles.split(",") if r.strip()])
+        except (AuthConfigError, OSError, json.JSONDecodeError) as exc:
+            print(f"{exc}; nothing changed.", file=sys.stderr)
+            return 2
+        print(f"Roles of {a.username} set to {a.roles or '(analyst)'} in {path}")
+        return 0
     if a.password_env:
         pw = os.environ.get(a.password_env) or ""
     else:

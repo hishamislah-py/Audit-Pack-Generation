@@ -96,6 +96,13 @@ class PackageService:
                      version_number=v.version_number, previous_file_version_id=v.previous_version_id,
                      version_status=v.version_status)
         d.update(details)
+        if actor is None and role == "analyst":
+            # Fix8 D6 (I-1): an analyst-attributed event records the acting identity (the signed-in user, or the
+            # system actor for work nobody initiated). Outside any request/job context the legacy actor id is kept.
+            from ..webapp import identity
+            a = identity.current()
+            if a is not None:
+                actor, role = a.user, a.role
         self.log.append(event, actor_id=actor or self.actor, actor_role=role,
                         intake_id=v.intake_id if v else None, source_sha256=v.source_sha256 if v else None, details=d)
 
