@@ -115,6 +115,61 @@ def job_view(j: dict) -> dict:
                                   "case_ref", "recon_run_id", "exception_id", "review_id", "result")}
 
 
+# ======================================================================================= mapping provenance (contract I-3)
+MAPPING_PROVENANCE_SCHEMA = "ringfence-mapping-provenance/1.0"
+MAPPING_DISPOSITIONS = ("MAPPED", "IGNORED", "UNRESOLVED")
+MAPPING_METHODS = ("DETERMINISTIC_EXACT", "DETERMINISTIC_POLICY", "AI_PROPOSED", "ANALYST_DEFINED", "ANALYST_IGNORED", "RULE")
+MAPPING_VALIDATION = ("PASS", "FAIL", "NOT_RECORDED")
+_MAPPING_FILE_KEYS = ("evidence_category", "file_version_id", "version_number", "original_filename", "source_sha256",
+                      "intake_id", "version_status", "review_kind", "columns")
+_MAPPING_COLUMN_KEYS = ("source_position", "source_header", "canonical_field", "disposition", "method", "rule_id",
+                        "rule_version", "proposal_id", "proposal_class", "decided_by", "decided_at", "confirmed_by",
+                        "confirmed_at", "validation", "audit_event_seqs")
+
+
+def _mapping_unavailable(reason: str) -> dict:
+    return {"schema": MAPPING_PROVENANCE_SCHEMA, "status": "UNAVAILABLE", "reason": reason, "files": [], "notes": []}
+
+
+def mapping_provenance_problems(doc, package_id: str, snapshot_id: str) -> list[str]:
+    """Contract I-3 checks on what the mapping provenance service returned (rendered only when this is empty)."""
+    if not isinstance(doc, dict):
+        return ["not an object"]
+    out = []
+    if doc.get("schema") != MAPPING_PROVENANCE_SCHEMA:
+        out.append(f"schema {doc.get('schema')!r} is not {MAPPING_PROVENANCE_SCHEMA}")
+    if doc.get("package_id") != package_id or doc.get("snapshot_id") != snapshot_id:
+        out.append(f"it describes {doc.get('package_id')}/{doc.get('snapshot_id')}, not {package_id}/{snapshot_id}")
+    if not isinstance(doc.get("files"), list) or not isinstance(doc.get("notes", []), list):
+        return out + ["files / notes must be lists"]
+    for i, f in enumerate(doc["files"]):
+        if not isinstance(f, dict) or any(k not in f for k in _MAPPING_FILE_KEYS) or not isinstance(f.get("columns"), list):
+            out.append(f"files[{i}] lacks a contract field")
+            continue
+        for j, col in enumerate(f["columns"]):
+            if not isinstance(col, dict) or any(k not in col for k in _MAPPING_COLUMN_KEYS):
+                out.append(f"files[{i}].columns[{j}] lacks a contract field")
+            elif col["disposition"] not in MAPPING_DISPOSITIONS or col["method"] not in MAPPING_METHODS \
+                    or col["validation"] not in MAPPING_VALIDATION:
+                out.append(f"files[{i}].columns[{j}] has a value outside the contract enumerations")
+    return out
+
+
+def mapping_provenance_sentence(mp: dict) -> str:
+    """Fixed-format sentence for the GENERATE comment (system text, not analyst free text)."""
+    if mp.get("status") != "AVAILABLE":
+        return (f"Column mapping provenance: UNAVAILABLE ({mp.get('reason')}); the supplement records this "
+                "(ringfence_provenance.json, mapping_provenance).")
+    cols = [col for f in mp["files"] for col in f["columns"]]
+    by = Counter(col["disposition"] for col in cols)
+    methods = Counter(col["method"] for col in cols)
+    return (f"Column mapping provenance: {len(mp['files'])} file(s), {len(cols)} column(s) ("
+            + ", ".join(f"{by[d]} {d}" for d in MAPPING_DISPOSITIONS) + "; methods: "
+            + (", ".join(f"{n} {m}" for m, n in sorted(methods.items())) or "none") + "); per-column source, rule or "
+            "proposal, decision and confirmation in the Ringfence provenance supplement (ringfence_provenance.json, "
+            "mapping_provenance).")
+
+
 class ClosureService:
     def __init__(self, ctx, runner: ClosureRunner):
         self.ctx = ctx
@@ -821,7 +876,20 @@ class ClosureService:
                     "closing_summary_unavailable_reason": meta["closing_summary"].get("unavailable_reason") or None,
                     "reused": bool(meta.get("reused")), "created_at": meta["created_at"],
                     "stale": meta["inputs_fingerprint"] != inputs["fingerprint"]},
+                "last_preview_failure": self._last_preview_failure(c, s),
                 "decisions": _jsonl(self._session_dir(c, s["review_id"]) / "decisions.jsonl") if s else []}
+
+    def _last_preview_failure(self, c: dict, s: dict | None) -> dict | None:
+        """The most recent failed preview of this review (Fix8 D5): what failed and why, kept for the analyst and audit."""
+        if not s:
+            return None
+        recs = [r for r in (_read_json(p) for p in (self._session_dir(c, s["review_id"]) / "preview_failures")
+                            .glob("PVF-*.json")) if r]
+        if not recs:
+            return None
+        r = max(recs, key=lambda x: x.get("at") or "")
+        return {"failure_id": r["failure_id"], "at": r["at"], "job_id": r.get("job_id"), "error": (r.get("error") or "")[:800],
+                "error_kind": r.get("error_kind"), "rejected_text_leaks": r.get("rejected_text_leaks") or []}
 
     # ============================================================================================ preview
     def request_preview(self, ref: str, confirm_ai: bool, expected_revision, user: str | None) -> dict:
@@ -904,7 +972,7 @@ class ClosureService:
             inputs = self._inputs(c, s)
             pv = _new_id("PV")
             out_dir = self._session_dir(c, s["review_id"]) / "previews" / pv
-            calls, err, res = [], None, None
+            calls, err, res, err_kind, diag = [], None, None, None, {}
             try:
                 res = self.runner.preview(pack_id=c["pack"]["pack_id"], packs_root=P["packs"],
                                           investigations_root=P["investigations"],
@@ -913,16 +981,22 @@ class ClosureService:
                                           out_dir=out_dir, scratch=P["scratch"])
                 calls = res.pop("ai_requests", [])
             except ClosureRunnerError as e:
-                err, calls = str(e), e.ai_requests
+                err, calls, err_kind, diag = str(e), e.ai_requests, e.kind, e.diagnostics or {}
         finally:
             if lane:
                 lane.release()
         self._record_usage(c, calls, "closing_summary", j["job_id"], None,
-                           ((res or {}).get("closing_summary") or {}).get("prompt_version"))
+                           ((res or {}).get("closing_summary") or {}).get("prompt_version")
+                           or (((diag.get("closing_summary") or {}).get("model_metadata")) or {}).get("prompt_version"))
         if res is None:
+            failure = self._record_preview_failure(c, s, j, inputs, err, err_kind, diag)
+            leaks = [{"investigation_id": k.get("investigation_id"), "text": (k.get("text") or "")[:240],
+                      "rejected_source": k.get("rejected_source"), "found_at": (k.get("found_at") or [])[:5]}
+                     for k in failure["rejected_text_leaks"][:5]]
             self._audit("CLOSING_PREVIEW_FAILED", c, j.get("requested_by"), review_id=s["review_id"], job_id=j["job_id"],
-                        reason=err[:800])
-            self._job_end(j, "failed", None, err)
+                        reason=err[:800], failure_id=failure["failure_id"], error_kind=err_kind,
+                        **({"rejected_text_leaks": leaks} if leaks else {}))
+            self._job_end(j, "failed", {"failure_id": failure["failure_id"]}, err)
             return
         meta = {"preview_id": pv, "review_id": s["review_id"], "created_at": now(), "created_by": j.get("requested_by"),
                 "job_id": j["job_id"], "inputs_fingerprint": inputs["fingerprint"],
@@ -943,6 +1017,24 @@ class ClosureService:
                     closing_summary_status=res["closing_summary"]["status"], current=current)
         self._job_end(j, "completed", {"preview_id": pv, "snapshot_sha256": res["snapshot_sha256"],
                                        "closing_summary_status": res["closing_summary"]["status"], "current": current})
+
+    def _record_preview_failure(self, c: dict, s: dict, j: dict, inputs: dict, err: str, kind, diag: dict) -> dict:
+        """Write-once diagnostics of a failed preview (Fix8 D5): the error, the library's structured reasons (e.g. which
+        rejected text was found where), the refused closing summary and the inputs. Never reused as a preview."""
+        rec = {"failure_id": _new_id("PVF"), "at": now(), "job_id": j["job_id"], "review_id": s["review_id"],
+               "requested_by": j.get("requested_by"), "summary_mode": j.get("summary_mode"),
+               "authorization_id": j.get("authorization_id"), "inputs_fingerprint": inputs["fingerprint"],
+               "selections": inputs["library_selections"],
+               "analyst_review_ids": [r["analyst_review_id"] for r in inputs["reviews"]],
+               "error": err, "error_kind": kind, "stage": diag.get("stage"),
+               "validation_errors": diag.get("errors") or [],
+               "rejected_text_leaks": diag.get("rejected_text_leaks") or [],
+               "closing_summary": diag.get("closing_summary")}
+        try:
+            _write_json(self._session_dir(c, s["review_id"]) / "preview_failures" / f"{rec['failure_id']}.json", rec)
+        except OSError:                                              # diagnostics never mask the failure itself
+            traceback.print_exc()
+        return rec
 
     def preview_file(self, ref: str, fmt: str) -> tuple:
         c, _ = self._locate(ref)
@@ -1039,8 +1131,28 @@ class ClosureService:
                     f"(system reviewer {self.ctx.reviewer.reviewer_id}); source files: ")
             body = "; ".join(f"{f['evidence_category']} {f['canonical_name']} {arrow} {f['original_filename']} "
                              f"({f['file_version_id']}, {f['source_sha256']})" for f in files)
-            return head + body + ". Full list also in the Ringfence provenance supplement (ringfence_provenance.json)."
+            return (head + body + ". Full list also in the Ringfence provenance supplement (ringfence_provenance.json). "
+                    + mapping_sentence)
+        mapping_sentence = mapping_provenance_sentence(self._mapping_provenance(c))
         return text("—", "→"), text("-", "->")
+
+    def _mapping_provenance(self, c: dict) -> dict:
+        """Column-mapping provenance of the case's package (contract I-3, provided by
+        smartparser/webapp/mapping_provenance.py). Guarded: when the module is absent, fails or breaks the contract, the
+        supplement says so visibly (status UNAVAILABLE with the reason); nothing is ever invented or back-filled."""
+        try:
+            from . import mapping_provenance as mp_mod
+        except ImportError as e:                                   # no local paths in text that reaches the pack
+            return _mapping_unavailable(f"the mapping provenance module is not installed ({type(e).__name__})")
+        try:
+            doc = mp_mod.build_mapping_provenance(self.ctx, c["package_id"], c["snapshot_id"])
+        except Exception as e:                                     # recorded, never hidden; generation is not blocked
+            msg = re.sub(r"(?:[A-Za-z]:)?[\\/][^\s'\"]*[\\/][^\s'\"]*", "<path>", str(e))[:300]
+            return _mapping_unavailable(f"mapping provenance could not be built: {type(e).__name__}: {msg}")
+        problems = mapping_provenance_problems(doc, c["package_id"], c["snapshot_id"])
+        if problems:
+            return _mapping_unavailable("mapping provenance does not satisfy contract I-3: " + "; ".join(problems[:5]))
+        return dict(doc, status="AVAILABLE", reason=None)
 
     def _run_final(self, j: dict) -> None:
         ref, run = j["case_ref"], j["recon_run_id"]
@@ -1132,9 +1244,13 @@ class ClosureService:
                "generated_at": res["generated_at"], "review_id": s["review_id"],
                "review_decision_id": rec["review_decision_id"], "final_content_sha256": res["final_content_sha256"],
                "source_files": self._source_files(c), "decisions": hist,
+               "mapping_provenance": self._mapping_provenance(c),
                "statement": "System-generated Ringfence provenance supplement (write-once). It maps the engine's "
-                            "canonical evidence files back to the customer's uploaded files and records who took each "
-                            "closure decision. It is not part of the library's final pack and does not change it."}
+                            "canonical evidence files back to the customer's uploaded files, records how each source "
+                            "column was mapped to a canonical field (method, rule or AI proposal, who decided and "
+                            "confirmed it, validation; values not recorded at the time are shown as not recorded, never "
+                            "inferred) and who took each closure decision. It is not part of the library's final pack "
+                            "and does not change it."}
         pj = d / "ringfence_provenance.json"
         pj.write_text(json.dumps(doc, indent=1, ensure_ascii=False), encoding="utf-8")
         pp = d / "ringfence_provenance.pdf"
@@ -1151,15 +1267,20 @@ class ClosureService:
                 return {"final_pack_id": fail.get("final_pack_id"), "status": "GENERATION_FAILED", "verified": False,
                         "problems": [fail["error"]], "files": [], "authorised_by": None, "generated_at": None}
             raise ClosureError(404, "NO_FINAL_PACK", "no final pack has been generated for this closure")
-        problems = self._check_files(fp)
+        integ = self._integrity(fp)
         files = []
         for key in ("pdf", "html", "json", "manifest", "provenance.pdf", "provenance.json"):
-            p = self._final_path(fp, key)
-            files.append({"key": key, "name": p.name, "size_bytes": p.stat().st_size if p.is_file() else None,
-                          "sha256": _sha(p.read_bytes()) if p.is_file() else None,
-                          "url": f"/api/cases/{ref}/closure/final-pack/{key}"})
-        return {"final_pack_id": fp["final_pack_id"], "status": fp["status"], "verified": fp["verified"] and not problems,
-                "problems": problems, "files": files, "authorised_by": fp["authorised_by"],
+            try:
+                p = self._final_path(fp, key)
+                files.append({"key": key, "name": p.name, "size_bytes": p.stat().st_size if p.is_file() else None,
+                              "sha256": _sha(p.read_bytes()) if p.is_file() else None,
+                              "url": f"/api/cases/{ref}/closure/final-pack/{key}"})
+            except (OSError, KeyError, TypeError):
+                files.append({"key": key, "name": None, "size_bytes": None, "sha256": None,
+                              "url": f"/api/cases/{ref}/closure/final-pack/{key}"})
+        return {"final_pack_id": fp["final_pack_id"], "status": fp["status"], "verified": integ["verified"],
+                "integrity": integ["status"], "integrity_checked_at": integ["checked_at"],
+                "problems": integ["problems"], "files": files, "authorised_by": fp["authorised_by"],
                 "generated_at": fp["generated_at"], "version": fp.get("version"),
                 "final_content_sha256": fp.get("final_content_sha256")}
 
@@ -1171,24 +1292,55 @@ class ClosureService:
         return Path(fp["path"]) / FINAL_FILES[key][0]
 
     def _check_files(self, fp: dict) -> list[str]:
-        d = Path(fp["path"])
+        """Integrity of a generated final pack, from the files on disk NOW (never from a stored flag): the manifest is
+        the one recorded at generation, every manifest file matches its SHA-256, the report files are listed, and the
+        provenance supplement matches the hashes recorded at generation. Read-only: nothing is repaired or re-signed.
+        Any unexpected content (a tampered, malformed manifest) is a problem, never an exception."""
         problems = []
         try:
+            d = Path(fp["path"])
             mb = (d / "manifest.json").read_bytes()
-            manifest = json.loads(mb)
-        except (OSError, ValueError) as e:
+        except (OSError, KeyError, TypeError) as e:
             return [f"manifest unreadable: {e}"]
         if _sha(mb) != fp.get("manifest_sha256"):
             problems.append("manifest.json differs from the manifest recorded at generation")
-        for name, info in manifest["files"].items():
-            p = d / name
-            if not p.is_file() or _sha(p.read_bytes()) != info["sha256"]:
+        try:
+            manifest = json.loads(mb)
+            listed = manifest["files"]
+            if not isinstance(listed, dict):
+                raise TypeError("'files' is not an object")
+        except (ValueError, KeyError, TypeError) as e:
+            return problems + [f"manifest unreadable: {type(e).__name__}: {e}"]
+        for name, info in listed.items():
+            p = d / str(name)
+            try:
+                ok = (Path(str(name)).name == str(name) and p.is_file() and isinstance(info, dict)
+                      and _sha(p.read_bytes()) == info.get("sha256"))
+            except OSError:
+                ok = False
+            if not ok:
                 problems.append(f"{name} does not match its manifest SHA-256")
+        for key in ("pdf", "html", "json"):
+            if FINAL_FILES[key][0] not in listed:
+                problems.append(f"{FINAL_FILES[key][0]} is not listed in the manifest")
+        prov = fp.get("provenance") or {}
         for k in ("json", "pdf"):
-            p = Path(fp["provenance"][k])
-            if not p.is_file() or _sha(p.read_bytes()) != fp["provenance"][f"{k}_sha256"]:
+            try:
+                p = Path(prov[k])
+                ok = p.is_file() and _sha(p.read_bytes()) == prov[f"{k}_sha256"]
+            except (OSError, KeyError, TypeError):
+                ok = False
+            if not ok:
                 problems.append(f"provenance {k} does not match the SHA-256 recorded at generation")
         return problems
+
+    def _integrity(self, fp: dict) -> dict:
+        """Current integrity of a generated final pack (Fix8 D8): recomputed from the files on every read. The flag stored
+        at generation is only an upper bound (a pack that failed then never verifies later)."""
+        problems = self._check_files(fp)
+        verified = bool(fp.get("verified")) and not problems
+        return {"verified": verified, "status": "VERIFIED" if verified else "FAILED", "problems": problems,
+                "checked_at": now()}
 
     def final_file(self, ref: str, key: str, download: bool) -> tuple:
         c, _ = self._locate(ref)
@@ -1465,13 +1617,14 @@ class ClosureService:
         rd = review["readiness"]
         active_inv = any(j["state"] in ACTIVE for j in self._jobs(c, "investigation"))             or c.get("auto_investigation") == "STARTING"
         fp = c.get("final_pack")
+        integ = self._integrity(fp) if fp else None          # D8: from the files now, never the stored flag
         cur = review.get("current_preview")
         if pack.get("status") == "PENDING":
             state = "PACK_PENDING"
         elif pack.get("status") != "GENERATED":
             state = "PACK_UNAVAILABLE"
         elif fp and fp.get("status") == "GENERATED":
-            state = "GENERATED"
+            state = "GENERATED" if integ["verified"] else "INTEGRITY_FAILED"
         elif s and s["status"] == "GENERATING":
             state = "GENERATING"
         elif s and s["status"] == "GENERATION_FAILED":
@@ -1518,7 +1671,10 @@ class ClosureService:
                        "problem": cfg["problem"]},
                 "usage": self._usage(c), "exceptions": rows, "review": review,
                 "final_pack": None if not fp else {"final_pack_id": fp["final_pack_id"], "status": fp["status"],
-                                                   "verified": fp["verified"], "authorised_by": fp["authorised_by"],
+                                                   "verified": integ["verified"], "integrity": integ["status"],
+                                                   "problems": integ["problems"],
+                                                   "integrity_checked_at": integ["checked_at"],
+                                                   "authorised_by": fp["authorised_by"],
                                                    "generated_at": fp["generated_at"]},
                 "last_generation_failure": c.get("last_generation_failure"), "actions": actions}
 

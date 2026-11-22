@@ -87,11 +87,17 @@ function PreviewFrames({ ref_, preview }) {
 }
 
 function FinalPack({ c, cl }) {
-  const q = useQuery(cl.final_pack ? 'finalpack:' + c.case_ref + ':' + cl.final_pack.final_pack_id + ':' + cl.final_pack.status : null, (svc) => svc.getFinalPack(c.case_ref));
-  if (!cl.final_pack) return null;
-  const f = q.data || cl.final_pack;
-  const verified = f.verified === true;
-  const failed = f.status === 'GENERATION_FAILED' || f.status === 'FAILED' || f.verified === false;
+  const fp0 = cl.final_pack;
+  const q = useQuery(fp0 ? 'finalpack:' + c.case_ref + ':' + fp0.final_pack_id + ':' + fp0.status + ':' + String(fp0.verified) + ':' + (fp0.problems || []).length : null, (svc) => svc.getFinalPack(c.case_ref));
+  if (!fp0) return null;
+  const f = q.data || fp0;
+  // Integrity (D8): both the closure view and /final-pack recompute it from the files; "Verified" only when every
+  // source says so, never from a stale flag. A generated pack whose files no longer verify is an integrity failure.
+  const integrityFailed = fp0.status === 'GENERATED' && (fp0.verified === false || fp0.integrity === 'FAILED' || (q.data && (q.data.verified === false || q.data.integrity === 'FAILED')));
+  const verified = !integrityFailed && fp0.verified === true && (!q.data || q.data.verified === true);
+  const failed = integrityFailed || f.status === 'GENERATION_FAILED' || f.status === 'FAILED' || f.verified === false;
+  const problems = (q.data && q.data.problems && q.data.problems.length ? q.data.problems : fp0.problems) || [];
+  const failTitle = integrityFailed ? 'Integrity check failed' : f.verified === false ? 'Verification failed' : 'Generation failed';
   const ref = c.case_ref;
   const LABEL = Object.fromEntries(FILES.map((x) => [x[0], x]));
   const files = (Array.isArray(f.files) && f.files.length && typeof f.files[0] === 'object'
@@ -99,11 +105,11 @@ function FinalPack({ c, cl }) {
     : FILES.map((x) => ({ key: x[0], url: closureFileUrl(ref, 'final-pack/' + x[0]) })))
     .map((x) => Object.assign(x, { label: (LABEL[x.key] || [0, x.key])[1], icon: (LABEL[x.key] || [0, 0, 'file'])[2] }));
   return <Panel title="Final audit pack" sub={<span className="rf-mono">{f.final_pack_id}</span>}
-    actions={verified ? <span className="rfe-verified"><Icon name="seal" size={14} />Verified</span> : failed ? <Pill state="GENERATION_FAILED" label={f.verified === false ? 'Verification failed' : 'Generation failed'} /> : <Pill state={f.status || 'GENERATING'} />}>
+    actions={verified ? <span className="rfe-verified"><Icon name="seal" size={14} />Verified</span> : failed ? <Pill state="GENERATION_FAILED" label={failTitle} /> : <Pill state={f.status || 'GENERATING'} />}>
     <div className="rf-stack rf-stack--3">
       {q.error && <Notice tone="danger" compact title="Final pack details could not be loaded">{q.error.message}</Notice>}
-      {failed && <Notice tone="danger" title={f.verified === false ? 'Verification failed' : 'Generation failed'}>{(f.problems || []).length ? <ul className="rfe-list">{f.problems.map((p, i) => <li key={i}>{itemText(p)}</li>)}</ul> : 'The backend reported no detail.'} A pack that does not verify is never treated as generated.</Notice>}
-      <KV pairs={[['Status', <Pill state={f.status} />], ['Authorised by', f.authorised_by || '—'], ['Generated', fmtDateTime(f.generated_at)]]} />
+      {failed && <Notice tone="danger" title={failTitle}>{problems.length ? <ul className="rfe-list">{problems.map((p, i) => <li key={i}>{itemText(p)}</li>)}</ul> : 'The backend reported no detail.'} {integrityFailed ? 'The files on disk no longer match the hashes recorded when the pack was generated. Downloads are refused; nothing is repaired, overwritten or re-signed.' : 'A pack that does not verify is never treated as generated.'}</Notice>}
+      <KV pairs={[['Status', <Pill state={f.status} />], ['Integrity', integrityFailed ? <Pill state="GENERATION_FAILED" label="Integrity check failed" /> : verified ? 'Files match the hashes recorded at generation' + (f.integrity_checked_at ? ' (checked ' + fmtDateTime(f.integrity_checked_at) + ')' : '') : '—'], ['Authorised by', f.authorised_by || '—'], ['Generated', fmtDateTime(f.generated_at)]]} />
       {verified && <ul className="rfe-downloads">{files.map((x) => <li key={x.key}><Icon name={x.icon} size={14} /><span>{x.label}</span>{x.name && <span className="rf-mono rf-muted rfe-small">{x.name}</span>}{x.sha256 && <Hash sha={x.sha256} />}<span className="rf-spacer" />
         <a className="rf-btn rf-btn--quiet rf-btn--sm" href={x.url} target="_blank" rel="noopener"><span>Open</span></a>
         <a className="rf-btn rf-btn--secondary rf-btn--sm" href={x.url + (x.url.indexOf('?') > -1 ? '&' : '?') + 'download=1'} download={x.name || true}><span>Download</span></a></li>)}</ul>}
@@ -118,7 +124,7 @@ function History({ c }) {
   return <Panel flush title={'Closure history' + (d ? ' · ' + ev.length : '')} sub="Audit events from the case's hash-chained audit log">
     {q.error ? <div style={{ padding: 16 }}><Notice tone="danger" compact>{q.error.message}</Notice></div> : !d ? <div style={{ padding: 16 }}><span className="rf-skel" style={{ width: '60%' }} /></div>
       : ev.length ? <Table dense caption="Closure history" maxHeight={420} columns={[{ key: 'at', label: 'Time' }, { key: 't', label: 'Event' }, { key: 'by', label: 'Actor' }, { key: 'd', label: 'Detail' }]}
-        rows={ev.slice().reverse().map((e, i) => { const det = e.details || {}; return { key: e.event_id || i, cells: { at: <span className="rf-nowrap">{fmtDateTime(e.at || e.created_at)}</span>, t: <Enum>{e.event_type || e.type}</Enum>, by: e.actor_id || e.actor || det.actor, d: <span className="rf-mono rfe-small rf-wrap">{['exception_id', 'investigation_id', 'review_id', 'preview_id', 'final_pack_id', 'pack_id', 'job_id'].filter((k) => det[k]).map((k) => det[k]).join(' · ') || (e.reason ? itemText(e.reason) : '')}</span> } }; })} />
+        rows={ev.slice().reverse().map((e, i) => { const det = e.details || {}; return { key: e.event_id || i, cells: { at: <span className="rf-nowrap">{fmtDateTime(e.at || e.created_at)}</span>, t: <Enum>{e.event_type || e.type}</Enum>, by: e.actor_id || e.actor || det.actor, d: <span className="rf-mono rfe-small rf-wrap">{['exception_id', 'investigation_id', 'review_id', 'preview_id', 'failure_id', 'final_pack_id', 'pack_id', 'job_id'].filter((k) => det[k]).map((k) => det[k]).join(' · ') || (e.reason ? itemText(e.reason) : '')}</span> } }; })} />
         : <div style={{ padding: 16 }} className="rf-help">No closure events yet.</div>}
   </Panel>;
 }
@@ -183,7 +189,7 @@ export default function ClosingTab({ c, app, nav, store }) {
 
   return <div className="rf-workspace rfe-closing">
     <div className="rf-row rf-row--wrap" style={{ gap: 10 }}>
-      <Pill state={cl.state} size="lg" />{cl.frozen && <Pill state="ACTIVE_LOCKED" label="Frozen" />}
+      {cl.state === 'INTEGRITY_FAILED' ? <Pill state="GENERATION_FAILED" size="lg" label="Integrity check failed" /> : <Pill state={cl.state} size="lg" />}{cl.frozen && <Pill state="ACTIVE_LOCKED" label="Frozen" />}
       <span className="rfe-small rf-secondary">Run <span className="rf-mono">{cl.recon_run_id}</span> · snapshot <span className="rf-mono">{cl.snapshot_id}</span> · revision {rev}</span>
       <span className="rf-spacer" />{(q.refreshing || jobs.running.length > 0) && <span className="rf-stale"><span className="rf-live" />{jobs.running.length ? jobs.running.map((j) => j.label).join(', ') + ' running' : 'Refreshing'}</span>}
       <Button size="sm" icon="refresh" onClick={q.reload}>Refresh</Button>
@@ -194,7 +200,9 @@ export default function ClosingTab({ c, app, nav, store }) {
       <div style={{ marginTop: 6 }}>Closure cannot continue: the audit pack is the basis for AI investigations, the closing review and the final PDF. The reconciliation results stay as they are; nothing is mocked or worked around. The reasons are listed under Readiness.</div>
     </Notice>}
     {cl.last_generation_failure && !cl.frozen && <Notice tone="danger" title="Final pack generation failed">{itemText(cl.last_generation_failure.error || cl.last_generation_failure)}</Notice>}
-    {cl.frozen && <Notice tone="locked" title="Closure frozen">The final pack has been generated and verified. Closure is read-only.</Notice>}
+    {cl.frozen && (cl.state === 'INTEGRITY_FAILED' || (cl.final_pack && cl.final_pack.verified === false)
+      ? <Notice tone="danger" title="Integrity check failed">The final pack was generated, but its files no longer match the hashes recorded at generation: {((cl.final_pack && cl.final_pack.problems) || []).map(itemText).join('; ') || 'no detail reported'}. Downloads are refused. Closure stays read-only; nothing is repaired, overwritten or re-signed.</Notice>
+      : cl.frozen && <Notice tone="locked" title="Closure frozen">The final pack has been generated and verified. Closure is read-only.</Notice>)}
     <div className="rfe-grid">
       <div className="rf-stack">
         <DeterministicSummary s={cl.deterministic_summary} />
@@ -212,6 +220,11 @@ export default function ClosingTab({ c, app, nav, store }) {
               {pv && <span className="rfe-small rf-secondary">Current preview <span className="rf-mono">{pv.preview_id}</span>{pv.reused ? <> · <span className="rfe-badge">reused</span></> : null}{pv.closing_summary_status ? <> · closing summary <Enum>{pv.closing_summary_status}</Enum></> : null}{pv.stale ? <> · <span className="rf-tone-attention">stale: generate again</span></> : null}</span>}
             </div>
             {pv && pv.snapshot_sha256 && <KV pairs={[['Preview snapshot', <Hash sha={pv.snapshot_sha256} />], ['Created', fmtDateTime(pv.created_at)]]} />}
+            {rv.last_preview_failure && (!pv || String(rv.last_preview_failure.at || '') > String(pv.created_at || '')) && <Notice tone="danger" compact title="The last preview was refused">
+              {itemText(rv.last_preview_failure.error)}
+              {(rv.last_preview_failure.rejected_text_leaks || []).length > 0 && <ul className="rfe-list">{rv.last_preview_failure.rejected_text_leaks.map((k, i) => <li key={i}><span className="rf-mono">{k.investigation_id}</span> {k.rejected_source}: “{k.text}” found at <span className="rf-mono">{(k.found_at || []).join(', ')}</span></li>)}</ul>}
+              <div className="rfe-small rf-secondary">Recorded as <span className="rf-mono">{rv.last_preview_failure.failure_id}</span> in the closure history.</div>
+            </Notice>}
             {summaryUnavailable && <Notice tone="attention" compact title="AI closing summary unavailable">{pv.closing_summary_unavailable_reason || 'The backend reported no reason.'}</Notice>}
             {pv ? <PreviewFrames ref_={ref} preview={pv} /> : <div className="rf-help">No preview yet. The preview shows exactly what the final pack will contain.</div>}
             {pv && !cl.frozen && <div className="rfe-acks">
