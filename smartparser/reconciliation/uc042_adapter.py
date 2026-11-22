@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import io
 import json
 import os
 import subprocess
@@ -33,6 +34,9 @@ import sys
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
+
+from ..packages.store import _retry_sharing
+
 
 ENGINE_RUNNER = r'''
 import json, sys
@@ -56,6 +60,25 @@ class ReconciliationError(RuntimeError):
     pass
 
 
+# Fix8 D-recon-io: every file this adapter reads or writes goes through the same transient-sharing-violation retry the
+# package store uses (Windows: PermissionError while an indexer / antivirus / another thread holds the file at that
+# instant). A persistent failure still raises, and the reconciliation job then ends FAILED with that error.
+def _read_bytes(p: Path) -> bytes:
+    return _retry_sharing(lambda: Path(p).read_bytes())
+
+
+def _read_text(p: Path) -> str:
+    return _retry_sharing(lambda: Path(p).read_text(encoding="utf-8"))
+
+
+def _write_bytes(p: Path, data: bytes) -> None:
+    _retry_sharing(lambda: Path(p).write_bytes(data))
+
+
+def _write_text(p: Path, text: str) -> None:
+    _retry_sharing(lambda: Path(p).write_text(text, encoding="utf-8"))
+
+
 def _sha(b: bytes) -> str:
     return hashlib.sha256(b).hexdigest()
 
@@ -70,11 +93,13 @@ def run_reconciliation(svc, package_id: str, snapshot_id: str, uc042_root: str |
         raise ReconciliationError(f"{snapshot_id} is not the ACTIVE snapshot ({pkg.active_snapshot_id}); a superseded "
                                   "selection is never reconciled")
     snap = svc.store.load_snapshot(package_id, snapshot_id)
-    checks = svc.verify_snapshot(package_id, snapshot_id)
+    # verify_snapshot is a pure read (SV-1..SV-5); its own file reads are not all sharing-safe, so the whole check is
+    # retried on a transient sharing violation (never on a failed check).
+    checks = _retry_sharing(lambda: svc.verify_snapshot(package_id, snapshot_id))
     if not all(c.passed for c in checks):
         raise ReconciliationError("snapshot verification failed: " + "; ".join(f"{c.check_id} {c.detail}"
                                                                                for c in checks if not c.passed))
-    manifest = json.loads(svc.store.manifest_path(package_id, snapshot_id).read_text(encoding="utf-8"))
+    manifest = json.loads(_read_text(svc.store.manifest_path(package_id, snapshot_id)))
     run_id = run_id or f"RECON-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}-{snapshot_id[-8:]}"
     run = out_dir / run_id
     if run.exists():
@@ -85,21 +110,21 @@ def run_reconciliation(svc, package_id: str, snapshot_id: str, uc042_root: str |
     staged = []
     for f in manifest["files"]:
         v = pkg.versions[f["file_version_id"]]
-        original = svc.evidence.read_original(f["source_sha256"])
-        rec = svc.evidence.find(f["intake_id"])
+        original = _retry_sharing(lambda: svc.evidence.read_original(f["source_sha256"]))
+        rec = _retry_sharing(lambda: svc.evidence.find(f["intake_id"]))
         if original is None or _sha(original) != f["source_sha256"] or rec is None or rec.sha256 != f["source_sha256"]:
             raise ReconciliationError(f"{f['evidence_category']}: stored original / intake does not match the manifest")
         if v.version_status != "ACTIVE" or v.file_version_id != pkg.evidence_files[f["evidence_category"]].active_version_id:
             raise ReconciliationError(f"{f['evidence_category']}: {v.file_version_id} is not the active version")
         if f["canonical_preview"]:
-            data = svc.store.abs(f["canonical_preview"]["path"]).read_bytes()
+            data = _read_bytes(svc.store.abs(f["canonical_preview"]["path"]))
             if _sha(data) != f["canonical_preview"]["sha256"]:
                 raise ReconciliationError(f"{f['evidence_category']}: canonical preview hash mismatch")
             kind, ext = "CANONICAL_PREVIEW_CSV", "csv"
         else:
             data, kind, ext = original, "ORIGINAL_PDF", "pdf"
         name = f"{f['evidence_category']}__{f['file_version_id']}.{ext}"
-        (run / "input" / name).write_bytes(data)
+        _write_bytes(run / "input" / name, data)
         staged.append({"evidence_category": f["evidence_category"], "file_version_id": f["file_version_id"],
                        "version_number": f["version_number"], "intake_id": f["intake_id"],
                        "original_filename": f["original_filename"], "source_sha256": f["source_sha256"],
@@ -117,8 +142,8 @@ def run_reconciliation(svc, package_id: str, snapshot_id: str, uc042_root: str |
     proc = subprocess.run([python or sys.executable, "-B", "-c", ENGINE_RUNNER, str(uc042_root), str(run / "input"),
                            str(run / "case"), period], cwd=str(run), env=env, capture_output=True, text=True,
                           encoding="utf-8", timeout=600)
-    (run / "engine_stdout.json").write_text(proc.stdout, encoding="utf-8")
-    (run / "engine_stderr.txt").write_text(proc.stderr, encoding="utf-8")
+    _write_text(run / "engine_stdout.json", proc.stdout)
+    _write_text(run / "engine_stderr.txt", proc.stderr)
     if proc.returncode != 0:
         svc.log.append("RECONCILIATION_FAILED", actor_id="smartparser-reconciliation-adapter", actor_role="system",
                        details={"package_id": package_id, "snapshot_id": snapshot_id, "run_id": run_id,
@@ -139,18 +164,18 @@ def run_reconciliation(svc, package_id: str, snapshot_id: str, uc042_root: str |
     for s in staged:
         sub = "source_data" if s["staged_kind"] == "CANONICAL_PREVIEW_CSV" else "supporting_documents"
         p = run / "case" / sub / (s.get("engine_canonical_name") or "")
-        s["engine_case_sha256"] = _sha(p.read_bytes()) if s.get("engine_canonical_name") and p.is_file() else None
+        s["engine_case_sha256"] = _sha(_read_bytes(p)) if s.get("engine_canonical_name") and p.is_file() else None
         s["engine_received_exact_bytes"] = s["engine_case_sha256"] == s["staged_sha256"]
         s["category_agrees"] = s.get("engine_file_id") == s["evidence_category"]
     not_staged = [r for r in eng["intake"] if r["original_path"] not in by_path]   # MISSING rows etc.
 
     # ---- outputs + traceability
-    out_files = {str(p.relative_to(run)).replace("\\", "/"): _sha(p.read_bytes())
+    out_files = {str(p.relative_to(run)).replace("\\", "/"): _sha(_read_bytes(p))
                  for p in sorted((run / "case").rglob("*")) if p.is_file()}
     trace = {s["engine_canonical_name"]: {k: s[k] for k in ("evidence_category", "file_version_id", "intake_id",
                                                             "source_sha256", "staged_sha256")}
              for s in staged if s.get("engine_canonical_name")}
-    rows = list(csv.DictReader(open(run / "case" / "validation" / "control_results.csv", encoding="utf-8")))
+    rows = list(csv.DictReader(io.StringIO(_read_text(run / "case" / "validation" / "control_results.csv"), newline="")))
     outcomes = Counter(r["outcome"] for r in rows)
     traced_examples = []
     for r in rows:
@@ -187,10 +212,10 @@ def run_reconciliation(svc, package_id: str, snapshot_id: str, uc042_root: str |
         "engine_category_agrees": all(s["category_agrees"] for s in staged),
         "no_superseded_version_staged": all(pkg.versions[s["file_version_id"]].version_status == "ACTIVE" for s in staged),
     }
-    (run / "reconciliation_run.json").write_text(json.dumps(record, indent=1, default=str), encoding="utf-8")
+    _write_text(run / "reconciliation_run.json", json.dumps(record, indent=1, default=str))
     svc.log.append("RECONCILIATION_EXECUTED", actor_id="smartparser-reconciliation-adapter", actor_role="system",
                    details={"package_id": package_id, "snapshot_id": snapshot_id, "run_id": run_id,
                             "case_status": eng["case_status"], "outcomes": dict(outcomes),
                             "exceptions": len(eng["exceptions"]), "checks": record["checks"],
-                            "run_record_sha256": _sha((run / "reconciliation_run.json").read_bytes())})
+                            "run_record_sha256": _sha(_read_bytes(run / "reconciliation_run.json"))})
     return record
