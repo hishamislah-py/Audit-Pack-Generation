@@ -79,6 +79,41 @@ class EngineRules:
 APPROVED_RULES = EngineRules()
 PUBLISHED_RULES_BEFORE_17_NOV_2026 = EngineRules(zero_difference_outcome=NA)
 ENRICHED_RULES = EngineRules(enrichment_v1=True)  # approved rules + Workstream 3 enrichment (not yet approved as default)
+_RECORDED_KEYS = {"c06_c08_zero_difference", "reconciliation_enrichment"}
+
+
+def rules_from_recorded(recorded):
+    """The EngineRules whose recorded() is `recorded` (the inverse of EngineRules.recorded()). An empty dict is the
+    published pre-17-Nov-2026 configuration, exactly as recorded() defines it. Unknown keys are refused, never ignored."""
+    recorded = dict(recorded or {})
+    unknown = set(recorded) - _RECORDED_KEYS
+    if unknown:
+        raise ValueError(f"unknown engine rule(s) recorded: {sorted(unknown)}")
+    enr = recorded.get("reconciliation_enrichment")
+    if enr not in (None, "v1"):
+        raise ValueError(f"unknown reconciliation_enrichment version: {enr!r}")
+    rules = EngineRules(zero_difference_outcome=recorded.get("c06_c08_zero_difference", NA), enrichment_v1=enr == "v1")
+    if rules.recorded() != recorded:
+        raise ValueError(f"recorded rules do not round-trip: {recorded}")
+    return rules
+
+
+def enrichment_document(state, rules):
+    """The text of validation/enrichment.json: the enrichment state plus the rules that produced it (I-3)."""
+    return json.dumps(dict(state, engine_rules=rules.recorded()), indent=2, sort_keys=True) + "\n"
+
+
+def rules_of_reconciliation(case_dir):
+    """The rules the case's stored reconciliation outputs (validation/) were produced with, as far as they record it:
+    ENRICHED outputs carry validation/enrichment.json with their engine_rules; outputs without it were produced with
+    enrichment off (approved or published rules, which the outputs do not distinguish). None if no outputs exist."""
+    d = Path(case_dir) / "validation"
+    e = d / "enrichment.json"
+    if e.exists():
+        return rules_from_recorded(json.loads(e.read_text(encoding="utf-8")).get("engine_rules") or {"reconciliation_enrichment": "v1"})
+    if (d / "control_results.csv").exists():
+        return "ENRICHMENT_OFF"
+    return None
 CONTROL_OF = {"C03-POLICY": "C03", "C03-POINT": "C03", "C01-COVER": "C01", "C07-COVER": "C07", "C14-COVER": "C14",
               "DQ23-STATEMENT": "DQ23", "DQ22-CONTINUITY": "DQ22", "BC-VS-EOD": "C07", "CASH-BANK-LINK": "C05/C07",
               "BANK-CASH-LINK": "C05/C07", "C04-REQUIREMENT": "C04", "C05-RESOURCE": "C05", "C06-DIFFERENCE": "C06",
@@ -1639,7 +1674,7 @@ def write_outputs(root, results, exceptions=(), status="", groups=(), candidates
             w.writeheader()
             w.writerows(rows_)
     if enrichment_state is not None:  # only with rules.enrichment_v1: default outputs are unchanged
-        (root / "validation" / "enrichment.json").write_text(json.dumps(enrichment_state, indent=2, sort_keys=True) + "\n",
+        (root / "validation" / "enrichment.json").write_text(enrichment_document(enrichment_state, rules or APPROVED_RULES),
                                                              encoding="utf-8")
     summary = defaultdict(lambda: defaultdict(int))
     for r in results:

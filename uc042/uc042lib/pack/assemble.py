@@ -317,7 +317,7 @@ def assemble(case_dir, v=None, period=None, rules=None):
     if (case_dir / "intake.csv").exists():
         with open(case_dir / "intake.csv", encoding="utf-8", newline="") as f:
             intake = [{k: r[k] for k in ("original_path", "sha256", "decision", "file_id", "reason")} for r in csv.DictReader(f)]
-    engine_fp = model.engine_fingerprint()
+    engine_fp = model.engine_fingerprint(v.rules)
     config_fp = model.configuration_fingerprint({k: list(v_) for k, v_ in registry.CONTROLS.items()}, v.rules.recorded())
     pack_fp = model.pack_layer_fingerprint()
     run = model.run_id(sorted((i["file_id"], i["sha256_actual"]) for i in inputs), engine_fp, config_fp, pack_fp)
@@ -353,8 +353,10 @@ def assemble(case_dir, v=None, period=None, rules=None):
                                       "Missing evidence is shown as 'not available'; it is never treated as zero."},
         "audit_trail": {"inputs": inputs, "intake": intake, "baseline_manifest_sha256": scenario.get("baseline_manifest_sha256", ""),
                         "engine_fingerprint": engine_fp, "configuration_fingerprint": config_fp, "pack_layer_fingerprint": pack_fp,
-                        "correlation_version": groups[0]["correlation_version"] if groups else config.CORRELATION_VERSION,
-                        "processing_outputs": {}, "pack_content_sha256": "", "review_events": [], "narrative": []},
+                        "correlation_version": groups[0]["correlation_version"] if groups else correlation_version(v.rules),
+                        "processing_outputs": {}, "pack_content_sha256": "", "review_events": [], "narrative": [],
+                        # I-3: the rules are recorded explicitly only for enriched runs (every other pack is unchanged)
+                        **({"engine_rules": v.rules.recorded()} if v.rules.enrichment_v1 else {})},
         "statements": {"synthetic_notice": scenario.get("synthetic_notice", config.SYNTHETIC_NOTICE), "entity_notice": config.ENTITY_NOTICE,
                        "not_a_compliance_opinion": config.NOT_A_COMPLIANCE_OPINION, "limitations": config.LIMITATIONS},
     }
@@ -365,9 +367,16 @@ def assemble(case_dir, v=None, period=None, rules=None):
     return pack, v
 
 
+def correlation_version(rules):
+    """The correlation version of a run with these rules (used when the run formed no group) (I-3)."""
+    from ..enrichment import CORRELATION_VERSION as ENRICHED
+    return ENRICHED if rules.enrichment_v1 else config.CORRELATION_VERSION
+
+
 def processing_outputs(v):
-    """The engine run's outputs as CSV texts (same columns as the engine's own writer)."""
-    from ..validate import CANDIDATE_COLS, EXC_COLS, GROUP_COLS
+    """The engine run's outputs as CSV texts (same columns as the engine's own writer); with enrichment, also the
+    enrichment document exactly as the engine writes it (validation/enrichment.json)."""
+    from ..validate import CANDIDATE_COLS, EXC_COLS, GROUP_COLS, enrichment_document
     import io
 
     def to_csv(cols, rows):
@@ -377,12 +386,15 @@ def processing_outputs(v):
         w.writerows(rows)
         return buf.getvalue()
     rcols = ["check_id", "control", "scope", "outcome", "computed", "reported", "evidence", "note", "root_cause", "evidence_status", "structured"]
-    return {"control_results.csv": to_csv(rcols, [dict(r, structured=json.dumps(r["structured"], sort_keys=True) if r["structured"] else "")
+    outputs = {"control_results.csv": to_csv(rcols, [dict(r, structured=json.dumps(r["structured"], sort_keys=True) if r["structured"] else "")
                                                   for r in v.results]),
             "exceptions.csv": to_csv(EXC_COLS, v.exceptions), "investigation_groups.csv": to_csv(GROUP_COLS, v.groups),
             "candidate_relationships.csv": to_csv(CANDIDATE_COLS, v.candidates),
             "document_details.csv": to_csv(["file_id", "label", "value"], [{"file_id": fid, "label": k, "value": val}
                                                                            for fid in sorted(v.pdf) for k, val in sorted(v.pdf[fid].items())])}
+    if v.rules.enrichment_v1 and v.enrichment is not None:
+        outputs["enrichment.json"] = enrichment_document(v.enrichment, v.rules)
+    return outputs
 
 
 def finalise(pack, outputs):

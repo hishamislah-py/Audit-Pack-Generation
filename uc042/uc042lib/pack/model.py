@@ -55,9 +55,11 @@ def result_id(r):
     return f"{r['check_id']}|{r['scope']}"
 
 
-def engine_fingerprint():
+def engine_fingerprint(rules=None):
+    """Hash of the engine modules that define the run's processing. rules: the run's EngineRules; with enrichment_v1 the
+    enrichment module is included (I-2). Without it the value is exactly the historical one."""
     h = hashlib.sha256()
-    for name in config.ENGINE_MODULES:
+    for name in config.ENGINE_MODULES + (config.ENRICHMENT_MODULES if getattr(rules, "enrichment_v1", False) else []):
         h.update(name.encode())
         h.update((ENGINE_DIR / name).read_bytes())
     return h.hexdigest()
