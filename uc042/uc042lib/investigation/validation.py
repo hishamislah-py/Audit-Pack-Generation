@@ -181,6 +181,30 @@ def _cited(out):
     return ids
 
 
+def normalise_supporting_records(out, packet):
+    """Session 1 citation fix (23 Nov 2026). `supporting_records` lists SOURCE records only; engine control results and
+    searches are analytical context/support and belong in `evidence_ids`. A model sometimes also copies control-result or
+    search IDs it already cites in evidence_ids into supporting_records (live, 22 Nov: F-02 of EXC-CASE-01). Those IDs are
+    removed from supporting_records (they stay in evidence_ids) and the change is recorded in a note.
+
+    Deliberately narrow, never widening: only IDs that are control results or searches OF THIS PACKET and ALREADY cited in
+    the same finding's evidence_ids are moved. Unknown IDs, exception/group/MISS-/CAND- IDs, and results not cited in
+    evidence_ids are left in place and are judged (and rejected) by validate_output exactly as before. Support checks run
+    on evidence_ids and are unchanged. Returns (normalised output, notes)."""
+    movable = {r["result_id"] for r in packet["control_results"]} | {s["search_id"] for s in packet["searches"]}
+    notes, findings = [], []
+    for f in out.confirmed_findings:
+        moved = [i for i in f.supporting_records if i in movable and i in f.evidence_ids]
+        if moved:
+            f = f.model_copy(update={"supporting_records": [i for i in f.supporting_records if i not in moved]})
+            notes.append(f"{f.finding_id}: supporting_records normalised - removed {moved} (control results/searches are "
+                         "analytical context, not source records; they remain cited in evidence_ids)")
+        findings.append(f)
+    if not notes:
+        return out, []
+    return out.model_copy(update={"confirmed_findings": findings}), notes
+
+
 def validate_output(out, packet, case):
     """Return (errors, notes, normalised evidence_references). Any error means the output is REJECTED."""
     errors, notes = [], []

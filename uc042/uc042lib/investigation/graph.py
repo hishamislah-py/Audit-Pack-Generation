@@ -23,7 +23,7 @@ from .retrieval import EvidenceStore, RetrievalError, load_pack
 from .routing import ROUTES, route_for
 from .tool_loop import run_tool_loop
 from .tools import TOOL_REGISTRY_VERSION
-from .validation import classification_summary, validate_output
+from .validation import classification_summary, normalise_supporting_records, validate_output
 
 log = logging.getLogger("uc042.investigation")
 
@@ -286,7 +286,9 @@ def validate_findings(state, config=None):
         packet = state["packet"]
         evidence = state.get("ledger") or packet  # tools mode: citations are checked against the accumulated ledger
         out = LLMInvestigationOutput.model_validate(state["llm_output"])
+        out, norm_notes = normalise_supporting_records(out, evidence)   # recorded; never widens support (validation.py)
         errors, notes, refs = validate_output(out, evidence, state["case"])
+        notes = norm_notes + notes
         body = out.model_dump()
         body["evidence_references"] = refs
         res = InvestigationResult(**base, **body, investigation_status="COMPLETED",
