@@ -109,6 +109,23 @@ function ActionDialog({ kind, c, onClose, nav }) {
     foot={<><Button onClick={onClose} disabled={m.busy}>Cancel</Button>{blocked ? <WithReason reason="Tick the acknowledgement first">{confirmBtn}</WithReason> : confirmBtn}</>}>{body}</Dialog></div>;
 }
 
+/* Case owner and the viewer's access (Fix8 D7). The backend decides (c.access, and every c.actions.* already carries
+   the NOT_CASE_OWNER reason); this only shows it and offers the audited claim of an unassigned case. */
+function Ownership({ c }) {
+  const m = useMutation();
+  const acc = c.access || {};
+  const owner = c.assigned_to;
+  const claim = () => m.run((svc) => svc.claimCase(c.case_ref, { expected_revision: c.revision }), { success: 'Case claimed · you are now the owner' });
+  return <span className="rf-row" data-testid="case-owner" style={{ gap: 8, fontSize: 12, flexWrap: 'wrap' }}>
+    <span className="rf-muted">Owner</span>
+    <span className={owner ? 'rf-strong' : 'rf-muted'} data-testid="case-owner-name">{owner || 'Unassigned'}{acc.is_owner ? ' (you)' : ''}</span>
+    {acc.enforced && acc.override && <span className="rf-tone-attention" data-testid="case-override-note" title="Every action you take on this case is recorded as SUPERVISOR_OVERRIDE">Supervisor · actions audited as override</span>}
+    {acc.enforced && !acc.can_act && <span className="rf-tone-attention" data-testid="case-access-reason">{acc.reason}</span>}
+    {acc.enforced && acc.can_claim && !owner && <Button size="sm" icon="check" loading={m.busy} onClick={claim} data-testid="case-claim">Claim case</Button>}
+    {m.error && <span className="rf-tone-danger">{m.error}</span>}
+  </span>;
+}
+
 export default function CaseWorkspace({ route, app, nav, store }) {
   const ref = route.ref, key = 'case:' + ref;
   const poll = store.casePoll(store.getQuery(key).data);
@@ -139,6 +156,7 @@ export default function CaseWorkspace({ route, app, nav, store }) {
     {c.completed && <Pill state={c.completed.case_status} />}
     <span className="rf-muted" style={{ fontSize: 12 }}>since {fmtDateTime(c.status_since)}</span>
     {q.error && <span className="rf-tone-danger" style={{ fontSize: 12 }} title={q.error.message}>Refresh failed: {q.error.message}</span>}
+    <Ownership c={c} />
   </div>;
   return <>
     <CaseHeader c={{ customerId: c.customer_id, customer: c.customer_name, ref: c.case_ref, period: fmtPeriod(c.reporting_period), periodRange: periodRange(c.reporting_period), submission: c.zip.filename, receivedLabel: fmtDateTime(c.created_at) }}

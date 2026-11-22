@@ -505,6 +505,7 @@ export function createMockService(opts) {
     listCases: (q) => later(() => { const all = sorted(), a = slotCase(); const counts = {}; ['WAITING', 'IN_PROGRESS', 'PENDING', 'COMPLETED'].forEach((k) => { counts[k] = all.filter((c) => c.status === k).length; }); return { items: all.filter((c) => !q || !q.status || c.status === q.status).map(summaryPayload), counts, active_case_ref: a ? a.case_ref : null, active_case: a ? { case_ref: a.case_ref, customer_name: a.customer_name, reporting_period: a.reporting_period, deferring: a.deferring } : null, ordering: 'in progress first; then WAITING and PENDING oldest first; then COMPLETED newest first' }; }),
     registerCase: (q) => later((t) => detail(register(q, t))),
     getCase: (ref) => later(() => detail(C(ref))),
+    claimCase: (ref) => later(() => { const c = C(ref); if (!c.assigned_to) c.assigned_to = analyst.reviewer_id; return detail(c); }),
     startCase: (ref, q) => later((t) => { const c = C(ref); expect(c, q); ops.start(c, t); return detail(c); }),
     deferCase: (ref, q) => later((t) => { const c = C(ref); expect(c, q); ops.defer(c, t); return detail(c); }),
     resumeCase: (ref, q) => later((t) => { const c = C(ref); expect(c, q); ops.resume(c, t); return detail(c); }),
