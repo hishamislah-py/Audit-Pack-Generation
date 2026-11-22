@@ -300,7 +300,11 @@ def restricted_target(ctx, method: str, P: list[str]):
             return ctx.cases.load(P[1]), "case/" + "/".join(rest)
         if rest[:1] == ["review"] and len(rest) == 3 and rest[2] in ("decision", "confirm", "reject"):
             return ctx.cases.load(P[1]), "case/review/" + rest[2]
-        return None
+        if rest == ["claim"]:                       # claim has its own audited ownership rules (api.claim)
+            return None
+        # Lead hardening (fail closed): any other POST under a case is restricted as well, so a mutation route added
+        # later can never be reachable by a non-owner merely because it is missing from the lists above.
+        return ctx.cases.load(P[1]), "case/" + "/".join(rest)
     pid = action = None
     if P[:1] == ["packages"] and len(P) == 3 and P[2] in PACKAGE_MUTATIONS:
         pid, action = P[1], "package/" + P[2]
