@@ -47,6 +47,13 @@ EVENT_TYPES = Literal[
     "CLOSING_REVIEW_OPENED", "CLOSING_SELECTIONS_CHANGED", "CLOSING_PREVIEW_REQUESTED", "CLOSING_PREVIEW_READY",
     "CLOSING_PREVIEW_FAILED", "CLOSING_REVIEW_HELD",
     "FINAL_PACK_GENERATED", "FINAL_PACK_GENERATION_FAILED",
+    # Fix8 (22 Nov 2026, lead-registered so no agent edits this allowlist):
+    # D2 - a refused/failed file confirmation is recorded as such (never as ANALYST_REVIEW_CONFIRMED)
+    "ANALYST_REVIEW_CONFIRMATION_FAILED",
+    # D4 - an analyst's explicit clarification of an ambiguous financial mapping
+    "ANALYST_MAPPING_CLARIFIED",
+    # D7 - a restricted action refused for lack of authorisation, and an audited supervisor override
+    "ACCESS_DENIED", "SUPERVISOR_OVERRIDE",
 ]
 GENESIS = "0" * 64
 
