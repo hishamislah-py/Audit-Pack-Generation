@@ -145,6 +145,7 @@ class _GuardedProposer:
         self.input_sha256 = self.output_sha256 = None
         self.usage = None
         self.text = None
+        self.call = None                       # Fix8 D1: provider request / response ids of the last attempt
 
     def propose(self, request) -> str:
         payload = render(request, self.config.send_value_shapes)
@@ -162,6 +163,7 @@ class _GuardedProposer:
             try:
                 text = fut.result(timeout=self.config.timeout_seconds)
                 ex.shutdown(wait=False)
+                self.call = getattr(self.inner, "last_call", None)
                 self.status, self.duration_ms = "OK", int((time.monotonic() - start) * 1000)
                 self.output_sha256 = hashlib.sha256(text.encode("utf-8")).hexdigest() if isinstance(text, str) else None
                 self.usage = getattr(self.inner, "last_usage", None)
@@ -174,9 +176,20 @@ class _GuardedProposer:
             except Exception as exc:          # provider failure: retry once, never partial
                 ex.shutdown(wait=False)
                 last = exc
-                self.status, self.error = "FAILED", type(exc).__name__
+                self.call = getattr(self.inner, "last_call", None)
+                kind = getattr(exc, "kind", None)
+                self.status, self.error = "FAILED", type(exc).__name__ + (f":{kind}" if kind else "")
         self.duration_ms = int((time.monotonic() - start) * 1000)
         raise last
+
+
+def _call_ids(call: dict | None) -> dict:
+    """Fix8 D1: provider correlation data for the PROVIDER_CALL record (ids, HTTP status, model as reported). Never the
+    request content, the response text or a credential."""
+    c = call or {}
+    return {"provider_request_id": c.get("request_id"), "provider_response_id": c.get("response_id"),
+            "response_model": c.get("response_model"), "http_status": c.get("http_status"),
+            "error_kind": c.get("error_kind")}
 
 
 @dataclass
@@ -221,7 +234,8 @@ class ProposalGateway:
         self._audit(status, reg_hash, schema.category, result, proposal_id=outcome.record.proposal_id if outcome.record else None,
                     input_sha256=guarded.input_sha256, output_sha256=guarded.output_sha256, usage=guarded.usage,
                     duration_ms=guarded.duration_ms, retry_count=max(0, guarded.attempts - 1),
-                    error_category=guarded.error or ("malformed_response" if err else None))
+                    error_category=guarded.error or ("malformed_response" if err else None),
+                    attempts=guarded.attempts, **_call_ids(guarded.call))
         outcome.manual_review_required = bool(err)
         if outcome.record is not None and not err:
             self.dedup.put(key, outcome, guarded.text)
