@@ -566,21 +566,35 @@ def test_a_view_revision_equals_disk_when_a_save_lands_while_the_view_is_built(t
 
 
 @needs_closure
-def test_b_auto_investigation_bump_failing_every_time_never_leaves_investigating(tmp_path, monkeypatch):
-    """(B) The final _bump of the automatic-investigation step raises on every try: the view must not stay INVESTIGATING
-    and every job must have ended."""
+def test_b_auto_investigation_outcome_unwritable_never_leaves_investigating(tmp_path, monkeypatch):
+    """(B) After the automatic investigations are queued, the closure record cannot be written any more (every _save
+    raises: a persistent sharing violation), so the final _bump in the `finally` of _auto_investigations fails, and so
+    does the old fallback (_fail_unexpected also writes through _save). The record stays STARTING on disk; the view must
+    still not show INVESTIGATING once every job has ended. (Old code: INVESTIGATING forever.)"""
     from .test_closure_service import scenario_zip
     ctx = ctx_for(tmp_path)
-    attempts = []
+    svc = ctx.closure
+    state = {"unwritable": False, "refused": 0}
+    real_inner, real_save = svc._auto_investigations_inner, svc._save
 
-    def bump_fails(*a, **k):
-        attempts.append(k)
-        raise PermissionError(5, "Access is denied")
-    monkeypatch.setattr(ctx.closure, "_bump", bump_fails)
+    def inner(*a, **k):
+        out = real_inner(*a, **k)                                  # investigations are queued normally ...
+        state["unwritable"] = True                                 # ... then the record becomes unwritable
+        return out
+
+    def save(c):
+        if state["unwritable"]:
+            state["refused"] += 1
+            raise PermissionError(5, "Access is denied (injected, persistent)")
+        return real_save(c)
+    monkeypatch.setattr(svc, "_auto_investigations_inner", inner)
+    monkeypatch.setattr(svc, "_save", save)
     data, customer, period = scenario_zip("scenario_2")
     ref = reconcile(ctx, data, customer, period)
-    v = wait_closure(ctx, ref, lambda v: v["state"] not in ("PACK_PENDING", "INVESTIGATING"), timeout=300)
-    assert attempts, "the automatic step never tried to record its outcome"
+    run = next(j["run_id"] for j in ctx.jobs.values() if j.get("kind") == "reconciliation" and j.get("run_id"))
+    v = wait_closure(ctx, ref, lambda v: v["state"] not in ("PACK_PENDING", "INVESTIGATING"), timeout=180)
+    assert state["refused"] >= 3                                   # the finally-bump was attempted and refused
+    assert svc._load(ref, run)["auto_investigation"] == "STARTING"  # the record really stayed STARTING on disk
     assert v["state"] != "INVESTIGATING"
     jobs = [j for j in ctx.jobs.values() if j.get("case_ref") == ref]
     assert jobs and all(j["state"] not in ("queued", "running") for j in jobs), [(j["kind"], j["state"]) for j in jobs]
