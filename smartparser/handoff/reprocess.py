@@ -62,8 +62,9 @@ def reprocess(intake_id: str, evidence: EvidenceStore, registry, rules: MappingR
     if forced is None and res.metadata.classification_status != ClassificationStatus.IDENTIFIED:
         raise ReprocessError("the category is neither identified deterministically nor confirmed by a person: "
                              + (res.classification.reason if res.classification else "not classified"))
-    used = sorted({(m.variation, m.rule_id, m.rule_version) for m in (res.mapping.mappings if res.mapping else [])
-                   if m.rule_id} | {("file_mapping", x["rule_id"], x["rule_version"])
+    kind_of = {"approved_file_mapping": "file_mapping", "approved_layout": "layout"}   # Fix8 D3: rule kind, not variant
+    used = sorted({(kind_of.get(m.method.value, m.variation), m.rule_id, m.rule_version)
+                   for m in (res.mapping.mappings if res.mapping else []) if m.rule_id} | {("file_mapping", x["rule_id"], x["rule_version"])
                                    for x in (res.mapping.ignored_columns if res.mapping else [])},
                   key=lambda x: (x[1], x[2] or 0))
     return ReprocessResult(result=res, source_bytes=data, original_intake_id=intake_id, source_sha256=rec.sha256,
