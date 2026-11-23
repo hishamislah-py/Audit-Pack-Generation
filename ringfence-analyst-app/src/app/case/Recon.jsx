@@ -9,7 +9,7 @@ import React from 'react';
 import { useQuery, useMutation } from '../hooks.js';
 import { Button, WithReason, Panel, KV, Notice, Table, Segmented, Tabs, Empty, Skeleton, Dialog, Pill, Enum, Ref, Hash, Money, Stats, SegBar, Outcome, Icon, Glyph, cx } from '../../ui/index.jsx';
 import { fmtDateTime, sevLevel, reconRunId } from '../format.js';
-import ExceptionWorkspace from './ExceptionWorkspace.jsx';
+import ExceptionWorkspace, { plainTitle } from './ExceptionWorkspace.jsx';
 import StartReconButton, { reconAvailability } from './StartRecon.jsx';
 import { useClosure, DeterministicSummary, PackStatusLine, AiState, DecisionCell, ClosureError } from './closure.jsx';
 
@@ -178,6 +178,29 @@ function ClosurePanel({ c, runId, nav }) {
   </div>;
 }
 
+/* Exceptions grouped under their cause (owner, 24 Nov 2026): each engine investigation group becomes one block, the
+   causing exception (duplicate entry / transaction against bank) first, then its linked exceptions; ungrouped
+   exceptions stay as they are, in the engine's order. */
+const CAUSE_RE = /^(DUPLICATE_|RC4-DIRECT)/;
+function groupedRows(exc) {
+  const out = [], done = new Set();
+  exc.forEach((e) => {
+    const gid = e.investigation_group_id;
+    if (!gid) { out.push({ e }); return; }
+    if (done.has(gid)) return;
+    done.add(gid);
+    const members = exc.filter((x) => x.investigation_group_id === gid);
+    if (members.length < 2) { out.push({ e }); return; }
+    const cause = members.find((x) => CAUSE_RE.test(String(x.root_cause || '')));
+    const order = cause ? [cause].concat(members.filter((x) => x !== cause)) : members;
+    out.push({ group: <span className="rf-row" style={{ gap: 6 }}><Icon name="layers" size={14} />{cause
+      ? <>{plainTitle(String(cause.root_cause).split('|')[0])} ({cause.exception_id}) · causes {members.length - 1} linked exception{members.length - 1 === 1 ? '' : 's'}</>
+      : <>{members.length} linked exceptions</>}</span> });
+    order.forEach((x) => out.push({ e: x, inGroup: true, isCause: x === cause }));
+  });
+  return out;
+}
+
 function ResultTabs({ c, r, runs, runId, route, go }) {
   const exc = r.exceptions || [];
   const clq = useClosure(c);
@@ -187,12 +210,12 @@ function ResultTabs({ c, r, runs, runId, route, go }) {
   return <div className="rf-stack rf-stack--3">
     <Tabs items={[['exceptions', 'Exceptions · ' + exc.length], ['controls', 'Control results · ' + (r.total_results != null ? r.total_results : '')], ['runs', 'Runs · ' + runs.length]]} active={tab} onChange={setTab} />
     {tab === 'exceptions' && <Panel flush>{exc.length ? <Table dense caption="Exceptions" columns={[{ key: 'id', label: 'Exception' }, { key: 'sev', label: 'Severity' }, { key: 'finding', label: 'Finding' }, { key: 'acct', label: 'Account' }, { key: 'period', label: 'Date or period' }, { key: 'amt', label: 'Amount', cls: 'is-num' }, { key: 'aff', label: 'Affected results', cls: 'is-num' }, { key: 'ai', label: 'AI investigation' }, { key: 'dec', label: 'Decision' }]}
-      rows={exc.map((e) => ({ key: e.exception_id, selected: route.id === e.exception_id, onClick: () => go(runId, e.exception_id), cells: {
-        id: <span className="rf-mono rf-strong">{e.exception_id}</span>, sev: <EngineSeverity value={e.severity} />,
-        finding: <><span className="rf-cell-main">{excTitle(e)}</span>{e.root_cause && <span className="rf-cell-sub"><Enum>{e.root_cause}</Enum></span>}</>,
+      rows={groupedRows(exc).map((g) => g.group != null ? g : (({ e, inGroup, isCause }) => ({ key: e.exception_id, selected: route.id === e.exception_id, onClick: () => go(runId, e.exception_id), className: inGroup ? 'is-grouped' : undefined, cells: {
+        id: <span className="rf-mono rf-strong">{inGroup ? <span className="rfx-indent" aria-hidden="true">{isCause ? '●' : '└'}</span> : null}{e.exception_id}</span>, sev: <EngineSeverity value={e.severity} />,
+        finding: <><span className="rf-cell-main">{(/^[A-Z0-9_-]+$/.test(String(excTitle(e))) ? plainTitle(String(excTitle(e))) : excTitle(e))}</span>{e.root_cause && <span className="rf-cell-sub"><Enum>{e.root_cause}</Enum></span>}</>,
         acct: excAccount(e), period: excPeriod(e), amt: typeof e.amount === 'number' ? <Money amount={e.amount} ccy={e.currency} /> : e.amount, aff: e.affected_results,
         ai: cl ? <AiState state={(byId.get(e.exception_id) || {}).ai_state} /> : <span className="rf-muted" title={clq.error ? clq.error.message : 'Closure not loaded'}>—</span>,
-        dec: cl ? <DecisionCell e={byId.get(e.exception_id)} /> : <span className="rf-muted">—</span> } }))} />
+        dec: cl ? <DecisionCell e={byId.get(e.exception_id)} /> : <span className="rf-muted">—</span> } }))(g))} />
       : <Empty icon="check" title="No exceptions">This run raised no exceptions.</Empty>}</Panel>}
     {tab === 'controls' && <ControlsPanel refKey={c.case_ref} runId={runId} outcomes={r.outcomes || {}} total={r.total_results} />}
     {tab === 'runs' && <Panel title={'Reconciliation runs · ' + runs.length} sub="Every run is kept, including failed runs and their errors" flush><RunsList runs={runs} runId={runId} onSelect={(rid) => go(rid)} /></Panel>}

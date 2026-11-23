@@ -205,3 +205,16 @@ button.rfe-cite:focus-visible { outline: 2px solid var(--focus-ring); outline-of
 .rf-signin__side { flex: 0 0 520px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 32px; background: #f7f8fa; }
 .rf-signin--split .rf-signin__card { box-shadow: 0 10px 34px rgba(24,33,44,.10); }
 @media (max-width: 1100px) { .rf-signin__hero { display: none; } .rf-signin__side { flex: 1 1 auto; } }
+
+/* Linked group banner (cause / effects) and grouped exception list */
+.rfx-group { padding: 14px 18px; border: 1px solid var(--line); border-left: 4px solid var(--brand-600); border-radius: 10px; background: var(--surface-muted); }
+.rfx-group__main { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; }
+.rfx-group__title { font-size: 15px; line-height: 22px; font-weight: 700; color: var(--ink); }
+.rfx-group__sub { font-size: 13px; line-height: 19px; color: var(--ink-secondary); }
+.rfx-group__list { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; }
+.rfx-group__item { display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 8px 10px; border: 1px solid var(--line-subtle); border-radius: 8px; background: var(--surface); color: var(--ink); text-align: left; cursor: pointer; font: inherit; font-size: 13px; }
+.rfx-group__item:hover { border-color: var(--line-strong); }
+.rfx-group__item.is-current { box-shadow: inset 3px 0 0 var(--brand-600); }
+.rfx-group__item.is-cause { font-weight: 600; }
+.rf-table tr.is-grouped td:first-child { padding-left: 28px; }
+.rfx-indent { display: inline-block; width: 16px; margin-left: -18px; color: var(--ink-muted); }

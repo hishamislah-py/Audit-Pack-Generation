@@ -220,7 +220,7 @@ const CHECK_TITLE = {
   'C09-ALLOCATION': 'An unallocated receipt is outstanding',
   'C12-REFUND': 'A refund does not reconcile',
 };
-const plainTitle = (code) => CHECK_TITLE[code] || (code ? String(code).replace(/[_|-]+/g, ' ').toLowerCase().replace(/^./, (ch) => ch.toUpperCase()) : 'Exception');
+export const plainTitle = (code) => CHECK_TITLE[code] || (code ? String(code).replace(/[_|-]+/g, ' ').toLowerCase().replace(/^./, (ch) => ch.toUpperCase()) : 'Exception');
 const ID_KEYS = ['line_id', 'batch_id', 'txn_id', 'bank_entry_id', 'ledger_entry_id', 'entry_id', 'snapshot_id', 'recon_run_id', 'statement_id', 'confirmation_id', 'break_id', 'receipt_id'];
 const DATE_KEYS = ['recon_date', 'cycle_date', 'posting_date', 'booking_date', 'value_date', 'clearing_date', 'settlement_date', 'entry_date', 'statement_date', 'as_at_ts', 'executed_ts', 'booking_ts'];
 const AMT_KEYS = ['net_amount_reported', 'amount', 'balance', 'requirement_reported', 'closing_balance', 'gross_amount'];
@@ -258,7 +258,8 @@ function evidenceRows(ws, app) {
     if (diff == null && delta != null) diff = delta;
     rows.push({ key: 'c' + i, kind: 'check', date: d, what: plainTitle(cr.check_id || x.check_id), ref: cr.scope || x.scope,
       amount: delta != null ? money(delta, ccy) : rep != null && rep === comp ? money(rep, ccy) : null,
-      note: rep != null && comp != null && rep !== comp ? 'Reported ' + money(rep, ccy) + ' · engine expected ' + money(comp, ccy)
+      note: rep != null && comp != null && rep !== comp && /DIFFERENCE/.test(cr.check_id || '') ? 'Firm reported ' + (rep ? 'a difference of ' + money(Math.abs(rep), ccy) : 'no difference') + ' · engine found ' + money(Math.abs(comp), ccy)
+        : rep != null && comp != null && rep !== comp ? 'Firm reported ' + money(rep, ccy) + ' · engine recomputed ' + money(comp, ccy)
         : rep != null && rep === comp ? 'difference reported by the engine' : (cr.note || x.note || x.text || '') });
   });
   ctrl.forEach((x) => {
@@ -266,7 +267,7 @@ function evidenceRows(ws, app) {
     const outliers = new Set();
     walk(st, (o) => { if (o.outlier && o.outlier.record) outliers.add(o.outlier.record); });
     walk(st, (o) => {
-      if (!o.record || o.amount == null || seen.has(o.record) || o.outlier || !(o.source || o.citation)) return;
+      if (!o.record || o.amount == null || seen.has(o.record) || o.outlier || !(o.source || o.citation) || !/\d/.test(String(o.record)) || /^(C\d+|RC\d+|DQ\d+|CBAL)-[A-Z-]+$/.test(String(o.record)) || o.record === ((x.control_result || {}).check_id)) return;
       seen.add(o.record);
       const cat = o.source || String(o.citation || '').split(':')[0];
       const plainRec = { 'roll-forward': 'Balance the engine expects', snapshot: 'Balance the firm recorded' }[o.record];
@@ -328,17 +329,46 @@ function rollForwardSteps(ws) {
 }
 
 /* The engine's own links between this exception and others (investigation group links), as written by the engine. */
-function engineLinks(ws, excId) {
-  const g = ws && ws.exception && ws.exception.investigation_group;
-  if (!g || typeof g !== 'object' || !g.links) return [];
-  return String(g.links).split(/(?=EXC-[A-Z]+-\d+—EXC-)/).map((t) => t.trim()).filter(Boolean).map((t) => {
-    const mm = t.match(/^(EXC-[A-Z]+-\d+)—(EXC-[A-Z]+-\d+)\s+([A-Z0-9 ]+?):\s*([\s\S]*)$/);
-    if (!mm) return { other: null, kind: '', text: t.replace(/\s*\[[^\]]*\]\s*;?\s*$/, '') };
-    if (mm[1] !== excId && mm[2] !== excId) return null;
-    const other = mm[1] === excId ? mm[2] : mm[1];
-    return { other, kind: mm[3].replace(/^L\d+\s+/, '').toLowerCase(), text: mm[4].replace(/\s*\[[^\]]*\]\s*;?\s*$/, '').trim() };
+/* The engine's links between exceptions (investigation group links), parsed. Every "[file#line]" citation is removed from
+   the text shown; the kind decides the order: a link that carries the CAUSE (duplicate entry, transaction) comes first,
+   "the same difference on another day" (persistence) last. */
+const LINK_RANK = (k) => /duplicate|transaction|line-sum|outlier|snapshot/.test(k) ? 0 : /persistence/.test(k) ? 2 : 1;
+function parseLinks(text) {
+  return String(text || '').split(/\s\|\s|(?=EXC-[A-Z]+-\d+—EXC-)/).map((t) => t.trim()).filter(Boolean).map((t) => {
+    const mm = t.match(/^(EXC-[A-Z]+-\d+)—(EXC-[A-Z]+-\d+)\s+([A-Z0-9 -]+?):\s*([\s\S]*)$/);
+    if (!mm) return null;
+    return { a: mm[1], b: mm[2], kind: mm[3].replace(/^L\d+\s+/, '').toLowerCase(), text: mm[4].replace(/\s*\[[^\]]*\]/g, '').replace(/\s*\|\s*$/, '').trim() };
   }).filter(Boolean);
 }
+function groupOf(ws) {
+  const g = ws && ws.exception && ws.exception.investigation_group;
+  if (!g || typeof g !== 'object' || !g.group_id) return null;
+  const members = String(g.exception_ids || '').split(/;\s*/).filter(Boolean);
+  return { id: g.group_id, members, links: parseLinks(g.links) };
+}
+function engineLinks(ws, excId) {
+  const g = groupOf(ws);
+  if (!g) return [];
+  const seen = new Set();
+  return g.links.filter((l) => l.a === excId || l.b === excId).map((l) => ({ other: l.a === excId ? l.b : l.a, kind: l.kind, text: l.text }))
+    .sort((x, y) => LINK_RANK(x.kind) - LINK_RANK(y.kind))
+    .filter((l) => { const k = l.other + l.kind; if (seen.has(k)) return false; seen.add(k); return true; });
+}
+/* The exception that CAUSES a linked group: an engine exception whose own category is a cause (duplicate entry,
+   transaction against bank), else the endpoint every duplicate / transaction link shares. null when there is none. */
+const CAUSE_RE = /^(DUPLICATE_|RC4-DIRECT)/;
+function causeOf(members, rows, links) {
+  const byId = new Map((rows || []).map((r) => [r.exception_id, r]));
+  const c1 = members.find((id) => CAUSE_RE.test(String((byId.get(id) || {}).root_cause || '')));
+  if (c1) return c1;
+  const causal = links.filter((l) => /duplicate|transaction/.test(l.kind));
+  if (!causal.length) return null;
+  const counts = {};
+  causal.forEach((l) => { counts[l.a] = (counts[l.a] || 0) + 1; counts[l.b] = (counts[l.b] || 0) + 1; });
+  const best = Object.entries(counts).sort((x, y) => y[1] - x[1])[0];
+  return best && best[1] === causal.length ? best[0] : null;
+}
+const scopeDate = (row) => (String((row || {}).root_cause || '').match(/\d{4}-\d{2}-\d{2}/) || [])[0];
 
 /* "What went wrong": a plain-English story of the exception, built ONLY from the engine's results and the cited source
    rows (never AI). Each kind of exception has its own short story; when the engine has not established why, the story
@@ -372,7 +402,7 @@ function txnVsBank(w) {
            date: String(t.executed_ts || t.clearing_date || (bank && bank.row.booking_date) || '').slice(0, 10), txnId: t.txn_id || cr.scope,
            bankId: bank ? bank.row.bank_entry_id : (vb && vb.record), out: ['DR', 'D'].includes(String(t.direction || '').toUpperCase()) };
 }
-function story(ws, linkedWs, links, excId) {
+function story(ws, linkedWs, links, excId, ctx) {
   const c = crOf(ws), cr = c.control_result || {};
   const check = cr.check_id || '';
   const ccy = ccyOf(ws);
@@ -382,8 +412,35 @@ function story(ws, linkedWs, links, excId) {
     const all = t.match(/-?\d+\.\d{2}/g); return all ? num(all[all.length - 1]) : null; };
   const comp = labelled(cr.computed), rep = labelled(cr.reported);
   const link = links.find((l) => l.other);
-  const linked = link ? { id: link.other, why: /transaction/.test(link.kind) ? 'the same transaction' : /balance|snapshot/.test(link.kind) ? 'the same client balance' : 'linked by the engine' } : null;
+  const linked = link ? { id: link.other, why: /duplicate/.test(link.kind) ? 'the duplicate entry that causes it' : /transaction/.test(link.kind) ? 'the same transaction' : /balance|snapshot/.test(link.kind) ? 'the same client balance' : /persistence/.test(link.kind) ? 'the same difference on another day' : 'linked by the engine' } : null;
   const M = (v) => money(Math.abs(v), ccy);
+  const S = (v) => money(v, ccy);
+  const rowsById = new Map(((ctx && ctx.rows) || []).map((r) => [r.exception_id, r]));
+  const alsoOn = links.filter((l) => /persistence/.test(l.kind)).map((l) => ({ id: l.other, date: scopeDate(rowsById.get(l.other)) }))
+    .filter((x, i, arr) => arr.findIndex((y) => y.id === x.id) === i);
+  // A. effect of an engine-proven duplicate cash-book entry: the cause first, then this exception's effect
+  const causeSt = ctx && ctx.causeId && ctx.causeId !== excId && linkedWs ? story(linkedWs, null, [], ctx.causeId, null) : null;
+  if (causeSt && causeSt.kind === 'duplicate' && comp != null) {
+    const d0 = (String(cr.scope || '').match(/\d{4}-\d{2}-\d{2}/) || [])[0];
+    const on = d0 ? 'On ' + day(d0) : 'On that day';
+    const amt = M(causeSt.amount);
+    let effect, flowMid, flowEnd;
+    if (/DIFFERENCE/.test(check) || rep === 0) {
+      const what = /C08|BANK/.test(check) || /BANK_LEDGER/.test(String((ws.summary || {}).root_cause || '')) ? 'the bank and the cash book differ' : 'the safeguarding reconciliation shows a difference';
+      effect = `${on}, ${what} by ${M(comp)}, but the firm's own reconciliation reported ${rep ? 'a difference of ' + M(rep) : 'no difference'}.`;
+      flowMid = { label: 'Engine found a difference', amount: M(comp) };
+      flowEnd = { label: 'Firm reported', amount: rep ? M(rep) : 'No difference', ref: 'its own reconciliation' };
+    } else {
+      const what = /RC2/.test(check) ? 'cash-book balance' : /C05/.test(check) ? 'safeguarding resource' : /C04/.test(check) ? 'safeguarding requirement' : 'figure';
+      effect = `${on}, the ${what} the engine recomputed from the cash book is ${S(comp)}, ${M(comp - rep)} more than the ${S(rep)} the firm reported.`;
+      flowMid = { label: 'Engine recomputed', amount: S(comp) };
+      flowEnd = { label: 'Firm reported', amount: S(rep) };
+    }
+    return { kind: 'effect', title: `${plainTitle(check || String((ws.summary || {}).root_cause || '').split('|')[0]).replace(/\.$/, '')}: ${amt}, caused by a duplicate cash-book entry`,
+      lines: [`The same ${amt} receipt was recorded twice in the cash book (${causeSt.ids.join(' and ')}). Because of this, the cash book is ${amt} higher than the bank.`, effect],
+      flow: [{ label: 'Duplicate entry', ref: causeSt.ids[0], amount: amt }, flowMid, flowEnd], gap: null,
+      cause: { id: ctx.causeId, why: 'the duplicate cash-book entry' }, alsoOn, linked: null };
+  }
   // 1. transaction recorded differently from the bank
   const tb = txnVsBank(ws);
   if (tb) {
@@ -393,7 +450,7 @@ function story(ws, linkedWs, links, excId) {
               `The firm's records say ${M(tb.firm)}. The bank says ${M(tb.bank)}.`,
               `So the firm's figure is ${M(tb.gap)} ${hl} than what the bank actually ${tb.out ? 'paid out' : 'received'}.`],
       flow: [{ label: "Firm's record", ref: tb.txnId, amount: M(tb.firm) }, { label: 'Bank', ref: tb.bankId, amount: M(tb.bank) }],
-      gap: { amount: M(tb.gap), note: 'difference' }, linked };
+      gap: { amount: M(tb.gap), note: 'difference' }, linked, alsoOn };
   }
   // 2. client balance does not roll forward
   if (check === 'CBAL-ROLLFWD' && comp != null && rep != null) {
@@ -409,7 +466,7 @@ function story(ws, linkedWs, links, excId) {
                 `The firm's records say ${M(ltb.firm)} ${ltb.out ? 'went out' : 'arrived'}. The bank says ${M(ltb.bank)}.`,
                 `Because the firm counted ${M(ltb.gap)} ${ltb.gap > 0 ? 'more' : 'less'} than the bank actually ${ltb.out ? 'paid out' : 'paid in'}, ${client}'s balance for ${day(date)} comes out ${M(diff)} different.`],
         flow: [{ label: "Firm's record", ref: ltb.txnId, amount: M(ltb.firm) }, { label: 'Bank', ref: ltb.bankId, amount: M(ltb.bank) }],
-        gap: { amount: M(ltb.gap), note: `shows up in ${client}'s balance` }, linked };
+        gap: { amount: M(ltb.gap), note: `shows up in ${client}'s balance` }, linked, alsoOn };
     }
     const prev = rows.find((x) => x.row.snapshot_id && x.row.client_id === client && x.row.recon_date < date);
     const n = rows.filter((x) => x.row.txn_id).length;
@@ -418,7 +475,7 @@ function story(ws, linkedWs, links, excId) {
               `That should give ${M(comp)}, but the firm recorded ${M(rep)} at 17:00.`,
               linked ? `The engine links this to ${linked.id}${linkedWs ? ': ' + (story(linkedWs, null, [], null) || { title: '' }).title.replace(/^./, (ch) => ch.toLowerCase()) : ''}.` : `The records do not show which figure is wrong.`],
       flow: [{ label: 'Engine expects', amount: M(comp) }, { label: 'Firm recorded', ref: client, amount: M(rep) }],
-      gap: { amount: M(diff), note: 'difference' }, linked };
+      gap: { amount: M(diff), note: 'difference' }, linked, alsoOn };
   }
   // 3. settlement batch does not add up
   if (check.startsWith('C11-')) {
@@ -434,14 +491,14 @@ function story(ws, linkedWs, links, excId) {
         lines: [head, `One line, ${line.record}, shows ${M(num(line.outlier_value))}. The transaction and the batch agree on ${M(num(line.agreed_value))}.`,
                 `That ${M(g)} gap is why the batch does not add up. The records do not show which figure is right.`],
         flow: [{ label: 'Settlement line', ref: line.record, amount: M(num(line.outlier_value)) }, { label: 'Transaction', amount: M(num(line.agreed_value)) }],
-        gap: { amount: M(g), note: 'difference' }, linked };
+        gap: { amount: M(g), note: 'difference' }, linked, alsoOn };
     }
     const missing = [...String(cr.note || '').matchAll(/(SL-[\w-]+) does not match transaction (TX-[\w-]+)/g)].map((x) => [x[1], x[2]]);
     if (missing.length) {
       return { title: `Settlement batch ${batch} does not add up`,
         lines: [head, `${missing.length === 1 ? 'One line refers' : missing.length + ' lines refer'} to ${missing.length === 1 ? 'a transaction that is' : 'transactions that are'} not in the firm's transaction export: ${missing.map((x) => x[0] + ' → ' + x[1]).join(', ')}.`,
                 'So the batch cannot be matched line by line. The records do not show why the transaction' + (missing.length === 1 ? ' is' : 's are') + ' missing.'],
-        flow: [], gap: null, linked };
+        flow: [], gap: null, linked, alsoOn };
     }
   }
   // 4a. timing difference stated by the engine's note
@@ -455,7 +512,7 @@ function story(ws, linkedWs, links, excId) {
               `The bank booked the same ${amt} on ${day(tm[5])}${days}.`,
               `So${d0 ? ' on ' + day(d0) : ''} the bank and the cash book differ by ${amt}. The engine treats this as a timing difference that still needs your confirmation.`],
       flow: [{ label: 'Cash book', ref: tm[1] + (d0 ? ' · ' + day(d0) : ''), amount: amt }, { label: 'Bank', ref: tm[2] + ' · ' + day(tm[5]), amount: amt }],
-      gap: { amount: amt, note: d0 ? 'open on ' + day(d0) : 'timing' }, linked };
+      gap: { amount: amt, note: d0 ? 'open on ' + day(d0) : 'timing' }, linked, alsoOn };
   }
   // 4. bank and cash book differ: timing (same amount, later bank date) or a plain difference
   const cash = rows.find((x) => /^LE-/.test(x.row.entry_id || x.row.ledger_entry_id || '')), bankE = rows.find((x) => x.row.bank_entry_id);
@@ -467,7 +524,7 @@ function story(ws, linkedWs, links, excId) {
         lines: [`The firm's cash book recorded ${amt} on ${day(cd)}.`, `The bank booked the same ${amt} on ${day(bd)}.`,
                 `So on ${day(cd)} the bank and the cash book differ by ${amt} until the bank entry arrives.`],
         flow: [{ label: 'Cash book', ref: (cash.row.entry_id || cash.row.ledger_entry_id) + ' · ' + day(cd), amount: amt }, { label: 'Bank', ref: bankE.row.bank_entry_id + ' · ' + day(bd), amount: amt }],
-        gap: { amount: amt, note: `open on ${day(cd)}` }, linked };
+        gap: { amount: amt, note: `open on ${day(cd)}` }, linked, alsoOn };
     }
   }
   // 5. the same cash-book entry twice
@@ -483,7 +540,7 @@ function story(ws, linkedWs, links, excId) {
                 bankE ? `The bank shows it only once (${bankE.row.bank_entry_id}).` : 'Only one of them is matched to the bank.',
                 `So the cash book is ${amt} higher than it should be.`],
         flow: [{ label: 'Cash book entry', ref: ids[0], amount: amt }, { label: 'Same entry again', ref: ids[1], amount: amt }],
-        gap: { amount: amt, note: 'counted twice' }, linked };
+        gap: { amount: amt, note: 'counted twice' }, linked, alsoOn };
     }
   }
   // 6. anything else: what the engine expected against what the firm reported
@@ -492,22 +549,56 @@ function story(ws, linkedWs, links, excId) {
   const lst = linkedWs ? story(linkedWs, null, [], null) : null;
   if (comp != null && rep != null && comp !== rep) {
     const d = Math.round((comp - rep) * 100) / 100;
-    const S = (v) => money(v, ccy);
     const cause = lst && lst.kind === 'duplicate' && Math.abs(Math.abs(d) - lst.amount) < 0.005
       ? `Because the same ${M(lst.amount)} was recorded twice in the cash book (${lst.ids.join(' and ')}), the figures ${where} are ${M(d)} apart.`
       : linked ? `The engine links this to ${linked.id}${lst ? ': ' + lst.title.charAt(0).toLowerCase() + lst.title.slice(1) : ''}.` : 'The records do not show why.';
-    return { kind: 'generic', title: `${plainTitle(check).replace(/\.$/, '')} — ${M(d)} apart`,
-      lines: [`${where ? where.charAt(0).toUpperCase() + where.slice(1) + ', the' : 'The'} engine's figure is ${S(comp)} and the firm's figure is ${S(rep)}.`, cause],
-      flow: [{ label: "Engine's figure", amount: S(comp) }, { label: "Firm's figure", amount: S(rep) }], gap: { amount: M(d), note: 'apart' }, linked };
+    const isDiff = /DIFFERENCE/.test(check);
+    return { kind: 'generic', title: `${plainTitle(check).replace(/\.$/, '')} — ${M(d)}`,
+      lines: [isDiff ? `${where ? where.charAt(0).toUpperCase() + where.slice(1) + ', the' : 'The'} engine found a difference of ${M(comp)}; the firm's own reconciliation reported ${rep ? 'a difference of ' + M(rep) : 'no difference'}.`
+                     : `${where ? where.charAt(0).toUpperCase() + where.slice(1) + ', the' : 'The'} engine's figure is ${S(comp)} and the firm's figure is ${S(rep)}.`, cause],
+      flow: isDiff ? [{ label: 'Engine found a difference', amount: M(comp) }, { label: 'Firm reported', amount: rep ? M(rep) : 'No difference' }]
+                   : [{ label: "Engine's figure", amount: S(comp) }, { label: "Firm's figure", amount: S(rep) }], gap: isDiff ? null : { amount: M(d), note: 'apart' }, linked, alsoOn };
   }
   if (rep != null) {
     return { kind: 'generic', title: `${plainTitle(check)} (${M(rep)})`,
       lines: [`${where ? where.charAt(0).toUpperCase() + where.slice(1) + ', the' : 'The'} engine found a difference of ${M(rep)}.`,
               /same-day resolution/.test(cr.note || '') ? 'A difference like this must be resolved the same day (CASS 15.8.50R).' : cr.note ? `Engine note: ${cr.note}.` : '',
               linked ? `The engine links this to ${linked.id}${lst ? ': ' + lst.title.charAt(0).toLowerCase() + lst.title.slice(1) : ''}.` : 'The records do not show why.'].filter(Boolean),
-      flow: [], gap: { amount: M(rep), note: 'difference' }, linked };
+      flow: [], gap: { amount: M(rep), note: 'difference' }, linked, alsoOn };
   }
   return null;
+}
+
+/* C + D: the linked group this exception belongs to. On an effect: "1 of N effects of one cause" with the cause; on the
+   cause: "causes N other exceptions". Both list the group and offer "Accept all" for every finding still pending (each
+   finding still gets its own recorded decision, with the same optional note). */
+function GroupBanner({ grp, causeId, causeTitle, excId, rows, go, runId, onAcceptAll }) {
+  const [open, setOpen] = React.useState(false);
+  if (!grp || grp.members.length < 2) return null;
+  const byId = new Map((rows || []).map((r) => [r.exception_id, r]));
+  const others = grp.members.filter((id) => id !== excId);
+  const pending = grp.members.filter((id) => { const r = byId.get(id) || {}; return r.investigation_id && r.review_state === 'PENDING_REVIEW'; });
+  const isCause = causeId === excId;
+  const effects = causeId ? grp.members.filter((id) => id !== causeId) : others;
+  return <section className="rfx-group" aria-label="Linked exceptions">
+    <div className="rfx-group__main">
+      <div>
+        <div className="rfx-group__title">{isCause ? `This entry causes ${effects.length} other exception${effects.length === 1 ? '' : 's'}`
+          : causeId ? `1 of ${effects.length} effects of one cause${causeTitle ? ': ' + causeTitle.charAt(0).toLowerCase() + causeTitle.slice(1) : ''}`
+          : `Linked with ${others.length} other exception${others.length === 1 ? '' : 's'}`}</div>
+        <div className="rfx-group__sub">The engine links these exceptions through the same records. {pending.length ? pending.length + ' AI finding' + (pending.length === 1 ? '' : 's') + ' in this group still need your decision.' : 'Every AI finding in this group has a decision.'}</div>
+      </div>
+      <div className="rf-row rf-row--wrap" style={{ gap: 8 }}>
+        {causeId && !isCause && <Button size="sm" variant="secondary" iconRight="arrowRight" onClick={() => go(runId, causeId)}>View the cause</Button>}
+        <Button size="sm" variant="secondary" onClick={() => setOpen(!open)}>{open ? 'Hide the group' : 'See all ' + grp.members.length}</Button>
+        {pending.length > 1 && <Button size="sm" variant="primary" icon="check" onClick={() => onAcceptAll(pending)}>Accept all {pending.length} findings</Button>}
+      </div>
+    </div>
+    {open && <div className="rfx-group__list">{grp.members.map((id) => { const r = byId.get(id) || {};
+      return <button key={id} type="button" className={cx('rfx-group__item', id === excId && 'is-current', id === causeId && 'is-cause')} onClick={() => go(runId, id)}>
+        <span className="rf-mono">{id}</span><span>{id === causeId ? 'Cause · ' : ''}{plainTitle(String(r.root_cause || '').split('|')[0])}</span>
+        <span className="rfe-small rf-muted">{scopeDate(r) ? day(scopeDate(r)) : ''}{r.analyst_decision ? ' · ' + (r.analyst_decision === 'ACCEPT' ? 'accepted' : 'rejected') : r.review_state === 'PENDING_REVIEW' ? ' · awaiting decision' : ''}</span></button>; })}</div>}
+  </section>;
 }
 
 function Story({ st, go, runId }) {
@@ -520,7 +611,9 @@ function Story({ st, go, runId }) {
       {st.gap && <><span className="rfx-flow__arrow" aria-hidden="true">→</span>
         <div className="rfx-flow__box is-gap"><div className="rfx-flow__label">Gap</div><div className="rfx-flow__amt">{st.gap.amount}</div><div className="rfx-flow__ref">{st.gap.note}</div></div></>}
     </div>}
-    {st.linked && <div className="rfx-linked">This is linked to <Button size="sm" variant="link" iconRight="arrowRight" onClick={() => go(runId, st.linked.id)}>{st.linked.id}</Button> ({st.linked.why}).</div>}
+    {st.cause && <div className="rfx-linked"><b>Caused by</b> <Button size="sm" variant="link" iconRight="arrowRight" onClick={() => go(runId, st.cause.id)}>{st.cause.id}</Button> ({st.cause.why}).</div>}
+    {st.linked && !st.cause && <div className="rfx-linked">This is linked to <Button size="sm" variant="link" iconRight="arrowRight" onClick={() => go(runId, st.linked.id)}>{st.linked.id}</Button> ({st.linked.why}).</div>}
+    {(st.alsoOn || []).length > 0 && <div className="rfx-linked">The same difference also appears on {st.alsoOn.map((x, i) => <React.Fragment key={x.id}>{i > 0 ? ', ' : ''}<Button size="sm" variant="link" onClick={() => go(runId, x.id)}>{x.date ? day(x.date) + ' (' + x.id + ')' : x.id}</Button></React.Fragment>)}.</div>}
   </section>;
 }
 
@@ -640,9 +733,33 @@ export default function ExceptionWorkspace({ c, app, run, runId, excId, go, nav 
   const ev = ws ? evidenceRows(ws, app) : null;
   const calc = ws ? rollForwardSteps(ws) : null;
   const links = ws ? engineLinks(ws, excId) : [];
-  const linkedId = (links.find((l) => l.other) || {}).other || null;
+  const grp = ws ? groupOf(ws) : null;
+  const causeId = grp ? causeOf(grp.members, (cl && cl.exceptions) || [], grp.links) : null;
+  const linkedId = (causeId && causeId !== excId ? causeId : null) || (links.find((l) => l.other) || {}).other || null;
   const lq = useQuery(forRun && linkedId ? 'cexc:' + ref + ':' + linkedId : null, (svc) => svc.getClosureException(ref, linkedId));
-  const st = ws ? story(ws, lq.data || null, links, excId) : null;
+  const st = ws ? story(ws, lq.data || null, links, excId, { rows: (cl && cl.exceptions) || [], causeId }) : null;
+  const causeTitle = causeId && causeId !== excId && lq.data ? ((story(lq.data, null, [], causeId, null) || {}).title || null) : (causeId === excId && st ? st.title : null);
+  const [bulk, setBulk] = React.useState(null);      // { ids, note, done, busy }
+  const acceptAll = async () => {
+    const ids = bulk.ids;
+    setBulk(Object.assign({}, bulk, { busy: true, done: 0, error: null }));
+    let done = 0;
+    for (const id of ids) {
+      const r0 = ((cl && cl.exceptions) || []).find((x) => x.exception_id === id) || {};
+      const ok = await m.run(async (svc) => {
+        const v = await svc.getClosure(ref);
+        const body = { decision: 'ACCEPT', expected_revision: v.revision };
+        if (bulk.note && bulk.note.trim()) body.explanation = bulk.note.trim();
+        return svc.decideInvestigation(ref, r0.investigation_id, body);
+      }, { inline: true });
+      if (!ok) { setBulk((b) => Object.assign({}, b, { busy: false, error: 'Stopped at ' + id + ': ' + (m.error || 'the decision was not recorded') })); return; }
+      done += 1;
+      setBulk((b) => Object.assign({}, b, { done }));
+    }
+    setBulk(null);
+    clq.reload && clq.reload();
+    wsq.reload && wsq.reload();
+  };
 
   return <div className="rfe-ws">
     <div className="rfe-ws__nav">
@@ -666,6 +783,7 @@ export default function ExceptionWorkspace({ c, app, run, runId, excId, go, nav 
     {(forRun && !ws && !wsq.error) || (useEngine && !engq.data && !engq.error) ? <div className="rf-panel" style={{ padding: 16 }}><span className="rf-skel" style={{ width: '80%' }} /><span className="rf-skel" style={{ width: '60%', marginTop: 10 }} /></div>
       : ws ? <div className="rfx rfx--wide">
         <div className="rfx-col">
+          <GroupBanner grp={grp} causeId={causeId} causeTitle={causeTitle} excId={excId} rows={(cl && cl.exceptions) || []} go={go} runId={runId} onAcceptAll={(ids) => { m.reset(); setBulk({ ids, note: '', done: 0, busy: false }); }} />
           {st && <Story st={st} go={go} runId={runId} />}
           <section className="rfx-card" aria-label="What the AI thinks">
             <div className="rfx-label">What the AI thinks<span className="rfe-badge rfe-badge--ai"><Icon name="sparkNone" size={12} />{['AI reading', ws.investigation && ws.investigation.model, 'an interpretation, not a fact'].filter(Boolean).join(' · ')}</span></div>
@@ -694,6 +812,14 @@ export default function ExceptionWorkspace({ c, app, run, runId, excId, go, nav 
         {useEngine && engq.error && <Notice tone="danger" title="Exception could not be loaded">{engq.error.message}</Notice>}
       </div>}
     {ws && ws.note && <div className="rf-help">{ws.note}</div>}
+    {bulk && <div className="rfd-layer"><Dialog eyebrow={ref + ' · linked group'} title={'Accept all ' + bulk.ids.length + ' AI findings?'} error={bulk.error} onClose={bulk.busy ? undefined : () => setBulk(null)}
+      foot={<><Button onClick={() => setBulk(null)} disabled={bulk.busy}>Cancel</Button><Button variant="primary" loading={bulk.busy} onClick={acceptAll}>{bulk.busy ? 'Recording ' + bulk.done + ' of ' + bulk.ids.length + '…' : 'Accept all ' + bulk.ids.length}</Button></>}>
+      <div className="rf-stack rf-stack--3">
+        <div className="rf-help">Records an ACCEPT for each finding below, one by one, with the same note. Each decision is recorded separately in the audit trail and the final pack. The engine exception statuses do not change.</div>
+        <div className="rf-mono rfe-small">{bulk.ids.join(' · ')}</div>
+        <label className="rfe-explain"><span>Note (optional, applied to every finding)</span>
+          <textarea value={bulk.note} maxLength={2000} rows={3} disabled={bulk.busy} onChange={(ev) => setBulk(Object.assign({}, bulk, { note: ev.target.value }))} placeholder="For example: all caused by the duplicate cash-book entry LE-GBP-0928-0007" /></label>
+      </div></Dialog></div>}
     {dlg && <div className="rfd-layer"><Dialog eyebrow={excId + ' · ' + ref} error={m.error} onClose={m.busy ? undefined : () => setDlg(null)}
       title={dlg.kind === 'retry' ? 'Run the AI investigation again?' : dlg.kind === 'ACCEPT' ? 'Accept the AI finding?' : 'Reject the AI finding?'}
       foot={<><Button onClick={() => setDlg(null)} disabled={m.busy}>Cancel</Button><Button variant={dlg.kind === 'REJECT' ? 'danger' : 'primary'} loading={m.busy} onClick={confirm}>{dlg.kind === 'retry' ? 'Start investigation' : dlg.kind === 'ACCEPT' ? 'Accept AI finding' : 'Reject AI finding'}</Button></>}>
