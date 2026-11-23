@@ -49,13 +49,25 @@ def make_investigator(req):
 
         def structured_request(self, instructions, user_content, text_format):
             data = _json.loads(user_content.split("<audit_pack_input>\n", 1)[1].rsplit("\n</audit_pack_input>", 1)[0])
+            extra = {}
+            if "allowed_source_refs" in data:   # engine summary input 1.1 (schema 1.2): group assessments are required
+                units = [(g["group_id"], g["exception_ids"], g["source_evidence_ids"]) for g in data["investigation_groups"]]
+                units += [(c["candidate_id"], c["exception_ids"], c["source_evidence_ids"]) for c in data["candidate_relationships"]]
+                extra["group_assessments"] = [{
+                    "group_id": u, "exception_ids": [i.strip() for i in e.split(";") if i.strip()], "related_exception_ids": [],
+                    "relationship_verdict": "UNVERIFIED", "confidence": "LOW", "supporting_evidence": list(s[:1]),
+                    "contradicting_evidence": [],
+                    "common_cause_hypothesis": "Test double: a common cause may exist but is not established.",
+                    "missing_evidence": ["Test double: records that would link these exceptions."],
+                    "analyst_action": "Test double: review the linked records.",
+                    "rationale": "Test double output; it is not AI analysis."} for u, e, s in units]
             out = text_format(
                 overall_position="The deterministic engine reported the case status recorded in the audit pack.",
                 summary_text="Test double closing summary: every exception listed remains unresolved and needs review.",
                 key_observations=[], unverified_hypotheses=[], evidence_gaps=[], suggested_next_steps=[],
                 unresolved_items=[{"exception_id": x["exception_id"], "text": "Remains open; human review is needed."}
                                   for x in data["exceptions"]],
-                limitations=["Test double output for automated tests; it is not AI analysis."])
+                limitations=["Test double output for automated tests; it is not AI analysis."], **extra)
             CALLS.append({"model": self.model, "request_id": "test-double", "usage": {"input_tokens": 10,
                           "cached_input_tokens": 2, "output_tokens": 5, "reasoning_tokens": 1, "total_tokens": 15}})
             return out, {"attempts": 1, "usage": {}}
