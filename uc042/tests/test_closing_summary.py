@@ -123,7 +123,7 @@ class GenerationAndFailures(SummaryCase):
         self.assertEqual((s.status, s.output, s.snapshot_sha256, s.source_fingerprint),
                          ("GENERATED", out, self.snap.sha256, summary_fingerprint(self.input)))
         self.assertEqual((s.model_metadata["provider"], s.model_metadata["model"], s.model_metadata["simulated"]), ("openai", "gpt-6-luna", False))
-        self.assertEqual(s.model_metadata["prompt_version"], "uc042-closing-summary-prompt/1.5")   # 1.5: relationship reasoning
+        self.assertEqual(s.model_metadata["prompt_version"], "uc042-closing-summary-prompt/1.6")   # 1.6: relationship register
         kw = inv._client.responses.with_raw_response.parse.call_args.kwargs
         self.assertIs(kw["text_format"], ClosingSummaryOutput)
         self.assertEqual((kw["store"], kw["instructions"]), (False, SUMMARY_INSTRUCTIONS))

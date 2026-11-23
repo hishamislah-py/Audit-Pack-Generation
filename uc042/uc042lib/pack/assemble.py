@@ -15,6 +15,7 @@ from ..period import resolve
 from ..structure import read_csv
 from ..validate import CONTROL_OF, Validator, case_status
 from . import config, model, registry
+from .relationships import build_relationship_register
 
 PERIOD_FIELD = {fid: (rule.get("in_period") or rule.get("open_during_period", {}).get("start") or
                       rule.get("not_before_event") or [None])[0] for fid, rule in schema.PERIOD_RULES.items()}
@@ -266,6 +267,8 @@ def assemble(case_dir, v=None, period=None, rules=None):
         e = dict(c)
         e["evidence_ids"] = resolve(c["evidence"], c["candidate_id"])
         cands.append(e)
+    # TMS relationship register: only for enriched runs (default packs are byte-identical); see pack/relationships.py
+    rel_register = build_relationship_register(v, resolve)
 
     # --- missing evidence ----------------------------------------------------------------------------------------
     insuf = OrderedDict()
@@ -347,7 +350,8 @@ def assemble(case_dir, v=None, period=None, rules=None):
                                          "statement": "No investigation groups were formed." if not groups else config.GROUP_STATEMENT,
                                          "candidate_relationships": cands,
                                          "candidate_statement": "No candidate relationships were recorded." if not cands else
-                                         "Candidate relationships are UNVERIFIED and NOT EVIDENCE-BACKED; they are not investigation groups."},
+                                         "Candidate relationships are UNVERIFIED and NOT EVIDENCE-BACKED; they are not investigation groups.",
+                                         **({"relationship_register": rel_register} if rel_register is not None else {})},
         "missing_evidence_register": {"items": missing, "optional_not_provided": optional_missing,
                                       "statement": "No required evidence is missing." if not missing else
                                       "Missing evidence is shown as 'not available'; it is never treated as zero."},

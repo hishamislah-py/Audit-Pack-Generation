@@ -396,7 +396,7 @@ class LiveTC06SummaryRefusal(unittest.TestCase):
     def test_prompt_1_4_states_the_citation_contract(self):
         from uc042lib.final_pack.model import SUMMARY_PROMPT_VERSION
         from uc042lib.final_pack.summary import SUMMARY_INSTRUCTIONS
-        self.assertEqual(SUMMARY_PROMPT_VERSION, "uc042-closing-summary-prompt/1.5")
+        self.assertEqual(SUMMARY_PROMPT_VERSION, "uc042-closing-summary-prompt/1.6")
         flat = " ".join(SUMMARY_INSTRUCTIONS.split())
         self.assertIn("allowed_refs (exception, investigation, finding, hypothesis, gap, conflict, next-step, group, candidate "
                       "and MISS- IDs) is the ONLY list for every source_refs", flat)

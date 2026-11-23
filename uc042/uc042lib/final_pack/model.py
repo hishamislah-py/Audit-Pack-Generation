@@ -56,14 +56,19 @@ SUMMARY_SCHEMA_VERSION = "uc042-closing-summary/1.2"
 # 1.5 (23 Nov 2026): mandatory relationship-reasoning procedure (origin, connecting records, shared keys, chronology,
 # contradictions, coincidence, decision); matching amounts/dates/labels never sufficient; lineage only when the linked record
 # is itself out of line. Validation unchanged.
-SUMMARY_PROMPT_VERSION = "uc042-closing-summary-prompt/1.5"
+# 1.6 (23 Nov 2026): relationship_register interpretation (CONFIRMED / CANDIDATE / REJECTED relationships; CC- common causes
+# are assessment units, at most UNVERIFIED). Validation adds: CC- units; no EVIDENCE_BACKED over a register-REJECTED pair.
+SUMMARY_PROMPT_VERSION = "uc042-closing-summary-prompt/1.6"
 # 1.1 (23 Nov 2026): each exception, investigation group, candidate relationship, accepted confirmed finding and conflict
 # also carries its SOURCE evidence record IDs (only IDs of the pack's evidence register), group links / candidate detail
 # text, and allowed_source_refs (their union): the only IDs a group assessment may cite as supporting or contradicting
 # evidence. Engine control-result IDs are never source records.
 # 1.2 (23 Nov 2026): each exception carries its engine root_cause; shared_record_links lists exception pairs whose evidence
 # cites the same source record (deterministic facts, no conclusions).
-SUMMARY_INPUT_VERSION = "uc042-closing-summary-input/1.2"
+# 1.3 (23 Nov 2026): relationship_register (engine relationship discovery: relationships with status, basis, amounts,
+# supporting / contradicting source records; common causes with confirmed facts, unverified inferences, missing evidence),
+# present only for enriched engine runs.
+SUMMARY_INPUT_VERSION = "uc042-closing-summary-input/1.3"
 RELATIONSHIP_VERDICTS = ("EVIDENCE_BACKED", "UNVERIFIED", "COINCIDENCE_REJECTED")
 ASSESSMENT_CONFIDENCE = ("LOW", "MEDIUM", "HIGH")
 SUPPORTED_PACK_SCHEMAS = {"uc042-pack/0.1"}
