@@ -2,6 +2,7 @@
    A port of the design-system helpers (components/bundle.js) with the same markup and class names,
    styled by styles/ringfence.css and styles/tokens.css. */
 import React from 'react';
+import { ThemeSwitch } from '../theme.jsx';
 import { ICONS, GLYPHS, MARK, STATES, TAGS } from './design.js';
 
 export const cx = (...a) => a.filter(Boolean).join(' ');
@@ -111,6 +112,7 @@ export function AppShell({ analyst, active, activeCase, onNav, menuOpen, onMenu,
         ? <a href={'#/cases/' + activeCase.ref + '/overview'} onClick={go('cases/' + activeCase.ref + '/overview')} className="rf-activecase" title={'In Progress: ' + activeCase.ref + ' · ' + activeCase.customer + ' · ' + activeCase.period + '. Only one case can be In Progress at a time.'}><Glyph name="active" size={10} /><span className="rf-activecase__label">In Progress</span><span className="rf-mono">{activeCase.ref}</span></a>
         : <span className="rf-activecase is-empty" title="Only one case can be In Progress at a time"><Glyph name="pending" size={10} /><span>No case In Progress</span></span>}
       <button type="button" className="rf-gsearch" role="search" onClick={() => onNav('queue?focus=search')}><Icon name="search" /><span>Search cases, customers, files</span><span className="rf-kbd">/</span></button>
+      <ThemeSwitch />
       <div className="rf-user"><button type="button" className="rf-userbtn" aria-haspopup="menu" aria-expanded={!!menuOpen} onClick={onMenu}><span className="rf-avatar">{analyst.initials}</span><span>{analyst.name}</span><Icon name="chevronDown" size={14} /></button>
         {menuOpen && <div className="rf-menu" role="menu" aria-label="Analyst profile"><div className="rf-menu__head"><span className="rf-avatar rf-avatar--lg">{analyst.initials}</span><div><div className="rf-strong">{analyst.name}</div><div className="rf-muted" style={{ fontSize: 12 }}>{analyst.role}</div><div className="rf-mono rf-muted" style={{ fontSize: 12, marginTop: 2 }}>{analyst.email}</div></div></div>
           <button type="button" className="rf-menu__item" role="menuitem" onClick={onSignOut}><Icon name="logout" />Sign out</button></div>}
@@ -140,7 +142,7 @@ export function CaseBanner({ kind, title, children, actions }) {
 export function CaseHeader({ c, onNav, tab, onTab, state, actions, steps, banner }) {
   const go = (to) => (e) => { e.preventDefault(); onNav(to); };
   return <><header className="rf-casehead">
-    <div className="rf-breadcrumb"><a href="#/queue" onClick={go('queue')}>Work queue</a><Icon name="chevronRight" size={12} /><a href={'#/customers/' + c.customerId} onClick={go('customers/' + c.customerId)}>{c.customer}</a><Icon name="chevronRight" size={12} /><span className="rf-mono">{c.ref}</span></div>
+    <div className="rf-breadcrumb"><a href="#/queue" onClick={go('queue')}>Dashboard</a><Icon name="chevronRight" size={12} /><a href={'#/customers/' + c.customerId} onClick={go('customers/' + c.customerId)}>{c.customer}</a><Icon name="chevronRight" size={12} /><span className="rf-mono">{c.ref}</span></div>
     <div className="rf-casehead__top"><div style={{ minWidth: 0 }}>
       <h1 className="rf-casehead__title">{c.customer} — {c.period}</h1>
       <div className="rf-casehead__meta"><span>Case <Ref id={c.ref} copy /></span><span>Period <b>{c.periodRange}</b></span><span>Submission <span className="rf-mono rf-secondary">{c.submission}</span></span><span>Received <b>{c.receivedLabel}</b></span></div>

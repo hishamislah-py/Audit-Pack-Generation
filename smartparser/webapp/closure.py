@@ -152,11 +152,13 @@ def ai_closing_summary() -> bool:
 
 
 def ai_parallel() -> int:
-    """How many AI operations may run at once: RINGFENCE_AI_PARALLEL (1..8), default 3."""
+    """How many AI operations may run at once: RINGFENCE_AI_PARALLEL (1..64). Default 64, i.e. every exception of a case is
+    investigated at the same time (owner, 24 Nov 2026: "if there are 10 exceptions, all 10 should be running"); set a
+    lower value only if the AI provider's rate limit requires it."""
     try:
-        return max(1, min(8, int(os.environ.get("RINGFENCE_AI_PARALLEL", "3"))))
+        return max(1, min(64, int(os.environ.get("RINGFENCE_AI_PARALLEL", "64"))))
     except ValueError:
-        return 3
+        return 64
 
 
 def _append(p: Path, rec: dict) -> None:

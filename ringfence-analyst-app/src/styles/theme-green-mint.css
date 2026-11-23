@@ -50,8 +50,7 @@
   --radius-md: 6px;
   --radius-lg: 8px;
   --radius-xl: 12px;
-  --font-sans: Inter, "Inter var", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  --font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  /* fonts and control sizes stay Ringfence's own (owner, 24 Nov 2026: sizes must suit this app); colours follow the kit */
   /* kit tokens used directly by the Ringfence-specific pieces below */
   --gm-shell: #0B3D2E; --gm-shell-deep: #052D22; --gm-mint: #C9F0DB; --gm-teal: #2DD4BF; --gm-fill: #0F7F50;
   --gm-card-top: 3px solid #0B3D2E; --gm-card-shadow: 0 1px 2px rgba(9, 35, 28, 0.06), 0 4px 12px rgba(9, 35, 28, 0.04);
@@ -74,7 +73,8 @@ body { font-family: var(--font-sans); color: var(--ink); background: var(--canva
 .rf-btn--primary { background: var(--gm-fill); border-color: var(--gm-fill); color: #FFFFFF; }
 .rf-btn--primary:hover { background: #0B6E45; border-color: #0B6E45; }
 .rf-btn--primary:active { background: #0B3D2E; }
-.rf-btn--secondary { background: #C9F0DB; border-color: transparent; color: var(--ink); }
+.rf-btn--secondary { background: var(--surface); border-color: var(--line); color: var(--ink); }
+.rf-btn--secondary:hover { background: var(--surface-hover); border-color: var(--line-strong); }
 
 /* Links */
 a { color: #0B6E45; }
@@ -104,3 +104,75 @@ a { color: #0B6E45; }
 .rf-signin__fstep { color: #9FBDB1; }
 .rfe-headline { border-top: 3px solid var(--gm-shell); }
 .rfe-headline--bare { border-top: 0; }
+
+/* ===================================================================== DARK (kit "Green & Mint" dark values) */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #07160F;
+  --surface: #0B2119;
+  --surface-muted: #0F2A20;
+  --surface-sunken: #04100B;
+  --surface-hover: rgba(45, 212, 191, 0.06);
+  --surface-selected: rgba(45, 212, 191, 0.14);
+  --surface-inverse: #082A20;
+  --surface-inverse-raised: #041A13;
+  --line-inverse: rgba(201, 240, 219, 0.08);
+  --on-inverse: #F2F5F4;
+  --on-inverse-muted: #B4BDB9;
+  --line-subtle: #17362B;
+  --line: #1F4336;
+  --line-strong: #4D7A69;
+  --ink: #FFFFFF;
+  --ink-secondary: #D2D8D5;
+  --ink-muted: #AEB6B2;
+  --ink-disabled: #9AA39F;
+  --brand-50: rgba(45, 212, 191, 0.08);
+  --brand-100: rgba(45, 212, 191, 0.14);
+  --brand-200: rgba(45, 212, 191, 0.30);
+  --brand-500: #2DD4BF;
+  --brand-600: #2DD4BF;
+  --brand-700: #2DD4BF;
+  --brand-800: #C9F0DB;
+  --on-brand: #FFFFFF;
+  --focus-ring: #2DD4BF;
+  --success-bg: rgba(95, 211, 154, 0.12);  --success-line: rgba(95, 211, 154, 0.30);  --success-fg: #FFFFFF;  --success-mark: #5FD39A;
+  --attention-bg: rgba(242, 178, 92, 0.12); --attention-line: rgba(242, 178, 92, 0.30); --attention-fg: #F2B25C; --attention-mark: #D98A2B;
+  --danger-bg: rgba(242, 139, 130, 0.12);  --danger-line: rgba(242, 139, 130, 0.30);  --danger-fg: #F28B82;  --danger-mark: #F28B82;
+  --neutral-bg: rgba(201, 240, 219, 0.06); --neutral-line: #1F4336; --neutral-fg: #D2D8D5; --neutral-mark: #9FBDB1;
+  --sealed-bg: #041A13;
+  --sealed-fg: #FFFFFF;
+  --scrim: rgba(0, 0, 0, 0.55);
+  --shadow-popover: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-overlay: 0 20px 48px rgba(0, 0, 0, 0.45);
+  --shadow-drawer: -12px 0 32px rgba(0, 0, 0, 0.40);
+  --gm-shell: #082A20; --gm-shell-deep: #041A13;
+  --gm-card-top: 1px solid #1F4336; --gm-card-shadow: none;
+  --gm-table-head: #0F2A20;
+}
+/* Dark mode is one weight step bolder for readability (kit section 4) */
+[data-theme="dark"] body { font-weight: 500; }
+[data-theme="dark"] a { color: #FFFFFF; }
+[data-theme="dark"] a:hover { text-decoration: underline; }
+[data-theme="dark"] .rf-btn--secondary { background: transparent; border-color: #2A5546; color: #FFFFFF; }
+[data-theme="dark"] .rf-table tbody tr:hover td { background: rgba(45, 212, 191, 0.06); }
+[data-theme="dark"] .rf-table tr[aria-selected="true"] td { background: rgba(45, 212, 191, 0.14); }
+[data-theme="dark"] .rf-input, [data-theme="dark"] input, [data-theme="dark"] select, [data-theme="dark"] textarea { background: #04100B; color: #FFFFFF; border-color: #4D7A69; }
+[data-theme="dark"] .rfx-flow__box.is-gap, [data-theme="dark"] .rfx-calc tr.is-diff td { background: rgba(242, 178, 92, 0.12); }
+[data-theme="dark"] .rf-signin { background: #07160F; }
+[data-theme="dark"] .rf-signin--split .rf-signin__side { background: #07160F; }
+[data-theme="dark"] .rf-signin__card { background: #0B2119; border-color: #1F4336; border-top-color: #2DD4BF; box-shadow: none; }
+[data-theme="dark"] .rf-signin__brand { color: #2DD4BF; }
+[data-theme="dark"] .rf-signin__hero { background: radial-gradient(1100px 600px at 10% 0%, rgba(45, 212, 191, 0.12) 0%, rgba(45, 212, 191, 0) 60%), linear-gradient(160deg, #082A20 0%, #061F17 55%, #041A13 100%); }
+[data-theme="dark"] .rfe-frame { background: #FFFFFF; }   /* the PDF / HTML preview stays a white document */
+
+/* Theme switch (kit: Light / Dark / System) */
+.theme-switch { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.theme-switch button { height: 28px; padding: 0 10px; border: 0; border-radius: 6px; background: transparent; color: var(--ink-secondary); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.theme-switch button[aria-pressed="true"] { background: var(--surface-selected); color: var(--ink); box-shadow: inset 0 0 0 1px var(--brand-500); }
+.rf-topbar .theme-switch { border-color: rgba(201, 240, 219, 0.18); background: transparent; }
+.rf-topbar .theme-switch button { color: #C9F0DB; }
+.rf-topbar .theme-switch button[aria-pressed="true"] { background: rgba(201, 240, 219, 0.12); color: #FFFFFF; box-shadow: inset 0 0 0 1px #2DD4BF; }
+.rf-signin__theme { margin-top: 4px; }
+
+/* Button sizes: Ringfence's compact controls everywhere (no oversized call-to-action buttons) */
+.rfg-act .rf-btn { padding: 0 var(--space-4); font-size: inherit; }

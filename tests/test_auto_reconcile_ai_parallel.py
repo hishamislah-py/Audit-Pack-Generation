@@ -107,7 +107,7 @@ def test_no_automatic_step_while_something_needs_the_analyst(tmp_path, monkeypat
     assert not events(ctx, "ANALYST_ACTIVATION_REQUESTED", "ANALYST_RECONCILIATION_REQUESTED")
 
 
-@pytest.mark.parametrize("value,expected", [(None, 3), ("1", 1), ("5", 5), ("0", 1), ("99", 8), ("x", 3)])
+@pytest.mark.parametrize("value,expected", [(None, 64), ("1", 1), ("5", 5), ("0", 1), ("99", 64), ("x", 64)])
 def test_ai_parallel_setting(monkeypatch, value, expected):
     if value is None:
         monkeypatch.delenv("RINGFENCE_AI_PARALLEL", raising=False)

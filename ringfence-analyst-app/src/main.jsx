@@ -2,6 +2,9 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles/index.css';
+import { initTheme } from './theme.jsx';
+
+initTheme();   // Light / Dark / System, before the first render
 import App from './app/App.jsx';
 import { createStore } from './app/store.js';
 import { createDataService } from './services/index.js';

@@ -153,7 +153,7 @@ function Investigation({ ws, row, cl, ai, openFile, onRetry, hideHeadline = fals
     <div className="rf-row rf-row--wrap" style={{ gap: 8 }}><AiState state={state} />{inv && inv.investigation_id && <span className="rf-mono rf-muted rfe-small">{inv.investigation_id}</span>}
       {inv && inv.validation && <span className="rf-row" style={{ gap: 4 }}><span className="rfe-small rf-muted">Validation</span><Pill state={inv.validation.status} /></span>}</div>
     {state === 'UNAVAILABLE' && <Notice tone="attention" compact title="AI is not available on this server">{(cl && cl.ai && cl.ai.problem) || (ai && ai.problem) || 'No AI provider is configured.'} Nothing is simulated.</Notice>}
-    {(state === 'QUEUED' || state === 'RUNNING') && <Notice tone="info" compact title={state === 'QUEUED' ? 'Queued' : 'Running'}>The investigation runs on the server (up to three at a time). This page refreshes while it runs.</Notice>}
+    {(state === 'QUEUED' || state === 'RUNNING') && <Notice tone="info" compact title={state === 'QUEUED' ? 'Queued' : 'Running'}>Every exception is investigated at the same time on the server. This page refreshes while it runs.</Notice>}
     {(state === 'NOT_PUBLISHED' || state === 'FAILED') && lastWhy && <Notice tone={state === 'FAILED' ? 'danger' : 'attention'} compact title={state === 'FAILED' ? 'Investigation failed' : 'Not published'}>{lastWhy}</Notice>}
     {inv && published && <>
       {!hideHeadline && <Headline text={inv.conclusion ? itemText(inv.conclusion) : ''} sufficiency={inv.sufficiency ? itemText(inv.sufficiency) : null} />}

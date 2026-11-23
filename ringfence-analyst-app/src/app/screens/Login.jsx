@@ -5,6 +5,7 @@
 import React from 'react';
 import { Button, Notice, Mark, Icon, Enum } from '../../ui/index.jsx';
 import { useAppState } from '../hooks.js';
+import { ThemeSwitch } from '../../theme.jsx';
 import '../format.js';
 
 
@@ -96,6 +97,7 @@ function LoginFrame({ children }) {
         {children}
       </div>
       <div className="rf-signin__foot">Authorised users only · activity is recorded</div>
+      <ThemeSwitch className="rf-signin__theme" />
     </section>
   </div>;
 }
