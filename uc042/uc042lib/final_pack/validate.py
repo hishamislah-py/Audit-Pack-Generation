@@ -467,31 +467,20 @@ def rejected_text_diagnostics(final, snapshot, include_attributed=False):
 
 
 def _relationship_checks(final, pack, summary, review):
-    """Evidence-bearing relationships (R10): the engine's relationship register is copied verbatim (statuses, proofs,
-    citations) and the per-relationship view keeps the engine's status and proof; an analyst explanation only refers to a
-    relationship the AI CHALLENGED. Nothing here applies to a pack without a register (absent sections are required)."""
-    from .assemble import _relationship_assessments
+    """Evidence-bearing relationships: the engine's relationship register (statuses, proofs, citations) is copied verbatim.
+    Nothing applies to a pack without a register (the section must then be absent). Neither the AI nor an analyst decision
+    changes an engine relationship."""
     errors = []
     reg = pack["investigation_group_register"].get("relationship_register")
     have = final["relationships"].get("relationship_register")
     if reg is None:
-        if have is not None or "relationship_assessments" in final:
+        if have is not None:
             errors.append("relationship register content in a final pack whose original pack has none")
         return errors
     if have != reg:
         errors.append("relationships.relationship_register differs from the original pack (engine relationship statuses and "
                       "proofs are copied, never changed)")
-    expected = _relationship_assessments(pack, summary, review)
-    if final.get("relationship_assessments") != expected:
-        errors.append("relationship_assessments differ from the engine register, the AI dispositions and the analyst "
-                      "explanations (the engine's status and proof must be kept exactly)")
-    challenged = {d.relationship_id for d in ((summary.output.relationship_dispositions or []) if summary.output else [])
-                  if d.disposition == "CHALLENGED"}
-    for c in (review.relationship_challenge_reviews if review else []):
-        if c.relationship_id not in challenged:
-            errors.append(f"analyst explanation for {c.relationship_id}: the AI summary does not challenge that relationship")
     return errors
-
 
 def validate_final_pack(final, snapshot, summary, review, preview=False):
     from .assemble import content_sha256

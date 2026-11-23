@@ -81,43 +81,6 @@ def _deterministic_sections(pack):
     }
 
 
-RELATIONSHIP_ASSESSMENT_NOTICE = ("Engine relationships are deterministic: their status and proof are copied from the engine "
-                                  "and are never changed by the AI or by this report. The AI's acknowledgement or challenge "
-                                  "and the analyst's explanation are shown beside them. An AI challenge is not accepted by "
-                                  "the engine; it is a point for the analyst.")
-
-
-def _relationship_assessments(pack, closing_summary, review):
-    """Evidence-bearing relationships (23 Nov 2026): one entry per CONFIRMED relationship of a register 1.1 - the engine's
-    status and proof (verbatim), the AI disposition (ACKNOWLEDGED / CHALLENGED with its fields, or NOT_AVAILABLE when no AI
-    summary), the common-cause assessments covering the pair, and the analyst's explanation of a challenge. None when the
-    pack has no evidence-bearing register (the final pack is then unchanged)."""
-    reg = pack["investigation_group_register"].get("relationship_register")
-    if not reg or reg.get("schema") != "uc042-relationship-register/1.1":
-        return None
-    out = closing_summary.output.model_dump() if closing_summary.status == "GENERATED" and closing_summary.output else {}
-    disp = {d["relationship_id"]: d for d in out.get("relationship_dispositions") or []}
-    notes = {c.relationship_id: c.model_dump() for c in (review.relationship_challenge_reviews if review else [])}
-    items = []
-    for r in reg["relationships"]:
-        if r["status"] != "CONFIRMED":
-            continue
-        d = disp.get(r["relationship_id"])
-        cover = [{"group_id": a["group_id"], "exception_ids": a["exception_ids"], "relationship_verdict": a["relationship_verdict"],
-                  "common_cause_status": a.get("common_cause_status"), "common_cause_hypothesis": a["common_cause_hypothesis"],
-                  "supporting_evidence": a["supporting_evidence"], "contradicting_evidence": a["contradicting_evidence"],
-                  "missing_evidence": a["missing_evidence"]}
-                 for a in out.get("group_assessments") or [] if set(r["exception_ids"]) <= set(a["exception_ids"])]
-        items.append({"relationship_id": r["relationship_id"], "exception_ids": r["exception_ids"],
-                      "relationship_type": r["relationship_type"], "engine_status": r["engine_status"],
-                      "register_status": r["status"], "proof": copy.deepcopy(r["proof"]),
-                      "ai_disposition": d["disposition"] if d else "NOT_AVAILABLE",
-                      "ai_disposition_detail": copy.deepcopy(d) if d else None,
-                      "common_cause_assessments": cover,
-                      "analyst_explanation": notes.get(r["relationship_id"])})
-    return {"notice": RELATIONSHIP_ASSESSMENT_NOTICE, "register_schema": reg["schema"], "items": items}
-
-
 def _exception_register(pack, snapshot, investigations):
     sel = {s.exception_id: s for s in snapshot.selections}
     inv_by_id = {i["investigation_id"]: i for i in investigations}
@@ -312,9 +275,6 @@ def assemble(snapshot, closing_summary, review=None, generation=None, preview=Fa
         "closing_summary": closing_summary.model_dump(),
         "final_content_sha256": "",
     }
-    rel_assessments = _relationship_assessments(pack, closing_summary, review)
-    if rel_assessments is not None:
-        final["relationship_assessments"] = rel_assessments
     if snapshot.reviewed:
         _add_analyst_reviews(final, register)
         _add_outcome_layer(final, pack)

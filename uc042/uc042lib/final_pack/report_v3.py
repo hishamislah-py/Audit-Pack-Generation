@@ -175,8 +175,8 @@ def build_report_v3(final):
                 ("evidence", "Evidence completeness and source inventory", _s_evidence)]
     if final["exception_register"]:
         sections.append(("exceptions", "Exceptions and investigations", _s_exceptions))
-    if final.get("relationship_assessments") is not None:   # evidence-bearing relationships; absent in every older pack
-        sections.append(("relationships", "Engine relationships and AI assessments", _s_relationships))
+    if (final.get("relationships") or {}).get("relationship_register") is not None:   # enriched packs only; absent before
+        sections.append(("relationships", "Related exceptions: engine relationship evidence", _s_relationships))
     sections += [("review", "Analyst review and decision record", _s_review),
                  ("limitations", "Limitations and disclosures", _s_limitations),
                  ("appendix", "Technical appendix", _s_appendix)]
@@ -398,8 +398,15 @@ def _s_exceptions(f):
     out = [_notice("bad", "Every exception below remains UNRESOLVED. Neither AI investigation, an analyst's decision on an AI "
                           "investigation, nor report generation resolves an exception.")]
     out.append(_sub("Exception register (deterministic engine)"))
+    rreg = (f.get("relationships") or {}).get("relationship_register")   # enriched packs only (absent: rendering unchanged)
     for e in reg:
         x, i = e["exception"], e["investigation"]
+        related = []
+        if rreg is not None:
+            related = [("Related exceptions (engine relationships)", "; ".join(
+                f"{', '.join(o for o in r['exception_ids'] if o != x['exception_id'])} - {r['relationship_type'].replace('_', ' ').lower()}"
+                for r in rreg["relationships"] if r["status"] == "CONFIRMED" and x["exception_id"] in r["exception_ids"])
+                or "None established by the engine")]
         out.append({"type": "item", "kind": "unresolved", "heading": f"{x['exception_id']} - {x['category']}", "badge": e["resolution_status"],
                     "fields": [("Dates", f"{x['first_date']} to {x['last_date']}"), ("Account / currency", f"{x['account_id']} / {x['currency']}"),
                                ("Amount (engine)", money(x["amount"], x["currency"]) if x["amount"] != "" else "none recorded"),
@@ -407,6 +414,7 @@ def _s_exceptions(f):
                                ("Deterministic status", f"{x['status']}; review {x['review_status']}; evidence {_v(x['evidence_status'], 'n/a')}"),
                                ("Affected results (engine)", f"{_n(x.get('affected_results', 0))}: " + _v(x.get("affected_result_ids"), "none")),
                                ("Source evidence (engine)", _v(x.get("evidence"), "none recorded")),
+                               *related,
                                ("AI investigation", _inv_status(e)),
                                ("Other investigation attempts", f"ineligible {_v(i['other_attempts']['published_ineligible'], 'none')}; "
                                                                 f"eligible not selected {_v(i['other_attempts']['published_not_selected'], 'none')}; "
@@ -632,46 +640,26 @@ def _proof_fields(p):
 
 
 def _s_relationships(f):
-    """Evidence-bearing relationships: each CONFIRMED engine relationship with its proof (the ENGINE's decision), followed by
-    the AI's acknowledgement or challenge and the analyst's explanation, each in its own clearly labelled block. A challenge
-    is never presented as changing the engine's status."""
-    ra = f["relationship_assessments"]
-    out = [_notice("info", ra["notice"])]
-    if not ra["items"]:
-        return out + [_para("The engine confirmed no relationship between exceptions in this pack.")]
-    for it in ra["items"]:
-        out.append(_sub(f"{it['relationship_id']}: {', '.join(it['exception_ids'])}"))
+    """Evidence-bearing relationships: each relationship the ENGINE confirmed between exceptions, with the proof behind it
+    (deterministic, copied from the engine). The AI's explanation is in the investigations and the closing summary; the
+    analyst's decisions are in 'Analyst review and decision record'. Neither changes these relationships."""
+    reg = f["relationships"]["relationship_register"]
+    conf = [r for r in reg["relationships"] if r["status"] == "CONFIRMED"]
+    out = [_notice("info", "Deterministic engine evidence, not AI. Each relationship below was established by the reconciliation "
+                           "engine from the source records; the figures are the engine's own. A relationship connects exceptions "
+                           "(often through one faulty record); it does not establish why that record is wrong. AI explanations "
+                           "and analyst decisions never change these relationships.")]
+    if not conf:
+        return out + [_para("The engine established no relationship between exceptions in this pack.")]
+    for r in conf:
         out.append({"type": "item", "kind": "engine_relationship",
-                    "heading": f"Engine decision - {it['relationship_type']}",
-                    "badge": f"ENGINE: {it['engine_status']} (deterministic)",
-                    "fields": [("Engine status", it["engine_status"]), ("Register status", it["register_status"])]
-                    + _proof_fields(it["proof"])})
-        d = it["ai_disposition_detail"]
-        if d is None:
-            out.append(_notice("warn", "AI assessment of this relationship: NOT AVAILABLE (no AI closing summary in this pack)."))
-        elif d["disposition"] == "ACKNOWLEDGED":
-            out.append({"type": "item", "kind": "relationship_backed", "heading": "AI assessment", "badge": "AI: ACKNOWLEDGED",
-                        "fields": [("Reason", d["reason"]), ("Cited records", ", ".join(d["cited_evidence"]) or "None cited."),
-                                   ("Missing evidence", "; ".join(d["missing_evidence"]) or "None stated."),
-                                   ("Confidence", d["confidence"])]})
-        else:
-            out.append({"type": "item", "kind": "ai_challenge", "heading": "AI challenge - not accepted by the engine",
-                        "badge": "AI: CHALLENGED - ENGINE STATUS UNCHANGED",
-                        "fields": [("Reason", d["reason"]), ("Cited records", ", ".join(d["cited_evidence"])),
-                                   ("Contradicting records", ", ".join(d["contradicting_evidence"])),
-                                   ("Why the engine evidence is insufficient (AI view)", d["why_engine_evidence_insufficient"]),
-                                   ("Missing evidence", "; ".join(d["missing_evidence"])),
-                                   ("Confidence", d["confidence"]), ("Limitations", "; ".join(d["limitations"]))]})
-        for a in it["common_cause_assessments"]:
-            out.append(_para(f"Common-cause assessment ({a['group_id']}: {', '.join(a['exception_ids'])}): relationship "
-                             f"{a['relationship_verdict']}; common cause {a.get('common_cause_status') or 'not stated'}. "
-                             f"{a['common_cause_hypothesis']}"))
-        n = it["analyst_explanation"]
-        if d is not None and d["disposition"] == "CHALLENGED":
-            out.append(_para("Analyst explanation: " + (f"{n['analyst_position']} - {n['analyst_explanation']}" if n
-                                                        else "not recorded.")))
+                    "heading": f"{', '.join(r['exception_ids'])} - {r['relationship_type'].replace('_', ' ').lower()}",
+                    "badge": "ENGINE: CONFIRMED", "fields": [("Relationship", r["relationship_id"])] + _proof_fields(r["proof"])})
+    rejected = [r for r in reg["relationships"] if r["status"] == "REJECTED"]
+    if rejected:
+        out += [_para("Apparent links the engine rejected (not relationships):"),
+                {"type": "bullets", "items": [f"{', '.join(r['exception_ids'])}: {r['basis']}" for r in rejected]}]
     return out
-
 
 def _closing_summary_blocks(f):
     s = f["closing_summary"]

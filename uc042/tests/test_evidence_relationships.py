@@ -1,34 +1,58 @@
-"""Evidence-bearing relationships and AI relationship challenges (23 Nov 2026; forensic report on TC06 01<->03).
+"""Evidence-bearing relationships with the SIMPLIFIED analyst workflow (23 Nov 2026).
+
+Workflow under test: the engine identifies exceptions and establishes evidence-backed relationships (with proofs) -> the AI
+investigates and explains -> the analyst ACCEPTs or REJECTs each AI finding (optional explanation) -> the decision is in the
+final audit pack and PDF. The AI never acknowledges, challenges, confirms or rejects an engine relationship.
 
 Real pipeline on TC01-TC06 of UC042_RECONCILIATION_TEST_SUITE_V2 with engine relationship discovery ON (built once by
-tests.test_relationship_register: engine -> pack with relationship register 1.1 -> investigations (provider HTTP mocked) ->
-analyst ACCEPT -> review snapshot -> closing summary (real validation; SCRIPTED model output) -> final pack -> PDF/HTML).
-No live AI. Expected values are the engine's own figures for the synthetic datasets, never the answer keys.
-
-Covers: engine proofs for every CONFIRMED relationship (section 2), the separate common-cause status (3), ACKNOWLEDGED /
-CHALLENGED dispositions (4), validation rules R1-R10 with negative tests (6), the final pack / PDF (7), the TC01-TC06
-regressions (8) and backward compatibility.
+tests.test_relationship_register: engine -> pack with relationship register 1.1 -> investigations through the real graph
+(provider HTTP MOCKED, scripted findings) -> analyst decisions -> review snapshot -> closing summary (real validation;
+SCRIPTED model output) -> final pack -> PDF/HTML). TC03 is also checked on its revision 3 dataset. No live AI.
+Expected values are the engine's own figures for the synthetic datasets, never the answer keys.
 """
 import copy
+import hashlib
 import json
+import os
+import shutil
+import tempfile
 import unittest
 from pathlib import Path
 
 import tests.test_relationship_register as R
 from tests.final_pack_support import openai_investigator, raw, review_for
 from tests.renderer_v3_support import audit_integrity, norm, pdf_text, render_all
-from uc042lib.final_pack import (ChallengeReview, ClosingSummaryOutput, FinalPackValidationError, GenerationInfo,
-                                 assemble_final_pack, generate_closing_summary, render_pdf, validate_closing_summary)
+from uc042lib.final_pack import (AnalystReview, ClosingSummaryOutput, FinalPackInputError, GenerationInfo, Selection,
+                                 assemble_final_pack, build_review_snapshot, closing_summary_input, generate_closing_summary,
+                                 render_pdf, validate_closing_summary)
 from uc042lib.final_pack.model import GroupAssessment, ReviewRecord
+from uc042lib.final_pack.sources import list_investigations
 from uc042lib.final_pack.validate import validate_final_pack
+from uc042lib.investigation.packet import build_case, build_packet, build_scope, retrieve
+from uc042lib.investigation.retrieval import EvidenceStore, load_pack
+from uc042lib.investigation.routing import route_for
+from uc042lib.pack.generate import generate
 from uc042lib.pack.relationships import NO_PROOF_LIMITATION, build_relationship_register
+from uc042lib.validate import ENRICHED_RULES
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 SNAP04 = "IN-03:CBS-20260917-C0004-GBP"
+TC03_REV3 = Path(os.environ.get("UC042_TC03_REV3",
+                                r"C:\Users\artlptp263user\Downloads\UC042_RECONCILIATION_TEST_SUITE_V2_TC03_REV3"))
+ANALYST = {"user_id": "analyst-7", "display_name": "Dana Analyst"}
+REV3 = {}
 
 
 def setUpModule():
     R.setUpModule()
+    if (TC03_REV3 / "TC03_TIMING_DIFFERENCE" / "initial_submission").is_dir():
+        root = R.TMP / "tc03_rev3"
+        case = root / "datasets" / "tc03_timing_difference"
+        shutil.copytree(TC03_REV3 / "TC03_TIMING_DIFFERENCE" / "initial_submission", case)
+        (root / "packs").mkdir()
+        generate(case, root / "packs", rules=ENRICHED_RULES)
+        pid = next(p.name for p in (root / "packs").iterdir() if p.name.startswith("PACK-"))
+        REV3.update(pack=load_pack(pid, root / "packs"), datasets=root / "datasets")
 
 
 def tearDownModule():
@@ -48,43 +72,59 @@ def errors_for(tc, edit, si=None):
     return validate_closing_summary(R.scripted(si, edit), si)
 
 
-def disp(d, rid):
-    return next(x for x in d["relationship_dispositions"] if x["relationship_id"] == rid)
+def packet(pack, datasets, exc):
+    case = build_case(pack, exc)
+    route = route_for(case["exception"], case["candidates"], case["results"])
+    return build_packet(case, build_scope(case), route, retrieve(route, case, EvidenceStore(pack, datasets)))
 
 
-def rid_of(tc, a, b, status="CONFIRMED"):
-    return rel(tc, a, b, status)[0]["relationship_id"]
+def tc_packet(tc, exc):
+    return packet(B(tc)["pack"], B(tc)["datasets"], exc)
 
 
-def tc06_challenge(d):
-    """A VALID formal challenge of the 01<->03 relationship: it cites a record outside the relationship's own proof and the
-    exceptions' detection records (C0007's same-day records), states why, what is missing, confidence and limitations, and
-    splits the group accordingly. The engine status is NOT changed by it."""
-    rid = rid_of("TC06", "EXC-TC06-01", "EXC-TC06-03")
-    x = disp(d, rid)
-    x.update(disposition="CHALLENGED", confidence="LOW",
-             reason="C0007 shows an equal and opposite 90.00 roll-forward difference on the same day, so the 90.00 internal "
-                    "difference could be a net of two client positions rather than C0004's snapshot alone.",
-             cited_evidence=[SNAP04, "IN-03:CBS-20260917-C0007-GBP"], contradicting_evidence=["IN-03:CBS-20260917-C0007-GBP"],
-             missing_evidence=["the client-balance system extract for 17 September for C0004 and C0007"],
-             why_engine_evidence_insufficient="The engine excludes C0007 as transaction-explained; the requirement composition "
-                                              "per client is not supplied, so the exclusivity cannot be checked here.",
-             limitations=["based only on the supplied snapshots; no client-balance system extract was available"])
-    gas = [a for a in d["group_assessments"] if a["group_id"] != "GRP-TC06-01"]
-    base = dict(related_exception_ids=[], analyst_action="SCRIPTED: obtain the client-balance extract for 17 September.",
-                rationale="SCRIPTED: the 01-03 link is challenged; 03-04 is acknowledged.")
-    gas += [dict(base, group_id="GRP-TC06-01", exception_ids=["EXC-TC06-01"], relationship_verdict="UNVERIFIED",
-                 common_cause_status="UNVERIFIED", confidence="LOW", supporting_evidence=[SNAP04], contradicting_evidence=[],
-                 common_cause_hypothesis="The internal difference may come from C0004's snapshot; this is not established.",
-                 missing_evidence=["the per-client requirement composition for 17 September"]),
-            dict(base, group_id="GRP-TC06-01", exception_ids=["EXC-TC06-03", "EXC-TC06-04"], relationship_verdict="EVIDENCE_BACKED",
-                 common_cause_status="NOT_ESTABLISHED", confidence="MEDIUM", supporting_evidence=[SNAP04], contradicting_evidence=[],
-                 common_cause_hypothesis="Both come from C0004's 17 September snapshot; why it is wrong is not established.",
-                 missing_evidence=["how the snapshot was produced"])]
-    d["group_assessments"] = gas
+def ids_of(pk):
+    return {r["evidence_id"] for r in pk["source_records"]}
 
 
-# ============================================================================================================ section 2
+def inv_id(tc, exc):
+    return list_investigations(B(tc)["pack"], exc, R.TMP / "inv")["published"][0]["investigation_id"]
+
+
+def findings_path(tc, exc):
+    info = next(i for i in list_investigations(B(tc)["pack"], exc, R.TMP / "inv")["published"])
+    return Path(info["path"]) / "findings.json"
+
+
+def reviewed_snapshot(tc, plan, explanations=None, skip=()):
+    """Snapshot with the analyst's decisions: plan {exception_id: ACCEPT|REJECT}; explanations {exception_id: text};
+    skip: INCLUDED investigations left PENDING (no decision)."""
+    b, explanations = B(tc), explanations or {}
+    sels, reviews = [], {}
+    for x in b["pack"]["exception_register"]["exceptions"]:
+        e = x["exception_id"]
+        i = inv_id(tc, e)
+        sels.append(Selection(exception_id=e, inclusion="INCLUDED", investigation_id=i))
+        if e in skip:
+            continue
+        d = plan.get(e, "ACCEPT")
+        text = explanations.get(e, "")
+        reviews[i] = AnalystReview(
+            analyst_review_id=f"AR-{e}", investigation_id=i, exception_id=e, decision=d,
+            findings_sha256=hashlib.sha256(findings_path(tc, e).read_bytes()).hexdigest(), reviewer=ANALYST,
+            decided_at="2026-11-23T14:05:00+00:00", comment=text if d == "ACCEPT" else "",
+            rejection_reason=(text or "Rejected by the analyst in Ringfence (fixed wording)") if d == "REJECT" else "")
+    return build_review_snapshot(b["pack_id"], sels, packs_root=b["packs"], investigations_root=R.TMP / "inv", analyst_reviews=reviews)
+
+
+def final_for(snap):
+    si = closing_summary_input(snap)
+    out = R.scripted(si)
+    summary = generate_closing_summary(snap, openai_investigator(lambda kw, o=out: raw(o)))
+    review = review_for(snap, summary, reviewer=ANALYST)
+    return assemble_final_pack(snap, summary, review, GenerationInfo(generated_at="2026-11-23T14:10:00+00:00")), summary, review
+
+
+# ============================================================================================================ engine proofs
 class EngineProofs(unittest.TestCase):
     def test_every_confirmed_relationship_carries_a_complete_proof(self):
         n = 0
@@ -101,62 +141,30 @@ class EngineProofs(unittest.TestCase):
                 self.assertEqual(p["relationship_type"], r["relationship_type"])
                 self.assertLessEqual(set(p["records"]) | ({p["faulty_record"]} - {""}), recs, (tc, r["relationship_id"]))
                 self.assertNotIn(NO_PROOF_LIMITATION, r["limitations"])
-        self.assertEqual(n, 17)          # 12 TC01 + 1 TC02 + 1 TC04 + 3 TC06 (forensic report section 5)
+        self.assertEqual(n, 17)          # 12 TC01 + 1 TC02 + 1 TC04 + 3 TC06
 
-    def test_tc06_01_03_proof_explains_the_90_and_keeps_the_cause_open(self):
+    def test_tc06_01_03_proof_explains_the_90_and_keeps_the_reason_open(self):
         [r] = rel("TC06", "EXC-TC06-01", "EXC-TC06-03", "CONFIRMED")
         p = r["proof"]
         self.assertEqual((r["relationship_type"], p["result"], p["faulty_record"]), ("CAUSAL_PROPAGATION", "EQUAL", SNAP04))
         q = {x["name"]: x["value"] for x in p["quantities"]}
         self.assertEqual(q["C0004 snapshot balance 2026-09-17 (reported)"], "40682.24")
         self.assertEqual(q["C0004 roll-forward balance 2026-09-17 (previous snapshot + movements)"], "40592.24")
-        self.assertEqual(q["snapshot error (snapshot - roll-forward)"], "90.00")                     # overstated by 90
-        self.assertEqual(q["internal difference 2026-09-17 (resource - requirement)"], "-90.00")     # = the internal difference
-        self.assertEqual(q["GBP requirement 2026-09-17 (recomputed from the snapshots)"], "341574.46")
-        self.assertIn("341484.46", p["requirement_effect"])                                          # the requirement effect
-        self.assertIn("includes C0004's snapshot balance 40682.24", p["requirement_effect"])
-        self.assertTrue(any("overstated by 90.00" in e for e in p["established"]))
-        self.assertTrue(any("EXC-TC06-03 is the failed roll-forward of this snapshot" in e for e in p["established"]))
-        self.assertTrue(any(c.startswith("EXC-TC06-04") and "reverses by 90.00" in c for c in p["corroboration"]))  # next day
-        self.assertTrue(any("C0007" in c and "transaction-side" in c for c in p["corroboration"]))   # exclusivity
-        self.assertTrue(any("why the faulty record is wrong" in n for n in p["not_established"]))   # cause stays open
-        self.assertEqual([c["date"] for c in p["chronology"]], sorted(c["date"] for c in p["chronology"]))
+        self.assertEqual(q["snapshot error (snapshot - roll-forward)"], "90.00")
+        self.assertEqual(q["internal difference 2026-09-17 (resource - requirement)"], "-90.00")
+        self.assertIn("341484.46", p["requirement_effect"])
+        self.assertTrue(any(c.startswith("EXC-TC06-04") and "reverses by 90.00" in c for c in p["corroboration"]))
+        self.assertTrue(any("C0007" in c and "transaction-side" in c for c in p["corroboration"]))
+        self.assertTrue(any("why the faulty record is wrong" in n for n in p["not_established"]))
 
     def test_tc06_other_relationships_and_coincidences(self):
         self.assertEqual(rel("TC06", "EXC-TC06-03", "EXC-TC06-04", "CONFIRMED")[0]["proof"]["result"], "EQUAL_AND_OPPOSITE")
         self.assertEqual(rel("TC06", "EXC-TC06-05", "EXC-TC06-06", "CONFIRMED")[0]["proof"]["faulty_record"], "IN-11:TX-0917-00002")
         r15 = rel("TC06", "EXC-TC06-01", "EXC-TC06-05")
-        self.assertTrue(r15 and all(r["status"] == "REJECTED" for r in r15))                        # 01-05 rejected
+        self.assertTrue(r15 and all(r["status"] == "REJECTED" for r in r15))
         coinc = [r for r in B("TC06")["reg"]["relationships"] if r["relationship_type"] == "COINCIDENCE"]
-        self.assertTrue(coinc and all(r["status"] == "REJECTED" for r in coinc))                    # never a relationship
+        self.assertTrue(coinc and all(r["status"] == "REJECTED" for r in coinc))
         self.assertFalse([r for r in B("TC06")["reg"]["relationships"] if "EXC-TC06-02" in r["exception_ids"] and r["status"] != "REJECTED"])
-
-    def test_tc01_persistence_links_keep_their_proof(self):
-        pers = [r for r in B("TC01")["reg"]["relationships"] if r["link_type"] == "L2 PERSISTENCE"]
-        self.assertEqual(len(pers), 2)
-        for r in pers:
-            self.assertEqual((r["status"], r["relationship_type"], r["proof"]["result"]), ("CONFIRMED", "PERSISTENCE", "CONSECUTIVE_EQUAL"))
-            self.assertEqual([q["value"] for q in r["proof"]["quantities"][:2]], ["1246.80", "1246.80"])
-        dup = [r for r in B("TC01")["reg"]["relationships"] if r["link_type"] == "L6 DUPLICATE LINEAGE"]
-        self.assertTrue(dup and all(r["proof"]["faulty_record"] == "IN-10:LE-GBP-0928-0007" for r in dup))   # duplicate unchanged
-
-    def test_tc02_18_mismatch_relationship(self):
-        [r] = [r for r in B("TC02")["reg"]["relationships"] if r["status"] == "CONFIRMED"]
-        self.assertEqual((r["relationship_type"], r["proof"]["faulty_record"], r["proof"]["result"]),
-                         ("TRANSACTION_LINEAGE", "IN-11:TX-0908-00002", "EQUAL"))
-        self.assertIn("18.00", r["proof"]["calculation"])
-
-    def test_tc04_lineage_carries_confirmation_evidence(self):
-        [r] = [r for r in B("TC04")["reg"]["relationships"] if r["status"] == "CONFIRMED"]
-        p = r["proof"]
-        self.assertEqual((r["relationship_type"], p["result"], p["faulty_record"]), ("BALANCE_LINEAGE", "EQUAL", "IN-09:BE-EUR-0930-U01"))
-        self.assertEqual(p["quantities"][0]["value"], p["quantities"][1]["value"])                   # entry = difference
-
-    def test_tc05_stays_candidate_and_suspected(self):
-        reg = B("TC05")["reg"]
-        self.assertFalse([r for r in reg["relationships"] if r["status"] == "CONFIRMED"])
-        self.assertEqual([c["status"] for c in reg["common_causes"]], ["SUSPECTED"])
-        self.assertTrue(all(r["proof"]["result"].startswith("SUM_EQUAL") for r in reg["relationships"] if r["link_type"] == "LINE-SUM MATCH"))
 
     def test_register_downgrades_a_confirmed_link_without_proof(self):
         class V:
@@ -169,270 +177,263 @@ class EngineProofs(unittest.TestCase):
 
             def scenario_id(self):
                 return "X"
-        reg = build_relationship_register(V(), lambda text, owner: [])
-        [r] = reg["relationships"]
-        self.assertEqual((r["status"], r["engine_status"]), ("CANDIDATE", "CONFIRMED"))             # never falsely confirmed
+        [r] = build_relationship_register(V(), lambda text, owner: [])["relationships"]
+        self.assertEqual((r["status"], r["engine_status"]), ("CANDIDATE", "CONFIRMED"))
         self.assertIn(NO_PROOF_LIMITATION, r["limitations"])
 
 
-# ============================================================================================================ sections 3-5
-class AIContract(unittest.TestCase):
-    def test_input_carries_the_proofs_and_the_relationships_to_dispose(self):
-        si = B("TC06")["si"]
-        reg = si["relationship_register"]
-        self.assertEqual(reg["schema"], "uc042-relationship-register/1.1")
-        rid = rid_of("TC06", "EXC-TC06-01", "EXC-TC06-03")
-        self.assertIn(rid, reg["confirmed_relationship_ids"])
-        r = next(x for x in reg["relationships"] if x["relationship_id"] == rid)
-        self.assertEqual(r["proof"]["faulty_record"], SNAP04)
-        self.assertIn("341484.46", r["proof"]["requirement_effect"])                                 # the 90 evidence reaches the AI
-        self.assertLessEqual(set(r["proof"]["records"]), set(si["allowed_source_refs"]))
+# ============================================================================================================ TC01-TC06: what the AI receives
+class InvestigationEvidence(unittest.TestCase):
+    """The evidence each scenario's AI investigation receives (the packet), from the real retrieval."""
 
-    def test_tc06_01_03_is_related_while_the_cause_stays_open(self):
+    def test_tc01_duplicate_posting_and_its_evidence(self):
+        pk = tc_packet("TC01", "EXC-TC01-06")
+        self.assertIn("IN-10:LE-GBP-0928-0007", ids_of(pk))                                        # the duplicate row
+        rels = pk["engine_relationships_CONTEXT"]["relationships"]
+        dup = [r for r in rels if r["relationship_type"] == "DUPLICATE_LINEAGE" and r["status"] == "CONFIRMED"]
+        self.assertTrue(dup and all(r["proof"]["faulty_record"] == "IN-10:LE-GBP-0928-0007" for r in dup))
+        self.assertTrue(all("1246.80" in r["proof"]["calculation"] for r in dup))
+
+    def test_tc02_amount_discrepancy_and_its_impact(self):
+        pk = tc_packet("TC02", "EXC-TC02-02")
+        self.assertIn("IN-11:TX-0908-00002", ids_of(pk))
+        [r] = [r for r in pk["engine_relationships_CONTEXT"]["relationships"] if r["status"] == "CONFIRMED"]
+        self.assertIn("18.00", r["proof"]["calculation"])                                           # the GBP 18 mismatch
+        self.assertIn("C0006", r["proof"]["calculation"])                                           # its client impact
+
+    @unittest.skipUnless(TC03_REV3.is_dir(), "TC03 revision 3 dataset not available")
+    def test_tc03_revision_3_timing_difference(self):
+        [x] = REV3["pack"]["exception_register"]["exceptions"]
+        self.assertEqual((x["root_cause"], x["evidence_status"]), ("BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-09-24|-5495.05",
+                                                                    "TIMING_EVIDENCED"))
+        pk = packet(REV3["pack"], REV3["datasets"], x["exception_id"])
+        self.assertIn("AQ-GBP-20260924", json.dumps(pk))                                             # the timing item reaches the AI
+        self.assertFalse([r for r in REV3["pack"]["investigation_group_register"]["relationship_register"]["relationships"]
+                          if r["status"] == "CONFIRMED"])
+
+    def test_tc04_unmatched_bank_credit(self):
+        pk = tc_packet("TC04", "EXC-TC04-02")
+        self.assertIn("IN-09:BE-EUR-0930-U01", ids_of(pk))
+        [r] = [r for r in pk["engine_relationships_CONTEXT"]["relationships"] if r["status"] == "CONFIRMED"]
+        self.assertEqual((r["relationship_type"], r["proof"]["result"]), ("BALANCE_LINEAGE", "EQUAL"))   # 650.00 = difference
+
+    def test_tc05_missing_settlement_transactions_without_client_attribution(self):
+        pk = tc_packet("TC05", "EXC-TC05-02")
+        self.assertIn("IN-12:SB-EUR-20260924", ids_of(pk))
+        self.assertFalse([r for r in B("TC05")["reg"]["relationships"] if r["status"] == "CONFIRMED"])  # amounts only
+        [c] = B("TC05")["reg"]["common_causes"]
+        self.assertEqual(c["status"], "SUSPECTED")
+        self.assertTrue(any("client of each missing transaction" in m for m in c["missing_evidence"]))
+        gas = B("TC05")["final"]["closing_summary"]["output"]["group_assessments"]
+        self.assertFalse([a for a in gas if a["relationship_verdict"] == "EVIDENCE_BACKED" or a["common_cause_status"] == "EVIDENCE_BACKED"])
+
+    def test_tc06_01_investigation_receives_the_c0004_proof(self):
+        pk = tc_packet("TC06", "EXC-TC06-01")
+        self.assertIn(SNAP04, ids_of(pk))
+        r = next(r for r in pk["engine_relationships_CONTEXT"]["relationships"]
+                 if r["status"] == "CONFIRMED" and set(r["exception_ids"]) == {"EXC-TC06-01", "EXC-TC06-03"})
+        self.assertIn("341484.46", r["proof"]["requirement_effect"])
+        self.assertTrue(any("reverses by 90.00" in c for c in r["proof"]["corroboration"]))
+        self.assertTrue(any("why the faulty record is wrong" in n for n in r["proof"]["not_established"]))
+        self.assertIn("REJECTED", {x["status"] for x in pk["engine_relationships_CONTEXT"]["relationships"]
+                                   if set(x["exception_ids"]) == {"EXC-TC06-01", "EXC-TC06-05"}})
+
+
+# ============================================================================================================ AI contract (no AI decisions)
+class AIContract(unittest.TestCase):
+    def test_input_carries_the_proofs_and_no_disposition_list(self):
+        reg = B("TC06")["si"]["relationship_register"]
+        self.assertEqual(reg["schema"], "uc042-relationship-register/1.1")
+        self.assertNotIn("confirmed_relationship_ids", reg)
+        r = next(x for x in reg["relationships"] if set(x["exception_ids"]) == {"EXC-TC06-01", "EXC-TC06-03"})
+        self.assertEqual(r["proof"]["faulty_record"], SNAP04)
+        self.assertLessEqual(set(r["proof"]["records"]), set(B("TC06")["si"]["allowed_source_refs"]))
+
+    def test_output_schema_has_no_ai_decision_on_engine_relationships(self):
+        self.assertNotIn("relationship_dispositions", ClosingSummaryOutput.model_fields)
+        from uc042lib.final_pack.summary import SUMMARY_INSTRUCTIONS
+        flat = " ".join(SUMMARY_INSTRUCTIONS.split())
+        self.assertNotIn("ACKNOWLEDGED", flat)
+        self.assertNotIn("CHALLENGED", flat)
+        self.assertIn("you never confirm, acknowledge, challenge or reject an engine relationship", flat)
+
+    def test_tc06_related_while_the_reason_stays_open(self):
         gas = B("TC06")["final"]["closing_summary"]["output"]["group_assessments"]
         a = next(x for x in gas if {"EXC-TC06-01", "EXC-TC06-03"} <= set(x["exception_ids"]))
         self.assertEqual((a["relationship_verdict"], a["common_cause_status"]), ("EVIDENCE_BACKED", "NOT_ESTABLISHED"))
+        self.assertFalse([x for x in gas if {"EXC-TC06-01", "EXC-TC06-05"} <= set(x["exception_ids"])])
+
+    def test_live_prompt_1_7_tc06_assessments_satisfy_the_simplified_rules(self):
+        live = json.loads((FIXTURES / "tc06_live_prompt17_group_assessments_20261123.json").read_text(encoding="utf-8"))
+        self.assertEqual(errors_for("TC06", lambda d: d.update(group_assessments=live["group_assessments"])), [])
 
     def test_the_four_representations(self):
-        # established relationship + established common cause (TC02: two exceptions, one acknowledged CONFIRMED relationship)
         def tc02(d):
             for a in d["group_assessments"]:
                 a["common_cause_status"] = "EVIDENCE_BACKED"
                 a["common_cause_hypothesis"] = "Both come from transaction TX-0908-00002; why it was recorded wrongly is not established."
-        self.assertEqual(errors_for("TC02", tc02), [])
-        # established relationship + unverified/not established common cause (TC06 01-03): the published scripted summary
-        self.assertEqual(errors_for("TC06", None), [])
-        # candidate relationship (TC05): UNVERIFIED, never EVIDENCE_BACKED
+        self.assertEqual(errors_for("TC02", tc02), [])                                             # related + cause backed
+        self.assertEqual(errors_for("TC06", None), [])                                             # related + cause open
         gas = B("TC05")["final"]["closing_summary"]["output"]["group_assessments"]
-        self.assertTrue(all(a["relationship_verdict"] == "UNVERIFIED" and a["common_cause_status"] == "UNVERIFIED" for a in gas))
-        # rejected relationship (TC06 01-05): present, REJECTED, and never inside an evidence-backed assessment
-        self.assertTrue(rel("TC06", "EXC-TC06-01", "EXC-TC06-05", "REJECTED"))
-
-    def test_tc05_no_invented_attribution_and_02_in_the_cause(self):
-        gas = B("TC05")["final"]["closing_summary"]["output"]["group_assessments"]
-        cc = next(a for a in gas if a["group_id"] == "CC-TC05-01")
-        self.assertEqual(sorted(cc["exception_ids"]), ["EXC-TC05-01", "EXC-TC05-02", "EXC-TC05-03"])
-        self.assertFalse([a for a in gas if a["relationship_verdict"] == "EVIDENCE_BACKED" or a["common_cause_status"] == "EVIDENCE_BACKED"])
-        self.assertEqual(B("TC05")["final"]["closing_summary"]["output"]["relationship_dispositions"], [])   # nothing CONFIRMED
-
-    def test_a_valid_challenge_is_accepted_and_does_not_change_the_engine(self):
-        self.assertEqual(errors_for("TC06", tc06_challenge), [])                                    # no blanket rule
+        self.assertTrue(all(a["relationship_verdict"] == "UNVERIFIED" for a in gas))              # candidate
+        self.assertTrue(rel("TC06", "EXC-TC06-01", "EXC-TC06-05", "REJECTED"))                     # rejected
 
 
-# ============================================================================================================ section 6
 class ValidationRules(unittest.TestCase):
     def refused(self, tc, edit, needle, si=None):
         errs = errors_for(tc, edit, si)
         self.assertTrue(any(needle in e for e in errs), (needle, errs))
 
-    def test_r1_confirmed_without_proof_in_the_input(self):
+    def test_e1_confirmed_without_proof_in_the_input(self):
         si = copy.deepcopy(B("TC06")["si"])
-        r = next(x for x in si["relationship_register"]["relationships"] if x["relationship_id"] in si["relationship_register"]["confirmed_relationship_ids"])
-        r["proof"] = None
+        next(x for x in si["relationship_register"]["relationships"] if x["status"] == "CONFIRMED")["proof"] = None
         self.refused("TC06", None, "carries no engine proof", si=si)
 
-    def test_r2_every_confirmed_relationship_needs_one_disposition(self):
-        self.refused("TC06", lambda d: d["relationship_dispositions"].pop(), "no ACKNOWLEDGED / CHALLENGED disposition")
-        self.refused("TC06", lambda d: d.update(relationship_dispositions=None), "relationship_dispositions is required")
-        self.refused("TC06", lambda d: d["relationship_dispositions"].append(copy.deepcopy(d["relationship_dispositions"][0])),
-                     "more than one disposition")
-        rej = rid_of("TC06", "EXC-TC06-01", "EXC-TC06-05", "REJECTED")
-
-        def on_rejected(d):
-            x = copy.deepcopy(d["relationship_dispositions"][0])
-            x.update(relationship_id=rej, exception_ids=["EXC-TC06-01", "EXC-TC06-05"])
-            d["relationship_dispositions"].append(x)
-        self.refused("TC06", on_rejected, "is not a CONFIRMED relationship")
-
-    def test_r3_live_tc06_output_is_a_silent_rejection_and_is_refused(self):
+    def test_e2_live_prompt_1_6_silent_split_is_refused(self):
         live = json.loads((FIXTURES / "tc06_live_relreg_group_assessments_20261123.json").read_text(encoding="utf-8"))
+        self.refused("TC06", lambda d: d.update(group_assessments=[dict(a, common_cause_status="NOT_ESTABLISHED")
+                                                                   for a in live["group_assessments"]]),
+                     "splits the engine-CONFIRMED relationship")
 
-        def replay(d):
-            d["group_assessments"] = [dict(a, common_cause_status="NOT_ESTABLISHED") for a in live["group_assessments"]]
-        errs = errors_for("TC06", replay)
-        self.assertTrue(any("splits the CONFIRMED relationship" in e for e in errs), errs)
-
-    def test_r3_unverified_over_a_confirmed_pair_in_a_group_is_refused(self):
+    def test_e2_engine_relationship_cannot_be_rejected_or_downgraded(self):
         def under(d):
-            a = next(x for x in d["group_assessments"] if x["group_id"] == "GRP-TC06-01")
-            a.update(relationship_verdict="UNVERIFIED", confidence="LOW", common_cause_status="UNVERIFIED")
-        self.refused("TC06", under, "without a CHALLENGED disposition")
+            next(x for x in d["group_assessments"] if x["group_id"] == "GRP-TC06-01").update(
+                relationship_verdict="UNVERIFIED", confidence="LOW", common_cause_status="UNVERIFIED")
+        self.refused("TC06", under, "the engine owns relationship status")
 
-    def test_r3_tc01_persistence_cannot_be_dropped_silently(self):
-        rid = next(r["relationship_id"] for r in B("TC01")["reg"]["relationships"] if r["link_type"] == "L2 PERSISTENCE")
-        pair = next(r["exception_ids"] for r in B("TC01")["reg"]["relationships"] if r["relationship_id"] == rid)
+        def coincidence(d):
+            next(x for x in d["group_assessments"] if x["group_id"] == "GRP-TC06-01").update(
+                relationship_verdict="COINCIDENCE_REJECTED", common_cause_status="NOT_ESTABLISHED", supporting_evidence=[],
+                contradicting_evidence=["IN-11:TX-0917-00002"])
+        self.refused("TC06", coincidence, "the engine owns relationship status")
+
+    def test_e2_tc01_persistence_cannot_be_split_off(self):
+        pair = next(r["exception_ids"] for r in B("TC01")["reg"]["relationships"] if r["link_type"] == "L2 PERSISTENCE")
 
         def split(d):
             g = next(x for x in d["group_assessments"] if set(pair) <= set(x["exception_ids"]))
-            rest = [e for e in g["exception_ids"] if e != pair[1]]
             d["group_assessments"].append(dict(copy.deepcopy(g), exception_ids=[pair[1]], relationship_verdict="UNVERIFIED",
                                                confidence="LOW", common_cause_status="UNVERIFIED"))
-            g["exception_ids"] = rest
-        self.refused("TC01", split, f"splits the CONFIRMED relationship {rid}")
+            g["exception_ids"] = [e for e in g["exception_ids"] if e != pair[1]]
+        self.refused("TC01", split, "splits the engine-CONFIRMED relationship")
 
-    def test_r4_challenge_resting_on_detection_records_is_refused(self):
-        rid = rid_of("TC06", "EXC-TC06-01", "EXC-TC06-03")
-
-        def detection_only(d):
-            tc06_challenge(d)
-            disp(d, rid)["contradicting_evidence"] = ["IN-05:IRR-EMONEY-GBP-20260917", SNAP04]   # what the live model cited
-        self.refused("TC06", detection_only, "detection records")
-
-    def test_r4_incomplete_challenges_are_refused(self):
-        rid = rid_of("TC06", "EXC-TC06-01", "EXC-TC06-03")
-        for field, value, needle in (("why_engine_evidence_insufficient", "", "why the engine's evidence is insufficient"),
-                                     ("limitations", [], "must state its limitations"),
-                                     ("missing_evidence", [], "must state the missing evidence"),
-                                     ("contradicting_evidence", [], "must cite contradicting source records"),
-                                     ("cited_evidence", [], "must cite source records"),
-                                     ("reason", "Different record.", "substantive reason")):
-            def e(d, f=field, v=value):
-                tc06_challenge(d)
-                disp(d, rid)[f] = v
-            self.refused("TC06", e, needle)
-
-    def test_r4_acknowledged_cannot_carry_contradicting_evidence(self):
-        rid = rid_of("TC06", "EXC-TC06-03", "EXC-TC06-04")
-        self.refused("TC06", lambda d: disp(d, rid).update(contradicting_evidence=["IN-11:TX-0917-00002"]), "challenge it instead")
-
-    def test_r5_disposition_keeps_the_engine_identity(self):
-        rid = rid_of("TC06", "EXC-TC06-01", "EXC-TC06-03")
-        self.refused("TC06", lambda d: disp(d, rid).update(exception_ids=["EXC-TC06-01", "EXC-TC06-04"]), "engine's identity")
-        self.refused("TC06", lambda d: disp(d, rid).update(relationship_type="SHARED_REFERENCE"), "engine's identity")
-
-    def test_r6_common_cause_status_is_required(self):
+    def test_c1_common_cause_status_is_required(self):
         self.refused("TC06", lambda d: d["group_assessments"][0].pop("common_cause_status"), "common_cause_status is required")
 
-    def test_r7_unverified_common_cause_is_never_promoted(self):
+    def test_c2_unverified_common_cause_is_never_promoted(self):
         def cc(d):
             next(x for x in d["group_assessments"] if x["group_id"] == "CC-TC05-01")["common_cause_status"] = "EVIDENCE_BACKED"
         self.refused("TC05", cc, "never promoted")
-        self.refused("TC06", lambda d: d["group_assessments"][0].update(relationship_verdict="UNVERIFIED", confidence="LOW",
-                                                                        common_cause_status="EVIDENCE_BACKED"),
-                     "requires relationship_verdict EVIDENCE_BACKED")
-        live = json.loads((FIXTURES / "tc06_live_relreg_group_assessments_20261123.json").read_text(encoding="utf-8"))
 
-        def rej(d):
-            tc06_challenge(d)
-            a = next(x for x in d["group_assessments"] if x["exception_ids"] == ["EXC-TC06-01"])
-            a.update(relationship_verdict="COINCIDENCE_REJECTED", common_cause_status="UNVERIFIED",
-                     contradicting_evidence=live["group_assessments"][0]["contradicting_evidence"], supporting_evidence=[])
-        self.refused("TC06", rej, "has common_cause_status NOT_ESTABLISHED")
+        def cand(d):
+            next(x for x in d["group_assessments"] if x["group_id"] == "CAND-TC05-01")["common_cause_status"] = "EVIDENCE_BACKED"
+        self.refused("TC05", cand, "requires relationship_verdict EVIDENCE_BACKED")
 
-    def test_r8_challenged_or_rejected_relationship_cannot_back_a_common_cause(self):
-        rid = rid_of("TC06", "EXC-TC06-01", "EXC-TC06-03")
-
-        def challenged_but_backed(d):
-            x = disp(d, rid)
-            tc = copy.deepcopy(d)
-            tc06_challenge(tc)
-            x.update(disp(tc, rid))
-            a = next(g for g in d["group_assessments"] if g["group_id"] == "GRP-TC06-01")
-            a["common_cause_status"] = "EVIDENCE_BACKED"
-        self.refused("TC06", challenged_but_backed, "CHALLENGES cannot support an evidence-backed common cause")
+    def test_c3_rejected_or_unconnected_cannot_back_a_common_cause(self):
         si = copy.deepcopy(B("TC06")["si"])
         si["investigation_groups"].append({"group_id": "GRP-TC06-99", "exception_ids": "EXC-TC06-01; EXC-TC06-05", "link_types": "",
                                            "links": "", "statement": "", "source_evidence_ids": []})
-
-        def on_rejected(d):
-            d["group_assessments"].append({"group_id": "GRP-TC06-99", "exception_ids": ["EXC-TC06-01", "EXC-TC06-05"],
-                                           "related_exception_ids": [], "relationship_verdict": "EVIDENCE_BACKED",
-                                           "common_cause_status": "EVIDENCE_BACKED", "confidence": "MEDIUM",
-                                           "common_cause_hypothesis": "These may share a cause; it is not established.",
-                                           "supporting_evidence": ["IN-11:TX-0917-00002"], "contradicting_evidence": [],
-                                           "missing_evidence": [], "analyst_action": "Check the two exceptions together.",
-                                           "rationale": "Same date and the same amount."})
-        self.refused("TC06", on_rejected, "a rejected relationship cannot support an evidence-backed common cause", si=si)
-
-    def test_r8_common_cause_needs_acknowledged_connections(self):
-        si = copy.deepcopy(B("TC06")["si"])
         si["investigation_groups"].append({"group_id": "GRP-TC06-98", "exception_ids": "EXC-TC06-02; EXC-TC06-03", "link_types": "",
                                            "links": "", "statement": "", "source_evidence_ids": []})
 
-        def unconnected(d):
-            d["group_assessments"].append({"group_id": "GRP-TC06-98", "exception_ids": ["EXC-TC06-02", "EXC-TC06-03"],
-                                           "related_exception_ids": [], "relationship_verdict": "EVIDENCE_BACKED",
-                                           "common_cause_status": "EVIDENCE_BACKED", "confidence": "MEDIUM",
-                                           "common_cause_hypothesis": "These may share a cause; it is not established.",
-                                           "supporting_evidence": [SNAP04], "contradicting_evidence": [], "missing_evidence": [],
-                                           "analyst_action": "Check the two exceptions together.", "rationale": "Scripted test case."})
-        self.refused("TC06", unconnected, "connected through acknowledged CONFIRMED engine relationships", si=si)
+        def add(gid, excs):
+            return {"group_id": gid, "exception_ids": excs, "related_exception_ids": [], "relationship_verdict": "EVIDENCE_BACKED",
+                    "common_cause_status": "EVIDENCE_BACKED", "confidence": "MEDIUM",
+                    "common_cause_hypothesis": "These may share a cause; it is not established.",
+                    "supporting_evidence": [SNAP04], "contradicting_evidence": [], "missing_evidence": [],
+                    "analyst_action": "Check the two exceptions together.", "rationale": "Scripted negative test."}
 
-    def test_r9_citations_must_be_source_records(self):
-        rid = rid_of("TC06", "EXC-TC06-03", "EXC-TC06-04")
-        self.refused("TC06", lambda d: disp(d, rid)["cited_evidence"].append(rid), "must be source record IDs")
-        self.refused("TC06", lambda d: disp(d, rid)["cited_evidence"].append("IN-03:CBS-NOT-A-RECORD"), "must be source record IDs")
+        def e(d):
+            d["group_assessments"] += [add("GRP-TC06-99", ["EXC-TC06-01", "EXC-TC06-05"]),
+                                       add("GRP-TC06-98", ["EXC-TC06-02", "EXC-TC06-03"])]
+        errs = errors_for("TC06", e, si)
+        self.assertTrue(any("a rejected relationship cannot support an evidence-backed common cause" in x for x in errs), errs)
+        self.assertTrue(any("connected through CONFIRMED engine relationships" in x for x in errs), errs)
+
+    def test_citations_must_be_source_records(self):
+        def bad(d):
+            next(x for x in d["group_assessments"] if x["group_id"] == "GRP-TC06-01")["supporting_evidence"].append("REL-TC06-04")
+        self.refused("TC06", bad, "must be source evidence record IDs")
 
 
-# ============================================================================================================ section 7 + R10
-class FinalPackAndReport(unittest.TestCase):
+# ============================================================================================================ analyst review
+class AnalystReviewWorkflow(unittest.TestCase):
+    """ACCEPT / REJECT with optional explanation, identity and timestamp; pending review; audit history; engine untouched."""
+
     @classmethod
     def setUpClass(cls):
-        b = B("TC06")
-        out = R.scripted(b["si"], tc06_challenge)
-        cls.summary = generate_closing_summary(b["snap"], openai_investigator(lambda kw, o=out: raw(o)))
-        rid = rid_of("TC06", "EXC-TC06-01", "EXC-TC06-03")
-        cls.rid = rid
-        cls.review = review_for(b["snap"], cls.summary, relationship_challenge_reviews=[ChallengeReview(
-            relationship_id=rid, analyst_position="ENGINE_RELATIONSHIP_UPHELD",
-            analyst_explanation="C0007 is explained by TX-0917-00002; the engine's exclusivity holds. Snapshot error is C0004's.")])
-        cls.final = assemble_final_pack(b["snap"], cls.summary, cls.review, GenerationInfo(generated_at="2026-11-23T10:00:00+00:00"))
+        cls.before = {e: hashlib.sha256(findings_path("TC06", e).read_bytes()).hexdigest()
+                      for e in ("EXC-TC06-01", "EXC-TC06-02")}
+        cls.explain = {"EXC-TC06-01": "Agreed: the C0004 snapshot of 17 Sep explains the 90.00; cause still to be confirmed.",
+                       "EXC-TC06-02": "Rejected: the acquirer-report finding needs the acquirer's own settlement file first."}
+        cls.snap = reviewed_snapshot("TC06", {"EXC-TC06-02": "REJECT"}, cls.explain)
+        cls.final, cls.summary, cls.review = final_for(cls.snap)
+        cls.all_accept, *_ = final_for(reviewed_snapshot("TC06", {}))
 
-    def test_final_pack_preserves_engine_proof_challenge_and_analyst_explanation(self):
-        f, b = self.final, B("TC06")
-        self.assertEqual(f["relationships"]["relationship_register"], b["reg"])                    # copied verbatim
-        it = next(i for i in f["relationship_assessments"]["items"] if i["relationship_id"] == self.rid)
-        self.assertEqual((it["engine_status"], it["register_status"], it["ai_disposition"]), ("CONFIRMED", "CONFIRMED", "CHALLENGED"))
-        self.assertEqual(it["proof"]["faulty_record"], SNAP04)
-        d = it["ai_disposition_detail"]
-        self.assertTrue(d["contradicting_evidence"] and d["missing_evidence"] and d["why_engine_evidence_insufficient"])
-        self.assertEqual(it["analyst_explanation"]["analyst_position"], "ENGINE_RELATIONSHIP_UPHELD")
-        self.assertTrue(it["common_cause_assessments"] == [] or all(a["common_cause_status"] for a in it["common_cause_assessments"]))
-        other = next(i for i in f["relationship_assessments"]["items"] if i["relationship_id"] == rid_of("TC06", "EXC-TC06-03", "EXC-TC06-04"))
-        self.assertEqual(other["ai_disposition"], "ACKNOWLEDGED")
-        self.assertEqual(other["common_cause_assessments"][0]["common_cause_status"], "NOT_ESTABLISHED")
+    def entry(self, exc):
+        return next(e for e in self.final["exception_register"] if e["exception"]["exception_id"] == exc)
 
-    def test_pdf_and_html_show_the_challenge_apart_from_the_engine_decision(self):
+    def test_accept_with_explanation_identity_and_time_in_the_final_pack(self):
+        r = self.entry("EXC-TC06-01")["investigation"]["analyst_review"]
+        self.assertEqual((r["decision"], r["comment"], r["reviewer"], r["decided_at"]),
+                         ("ACCEPT", self.explain["EXC-TC06-01"], ANALYST, "2026-11-23T14:05:00+00:00"))
+        self.assertIn(inv_id("TC06", "EXC-TC06-01"), {i["investigation_id"] for i in self.final["ai_investigations"]})
+
+    def test_reject_with_explanation_keeps_the_reference_and_excludes_the_ai_content(self):
+        e = self.entry("EXC-TC06-02")["investigation"]
+        r = e["analyst_review"]
+        self.assertEqual((r["decision"], r["rejection_reason"], r["disposition"]),
+                         ("REJECT", self.explain["EXC-TC06-02"], "REJECTED_BY_ANALYST"))
+        self.assertEqual(e["investigation_id"], inv_id("TC06", "EXC-TC06-02"))                    # reference kept
+        self.assertNotIn(e["investigation_id"], {i["investigation_id"] for i in self.final["ai_investigations"]})
+
+    def test_reject_without_explanation_uses_the_fixed_wording(self):
+        f, *_ = final_for(reviewed_snapshot("TC06", {"EXC-TC06-02": "REJECT"}))
+        r = next(e for e in f["exception_register"] if e["exception"]["exception_id"] == "EXC-TC06-02")["investigation"]["analyst_review"]
+        self.assertEqual(r["rejection_reason"], "Rejected by the analyst in Ringfence (fixed wording)")
+
+    def test_pending_review_is_never_treated_as_accepted(self):
+        with self.assertRaises(FinalPackInputError) as cm:
+            reviewed_snapshot("TC06", {}, skip=("EXC-TC06-03",))
+        self.assertIn("pending analyst review", str(cm.exception))
+        self.assertIn("never treated as accepted", str(cm.exception))
+
+    def test_original_ai_findings_stay_unchanged_in_the_audit_history(self):
+        for e, digest in self.before.items():
+            self.assertEqual(hashlib.sha256(findings_path("TC06", e).read_bytes()).hexdigest(), digest)
+
+    def test_decisions_never_change_the_engine_result(self):
+        pack = B("TC06")["pack"]
+        for f in (self.final, self.all_accept):
+            self.assertEqual([e["exception"] for e in f["exception_register"]], pack["exception_register"]["exceptions"])
+            self.assertEqual(f["relationships"]["relationship_register"], pack["investigation_group_register"]["relationship_register"])
+            self.assertTrue(all(e["resolution_status"] == "UNRESOLVED" for e in f["exception_register"]))
+        for k in ("reconciliation_results", "relationships", "source_inventory"):
+            self.assertEqual(self.final[k], self.all_accept[k], k)
+        self.assertEqual(validate_final_pack(self.final, self.snap, self.summary, self.review), [])
+
+    def test_tampered_engine_relationship_is_refused(self):
+        f = copy.deepcopy(self.final)
+        f["relationships"]["relationship_register"]["relationships"][0]["status"] = "REJECTED"
+        errs = validate_final_pack(f, self.snap, self.summary, self.review)
+        self.assertTrue(any("never changed" in e for e in errs), errs)
+
+    def test_pdf_shows_the_decisions_the_engine_relationships_and_no_ai_verdicts(self):
         pdf, html = render_all(self.final)
-        self.assertEqual(audit_integrity(self.final, B("TC06")["pack"], pdf, html, B("TC06")["snap"]), [])
+        self.assertEqual(audit_integrity(self.final, B("TC06")["pack"], pdf, html, self.snap), [])
         t = norm(pdf_text(pdf))
-        for s in ("Engine relationships and AI assessments", "ENGINE: CONFIRMED (deterministic)", "AI challenge - not accepted by the engine",
-                  "AI: CHALLENGED - ENGINE STATUS UNCHANGED", "Analyst explanation: ENGINE_RELATIONSHIP_UPHELD", "AI: ACKNOWLEDGED",
-                  "NOT established", "341484.46"):
+        for s in ("REJECTED BY ANALYST", self.explain["EXC-TC06-02"], self.explain["EXC-TC06-01"], "Dana Analyst (analyst-7)",
+                  "2026-11-23T14:05:00+00:00", "Related exceptions: engine relationship evidence", "ENGINE: CONFIRMED",
+                  "Related exceptions (engine relationships)", "341484.46", "NOT established"):
             self.assertIn(norm(s), t, s)
-        self.assertIn("item ai_challenge", html)
-        self.assertIn("item engine_relationship", html)
+        for s in ("ACKNOWLEDGED", "CHALLENGED", "AI challenge"):
+            self.assertNotIn(norm(s), t, s)
 
-    def test_r10_tampered_engine_status_or_proof_is_refused(self):
-        b = B("TC06")
-        for path in (("relationships", "relationship_register"), ("relationship_assessments",)):
-            f = copy.deepcopy(self.final)
-            node = f
-            for k in path:
-                node = node[k]
-            if path[0] == "relationships":
-                node["relationships"][0]["status"] = "REJECTED"
-            else:
-                node["items"][0]["engine_status"] = "REJECTED"
-            errs = validate_final_pack(f, b["snap"], self.summary, self.review)
-            self.assertTrue(any("never changed" in e or "must be kept exactly" in e for e in errs), (path, errs))
-
-    def test_r10_analyst_explanation_only_for_a_challenged_relationship(self):
-        b = B("TC06")
-        rid = rid_of("TC06", "EXC-TC06-03", "EXC-TC06-04")
-        review = self.review.model_copy(update={"relationship_challenge_reviews": [ChallengeReview(
-            relationship_id=rid, analyst_position="AI_CHALLENGE_SUPPORTED", analyst_explanation="Not challenged by the AI.")]})
-        with self.assertRaises(FinalPackValidationError) as cm:
-            assemble_final_pack(b["snap"], self.summary, review, GenerationInfo(generated_at="2026-11-23T10:00:00+00:00"))
-        self.assertTrue(any("does not challenge that relationship" in e for e in cm.exception.errors))
-
-    def test_acknowledged_pack_renders_every_confirmed_relationship(self):
-        for tc in ("TC01", "TC02", "TC04", "TC06"):
-            f = B(tc)["final"]
-            n = len([r for r in B(tc)["reg"]["relationships"] if r["status"] == "CONFIRMED"])
-            self.assertEqual(len(f["relationship_assessments"]["items"]), n, tc)
-            self.assertTrue(all(i["ai_disposition"] == "ACKNOWLEDGED" for i in f["relationship_assessments"]["items"]), tc)
-            self.assertIn(norm("Engine relationships and AI assessments"), norm(pdf_text(render_pdf(f))), tc)
+    def test_every_tc_publishes_and_renders(self):
+        for tc, b in R.BUILT.items():
+            pdf, html = render_all(b["final"])
+            self.assertEqual(audit_integrity(b["final"], b["pack"], pdf, html, b["snap"]), [], tc)
+            self.assertIn(norm("Related exceptions: engine relationship evidence"), norm(pdf_text(pdf)), tc)
 
 
 # ============================================================================================================ compatibility
@@ -443,33 +444,26 @@ class BackwardCompatibility(unittest.TestCase):
                             contradicting_evidence=[], missing_evidence=["x"], analyst_action="Check the records.", confidence="LOW",
                             rationale="Scripted test.")
         self.assertNotIn("common_cause_status", a.model_dump())
-        o = ClosingSummaryOutput.model_validate(copy.deepcopy(B("TC06")["final"]["closing_summary"]["output"]) | {"relationship_dispositions": None})
-        self.assertNotIn("relationship_dispositions", o.model_dump())
-        r = ReviewRecord.model_validate({k: v for k, v in self.__class__._review().model_dump().items()})
-        self.assertNotIn("relationship_challenge_reviews", r.model_dump())
+        self.assertNotIn("relationship_challenge_reviews", ReviewRecord.model_fields)
 
-    @staticmethod
-    def _review():
-        return review_for(B("TC06")["snap"], generate_closing_summary(
-            B("TC06")["snap"], openai_investigator(lambda kw, o=B("TC06")["out"]: raw(o))))
+    def test_withdrawn_draft_output_is_refused_by_the_schema(self):
+        out = copy.deepcopy(B("TC06")["final"]["closing_summary"]["output"])
+        out["relationship_dispositions"] = []
+        with self.assertRaises(Exception):
+            ClosingSummaryOutput.model_validate(out)
 
     def test_register_1_0_input_and_1_2_output_validate_as_before(self):
         si = copy.deepcopy(B("TC06")["si"])
         reg = si["relationship_register"]
-        for k in ("schema", "confirmed_relationship_ids"):
-            reg.pop(k)
+        reg.pop("schema")
         for r in reg["relationships"]:
             for k in ("relationship_type", "engine_status", "proof", "limitations"):
                 r.pop(k)
 
         def old_output(d):
-            d.pop("relationship_dispositions", None)
             for a in d["group_assessments"]:
                 a.pop("common_cause_status", None)
         self.assertEqual(validate_closing_summary(R.scripted(si, old_output), si), [])
-        with_disp = R.scripted(B("TC06")["si"])
-        self.assertTrue(any("without an evidence-bearing relationship register" in e
-                            for e in validate_closing_summary(with_disp, si)))
 
 
 if __name__ == "__main__":

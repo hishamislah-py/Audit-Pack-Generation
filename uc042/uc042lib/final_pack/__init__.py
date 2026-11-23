@@ -13,8 +13,8 @@ Workflow (each step is a separate call; the assembler never calls a model):
     path = publish_final_pack(final)                          # write-once; verify_final_pack(path)
 """
 from .assemble import FinalPackValidationError, assemble_final_pack, assemble_preview, content_sha256
-from .model import (ACKNOWLEDGEMENT_TEXT, AnalystReview, ChallengeReview, ClosingSummary, ClosingSummaryOutput, GenerationInfo,
-                    GroupAssessment, PriorDecision, RelationshipDisposition, Reviewer, ReviewRecord, Selection)
+from .model import (ACKNOWLEDGEMENT_TEXT, AnalystReview, ClosingSummary, ClosingSummaryOutput, GenerationInfo, GroupAssessment,
+                    PriorDecision, Reviewer, ReviewRecord, Selection)
 from .persistence import (FinalPackExistsError, FinalPackPublicationError, list_final_packs, next_version, publish_final_pack,
                           verify_final_pack)
 from .render_html import render_html
