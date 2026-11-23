@@ -315,8 +315,15 @@ Strict rules:
   source_refs. Hypotheses and candidate relationships are not observations; report them under unverified_hypotheses.
 - State causes only as unverified hypotheses. "Not found in the supplied data" never means the record does not exist.
 - source_refs must be IDs from allowed_refs. unresolved_items must name exceptions from the input.
+- The input has TWO separate ID lists. allowed_refs (exception, investigation, finding, hypothesis, gap, conflict,
+  next-step, group, candidate and MISS- IDs) is the ONLY list for every source_refs. allowed_source_refs (source record IDs
+  such as IN-03:CBS-...) is ONLY for the supporting_evidence and contradicting_evidence of group_assessments. Never put a
+  source record ID (IN-xx:...) in any source_refs, not even next to an allowed reference.
 - Every item of key_observations, unverified_hypotheses, evidence_gaps and suggested_next_steps must cite at least one ID
   from allowed_refs. If you cannot cite one for an item, leave that item out. An empty string is never a reference.
+- Every unverified_hypotheses item must cite at least one hypothesis ref (an investigation hypothesis, '#H-..') or a CAND-
+  candidate ID. A possible common cause across several exceptions that has no such ref belongs in group_assessments, not
+  in unverified_hypotheses.
 - If allowed_refs is empty, return key_observations, unverified_hypotheses, evidence_gaps and suggested_next_steps as
   empty lists, and put any general remark in summary_text or limitations instead.
 - If the pack has no exceptions, say so plainly and leave unresolved_items empty.
@@ -328,8 +335,9 @@ Group assessments (group_assessments) - required:
 - exception_ids: the exceptions of that group or candidate. If the records show that only part of a group is genuinely
   related, split that ONE group into several assessments (same group_id) whose exception_ids together cover each of its
   exceptions exactly once - for example two exceptions with a shared cause (EVIDENCE_BACKED) and a third whose apparent
-  link is a coincidence (COINCIDENCE_REJECTED). related_exception_ids: other exceptions of this pack that appear related
-  on the records (may be empty).
+  link is a coincidence (COINCIDENCE_REJECTED). related_exception_ids: other exceptions of this pack (not already in
+  exception_ids) that appear related on the records - consider every exception whose records point to the same batch,
+  reference, client, account or day - (may be empty).
 - relationship_verdict: EVIDENCE_BACKED only when cited source records show the link (never for a CAND- candidate, which
   is unverified by definition, and never when records contradict it); UNVERIFIED when the link is plausible but not
   established; COINCIDENCE_REJECTED when an apparent link (for example the same date and the same amount) is contradicted

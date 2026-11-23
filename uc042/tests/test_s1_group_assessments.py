@@ -12,6 +12,7 @@ TC03 uses the suite's current (Saturday 26 Sep) version: no weekday revision exi
 """
 import copy
 import hashlib
+import json
 import os
 import re
 import shutil
@@ -364,6 +365,51 @@ class Refused(unittest.TestCase):
         b = BUILT["TC06"]
         decoy = b["final"]["closing_summary"]["output"]["group_assessments"][1]
         self.assertIn(norm("Contradicting evidence (source records)" + ", ".join(decoy["contradicting_evidence"])), b["pdf"])
+
+
+class LiveTC06SummaryRefusal(unittest.TestCase):
+    """Regression for the live TC06 refusal (prompt 1.3): an unverified_hypotheses item cited two SOURCE record IDs.
+    The validator is unchanged and must keep refusing exactly that; prompt 1.4 spells out the citation contract."""
+    FIX = json.loads((Path(__file__).resolve().parent / "fixtures" / "tc06_live_summary_refusal_20261123.json")
+                     .read_text(encoding="utf-8"))
+
+    def refused_item(self):
+        return {"text": "The 17 Sep snapshots of C0004 and C0007 may share a common data problem; this is unverified.",
+                "source_refs": list(self.FIX["refused_item_source_refs"])}
+
+    def test_the_cited_ids_are_genuine_tc06_source_records_offered_only_for_group_evidence(self):
+        si = BUILT["TC06"]["si"]
+        for i in self.FIX["refused_item_source_refs"]:
+            self.assertIn(i, si["allowed_source_refs"])
+            self.assertNotIn(i, si["allowed_refs"])
+
+    def test_the_unchanged_validator_reproduces_the_live_findings_exactly(self):
+        si = BUILT["TC06"]["si"]
+        out = scripted_summary("TC06", si, lambda d: d["unverified_hypotheses"].append(self.refused_item()))
+        idx = len(out.unverified_hypotheses) - 1
+        errors = validate_closing_summary(out, si)
+        expected = [f.replace("unverified_hypotheses[4]", f"unverified_hypotheses[{idx}]") for f in self.FIX["live_findings"]]
+        self.assertEqual(sorted(e for e in errors if e.startswith(f"unverified_hypotheses[{idx}]")), sorted(expected))
+        with self.assertRaises(ClosingSummaryError):
+            generate_closing_summary(BUILT["TC06"]["snap"], openai_investigator(lambda kw: raw(out)))
+
+    def test_prompt_1_4_states_the_citation_contract(self):
+        from uc042lib.final_pack.model import SUMMARY_PROMPT_VERSION
+        from uc042lib.final_pack.summary import SUMMARY_INSTRUCTIONS
+        self.assertEqual(SUMMARY_PROMPT_VERSION, "uc042-closing-summary-prompt/1.4")
+        flat = " ".join(SUMMARY_INSTRUCTIONS.split())
+        self.assertIn("allowed_refs (exception, investigation, finding, hypothesis, gap, conflict, next-step, group, candidate "
+                      "and MISS- IDs) is the ONLY list for every source_refs", flat)
+        self.assertIn("Never put a source record ID (IN-xx:...) in any source_refs", flat)
+        self.assertIn("Every unverified_hypotheses item must cite at least one hypothesis ref", flat)
+        self.assertIn("belongs in group_assessments, not in unverified_hypotheses", flat)
+
+    def test_the_contract_conforming_form_validates(self):
+        si = BUILT["TC06"]["si"]   # the same content, expressed where the contract puts it: the group assessment
+        out = scripted_summary("TC06", si)
+        self.assertEqual(validate_closing_summary(out, si), [])
+        cited = {i for a in out.group_assessments for i in a.supporting_evidence + a.contradicting_evidence}
+        self.assertTrue(cited & set(self.FIX["refused_item_source_refs"]))
 
 
 class BackwardCompatible(unittest.TestCase):

@@ -46,11 +46,14 @@ OUTCOME_SUMMARY_VERSION = "uc042-outcome-summary/1.0"
 # investigation group and per candidate relationship supplied). Stored 1.0 / 1.1 summaries have no such field: it is omitted
 # when absent, so their bytes, hashes and renderings are unchanged.
 SUMMARY_SCHEMA_VERSION = "uc042-closing-summary/1.2"
+# 1.4 (23 Nov 2026): the two ID lists are spelt out (allowed_refs only for source_refs; allowed_source_refs only for group
+# assessment evidence), unverified_hypotheses must cite a hypothesis or CAND- ref, related_exception_ids guidance; live TC06
+# refusal (an unverified_hypotheses item cited source records). Validation unchanged.
 # 1.3 (23 Nov 2026): group assessment instructions. 1.2 (18 Nov 2026): with no citable reference (allowed_refs empty) every
 # citation-dependent list stays empty; an item that cannot cite an allowed reference is omitted; an empty string is never a
 # reference. Validation unchanged except that it names an empty reference explicitly. 1.1 (12 Nov 2026): one negation per
 # disclaimer term.
-SUMMARY_PROMPT_VERSION = "uc042-closing-summary-prompt/1.3"
+SUMMARY_PROMPT_VERSION = "uc042-closing-summary-prompt/1.4"
 # 1.1 (23 Nov 2026): each exception, investigation group, candidate relationship, accepted confirmed finding and conflict
 # also carries its SOURCE evidence record IDs (only IDs of the pack's evidence register), group links / candidate detail
 # text, and allowed_source_refs (their union): the only IDs a group assessment may cite as supporting or contradicting
