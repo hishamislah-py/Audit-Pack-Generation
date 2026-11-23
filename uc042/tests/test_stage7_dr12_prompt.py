@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parent.parent
 class Versions(unittest.TestCase):
     def test_prompt_versions_bumped(self):
         self.assertEqual((config.PROMPT_VERSION, config.TOOLS_PROMPT_VERSION),
-                         ("uc042-investigator-prompt/1.8", "uc042-investigator-prompt/2.8-tools"))
+                         ("uc042-investigator-prompt/1.9", "uc042-investigator-prompt/2.9-tools"))
 
 
 class Wording(unittest.TestCase):

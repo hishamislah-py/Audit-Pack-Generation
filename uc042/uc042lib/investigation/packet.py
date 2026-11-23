@@ -383,11 +383,13 @@ def build_packet(case, scope, route, col):
                         "reconciliation_point": "17:00 Europe/London each reconciliation day"},
     }
     if case.get("engine_relationships") is not None:
-        packet["engine_relationships_CONTEXT"] = {
-            "note": ("The engine's deterministic relationships of this exception (relationship register 1.1), with the proof of "
-                     "each confirmation. Context only: cite the records through allowed_citation_ids. A CONFIRMED relationship "
-                     "connects the exceptions (often through one faulty record); its proof says what is NOT established. "
-                     "Exceptions detected on different records can still share one faulty record."),
+        packet["engine_relationships"] = {
+            "note": ("The engine's deterministic relationships of this exception (relationship register 1.1), each with its "
+                     "proof. A CONFIRMED relationship is an engine result: the exceptions are connected (often through one "
+                     "out-of-line record) and the proof gives the figures, the calculation and the records; report it as a "
+                     "confirmed finding citing the proof's records (REL- IDs are not citable). The proof also says what is NOT "
+                     "established, usually why the record is wrong. CANDIDATE: amounts only, a hypothesis. REJECTED: not "
+                     "related. Exceptions detected on different records can still share one out-of-line record."),
             "relationships": [{k: r[k] for k in ("relationship_id", "exception_ids", "link_type", "relationship_type", "status",
                                                   "engine_status", "basis", "proof", "limitations")}
                               for r in case["engine_relationships"]]}

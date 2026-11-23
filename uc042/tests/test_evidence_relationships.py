@@ -189,7 +189,7 @@ class InvestigationEvidence(unittest.TestCase):
     def test_tc01_duplicate_posting_and_its_evidence(self):
         pk = tc_packet("TC01", "EXC-TC01-06")
         self.assertIn("IN-10:LE-GBP-0928-0007", ids_of(pk))                                        # the duplicate row
-        rels = pk["engine_relationships_CONTEXT"]["relationships"]
+        rels = pk["engine_relationships"]["relationships"]
         dup = [r for r in rels if r["relationship_type"] == "DUPLICATE_LINEAGE" and r["status"] == "CONFIRMED"]
         self.assertTrue(dup and all(r["proof"]["faulty_record"] == "IN-10:LE-GBP-0928-0007" for r in dup))
         self.assertTrue(all("1246.80" in r["proof"]["calculation"] for r in dup))
@@ -197,7 +197,7 @@ class InvestigationEvidence(unittest.TestCase):
     def test_tc02_amount_discrepancy_and_its_impact(self):
         pk = tc_packet("TC02", "EXC-TC02-02")
         self.assertIn("IN-11:TX-0908-00002", ids_of(pk))
-        [r] = [r for r in pk["engine_relationships_CONTEXT"]["relationships"] if r["status"] == "CONFIRMED"]
+        [r] = [r for r in pk["engine_relationships"]["relationships"] if r["status"] == "CONFIRMED"]
         self.assertIn("18.00", r["proof"]["calculation"])                                           # the GBP 18 mismatch
         self.assertIn("C0006", r["proof"]["calculation"])                                           # its client impact
 
@@ -214,7 +214,7 @@ class InvestigationEvidence(unittest.TestCase):
     def test_tc04_unmatched_bank_credit(self):
         pk = tc_packet("TC04", "EXC-TC04-02")
         self.assertIn("IN-09:BE-EUR-0930-U01", ids_of(pk))
-        [r] = [r for r in pk["engine_relationships_CONTEXT"]["relationships"] if r["status"] == "CONFIRMED"]
+        [r] = [r for r in pk["engine_relationships"]["relationships"] if r["status"] == "CONFIRMED"]
         self.assertEqual((r["relationship_type"], r["proof"]["result"]), ("BALANCE_LINEAGE", "EQUAL"))   # 650.00 = difference
 
     def test_tc05_missing_settlement_transactions_without_client_attribution(self):
@@ -230,12 +230,12 @@ class InvestigationEvidence(unittest.TestCase):
     def test_tc06_01_investigation_receives_the_c0004_proof(self):
         pk = tc_packet("TC06", "EXC-TC06-01")
         self.assertIn(SNAP04, ids_of(pk))
-        r = next(r for r in pk["engine_relationships_CONTEXT"]["relationships"]
+        r = next(r for r in pk["engine_relationships"]["relationships"]
                  if r["status"] == "CONFIRMED" and set(r["exception_ids"]) == {"EXC-TC06-01", "EXC-TC06-03"})
         self.assertIn("341484.46", r["proof"]["requirement_effect"])
         self.assertTrue(any("reverses by 90.00" in c for c in r["proof"]["corroboration"]))
         self.assertTrue(any("why the faulty record is wrong" in n for n in r["proof"]["not_established"]))
-        self.assertIn("REJECTED", {x["status"] for x in pk["engine_relationships_CONTEXT"]["relationships"]
+        self.assertIn("REJECTED", {x["status"] for x in pk["engine_relationships"]["relationships"]
                                    if set(x["exception_ids"]) == {"EXC-TC06-01", "EXC-TC06-05"}})
 
 
@@ -464,6 +464,101 @@ class BackwardCompatibility(unittest.TestCase):
             for a in d["group_assessments"]:
                 a.pop("common_cause_status", None)
         self.assertEqual(validate_closing_summary(R.scripted(si, old_output), si), [])
+
+
+# ============================================================================================================ investigation prompt 1.9
+class InvestigationPrompt(unittest.TestCase):
+    """Prompt 1.9 / 2.9-tools: individual investigations examine and use the engine's relationships (root cause of the
+    live TC06-01 weakness: the prompt never mentioned them, so an engine-CONFIRMED link was reported as merely possible)."""
+
+    def test_versions_and_reusable_instruction(self):
+        from uc042lib.investigation import config
+        from uc042lib.investigation.prompts import SYSTEM_PROMPT, TOOLS_SYSTEM_PROMPT
+        self.assertEqual((config.PROMPT_VERSION, config.TOOLS_PROMPT_VERSION),
+                         ("uc042-investigator-prompt/1.9", "uc042-investigator-prompt/2.9-tools"))
+        for p in (SYSTEM_PROMPT, TOOLS_SYSTEM_PROMPT):
+            flat = " ".join(p.split())
+            for s in ("engine_relationships", "status CONFIRMED: an engine result",
+                      'Do not describe a CONFIRMED relationship as possible, potential or "may be related"',
+                      "A relationship is not a cause", "never invent the reason behind a faulty record",
+                      "status CANDIDATE", "status REJECTED", "Relationship IDs (REL-...) are not citable"):
+                self.assertIn(s, flat)
+            for s in ("TC06", "C0004", "EXC-", "90.00"):            # reusable: nothing scenario-specific
+                self.assertNotIn(s, flat)
+
+    def test_model_view_carries_the_proof_losslessly(self):
+        from uc042lib.investigation.packet_view import render_model_view
+        pk = tc_packet("TC06", "EXC-TC06-01")
+        view = render_model_view(pk)                                   # raises unless the view reconstructs the packet
+        rels = view["packet_extras"]["engine_relationships"]["relationships"]
+        r = next(r for r in rels if r["status"] == "CONFIRMED" and set(r["exception_ids"]) == {"EXC-TC06-01", "EXC-TC06-03"})
+        self.assertEqual(r["proof"]["faulty_record"], SNAP04)
+        self.assertLessEqual(set(r["proof"]["records"]), set(pk["allowed_citation_ids"]))   # every proof record is citable
+
+    def test_a_confirmed_relationship_finding_passes_investigation_validation(self):
+        from tests.final_pack_support import OFFLINE
+        from uc042lib.investigation.models import LLMInvestigationOutput
+        from uc042lib.investigation.validation import validate_output
+        b = B("TC06")
+        case = build_case(b["pack"], "EXC-TC06-01")
+        pk = tc_packet("TC06", "EXC-TC06-01")
+        out = OFFLINE.investigate(pk)[0].model_dump()
+        recs = [SNAP04, "IN-03:CBS-20260916-C0004-GBP", "IN-05:IRR-EMONEY-GBP-20260917"]
+        out["confirmed_findings"].append({
+            "finding_id": f"F-{len(out['confirmed_findings']) + 1:02d}", "evidence_basis": "SOURCE_EVIDENCE",
+            "claim": "EXC-TC06-01 and EXC-TC06-03 are connected through the C0004 GBP snapshot of 2026-09-17, which is 90.00 "
+                     "above its roll-forward; the GBP requirement of 341574.46 includes it and exceeds the resource of 341484.46 "
+                     "by the same 90.00.",
+            "explanation": "The engine's confirmed relationship proof compares the snapshot (40682.24) with its roll-forward "
+                           "(40592.24) and the requirement with the resource; the next roll-forward reverses by 90.00.",
+            "evidence_ids": recs, "supporting_records": recs, "title": "One out-of-line snapshot behind two exceptions",
+            "audit_relevance": "It connects the internal difference to the client-balance roll-forward failures.",
+            "establishes": "The 17 September C0004 snapshot is 90.00 above its roll-forward, equal to the requirement excess.",
+            "does_not_establish": "Why the 17 September C0004 snapshot is wrong is not established by the records."})
+        errors, notes, refs = validate_output(LLMInvestigationOutput.model_validate(out), pk, case)
+        self.assertEqual(errors, [])
+
+
+# ============================================================================================================ zero LLM after investigation
+class ZeroLLMFinalisation(unittest.TestCase):
+    """Analyst review and finalisation are deterministic: with every model entry point instrumented (OpenAI client class,
+    investigator factories), snapshot, pending check, decisions, final pack, PDF, HTML, publication and re-opening make ZERO
+    model calls. The AI stages (investigations, the closing summary) run before and are persisted."""
+
+    def test_review_and_finalisation_make_no_model_call(self):
+        from unittest import mock
+        from uc042lib.final_pack import ClosingSummary, publish_final_pack, render_html, verify_final_pack
+        snap0 = reviewed_snapshot("TC06", {"EXC-TC06-02": "REJECT"}, {"EXC-TC06-02": "Rejected: needs the acquirer file."})
+        _, summary, _ = final_for(snap0)                       # AI stage (closing summary), persisted below
+        persisted = json.loads(json.dumps(summary.model_dump()))
+        calls = []
+
+        def trip(name):
+            def f(*a, **k):
+                calls.append(name)
+                raise AssertionError(f"model entry point called during finalisation: {name}")
+            return f
+        with mock.patch("openai.OpenAI", side_effect=trip("openai.OpenAI")), \
+                mock.patch("uc042lib.investigation.llm.investigator_from_env", side_effect=trip("investigator_from_env")), \
+                mock.patch("uc042lib.final_pack.summary.investigator_from_env", side_effect=trip("summary.investigator_from_env")):
+            with self.assertRaises(FinalPackInputError):        # pending investigation: refused, no model call
+                reviewed_snapshot("TC06", {}, skip=("EXC-TC06-04",))
+            snap = reviewed_snapshot("TC06", {"EXC-TC06-02": "REJECT"}, {"EXC-TC06-02": "Rejected: needs the acquirer file."})
+            self.assertEqual(snap.sha256, snap0.sha256)
+            stored = ClosingSummary.model_validate(persisted)  # the persisted AI output is reused, never regenerated
+            review = review_for(snap, stored, reviewer=ANALYST)
+            final = assemble_final_pack(snap, stored, review, GenerationInfo(generated_at="2026-11-23T14:10:00+00:00"))
+            pdf, html = render_pdf(final), render_html(final)
+            root = Path(tempfile.mkdtemp(prefix="zero_llm_"))
+            path = publish_final_pack(final, root)
+            self.assertEqual(verify_final_pack(path), [])       # re-opening the published pack
+            again = json.loads((Path(path) / "final_pack.json").read_text(encoding="utf-8"))
+            self.assertEqual(render_html(again), html)
+            shutil.rmtree(root, ignore_errors=True)
+        self.assertEqual(calls, [])
+        t = norm(pdf_text(pdf))
+        self.assertIn(norm("Rejected: needs the acquirer file."), t)
+        self.assertIn(norm(summary.output.overall_position), t)  # the persisted AI summary is what the PDF shows
 
 
 if __name__ == "__main__":

@@ -20,10 +20,15 @@ DET_WORKFLOW_VERSION = "uc042-investigation-graph/3.0-det"     # deterministic r
 # message (about 3 characters per token, as the tool loop estimates). Tools mode keeps its own per-request guard.
 ENV_SINGLE_REQUEST_MAX_INPUT_TOKENS = "UC042_SINGLE_REQUEST_MAX_INPUT_TOKENS"
 DEFAULT_SINGLE_REQUEST_MAX_INPUT_TOKENS = 150000
-PROMPT_VERSION = "uc042-investigator-prompt/1.8"              # 1.1: contradiction rules; 1.2: schema 1.4 explanatory fields;
+PROMPT_VERSION = "uc042-investigator-prompt/1.9"              # 1.1: contradiction rules; 1.2: schema 1.4 explanatory fields;
 # 1.3 / 2.3: the prompt names every causal phrase the findings validation refuses (validation.CAUSE_PATTERNS, unchanged);
 # 2.2 named only two of them, so a live investigation was refused for "due to" (12 Nov 2026).
-TOOLS_PROMPT_VERSION = "uc042-investigator-prompt/2.8-tools"
+TOOLS_PROMPT_VERSION = "uc042-investigator-prompt/2.9-tools"
+# 1.9 / 2.9-tools (23 Nov 2026, live prompt-1.8 verification): engine relationships. The evidence of an enriched pack
+# carries engine_relationships (relationship register 1.1 with proofs); the prompt never mentioned them, so a live TC06-01
+# investigation called an engine-CONFIRMED relationship merely possible. Now: CONFIRMED = an engine result reported as a
+# confirmed finding with the proof's figures and records; a relationship is not a cause (the reason for a faulty record
+# stays in does_not_establish / hypotheses); CANDIDATE = hypotheses only; REJECTED = not related. Validation unchanged.
 # 1.8 / 2.8-tools (20 Nov 2026, live M3 refusal): the five kinds of citable ID, the four citation classes of model view
 # 1.3, evidence_basis (findings schema 1.5), and absent / not assessable / not retrieved. The earlier prompts listed the
 # exception and MISS- IDs as finding support (confirmed_finding_ids) although validation never accepted them as such.

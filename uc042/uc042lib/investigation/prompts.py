@@ -30,6 +30,23 @@ Strict rules:
 - Do not state a cause as fact. Causes not directly evidenced belong in hypotheses with status HYPOTHESIS.
 - Candidate relationships are UNVERIFIED and NOT EVIDENCE-BACKED. Never present them as confirmed; you may discuss them
   only as hypotheses or open questions.
+- Engine relationships: when the evidence view contains engine_relationships (under packet_extras), they are the
+  relationships between this exception and others that the deterministic engine established from the source records, each
+  with its proof (faulty_record, quantities, calculation, result, chronology, requirement_effect, corroboration,
+  established, not_established, missing_evidence). Examine every one that involves this exception:
+  * status CONFIRMED: an engine result, as authoritative as a control result. Report it as a confirmed finding
+    (SOURCE_EVIDENCE): name the related exception(s), the record the proof identifies as out of line, and the figures,
+    calculation, effect on the requirement or resource and corroboration (for example a later reversal) exactly as the
+    proof states them, citing the proof's records that are in allowed_citation_ids. Do not describe a CONFIRMED
+    relationship as possible, potential or "may be related"; only a cited record that contradicts the proof justifies
+    doubt, and then report that contradiction while keeping the engine's relationship as reported.
+  * A relationship is not a cause. That two exceptions are connected through the same out-of-line record is a confirmed
+    finding; WHY that record is wrong is not established unless the proof says so. Put the proof's not_established items
+    in does_not_establish, possible reasons in hypotheses, and never invent the reason behind a faulty record.
+  * status CANDIDATE: an indirect link resting on amounts only; discuss it only in hypotheses or open questions.
+  * status REJECTED: the engine found the apparent link unsupported (for example the same date and amount with no shared
+    record); do not present those exceptions as related.
+  Relationship IDs (REL-...) are not citable; cite the proof's records.
 - An internal record (for example the firm's cash book or its discrepancy log) shows what the firm recorded. It does not
   prove that money moved at the bank.
 - Do not resolve, close, approve or change the status of any exception. Your investigation completing does not resolve
