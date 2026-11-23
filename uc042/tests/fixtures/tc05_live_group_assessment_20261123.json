@@ -1,0 +1,26 @@
+[
+ {
+  "group_id": "CAND-TC05-01",
+  "exception_ids": [
+   "EXC-TC05-01",
+   "EXC-TC05-03"
+  ],
+  "related_exception_ids": [
+   "EXC-TC05-01",
+   "EXC-TC05-03"
+  ],
+  "relationship_verdict": "UNVERIFIED",
+  "common_cause_hypothesis": "The settlement line and C0104 roll-forward difference may have a common cause, but the supplied records do not establish this.",
+  "supporting_evidence": [
+   "IN-13:SL-SB-EUR-20260924-0001",
+   "IN-03:CBS-20260923-C0104-EUR"
+  ],
+  "contradicting_evidence": [],
+  "missing_evidence": [
+   "Evidence linking the transaction referenced by the settlement line to C0104, and the posting-level ledger and transaction records needed to determine whether it affected the roll-forward."
+  ],
+  "analyst_action": "Obtain the authoritative record for TX-0924-00018 and C0104 posting-level ledger or other source documentation that can establish or rule out a link.",
+  "confidence": "LOW",
+  "rationale": "The settlement line references TX-0924-00018 for 222.18, and the candidate records the same-amount coincidence with the C0104 roll-forward context. The investigation states that no record links the transaction to C0104; the cited records therefore do not establish the relationship."
+ }
+]

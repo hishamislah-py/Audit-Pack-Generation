@@ -53,12 +53,17 @@ SUMMARY_SCHEMA_VERSION = "uc042-closing-summary/1.2"
 # citation-dependent list stays empty; an item that cannot cite an allowed reference is omitted; an empty string is never a
 # reference. Validation unchanged except that it names an empty reference explicitly. 1.1 (12 Nov 2026): one negation per
 # disclaimer term.
-SUMMARY_PROMPT_VERSION = "uc042-closing-summary-prompt/1.4"
+# 1.5 (23 Nov 2026): mandatory relationship-reasoning procedure (origin, connecting records, shared keys, chronology,
+# contradictions, coincidence, decision); matching amounts/dates/labels never sufficient; lineage only when the linked record
+# is itself out of line. Validation unchanged.
+SUMMARY_PROMPT_VERSION = "uc042-closing-summary-prompt/1.5"
 # 1.1 (23 Nov 2026): each exception, investigation group, candidate relationship, accepted confirmed finding and conflict
 # also carries its SOURCE evidence record IDs (only IDs of the pack's evidence register), group links / candidate detail
 # text, and allowed_source_refs (their union): the only IDs a group assessment may cite as supporting or contradicting
 # evidence. Engine control-result IDs are never source records.
-SUMMARY_INPUT_VERSION = "uc042-closing-summary-input/1.1"
+# 1.2 (23 Nov 2026): each exception carries its engine root_cause; shared_record_links lists exception pairs whose evidence
+# cites the same source record (deterministic facts, no conclusions).
+SUMMARY_INPUT_VERSION = "uc042-closing-summary-input/1.2"
 RELATIONSHIP_VERDICTS = ("EVIDENCE_BACKED", "UNVERIFIED", "COINCIDENCE_REJECTED")
 ASSESSMENT_CONFIDENCE = ("LOW", "MEDIUM", "HIGH")
 SUPPORTED_PACK_SCHEMAS = {"uc042-pack/0.1"}

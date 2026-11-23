@@ -396,7 +396,7 @@ class LiveTC06SummaryRefusal(unittest.TestCase):
     def test_prompt_1_4_states_the_citation_contract(self):
         from uc042lib.final_pack.model import SUMMARY_PROMPT_VERSION
         from uc042lib.final_pack.summary import SUMMARY_INSTRUCTIONS
-        self.assertEqual(SUMMARY_PROMPT_VERSION, "uc042-closing-summary-prompt/1.4")
+        self.assertEqual(SUMMARY_PROMPT_VERSION, "uc042-closing-summary-prompt/1.5")
         flat = " ".join(SUMMARY_INSTRUCTIONS.split())
         self.assertIn("allowed_refs (exception, investigation, finding, hypothesis, gap, conflict, next-step, group, candidate "
                       "and MISS- IDs) is the ONLY list for every source_refs", flat)
@@ -410,6 +410,65 @@ class LiveTC06SummaryRefusal(unittest.TestCase):
         self.assertEqual(validate_closing_summary(out, si), [])
         cited = {i for a in out.group_assessments for i in a.supporting_evidence + a.contradicting_evidence}
         self.assertTrue(cited & set(self.FIX["refused_item_source_refs"]))
+
+
+class RelationshipReasoning(unittest.TestCase):
+    """Input 1.2 / prompt 1.5: the deterministic facts that separate genuine links from coincidences are in the input, and
+    the two live quality failures (prompt 1.3 / 1.4 outputs) are reproduced against those facts."""
+    FIXTURES = Path(__file__).resolve().parent / "fixtures"
+
+    def links(self, tc):
+        return {tuple(link["exception_ids"]): set(link["shared_source_records"]) for link in BUILT[tc]["si"]["shared_record_links"]}
+
+    def test_every_exception_carries_its_engine_root_cause(self):
+        for tc, b in BUILT.items():
+            pack_rc = {x["exception_id"]: x["root_cause"] for x in b["pack"]["exception_register"]["exceptions"]}
+            self.assertEqual({x["exception_id"]: x["root_cause"] for x in b["si"]["exceptions"]}, pack_rc, tc)
+
+    def test_tc06_shared_records_expose_two_different_origins(self):
+        links = self.links("TC06")
+        self.assertIn("IN-11:TX-0917-00002", links[("EXC-TC06-05", "EXC-TC06-06")])      # 05: transaction-side origin
+        self.assertIn("IN-03:CBS-20260917-C0004-GBP", links[("EXC-TC06-03", "EXC-TC06-04")])   # 03: the C0004 snapshot
+        for other in ("EXC-TC06-01", "EXC-TC06-03"):                                    # 05 shares no record with them
+            self.assertNotIn(tuple(sorted(("EXC-TC06-05", other))), links)
+
+    def test_tc05_root_causes_expose_the_batch_and_the_same_day(self):
+        rc = {x["exception_id"]: x["root_cause"] for x in BUILT["TC05"]["si"]["exceptions"]}
+        self.assertTrue(rc["EXC-TC05-01"].endswith("SB-EUR-20260924"))
+        self.assertTrue(all("EUR" in r and ("2026-09-24" in r or "20260924" in r) for r in rc.values()), rc)
+
+    def test_prompt_1_5_requires_the_relationship_reasoning_procedure(self):
+        from uc042lib.final_pack.summary import SUMMARY_INSTRUCTIONS
+        flat = " ".join(SUMMARY_INSTRUCTIONS.split())
+        for needle in ("1. Origin:", "2. Connecting records:", "3. Shared keys:", "4. Chronology:", "5. Contradictions:",
+                       "6. Coincidence:", "7. Decide:", "Matching amounts, dates or labels are NEVER sufficient evidence",
+                       "supports a shared cause only if that linked record is itself the one that is out of line",
+                       "Never invent evidence or force a common cause"):
+            self.assertIn(needle, flat)
+
+    def test_original_live_tc06_failure_is_contradicted_by_the_deterministic_facts(self):
+        live = json.loads((self.FIXTURES / "tc06_live_app_group_assessment_20261123.json").read_text(encoding="utf-8"))
+        [a] = live                                     # app IDs EXC-CASE-NN = TC06 exceptions in the same order
+        self.assertEqual((sorted(a["exception_ids"]), a["relationship_verdict"]),
+                         (["EXC-CASE-01", "EXC-CASE-03", "EXC-CASE-05"], "EVIDENCE_BACKED"))    # the failure (prompt 1.4)
+        links = self.links("TC06")                     # ... while 05's evidence points to a different originating record
+        self.assertIn(("EXC-TC06-05", "EXC-TC06-06"), links)
+        self.assertNotIn(("EXC-TC06-01", "EXC-TC06-05"), links)
+
+    def test_original_live_tc05_failure_left_out_the_third_exception(self):
+        live = json.loads((self.FIXTURES / "tc05_live_group_assessment_20261123.json").read_text(encoding="utf-8"))
+        [a] = live
+        self.assertNotIn("EXC-TC05-02", a["exception_ids"] + a["related_exception_ids"])      # the failure (prompt 1.3)
+        [s] = BUILT["TC05"]["final"]["closing_summary"]["output"]["group_assessments"]           # the expected form
+        self.assertIn("EXC-TC05-02", s["exception_ids"] + s["related_exception_ids"])
+
+    def test_supported_and_rejected_relationships_stay_consistent(self):
+        for a in BUILT["TC06"]["final"]["closing_summary"]["output"]["group_assessments"]:
+            if a["relationship_verdict"] == "EVIDENCE_BACKED":
+                self.assertTrue(a["supporting_evidence"] and not a["contradicting_evidence"] and a["confidence"] != "LOW")
+            if a["relationship_verdict"] == "COINCIDENCE_REJECTED":
+                self.assertTrue(a["contradicting_evidence"] and not a["supporting_evidence"])
+                self.assertTrue(set(a["contradicting_evidence"]) & self.links("TC06")[("EXC-TC06-05", "EXC-TC06-06")])
 
 
 class BackwardCompatible(unittest.TestCase):

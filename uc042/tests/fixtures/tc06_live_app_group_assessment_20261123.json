@@ -1,0 +1,28 @@
+[
+ {
+  "analyst_action": "Obtain the posting-level ledgers and requirement workpapers for C0004 and C0007, then trace the snapshot lineage into the 2026-09-17 GBP requirement.",
+  "common_cause_hypothesis": "The C0004 and C0007 snapshot lineage may feed into the 2026-09-17 GBP requirement, but the records do not establish a single underlying cause for these exceptions.",
+  "confidence": "MEDIUM",
+  "contradicting_evidence": [],
+  "exception_ids": [
+   "EXC-CASE-01",
+   "EXC-CASE-03",
+   "EXC-CASE-05"
+  ],
+  "group_id": "GRP-CASE-01",
+  "missing_evidence": [
+   "Posting-level client ledger records and the underlying GBP requirement calculation are needed to establish how the client roll-forward results affect the internal reconciliation and whether they share a cause."
+  ],
+  "rationale": "The group links the 2026-09-17 C0004 and C0007 snapshots to the GBP requirement through lineage. The supplied snapshot records support those client and date connections, but they do not establish a common underlying cause.",
+  "related_exception_ids": [
+   "EXC-CASE-04",
+   "EXC-CASE-06"
+  ],
+  "relationship_verdict": "EVIDENCE_BACKED",
+  "supporting_evidence": [
+   "IN-03:CBS-20260916-C0004-GBP",
+   "IN-03:CBS-20260917-C0004-GBP",
+   "IN-03:CBS-20260917-C0007-GBP"
+  ]
+ }
+]

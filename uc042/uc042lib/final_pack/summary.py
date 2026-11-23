@@ -54,6 +54,8 @@ def closing_summary_input(snapshot):
                "investigation_id": chosen.investigation_id,
                "overall_evidence_assessment": inv["assessment"]["overall_evidence_assessment"] if inv else None,
                "investigation_group_id": x.get("investigation_group_id") or "",
+               # input 1.2: what the engine says produced the exception (check|scope: batch, client, account, date, txn)
+               "root_cause": x.get("root_cause") or "",
                "source_evidence_ids": src(x.get("evidence_ids"))}
         if snapshot.reviewed:  # only then: the Phase 1 input (and its fingerprint) is unchanged without analyst reviews
             decision = snapshot.analyst_reviews[chosen.investigation_id].decision if chosen.inclusion == "INCLUDED" else None
@@ -96,9 +98,23 @@ def closing_summary_input(snapshot):
                                      "source_evidence_ids": src(c.get("evidence_ids"))}
                                     for c in pack["investigation_group_register"]["candidate_relationships"]],
         "exceptions": exceptions, "investigations": investigations}
+    data["shared_record_links"] = _shared_record_links(exceptions)
     data["allowed_refs"] = sorted(_refs(data))
     data["allowed_source_refs"] = sorted(_source_refs(data))
     return data
+
+
+def _shared_record_links(exceptions):
+    """Input 1.2: every pair of exceptions whose engine evidence cites the SAME source record (deterministic fact: the same
+    transaction, snapshot, batch line, statement line ... underlies both). No conclusion is drawn; an absent pair means the
+    two exceptions share no source record in the engine's evidence."""
+    out = []
+    for i, a in enumerate(exceptions):
+        for b in exceptions[i + 1:]:
+            shared = [r for r in a["source_evidence_ids"] if r in set(b["source_evidence_ids"])]
+            if shared:
+                out.append({"exception_ids": [a["exception_id"], b["exception_id"]], "shared_source_records": shared})
+    return out
 
 
 def _source_refs(data):
@@ -351,6 +367,29 @@ Group assessments (group_assessments) - required:
 - analyst_action: a concrete next check for the analyst. confidence: LOW, MEDIUM or HIGH (an UNVERIFIED verdict is never
   HIGH). rationale: why this verdict, referring to the cited records.
 - A relationship you reject as a coincidence must not be cited as support anywhere else in the summary.
+
+How to reason about every group and candidate before writing its assessment (do this for each member exception):
+1. Origin: what financial event or record produced the exception? Use its root_cause (check | batch, client, account, date,
+   transaction) and, when an accepted investigation exists, its confirmed findings, which identify the record that is out
+   of line (for example the transaction export disagreeing with the bank and cash book, or a snapshot that fails its own
+   roll-forward).
+2. Connecting records: which source records connect the exceptions? Use shared_record_links (pairs of exceptions whose
+   evidence cites the same source record) and the group links. Two exceptions with no shared record and no link record
+   are not shown to be related.
+3. Shared keys: do they share a batch, transaction reference, client, account or financial movement - not merely a date,
+   an amount, a currency or a category label?
+4. Chronology: do the dates support the proposed direction (the cause precedes or coincides with the effect)?
+5. Contradictions: do any records contradict the link (for example the other side of a comparison agreeing with the bank)?
+6. Coincidence: could the similarity be coincidental? Matching amounts, dates or labels are NEVER sufficient evidence of a
+   common cause on their own. A lineage link (a record that is an input to another result) supports a shared cause only if
+   that linked record is itself the one that is out of line; if a member's own origin is a different record (for example
+   a transaction that also fails elsewhere), its apparent link is a coincidence.
+7. Decide: group exceptions that share an originating record (EVIDENCE_BACKED, cite those records); split a group whose
+   members have different originating records into separate assessments (the link of a member with a different origin is
+   COINCIDENCE_REJECTED, citing the records showing its own origin as contradicting evidence); leave a plausible link that
+   no record establishes as UNVERIFIED and say what evidence is missing. Put other exceptions that share a batch,
+   reference, client or originating record with the members in related_exception_ids. Never invent evidence or force a
+   common cause.
 Return ONLY the structured output."""
 
 
