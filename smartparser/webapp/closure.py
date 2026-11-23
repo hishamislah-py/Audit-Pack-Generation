@@ -30,6 +30,7 @@ import os
 import re
 import threading
 import traceback
+import unicodedata
 import uuid
 from collections import Counter
 from datetime import datetime, timezone
@@ -49,6 +50,26 @@ FIXED = {
     "EXCLUDED_BY_ANALYST": "Excluded by the analyst in Ringfence (fixed wording, O4)",
 }
 INCLUSIONS = ("INCLUDED", "NOT_INVESTIGATED", "EXCLUDED_BY_ANALYST")
+EXPLANATION_MAX = 2000
+
+
+def _explanation(value) -> str:
+    """The analyst's optional explanation on an AI-finding decision: trimmed text, at most EXPLANATION_MAX characters, no
+    control characters other than line breaks and tabs, and only characters the audit PDF fonts can print (Latin, Greek,
+    Cyrillic, general punctuation and currency signs) - so a decision can never make the final pack unprintable."""
+    if value is None:
+        return ""
+    if not isinstance(value, str):
+        raise ClosureError(400, "INVALID", "explanation must be text")
+    text = value.strip()
+    if len(text) > EXPLANATION_MAX:
+        raise ClosureError(400, "INVALID", f"explanation is longer than {EXPLANATION_MAX} characters")
+    for ch in text:
+        cat, o = unicodedata.category(ch), ord(ch)
+        printable = ch in "\n\t" or (not cat.startswith("C") and (o < 0x0530 or 0x2000 <= o <= 0x20CF))
+        if not printable:
+            raise ClosureError(400, "INVALID", f"explanation contains a character the audit PDF cannot print: U+{o:04X}")
+    return text
 REF_RE = re.compile(r"^RF-\d{4}-\d{2}-\d{3}$")
 ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,160}$")
 FINAL_FILES = {"pdf": ("report.pdf", "application/pdf"), "html": ("report.html", "text/html; charset=utf-8"),
@@ -698,9 +719,14 @@ class ClosureService:
                     problems.append(f"{name} does not match its run record SHA-256")
         return problems + [f"library eligibility at publication: {r}" for r in entry.get("eligibility_reasons") or []]
 
-    def decide_investigation(self, ref: str, inv: str, decision: str, expected_revision, user: str | None) -> dict:
+    def decide_investigation(self, ref: str, inv: str, decision: str, expected_revision, user: str | None,
+                             explanation=None) -> dict:
+        """ACCEPT / REJECT an AI finding. `explanation` (optional, 23 Nov 2026 owner requirement, supersedes O4 for this
+        decision only): the analyst's own words - stored verbatim as the REJECT reason (else the fixed wording) or as the
+        ACCEPT comment. A decision never changes the engine's reconciliation result or relationship statuses."""
         if decision not in ("ACCEPT", "REJECT"):
             raise ClosureError(400, "INVALID", "decision must be ACCEPT or REJECT")
+        explanation = _explanation(explanation)
         c0, run = self._locate(ref)
         actor = self._actor(user)
         with self._lock(ref, run):
@@ -718,7 +744,9 @@ class ClosureService:
             rec = {"analyst_review_id": _new_id("AR"), "investigation_id": inv, "exception_id": entry["exception_id"],
                    "decision": decision, "findings_sha256": entry["findings_sha256"],
                    "findings_schema_version": (findings.get("model_metadata") or {}).get("findings_schema_version", ""),
-                   "comment": "", "rejection_reason": FIXED["REJECT"] if decision == "REJECT" else "",
+                   "comment": explanation if decision == "ACCEPT" else "",
+                   "rejection_reason": (explanation or FIXED["REJECT"]) if decision == "REJECT" else "",
+                   "explanation_supplied": bool(explanation),
                    "reviewer": {"user_id": actor, "display_name": actor}, "decided_at": now(),
                    "revision": (prev["revision"] + 1) if prev else 1, "decided_by": actor,
                    "system_reviewer_id": self._system_reviewer_id(), "supersedes": prev["analyst_review_id"] if prev else None}
@@ -727,7 +755,7 @@ class ClosureService:
         self._audit("ANALYST_INVESTIGATION_ACCEPTED" if decision == "ACCEPT" else "ANALYST_INVESTIGATION_REJECTED", c,
                     actor, exception_id=entry["exception_id"], investigation_id=inv,
                     analyst_review_id=rec["analyst_review_id"], decision=decision, revision=rec["revision"],
-                    rejection_reason=rec["rejection_reason"] or None)
+                    rejection_reason=rec["rejection_reason"] or None, comment=rec["comment"] or None)
         return {"analyst_review": rec, "closure": self.view(ref)}
 
     def start_investigation(self, ref: str, exc: str, expected_revision, user: str | None) -> dict:
@@ -1577,7 +1605,9 @@ class ClosureService:
                 or "[INSUFFICIENT_EVIDENCE]" in aff,
                 "ai_state": state, "investigation_id": inv, "attempts": len(jobs),
                 "analyst_decision": dec["decision"] if dec else None, "decision_revision": dec["revision"] if dec else None,
-                "decided_by": dec["decided_by"] if dec else None, "decided_at": dec["decided_at"] if dec else None}
+                "decided_by": dec["decided_by"] if dec else None, "decided_at": dec["decided_at"] if dec else None,
+                # PENDING_REVIEW: a published AI finding with no analyst decision yet (never treated as accepted)
+                "review_state": "PENDING_REVIEW" if inv and not dec else ("REVIEWED" if dec else None)}
 
     def exception_workspace(self, ref: str, exc: str) -> dict:
         c, _ = self._locate(ref)
@@ -1693,10 +1723,15 @@ class ClosureService:
             if not (entry or {}).get("eligible"):
                 return {"enabled": False, "reason": "the AI finding is not eligible", "label": label}
             return {"enabled": True, "reason": None, "label": label}
-        return {"current": None if cur is None else {k: cur[k] for k in ("decision", "revision", "decided_by",
-                                                                         "decided_at", "analyst_review_id")},
-                "history": [{k: r[k] for k in ("analyst_review_id", "investigation_id", "decision", "revision",
-                                               "decided_by", "decided_at", "rejection_reason")} for r in hist],
+        def explained(r):   # the analyst's own explanation (None when only the fixed wording was recorded)
+            return r.get("comment") or (r.get("rejection_reason") if r.get("rejection_reason") != FIXED["REJECT"] else "") or None
+        return {"current": None if cur is None else dict({k: cur[k] for k in ("decision", "revision", "decided_by",
+                                                                              "decided_at", "analyst_review_id")},
+                                                         explanation=explained(cur)),
+                "review_state": "PENDING_REVIEW" if cur is None and inv else ("REVIEWED" if cur else None),
+                "history": [dict({k: r[k] for k in ("analyst_review_id", "investigation_id", "decision", "revision",
+                                                    "decided_by", "decided_at", "rejection_reason")},
+                                 explanation=explained(r)) for r in hist],
                 "actions": {"accept": act("Accept AI finding"), "reject": act("Reject AI finding")},
                 "rejection_wording": FIXED["REJECT"]}
 

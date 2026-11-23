@@ -179,6 +179,11 @@ code, kbd, samp { font-family: var(--font-mono); }
 .rf-search input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 13px; }
 .rf-search input::placeholder { color: var(--ink-muted); }
 .rf-search:focus-within { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+/* analyst decision: optional explanation (23 Nov 2026) */
+.rfe-explain { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--ink-secondary); }
+.rfe-explain textarea { width: 100%; box-sizing: border-box; min-height: 72px; padding: 6px 8px; border: 1px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface); color: var(--ink); font: inherit; font-size: 13px; resize: vertical; }
+.rfe-explain textarea:focus { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+.rfe-explain-text { flex-basis: 100%; margin-top: 4px; white-space: pre-wrap; font-size: 13px; }
 .rf-chip { display: inline-flex; align-items: center; gap: 6px; height: var(--control-sm); padding: 0 10px; border: 1px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface); font-size: 13px; color: var(--ink-secondary); white-space: nowrap; cursor: pointer; }
 .rf-chip:hover { background: var(--surface-hover); }
 .rf-chip.is-active { background: var(--surface-selected); border-color: var(--brand-600); color: var(--brand-700); }

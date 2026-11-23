@@ -67,6 +67,7 @@ export function ActBtn({ a, label, onClick, variant = 'secondary', size, icon, l
 
 export const AiState = ({ state }) => (state ? <Pill state={state} /> : <span className="rf-muted">—</span>);
 export function DecisionCell({ e }) {
+  if (e && !e.analyst_decision && e.review_state === 'PENDING_REVIEW') return <Pill state="V_PENDING" label="PENDING REVIEW" />;
   if (!e || !e.analyst_decision) return <span className="rf-muted">No decision</span>;
   return <span className="rf-stack rf-stack--2" style={{ gap: 2, alignItems: 'flex-start' }}><Pill state={e.analyst_decision} label={e.analyst_decision === 'ACCEPT' ? 'AI finding accepted' : 'AI finding rejected'} />{e.decided_by && <span className="rf-cell-sub">{e.decided_by} · {fmtDateTime(e.decided_at)}</span>}</span>;
 }

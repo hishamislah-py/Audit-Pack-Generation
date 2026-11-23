@@ -1,7 +1,9 @@
 /* Full-width exception workspace: cases/<ref>/recon/<run>/<exc> (replaces the 640px drawer).
    GET /api/cases/{ref}/closure/exceptions/{exc} (ExceptionWorkspace) in three sections:
    (A) deterministic facts, (B) the AI investigation (an interpretation, not a fact), (C) the analyst decision.
-   No free-text input anywhere (O4): ACCEPT/REJECT carry fixed wording applied by the backend. A decision never
+   ACCEPT/REJECT take an OPTIONAL explanation in the analyst's own words (23 Nov 2026 owner requirement; it supersedes
+   O4 for this decision only): stored verbatim as the REJECT reason (else the backend's fixed wording) or the ACCEPT
+   comment, and reported in the final audit pack. A published AI finding without a decision is PENDING REVIEW. A decision never
    changes the engine's exception status, which is shown separately. When closure is not available (no closure yet,
    mock service) section A falls back to the engine's read-only exception detail (GET /api/runs/{run}/exceptions/{id}). */
 import React from 'react';
@@ -161,7 +163,7 @@ function Investigation({ ws, row, cl, ai, openFile, onRetry }) {
   </Sec>;
 }
 
-/* (C) Analyst decision on the AI finding. ACCEPT/REJECT only; fixed wording; no free text. */
+/* (C) Analyst decision on the AI finding: ACCEPT/REJECT with an optional explanation. */
 function Decision({ ws, row, cl, onDecide, history }) {
   const d = (ws && ws.decision) || {};
   const a = d.actions || {};
@@ -170,10 +172,13 @@ function Decision({ ws, row, cl, onDecide, history }) {
   const missing = row && row.missing_evidence;
   const status = ws ? (ws.summary && ws.summary.status) || engineStatus(wsException(ws)) : null;
   const hist = d.history || [];
-  return <Sec tag="C" title="Analyst decision" sub="On the AI finding only. Fixed wording; no free-text reason is captured (O4)." tone="dec">
+  const pending = !cur && inv && inv.state === 'PUBLISHED';
+  return <Sec tag="C" title="Analyst decision" sub="On the AI finding only. Accept or reject; an explanation is optional." tone="dec">
     {cur ? <div className="rfe-current"><Pill state={cur.decision} size="lg" label={cur.decision === 'ACCEPT' ? 'AI finding accepted' : 'AI finding rejected'} />
-      <span className="rfe-small rf-secondary">{cur.decided_by} · {fmtDateTime(cur.decided_at)} · revision {cur.revision}</span>{cur.analyst_review_id && <span className="rf-mono rf-muted rfe-small">{cur.analyst_review_id}</span>}</div>
-      : <div className="rf-help">No decision recorded{inv && inv.state === 'PUBLISHED' ? ' yet. A decision is required before closing.' : '. A decision is possible once an AI finding is published.'}</div>}
+      <span className="rfe-small rf-secondary">{cur.decided_by} · {fmtDateTime(cur.decided_at)} · revision {cur.revision}</span>{cur.analyst_review_id && <span className="rf-mono rf-muted rfe-small">{cur.analyst_review_id}</span>}
+      {cur.explanation && <div className="rfe-explain-text"><span className="rf-muted rfe-small">Analyst explanation</span><div>{cur.explanation}</div></div>}</div>
+      : pending ? <div className="rf-row" style={{ gap: 8 }}><Pill state="V_PENDING" size="lg" label="PENDING REVIEW" /><span className="rf-help">Not yet accepted or rejected. A decision is required before closing.</span></div>
+        : <div className="rf-help">No decision recorded. A decision is possible once an AI finding is published.</div>}
     <div className="rf-row rf-row--wrap" style={{ gap: 8 }}>
       <ActBtn a={a.accept} label="Accept AI finding" variant="primary" icon="check" onClick={() => onDecide('ACCEPT', inv && inv.investigation_id)} extraReason={inv && inv.investigation_id ? null : a.accept && a.accept.enabled ? 'No published AI finding.' : null} />
       <ActBtn a={a.reject} label="Reject AI finding" variant="danger" icon="x" onClick={() => onDecide('REJECT', inv && inv.investigation_id)} extraReason={inv && inv.investigation_id ? null : a.reject && a.reject.enabled ? 'No published AI finding.' : null} />
@@ -181,8 +186,8 @@ function Decision({ ws, row, cl, onDecide, history }) {
     {missing && <Notice tone="info" compact title="Missing-evidence exception">There is no “accept evidence” action. Missing evidence is resolved only by the evidence itself; a decision here applies to the AI finding, not to the evidence.</Notice>}
     <div className="rf-help"><Icon name="lock" size={12} /> Decisions never change the engine exception status{status ? <> (still <Enum>{status}</Enum>)</> : null}.</div>
     <Sub title={'Decision history · ' + hist.length}>
-      {hist.length ? <Table dense caption="Decision history" columns={[{ key: 'd', label: 'Decision' }, { key: 'by', label: 'Actor' }, { key: 'at', label: 'Time' }, { key: 'rev', label: 'Revision', cls: 'is-num' }]}
-        rows={hist.map((h, i) => ({ key: i, cells: { d: <Pill state={h.decision} />, by: h.decided_by || h.actor, at: fmtDateTime(h.decided_at || h.at), rev: h.revision } }))} />
+      {hist.length ? <Table dense caption="Decision history" columns={[{ key: 'd', label: 'Decision' }, { key: 'by', label: 'Actor' }, { key: 'at', label: 'Time' }, { key: 'ex', label: 'Explanation' }, { key: 'rev', label: 'Revision', cls: 'is-num' }]}
+        rows={hist.map((h, i) => ({ key: i, cells: { d: <Pill state={h.decision} />, by: h.decided_by || h.actor, at: fmtDateTime(h.decided_at || h.at), ex: h.explanation || <span className="rf-muted">—</span>, rev: h.revision } }))} />
         : <div className="rf-help">No decisions yet.</div>}
     </Sub>
     {history && <Sub title="Exception history">
@@ -208,6 +213,7 @@ export default function ExceptionWorkspace({ c, app, run, runId, excId, go, nav 
   const jobs = useJobWatch(ref);
   const m = useMutation();
   const [dlg, setDlg] = React.useState(null);
+  const [why, setWhy] = React.useState('');
   const ws = forRun && !wsq.error ? wsq.data : null;
 
   const list = (run.exceptions || []).map((e) => e.exception_id);
@@ -221,8 +227,10 @@ export default function ExceptionWorkspace({ c, app, run, runId, excId, go, nav 
       const r = await m.run((svc) => svc.startInvestigation(ref, excId, { expected_revision: rev }), { inline: true, success: 'AI investigation queued' });
       if (r) { jobs.watch(r.job_id, 'AI investigation for ' + excId); setDlg(null); }
     } else {
-      const r = await m.run((svc) => svc.decideInvestigation(ref, dlg.inv, { decision: dlg.kind, expected_revision: rev }), { inline: true, success: dlg.kind === 'ACCEPT' ? 'AI finding accepted' : 'AI finding rejected' });
-      if (r) setDlg(null);
+      const body = { decision: dlg.kind, expected_revision: rev };
+      if (why.trim()) body.explanation = why.trim();
+      const r = await m.run((svc) => svc.decideInvestigation(ref, dlg.inv, body), { inline: true, success: dlg.kind === 'ACCEPT' ? 'AI finding accepted' : 'AI finding rejected' });
+      if (r) { setDlg(null); setWhy(''); }
     }
   };
   const e = (ws && wsException(ws)) || (engq.data && engq.data.exception) || (run.exceptions || []).find((x) => x.exception_id === excId) || {};
@@ -237,7 +245,7 @@ export default function ExceptionWorkspace({ c, app, run, runId, excId, go, nav 
     </div>
     <header className="rfe-ws__head">
       <h2 className="rfd-dtitle">{e.title || e.category || e.root_cause || excId}</h2>
-      <div className="rf-row rf-row--wrap" style={{ gap: 8 }}>{e.severity && <Sev value={e.severity} />}{e.root_cause && <Enum>{e.root_cause}</Enum>}<Ref id={excId} copy />{row && <AiState state={row.ai_state} />}{row && row.analyst_decision && <Pill state={row.analyst_decision} label={row.analyst_decision === 'ACCEPT' ? 'AI finding accepted' : 'AI finding rejected'} />}</div>
+      <div className="rf-row rf-row--wrap" style={{ gap: 8 }}>{e.severity && <Sev value={e.severity} />}{e.root_cause && <Enum>{e.root_cause}</Enum>}<Ref id={excId} copy />{row && <AiState state={row.ai_state} />}{row && row.analyst_decision && <Pill state={row.analyst_decision} label={row.analyst_decision === 'ACCEPT' ? 'AI finding accepted' : 'AI finding rejected'} />}{row && row.review_state === 'PENDING_REVIEW' && <Pill state="V_PENDING" label="PENDING REVIEW" />}</div>
     </header>
     {cl && !forRun && <Notice tone="info" compact>Closure belongs to run <span className="rf-mono">{cl.recon_run_id}</span>. This earlier run shows the engine facts only.</Notice>}
     {!cl && clq.error && <ClosureError err={clq.error} reload={clq.reload} />}
@@ -248,7 +256,7 @@ export default function ExceptionWorkspace({ c, app, run, runId, excId, go, nav 
         <Facts ws={ws} eng={useEngine ? engq.data : null} app={app} openFile={openFile} run={run} runId={runId} />
         {useEngine && engq.error && <Notice tone="danger" title="Exception could not be loaded">{engq.error.message}</Notice>}
         {ws && <Investigation ws={ws} row={row} cl={cl} ai={ai.data} openFile={openFile} onRetry={() => { m.reset(); setDlg({ kind: 'retry' }); }} />}
-        {ws && <Decision ws={ws} row={row} cl={cl} history={histq} onDecide={(kind, inv) => { m.reset(); setDlg({ kind, inv }); }} />}
+        {ws && <Decision ws={ws} row={row} cl={cl} history={histq} onDecide={(kind, inv) => { m.reset(); setWhy(''); setDlg({ kind, inv }); }} />}
       </div>}
     {ws && ws.note && <div className="rf-help">{ws.note}</div>}
     {dlg && <div className="rfd-layer"><Dialog eyebrow={excId + ' · ' + ref} error={m.error} onClose={m.busy ? undefined : () => setDlg(null)}
@@ -259,8 +267,10 @@ export default function ExceptionWorkspace({ c, app, run, runId, excId, go, nav 
         {ai.data && ai.data.data_notice && <Notice tone="info" compact title="Data notice">{ai.data.data_notice}</Notice>}
         <div className="rf-help">A new attempt never overwrites an earlier one; earlier attempts stay in the list.</div></div>
         : <div className="rf-stack rf-stack--3">
-          <div className="rf-help">{dlg.kind === 'ACCEPT' ? 'Records that you accept the published AI finding. No comment is captured.' : 'Records that you reject the published AI finding with fixed wording. No free-text reason is captured (O4).'}</div>
-          {dlg.kind === 'REJECT' && ws && ws.decision && ws.decision.rejection_wording && <Notice tone="info" compact title="Recorded wording">{ws.decision.rejection_wording}</Notice>}
+          <div className="rf-help">{dlg.kind === 'ACCEPT' ? 'Records that you accept the published AI finding. It is reported as accepted in the final audit pack.' : 'Records that you reject the published AI finding. Its AI content is excluded from the final audit pack; the original investigation is kept unchanged.'}</div>
+          <label className="rfe-explain"><span>Explanation (optional{dlg.kind === 'REJECT' ? ', recommended when rejecting' : ''})</span>
+            <textarea value={why} maxLength={2000} rows={4} onChange={(ev) => setWhy(ev.target.value)} placeholder={dlg.kind === 'REJECT' ? 'Why is the AI finding rejected?' : 'Any comment on the AI finding'} /></label>
+          {dlg.kind === 'REJECT' && !why.trim() && ws && ws.decision && ws.decision.rejection_wording && <Notice tone="info" compact title="Recorded wording if no explanation is given">{ws.decision.rejection_wording}</Notice>}
           <div className="rf-help"><Icon name="lock" size={12} /> The engine exception status does not change.</div></div>}
     </Dialog></div>}
   </div>;

@@ -784,7 +784,7 @@ def closure_route(ctx: AppContext, method: str, ref: str, R: list[str], q: dict,
         if R[:1] == ["exceptions"] and len(R) == 3 and R[2] == "investigations":
             return cl.start_investigation(ref, R[1], rev, user)
         if R[:1] == ["investigations"] and len(R) == 3 and R[2] == "decision":
-            return cl.decide_investigation(ref, R[1], str(body.get("decision") or ""), rev, user)
+            return cl.decide_investigation(ref, R[1], str(body.get("decision") or ""), rev, user, body.get("explanation"))
         if R == ["review"]:
             return cl.open_review(ref, rev, user)
         if R == ["review", "selections"]:
