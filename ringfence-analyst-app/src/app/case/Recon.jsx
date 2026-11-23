@@ -181,7 +181,7 @@ function ClosurePanel({ c, runId, nav }) {
 /* Exceptions grouped under their cause (owner, 24 Nov 2026): each engine investigation group becomes one block, the
    causing exception (duplicate entry / transaction against bank) first, then its linked exceptions; ungrouped
    exceptions stay as they are, in the engine's order. */
-const CAUSE_RE = /^(DUPLICATE_|RC4-DIRECT)/;
+const CAUSE_RE = /^(DUPLICATE_|RC4-DIRECT|UNMATCHED_)/;
 function groupedRows(exc) {
   const out = [], done = new Set();
   exc.forEach((e) => {

@@ -208,6 +208,8 @@ const CHECK_TITLE = {
   'C14-COVER': 'Required evidence does not cover the day',
   'DUPLICATE_CASHBOOK_ENTRY': 'The same cash-book entry is recorded twice',
   'MISSING_BANK_EVIDENCE': 'Bank evidence is missing',
+  'UNMATCHED_BANK_ENTRY': 'A bank entry has no matching cash-book entry',
+  'UNMATCHED_CASHBOOK_ENTRY': 'A cash-book entry has no matching bank entry',
   'C04-REQUIREMENT': 'The safeguarding requirement does not agree',
   'C05-RESOURCE': 'The safeguarding resource does not agree',
   'RC2-LEDGER': "The firm's ledger balance does not agree with the cash book",
@@ -252,6 +254,11 @@ function evidenceRows(ws, app) {
   let diff = null;
   ctrl.forEach((x, i) => {
     const cr = x.control_result || {};
+    if (cr.check_id === 'DISC-LOG') {
+      rows.push({ key: 'c' + i, kind: 'check', date: (String(cr.scope || '').match(/\d{4}-\d{2}-\d{2}/) || [])[0], what: 'Discrepancy log', ref: cr.scope,
+        amount: null, note: 'The difference is not recorded in the firm’s discrepancy log' });
+      return;
+    }
     const rep = num(cr.reported), comp = num(cr.computed);
     const d = (String(cr.scope || x.scope || '').match(/\d{4}-\d{2}-\d{2}/) || [])[0];
     const delta = rep != null && comp != null && rep !== comp ? Math.round((rep - comp) * 100) / 100 : null;
@@ -356,7 +363,7 @@ function engineLinks(ws, excId) {
 }
 /* The exception that CAUSES a linked group: an engine exception whose own category is a cause (duplicate entry,
    transaction against bank), else the endpoint every duplicate / transaction link shares. null when there is none. */
-const CAUSE_RE = /^(DUPLICATE_|RC4-DIRECT)/;
+const CAUSE_RE = /^(DUPLICATE_|RC4-DIRECT|UNMATCHED_)/;
 function causeOf(members, rows, links) {
   const byId = new Map((rows || []).map((r) => [r.exception_id, r]));
   const c1 = members.find((id) => CAUSE_RE.test(String((byId.get(id) || {}).root_cause || '')));
@@ -420,6 +427,16 @@ function story(ws, linkedWs, links, excId, ctx) {
     .filter((x, i, arr) => arr.findIndex((y) => y.id === x.id) === i);
   // A. effect of an engine-proven duplicate cash-book entry: the cause first, then this exception's effect
   const causeSt = ctx && ctx.causeId && ctx.causeId !== excId && linkedWs ? story(linkedWs, null, [], ctx.causeId, null) : null;
+  if (causeSt && causeSt.kind === 'unmatched_bank' && rep != null) {
+    const amt = M(causeSt.amount);
+    const d0 = (String(cr.scope || '').match(/\d{4}-\d{2}-\d{2}/) || [])[0] || causeSt.date;
+    const diff = comp != null ? comp : rep;
+    return { kind: 'effect', title: `The bank and the cash book differ by ${M(diff)}: an unmatched bank ${causeSt.credit ? 'credit' : 'debit'}`,
+      lines: [`A ${amt} ${causeSt.credit ? 'credit reached the bank' : 'payment left the bank'} on ${causeSt.date ? day(causeSt.date) : 'that day'} (${causeSt.id}) but has no matching entry in the firm's cash book.`,
+              `On ${d0 ? day(d0) : 'that day'} the bank shows ${M(diff)} ${causeSt.credit ? 'more' : 'less'} than the cash book${Math.abs(Math.abs(diff) - Math.abs(causeSt.amount)) < 0.005 ? ', exactly the amount of that entry' : ''}. The records do not show what the ${causeSt.credit ? 'credit' : 'payment'} was for.`],
+      flow: [{ label: 'Bank ' + (causeSt.credit ? 'credit' : 'debit'), ref: causeSt.id, amount: amt }, { label: 'Cash book', amount: 'No entry' }, { label: 'Bank vs cash book', amount: M(diff), ref: d0 ? day(d0) : '' }],
+      gap: null, head: M(diff), cause: { id: ctx.causeId, why: 'the unmatched bank entry' }, alsoOn, linked: null };
+  }
   if (causeSt && causeSt.kind === 'duplicate' && comp != null) {
     const d0 = (String(cr.scope || '').match(/\d{4}-\d{2}-\d{2}/) || [])[0];
     const on = d0 ? 'On ' + day(d0) : 'On that day';
@@ -438,7 +455,7 @@ function story(ws, linkedWs, links, excId, ctx) {
     }
     return { kind: 'effect', title: `${plainTitle(check || String((ws.summary || {}).root_cause || '').split('|')[0]).replace(/\.$/, '')}: ${amt}, caused by a duplicate cash-book entry`,
       lines: [`The same ${amt} receipt was recorded twice in the cash book (${causeSt.ids.join(' and ')}). Because of this, the cash book is ${amt} higher than the bank.`, effect],
-      flow: [{ label: 'Duplicate entry', ref: causeSt.ids[0], amount: amt }, flowMid, flowEnd], gap: null,
+      flow: [{ label: 'Duplicate entry', ref: causeSt.ids[0], amount: amt }, flowMid, flowEnd], gap: null, head: amt,
       cause: { id: ctx.causeId, why: 'the duplicate cash-book entry' }, alsoOn, linked: null };
   }
   // 1. transaction recorded differently from the bank
@@ -476,6 +493,22 @@ function story(ws, linkedWs, links, excId, ctx) {
               linked ? `The engine links this to ${linked.id}${linkedWs ? ': ' + (story(linkedWs, null, [], null) || { title: '' }).title.replace(/^./, (ch) => ch.toLowerCase()) : ''}.` : `The records do not show which figure is wrong.`],
       flow: [{ label: 'Engine expects', amount: M(comp) }, { label: 'Firm recorded', ref: client, amount: M(rep) }],
       gap: { amount: M(diff), note: 'difference' }, linked, alsoOn };
+  }
+  // 2b. a bank entry with no cash-book counterpart (the engine's BANK-CASH-LINK failure)
+  const rcRoot = String((ws.summary || {}).root_cause || '');
+  if (/^UNMATCHED_BANK_ENTRY/.test(rcRoot) || check === 'BANK-CASH-LINK') {
+    const be = rows.find((x) => x.row.bank_entry_id);
+    if (be) {
+      const r = be.row, amt = M(num(r.amount)), d0 = String(r.booking_date || r.value_date || r.booking_ts || '').slice(0, 10);
+      const credit = !['D', 'DR', 'DEBIT'].includes(String(r.dc_indicator || r.direction || '').toUpperCase());
+      return { kind: 'unmatched_bank', amount: num(r.amount), id: r.bank_entry_id, date: d0, credit,
+        title: `A ${amt} bank ${credit ? 'credit' : 'debit'} has no matching cash-book entry`,
+        lines: [`On ${d0 ? day(d0) : 'that day'} the bank ${credit ? 'received' : 'paid out'} ${amt} (${r.bank_entry_id}${r.bank_reference || r.end_to_end_ref ? ', reference ' + (r.bank_reference || r.end_to_end_ref) : ''}).`,
+                `There is no matching entry in the firm's cash book, and the engine found no batch, transaction, top-up or register entry it belongs to.`,
+                `So the bank shows ${amt} ${credit ? 'more' : 'less'} than the cash book from ${d0 ? day(d0) : 'that day'}.`],
+        flow: [{ label: 'Bank ' + (credit ? 'credit' : 'debit'), ref: r.bank_entry_id, amount: amt }, { label: 'Cash book', amount: 'No entry' }],
+        gap: { amount: amt, note: 'not in the cash book' }, linked, alsoOn };
+    }
   }
   // 3. settlement batch does not add up
   if (check.startsWith('C11-')) {
@@ -557,7 +590,7 @@ function story(ws, linkedWs, links, excId, ctx) {
       lines: [isDiff ? `${where ? where.charAt(0).toUpperCase() + where.slice(1) + ', the' : 'The'} engine found a difference of ${M(comp)}; the firm's own reconciliation reported ${rep ? 'a difference of ' + M(rep) : 'no difference'}.`
                      : `${where ? where.charAt(0).toUpperCase() + where.slice(1) + ', the' : 'The'} engine's figure is ${S(comp)} and the firm's figure is ${S(rep)}.`, cause],
       flow: isDiff ? [{ label: 'Engine found a difference', amount: M(comp) }, { label: 'Firm reported', amount: rep ? M(rep) : 'No difference' }]
-                   : [{ label: "Engine's figure", amount: S(comp) }, { label: "Firm's figure", amount: S(rep) }], gap: isDiff ? null : { amount: M(d), note: 'apart' }, linked, alsoOn };
+                   : [{ label: "Engine's figure", amount: S(comp) }, { label: "Firm's figure", amount: S(rep) }], gap: isDiff ? null : { amount: M(d), note: 'apart' }, head: isDiff ? M(comp) : null, linked, alsoOn };
   }
   if (rep != null) {
     return { kind: 'generic', title: `${plainTitle(check)} (${M(rep)})`,
@@ -583,7 +616,8 @@ function GroupBanner({ grp, causeId, causeTitle, excId, rows, go, runId, onAccep
   return <section className="rfx-group" aria-label="Linked exceptions">
     <div className="rfx-group__main">
       <div>
-        <div className="rfx-group__title">{isCause ? `This entry causes ${effects.length} other exception${effects.length === 1 ? '' : 's'}`
+        <div className="rfx-group__title">{isCause ? `This ${/^UNMATCHED|^DUPLICATE/.test(String((byId.get(excId) || {}).root_cause || '')) ? 'entry' : 'exception'} causes ${effects.length} other exception${effects.length === 1 ? '' : 's'}`
+          : causeId && effects.length === 1 ? `Caused by another exception${causeTitle ? ': ' + causeTitle.charAt(0).toLowerCase() + causeTitle.slice(1) : ''}`
           : causeId ? `1 of ${effects.length} effects of one cause${causeTitle ? ': ' + causeTitle.charAt(0).toLowerCase() + causeTitle.slice(1) : ''}`
           : `Linked with ${others.length} other exception${others.length === 1 ? '' : 's'}`}</div>
         <div className="rfx-group__sub">The engine links these exceptions through the same records. {pending.length ? pending.length + ' AI finding' + (pending.length === 1 ? '' : 's') + ' in this group still need your decision.' : 'Every AI finding in this group has a decision.'}</div>
@@ -591,7 +625,6 @@ function GroupBanner({ grp, causeId, causeTitle, excId, rows, go, runId, onAccep
       <div className="rf-row rf-row--wrap" style={{ gap: 8 }}>
         {causeId && !isCause && <Button size="sm" variant="secondary" iconRight="arrowRight" onClick={() => go(runId, causeId)}>View the cause</Button>}
         <Button size="sm" variant="secondary" onClick={() => setOpen(!open)}>{open ? 'Hide the group' : 'See all ' + grp.members.length}</Button>
-        {pending.length > 1 && <Button size="sm" variant="primary" icon="check" onClick={() => onAcceptAll(pending)}>Accept all {pending.length} findings</Button>}
       </div>
     </div>
     {open && <div className="rfx-group__list">{grp.members.map((id) => { const r = byId.get(id) || {};
@@ -774,7 +807,7 @@ export default function ExceptionWorkspace({ c, app, run, runId, excId, go, nav 
         <h2 className="rfd-dtitle rfx-title">{st ? st.title : ws ? plainTitle(e.category || String(e.root_cause || '').split('|')[0]) : (e.title || e.category || e.root_cause || excId)}</h2>
         <div className="rf-row rf-row--wrap rfx-sub" style={{ gap: 8 }}>{ws && String(e.root_cause || '').includes('|') && <span className="rf-mono">{String(e.root_cause).split('|').slice(1).join(' · ')}</span>}<Ref id={excId} copy /></div>
       </div>
-      <div className="rf-row rf-row--wrap rfx-head__right" style={{ gap: 8 }}>{st && st.gap ? <span className="rfx-amount">{st.gap.amount}</span> : ev && ev.diff && <span className="rfx-amount">{ev.diff}</span>}{e.severity && <Sev value={e.severity} />}{row && row.analyst_decision && <Pill state={row.analyst_decision} label={row.analyst_decision === 'ACCEPT' ? 'Accepted' : 'Rejected'} />}{row && row.review_state === 'PENDING_REVIEW' && <Pill state="V_PENDING" label="Awaiting your decision" />}</div>
+      <div className="rf-row rf-row--wrap rfx-head__right" style={{ gap: 8 }}>{st && (st.gap || st.head) ? <span className="rfx-amount">{st.gap ? st.gap.amount : st.head}</span> : ev && ev.diff && <span className="rfx-amount">{ev.diff}</span>}{e.severity && <Sev value={e.severity} />}{row && row.analyst_decision && <Pill state={row.analyst_decision} label={row.analyst_decision === 'ACCEPT' ? 'Accepted' : 'Rejected'} />}{row && row.review_state === 'PENDING_REVIEW' && <Pill state="V_PENDING" label="Awaiting your decision" />}</div>
     </header>
     {cl && !forRun && <Notice tone="info" compact>Closure belongs to run <span className="rf-mono">{cl.recon_run_id}</span>. This earlier run shows the engine facts only.</Notice>}
     {!cl && clq.error && <ClosureError err={clq.error} reload={clq.reload} />}
