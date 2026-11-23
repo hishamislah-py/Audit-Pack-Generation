@@ -49,6 +49,7 @@ export function createHttpService(config) {
     getApp: () => get('/api/app'),
     listCases: (q) => get('/api/cases' + qs({ status: q && q.status, assigned: q && q.assigned })),
     registerCase: (body) => post('/api/cases', body),
+    detectPeriod: (body) => post('/api/cases/detect-period', body),
     getCase: (ref) => get('/api/cases/' + enc(ref)),
     claimCase: (ref, body) => post('/api/cases/' + enc(ref) + '/claim', body || {}),
     startCase: (ref, body) => post('/api/cases/' + enc(ref) + '/start', body),

@@ -100,18 +100,17 @@ export const Bullets = ({ items }) => <ul className="rf-steps-mini">{items.map((
 /* ---------- app shell, case header, status ---------- */
 export function AppShell({ analyst, active, activeCase, onNav, menuOpen, onMenu, onSignOut, children, overlay, demo }) {
   // Demo scenarios are a section of the Work queue (no separate nav item); `demo` is accepted for compatibility.
-  const nav = [['queue', 'Work queue', 'inbox'], ['customers', 'Customers', 'building']];
+  const nav = [['queue', 'Dashboard', 'inbox'], ['customers', 'Customers', 'building']];
   const go = (to) => (e) => { e.preventDefault(); onNav(to); };
   return <div className="rf-app">
     <header className="rf-topbar">
       <a className="rf-brand" href="#/queue" onClick={go('queue')} aria-label="Ringfence home"><Mark size={22} /><span>Ringfence</span></a>
-      <span className="rf-brand__ctx">Moorwand · UC-042</span>
+      <span className="rf-brand__ctx">Safeguarding reconciliation</span>
       <nav className="rf-nav" aria-label="Primary">{nav.map((n) => <a key={n[0]} href={'#/' + n[0]} onClick={go(n[0])} className={cx('rf-nav__item', active === n[0] && 'is-active')} aria-current={active === n[0] ? 'page' : undefined}><Icon name={n[2]} />{n[1]}</a>)}</nav>
       {activeCase
         ? <a href={'#/cases/' + activeCase.ref + '/overview'} onClick={go('cases/' + activeCase.ref + '/overview')} className="rf-activecase" title={'In Progress: ' + activeCase.ref + ' · ' + activeCase.customer + ' · ' + activeCase.period + '. Only one case can be In Progress at a time.'}><Glyph name="active" size={10} /><span className="rf-activecase__label">In Progress</span><span className="rf-mono">{activeCase.ref}</span></a>
         : <span className="rf-activecase is-empty" title="Only one case can be In Progress at a time"><Glyph name="pending" size={10} /><span>No case In Progress</span></span>}
       <button type="button" className="rf-gsearch" role="search" onClick={() => onNav('queue?focus=search')}><Icon name="search" /><span>Search cases, customers, files</span><span className="rf-kbd">/</span></button>
-      <span className="rf-env" title="Proof-of-concept environment with synthetic data">POC · SYNTHETIC DATA</span>
       <div className="rf-user"><button type="button" className="rf-userbtn" aria-haspopup="menu" aria-expanded={!!menuOpen} onClick={onMenu}><span className="rf-avatar">{analyst.initials}</span><span>{analyst.name}</span><Icon name="chevronDown" size={14} /></button>
         {menuOpen && <div className="rf-menu" role="menu" aria-label="Analyst profile"><div className="rf-menu__head"><span className="rf-avatar rf-avatar--lg">{analyst.initials}</span><div><div className="rf-strong">{analyst.name}</div><div className="rf-muted" style={{ fontSize: 12 }}>{analyst.role}</div><div className="rf-mono rf-muted" style={{ fontSize: 12, marginTop: 2 }}>{analyst.email}</div></div></div>
           <button type="button" className="rf-menu__item" role="menuitem" onClick={onSignOut}><Icon name="logout" />Sign out</button></div>}

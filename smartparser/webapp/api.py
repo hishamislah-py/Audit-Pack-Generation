@@ -654,6 +654,13 @@ def case_route(ctx: AppContext, method: str, P: list[str], q: dict, body: dict, 
             c = cs.create(body.get("customer_name", ""), body.get("reporting_period", ""), body.get("zip_name", ""),
                           data, body.get("customer_id") or None, assigned_to=assignee)
             return cs.detail(c["case_ref"])
+    if P == ["detect-period"] and method == "POST":          # read-only: the period the files show (nothing stored)
+        from .cases import detect_period
+        try:
+            data = base64.b64decode(body.get("zip_b64") or "", validate=True)
+        except (ValueError, TypeError):
+            raise HttpError(400, "INVALID", "zip_b64 is not valid base64") from None
+        return {"detected": detect_period(data)}
     ref, rest = P[0], P[1:]
     if rest == ["claim"] and method == "POST":
         return claim(ctx, ref, body)

@@ -9,10 +9,10 @@ import { DemoScenariosSection } from './Demo.jsx';
 export const STATUSES = ['IN_PROGRESS', 'WAITING', 'PENDING', 'COMPLETED'];
 const BUCKETS = [
   ['', 'All cases', 'dot', 'neutral', 'Every status'],
-  ['IN_PROGRESS', 'In Progress', 'active', 'progress', 'One case at a time'],
-  ['WAITING', 'Waiting', 'waiting', 'waiting', 'Not started'],
-  ['PENDING', 'Pending', 'paused', 'attention', 'Deferred · resume to continue'],
-  ['COMPLETED', 'Completed', 'success', 'success', 'Reconciliation completed']
+  ['IN_PROGRESS', 'In progress', 'active', 'progress', 'Being processed'],
+  ['WAITING', 'Not started', 'waiting', 'waiting', 'Uploaded, not started'],
+  ['PENDING', 'On hold', 'paused', 'attention', 'Paused · resume to continue'],
+  ['COMPLETED', 'Completed', 'success', 'success', 'Reconciled']
 ];
 export const nowOf = (store) => (store && store.svc && store.svc.now ? store.svc.now() : Date.now());
 
@@ -44,7 +44,7 @@ export function caseRow(c, now, nav, o) {
   return {
     key: c.case_ref, onClick: open, selected: o && o.selected === c.case_ref,
     cells: {
-      case: <><Ref id={c.case_ref} />{others > 0 && <span className="rf-cell-sub">+{others} other case{others > 1 ? 's' : ''} for this period</span>}</>,
+      case: <Ref id={c.case_ref} />,
       cust: <><span className="rf-cell-main">{c.customer_name}</span><span className="rf-cell-sub">{fmtPeriod(c.reporting_period)}</span></>,
       period: <span className="rf-nowrap">{fmtPeriod(c.reporting_period)}</span>,
       st: <StatusCell c={c} />,
@@ -69,13 +69,13 @@ function ActiveSlot({ data, nav, now }) {
     const w = first('WAITING'), p = first('PENDING');
     return <section className="rf-panel" aria-label="Case In Progress"><div className="as-slot-empty">
       <span className="as-slot-empty__ring"><Glyph name="pending" size={12} /></span>
-      <div style={{ flex: 1, minWidth: 260 }}><div className="rf-strong">No case In Progress</div><div className="rf-secondary" style={{ fontSize: 13, lineHeight: '18px' }}>Only one case can be In Progress at a time. Open a Waiting case to start it, or a Pending case to resume it. Opening a case only shows it; starting or resuming is a separate, confirmed step.</div></div>
-      {w && <Button iconRight="arrowRight" onClick={() => nav('cases/' + w.case_ref + '/overview')}>Oldest Waiting · {w.case_ref}</Button>}
-      {p && <Button iconRight="arrowRight" onClick={() => nav('cases/' + p.case_ref + '/overview')}>Oldest Pending · {p.case_ref}</Button>}
+      <div style={{ flex: 1, minWidth: 260 }}><div className="rf-strong">Nothing is being processed</div><div className="rf-secondary" style={{ fontSize: 13, lineHeight: '18px' }}>Start a case below, or upload a new submission.</div></div>
+      {w && <Button iconRight="arrowRight" onClick={() => nav('cases/' + w.case_ref + '/overview')}>Next not started · {w.case_ref}</Button>}
+      {p && <Button iconRight="arrowRight" onClick={() => nav('cases/' + p.case_ref + '/overview')}>Next on hold · {p.case_ref}</Button>}
     </div></section>;
   }
   const item = data.items.find((x) => x.case_ref === a.case_ref);
-  return <Panel title="In Progress" sub="Only one case can be In Progress. To start or resume another case, defer this one first." aria-label="Case In Progress">
+  return <Panel title="Being processed" sub="One case is processed at a time." aria-label="Case in progress">
     <div className="as-slot">
       <div className="as-slot__case">
         <div className="rf-row" style={{ gap: 8 }}><Pill state="IN_PROGRESS" />{a.deferring && <Pill state="DEFERRAL_REQUESTED" />}<Ref id={a.case_ref} copy /></div>
@@ -89,7 +89,7 @@ function ActiveSlot({ data, nav, now }) {
   </Panel>;
 }
 
-const SECTION = { IN_PROGRESS: ['IN_PROGRESS', 'In Progress'], WAITING: ['OPEN', 'Waiting and Pending · oldest received first'], PENDING: ['OPEN', 'Waiting and Pending · oldest received first'], COMPLETED: ['COMPLETED', 'Completed · newest first'] };
+const SECTION = { IN_PROGRESS: ['IN_PROGRESS', 'In progress'], WAITING: ['OPEN', 'Not started and on hold'], PENDING: ['OPEN', 'Not started and on hold'], COMPLETED: ['COMPLETED', 'Completed'] };
 
 export default function QueueScreen({ route, app, nav: navProp, focusDemo }) {
   const store = useStoreApi();
@@ -126,9 +126,11 @@ export default function QueueScreen({ route, app, nav: navProp, focusDemo }) {
   });
   const open = counts ? (counts.WAITING || 0) + (counts.IN_PROGRESS || 0) + (counts.PENDING || 0) : null;
 
-  return <div className="rf-page">
+  const completed = items.filter((c) => c.status === 'COMPLETED');
+  const withExc = completed.filter((c) => c.completed && c.completed.case_status && c.completed.case_status !== 'CLEAN').length;
+  return <div className="rf-page dash">
     <div className="rf-page__head">
-      <div><h1 className="rf-page__title">Work queue</h1><div className="rf-page__sub">{fmtDay(new Date(now).toISOString())}{open != null ? ' · ' + open + ' open case' + (open === 1 ? '' : 's') + (mine ? ' assigned to ' + user : '') : ''} · opening a case never starts processing</div></div>
+      <div><h1 className="rf-page__title">Dashboard</h1><div className="rf-page__sub">{fmtDay(new Date(now).toISOString())}{open != null ? ' · ' + open + ' open case' + (open === 1 ? '' : 's') + (mine ? ' assigned to you' : '') : ''}</div></div>
       <span className="rf-spacer" />
       {user && <div className="rf-row" role="tablist" aria-label="Whose cases" style={{ gap: 4 }}>
         <Button size="sm" variant={mine ? 'primary' : 'quiet'} role="tab" aria-selected={mine} onClick={() => nav(scopeQ(status, ''))}>My cases</Button>
@@ -136,8 +138,14 @@ export default function QueueScreen({ route, app, nav: navProp, focusDemo }) {
       </div>}
       {q.refreshing && data && <span className="rf-muted" style={{ fontSize: 12 }}>Refreshing…</span>}
       <Button size="sm" icon="refresh" onClick={() => q.reload()}>Refresh</Button>
-      <Button variant="primary" icon="plus" onClick={() => nav('register')}>Register case</Button>
+      <Button variant="primary" icon="upload" onClick={() => nav('register')}>Upload a submission</Button>
     </div>
+
+    {data && <div className="dash-kpis">
+      {[['In progress', counts.IN_PROGRESS || 0, 'IN_PROGRESS'], ['Not started', (counts.WAITING || 0) + (counts.PENDING || 0), 'WAITING'],
+        ['Completed', counts.COMPLETED || 0, 'COMPLETED'], ['Completed with exceptions', withExc, 'COMPLETED']].map(([label, n, s]) =>
+        <button key={label} type="button" className="dash-kpi" onClick={() => nav(scopeQ(s, scopeParam))}><span className="dash-kpi__n">{n}</span><span className="dash-kpi__l">{label}</span></button>)}
+    </div>}
 
     <div className="rf-buckets" role="tablist" aria-label="Queue status">
       {BUCKETS.map(([s, label, glyph, tone, hint]) => <button key={s || 'all'} type="button" role="tab" aria-selected={s === status} className={cx('rf-bucket', 'rf-bucket--' + tone, s === status && 'is-active')} onClick={() => nav(scopeQ(s, scopeParam))}>
@@ -152,20 +160,18 @@ export default function QueueScreen({ route, app, nav: navProp, focusDemo }) {
     {data && <ActiveSlot data={data} nav={nav} now={now} />}
 
     {data && <section className="rf-panel">
-      <div className="rf-panel__head"><div className="rf-toolbar" style={{ flex: 1 }}>
+      <div className="rf-panel__head"><h3 className="rf-panel__title" style={{ marginRight: 12 }}>Cases</h3><div className="rf-toolbar" style={{ flex: 1 }}>
         <label className="rf-search" style={{ minWidth: 340 }}><Icon name="search" /><input ref={searchRef} type="search" value={text} onChange={(e) => setText(e.target.value)} placeholder="Case, customer, ZIP name or period" aria-label="Search the work queue" /></label>
         {text && <Button variant="quiet" size="sm" icon="x" onClick={() => setText('')}>Clear</Button>}
         <span className="rf-spacer" />
-        <span className="as-order" title="Order set by the backend">{data.ordering ? 'Order: ' + data.ordering : ''}</span>
         <span className="rf-muted" style={{ fontSize: 12 }}>{needle ? shown.length + ' of ' + items.length : items.length} case{items.length === 1 ? '' : 's'}</span>
       </div></div>
       {q.error && <div style={{ padding: '0 16px 12px' }}><Notice tone="danger" compact title="Refresh failed">{q.error.message}</Notice></div>}
       {shown.length
         ? <Table columns={caseColumns({ assignment: true })} rows={rows} caption="Cases" />
-        : <Empty icon="inbox" title={needle ? 'No case matches “' + text.trim() + '”' : status ? 'No ' + (BUCKETS.find((b) => b[0] === status) || [0, ''])[1] + ' cases' : mine ? 'No cases assigned to you' : 'No cases yet'} action={needle ? <Button size="sm" onClick={() => setText('')}>Clear search</Button> : <Button variant="primary" icon="plus" onClick={() => nav('register')}>Register case</Button>}>{needle ? 'Search covers case reference, customer, ZIP name and period.' : 'Register a case with the customer’s original evidence ZIP. It is created as Waiting.'}</Empty>}
+        : <Empty icon="inbox" title={needle ? 'No case matches “' + text.trim() + '”' : status ? 'No ' + (BUCKETS.find((b) => b[0] === status) || [0, ''])[1] + ' cases' : mine ? 'No cases assigned to you' : 'No cases yet'} action={needle ? <Button size="sm" onClick={() => setText('')}>Clear search</Button> : <Button variant="primary" icon="upload" onClick={() => nav('register')}>Upload a submission</Button>}>{needle ? 'Search covers case reference, customer, file name and period.' : 'Upload a customer’s evidence ZIP, or start one of the submissions waiting below.'}</Empty>}
     </section>}
 
-    {/* Demo scenarios: a separate section below the case list (server --demo-scenarios). Register case stays the primary journey. */}
-    {app && app.demo_scenarios && <div className="as-demo-wrap"><DemoScenariosSection nav={nav} focus={!!focusDemo} /></div>}
+    {app && app.demo_scenarios && <DemoScenariosSection nav={nav} focus={!!focusDemo} />}
   </div>;
 }

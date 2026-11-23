@@ -64,34 +64,40 @@ function LoadedCases({ s, nav }) {
   </div>;
 }
 
+/* "Waiting to start": submissions already on the server (server --demo-scenarios) that the analyst can start with one
+   click. Start registers a case from the submission through the same registration as an upload, then starts it. */
+function StartButton({ s, nav }) {
+  const m = useMutation();
+  const start = async () => {
+    const r = await m.run((svc) => svc.loadDemoScenario(s.scenario_id), { success: (c) => 'Case ' + (c && c.case_ref) + ' created' });
+    if (r && r.case_ref) nav('cases/' + r.case_ref + '/overview?action=start');
+  };
+  return <Button size="sm" variant="primary" icon="play" loading={m.busy} disabled={!(s.zip && s.zip.present)} title={s.zip && s.zip.present ? undefined : 'The submission file is missing on the server'}
+    aria-label={'Start ' + s.customer_name} data-scenario={s.scenario_id} onClick={(e) => { e.stopPropagation(); start(); }}>{m.busy ? 'Starting…' : 'Start'}</Button>;
+}
+
 export function DemoScenariosSection({ nav, focus }) {
   const q = useQuery('demo-scenarios', (svc) => svc.listDemoScenarios(), { focus: true });
-  const [sel, setSel] = React.useState(null);
   const ref = React.useRef(null);
   React.useEffect(() => { if (focus && ref.current && ref.current.scrollIntoView) ref.current.scrollIntoView({ block: 'start' }); }, [focus, !!q.data]);
   const d = q.data;
   const list = (d && d.scenarios) || [];
-  const chosen = list.find((s) => s.scenario_id === sel);
-  return <section ref={ref} className="rf-panel as-demo" id="demo-scenarios" aria-label="Demo scenarios">
-    <header className="rf-panel__head"><div><h3 className="rf-panel__title"><Icon name="flag" size={14} /> Demo scenarios</h3>
-      <div className="rf-panel__sub">Synthetic evidence ZIPs. Load scenario registers a new Waiting case through the same registration as a manual upload; every result comes from the real Smart Parser and engine.</div></div>
-      <span className="rf-spacer" /><Button size="sm" icon="refresh" onClick={() => q.reload()}>Refresh</Button></header>
+  if (q.error && q.error.error === 'DEMO_DISABLED') return null;
+  return <section ref={ref} className="rf-panel dash-panel" id="waiting-to-start" aria-label="Waiting to start">
+    <header className="rf-panel__head"><div><h3 className="rf-panel__title">Waiting to start</h3>
+      <div className="rf-panel__sub">Submissions received and ready for processing. Start runs Smart Parsing, reconciliation and the AI review.</div></div>
+      <span className="rf-spacer" /><span className="dash-count">{list.length}</span></header>
     <div className="rf-panel__body rf-panel__body--flush">
-      {q.error && <div style={{ padding: 16 }}><Notice tone={q.error.error === 'DEMO_DISABLED' ? 'attention' : 'danger'} compact title={q.error.error === 'DEMO_DISABLED' ? 'Demo scenarios are not enabled on this server' : 'Demo scenarios could not be loaded'}>{q.error.message}</Notice></div>}
+      {q.error && <div style={{ padding: 16 }}><Notice tone="danger" compact title="Submissions could not be loaded">{q.error.message}</Notice></div>}
       {!d && !q.error && <div style={{ padding: 16 }}><span className="rf-skel" style={{ width: '60%' }} /></div>}
-      {d && (list.length ? <Table dense caption="Demo scenarios" columns={[{ key: 'cust', label: 'Customer', width: '200px' }, { key: 'per', label: 'Period', width: '120px' }, { key: 'desc', label: 'Scenario' }, { key: 'exp', label: 'Expected business outcome', width: '240px' }, { key: 'n', label: 'Loaded', cls: 'is-num' }, { key: 'go', label: <span className="rf-sr">Load</span>, cls: 'is-tight' }]}
-        rows={list.map((s) => ({ key: s.scenario_id, selected: sel === s.scenario_id, onClick: () => setSel(sel === s.scenario_id ? null : s.scenario_id), cells: {
+      {d && (list.length ? <Table caption="Waiting to start" columns={[{ key: 'cust', label: 'Customer', width: '260px' }, { key: 'per', label: 'Period', width: '140px' }, { key: 'desc', label: 'Submission' }, { key: 'last', label: 'Previous cases', width: '170px' }, { key: 'go', label: <span className="rf-sr">Start</span>, cls: 'is-tight' }]}
+        rows={list.map((s) => { const prev = (s.cases || [])[0]; return { key: s.scenario_id, cells: {
           cust: <span className="rf-cell-main">{s.customer_name}</span>,
           per: <span className="rf-nowrap">{fmtPeriod(s.reporting_period)}</span>,
-          desc: <><span className="rf-cell-main">{s.title}</span><span className="rf-cell-sub" title={s.description}>{shortText(s.description)}</span></>,
-          exp: <Expected e={s.expected} />,
-          n: (s.cases || []).length || null,
-          go: <LoadButton s={s} nav={nav} /> } }))} />
-        : <div style={{ padding: 16 }} className="rf-help">The scenario folder contains no scenario.</div>)}
-      {chosen && <div className="as-demo__detail"><div className="rf-label" style={{ marginBottom: 6 }}>{chosen.title} · cases loaded from this scenario</div>
-        {chosen.demonstrates && <div className="rf-help" style={{ marginBottom: 8 }}>{chosen.demonstrates}</div>}
-        <LoadedCases s={chosen} nav={nav} /></div>}
-      {d && d.scenarios && d.scenarios[0] && d.scenarios[0].synthetic_notice && <div className="rf-help as-demo__note">{d.scenarios[0].synthetic_notice}</div>}
+          desc: <><span className="rf-cell-main">{s.title}</span>{s.zip && s.zip.filename && <span className="rf-cell-sub rf-mono">{s.zip.filename}</span>}</>,
+          last: prev ? <Button size="sm" variant="link" iconRight="arrowRight" onClick={(e) => { e.stopPropagation(); nav('cases/' + prev.case_ref + '/overview'); }}>{prev.case_ref}</Button> : <span className="rf-muted">None</span>,
+          go: <StartButton s={s} nav={nav} /> } }; })} />
+        : <div style={{ padding: 16 }} className="rf-help">No submission is waiting.</div>)}
     </div>
   </section>;
 }

@@ -207,7 +207,7 @@ function ControlsPanel({ refKey, runId, outcomes, total }) {
   const checks = all.data && all.data.rows ? [...new Set(all.data.rows.map((x) => x.check_id))] : [];
   const sum = total != null ? total : OUTCOMES.reduce((a, o) => a + (outcomes[o[0]] || 0), 0);
   const d = q.data;
-  return <Panel flush title="Control results" sub="check_id and note as returned by the engine (no control catalogue in this POC)"
+  return <Panel flush title="Control results" sub="check_id and note as returned by the engine "
     actions={<div className="rfd-filters">
       <Segmented items={[['', 'All ' + sum]].concat(OUTCOMES.map((o) => [o[0], o[0] + ' ' + (outcomes[o[0]] || 0)]))} active={outcome} onChange={setOutcome} />
       <select className="rfd-select" aria-label="Filter by control" value={check} onChange={(e) => setCheck(e.target.value)}><option value="">All controls</option>{checks.map((k) => <option key={k} value={k}>{k}</option>)}</select>

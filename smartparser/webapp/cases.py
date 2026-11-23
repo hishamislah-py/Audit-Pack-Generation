@@ -41,6 +41,57 @@ from . import identity
 STATUSES = ("WAITING", "IN_PROGRESS", "PENDING", "COMPLETED")
 MAX_ZIP_BYTES = 50 * 1024 * 1024
 PERIOD_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
+_MONTHS = {m: i for i, m in enumerate(("jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"), 1)}
+
+
+def detect_period(data: bytes) -> dict | None:
+    """The reporting period of a submission, worked out from the files themselves (23 Nov 2026, owner request), so the
+    analyst only names the customer. Read-only; nothing is stored.
+    1. the reconciliation-day calendar (a CSV whose header has calendar_date or recon_date): the month most of its dates
+       fall in - the most reliable source, because it lists the days being reconciled;
+    2. otherwise the period written in the file names (..._2026-09.csv, ..._Sep2026.pdf), when they agree.
+    Returns {"period": "YYYY-MM", "basis": ...} or None when the files do not show one period."""
+    import csv
+    import io
+    import zipfile
+    from collections import Counter
+    try:
+        z = zipfile.ZipFile(io.BytesIO(data))
+    except zipfile.BadZipFile:
+        return None
+    names = [n for n in z.namelist() if not n.endswith("/")]
+    for n in names:
+        if not n.lower().endswith(".csv"):
+            continue
+        try:
+            with z.open(n) as fh:
+                head = fh.read(512 * 1024).decode("utf-8-sig", errors="replace")
+        except Exception:
+            continue
+        rows = list(csv.reader(io.StringIO(head)))
+        if not rows:
+            continue
+        hdr = [h.strip().lower() for h in rows[0]]
+        col = next((hdr.index(k) for k in ("calendar_date", "recon_date") if k in hdr), None)
+        if col is None or "calendar" not in n.lower() and "calendar_date" not in hdr:
+            continue
+        months = Counter(r[col][:7] for r in rows[1:] if len(r) > col and re.match(r"\d{4}-\d{2}-\d{2}", r[col].strip()))
+        if months:
+            period, _ = months.most_common(1)[0]
+            if PERIOD_RE.match(period):
+                return {"period": period, "basis": f"reconciliation calendar ({Path(n).name})"}
+    found = Counter()
+    for n in names:
+        b = Path(n).name
+        for y, m in re.findall(r"(20\d{2})-(0[1-9]|1[0-2])(?!\d)", b):
+            found[f"{y}-{m}"] += 1
+        for mon, y in re.findall(r"(?i)(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*[ _-]?(20\d{2})", b):
+            found[f"{y}-{_MONTHS[mon.lower()]:02d}"] += 1
+    if found:
+        (period, n1), *rest = found.most_common(2) + [(None, 0)]
+        if n1 and (not rest or rest[0][1] < n1):
+            return {"period": period, "basis": "file names"}
+    return None
 # Case assignment: `assigned_to` is the sign-in username of the case OWNER, recorded at registration (the registering
 # user by default) or by an audited claim / supervisor reassignment (CASE_ASSIGNED). It filters the Work Queue ("My
 # cases") without changing its date-based order and, since Fix8 D7, decides who may act on the case (authz.py: the
@@ -176,6 +227,13 @@ class CaseService:
                                             and len(assigned_to) <= USERNAME_MAX):
             raise CaseError(400, "INVALID", "assigned_to must be a non-empty username")
         assigned_to = assigned_to.strip() if assigned_to else None
+        detected = None
+        if not (reporting_period or "").strip():           # worked out from the files (owner request, 23 Nov 2026)
+            detected = detect_period(data) if data[:4] == b"PK\x03\x04" else None
+            if detected is None:
+                raise CaseError(400, "PERIOD_NOT_DETECTED", "the reporting period could not be worked out from the files; "
+                                "enter it (YYYY-MM)")
+            reporting_period = detected["period"]
         if not PERIOD_RE.match(reporting_period or ""):
             raise CaseError(400, "INVALID", "the reporting period must be YYYY-MM")
         if not (zip_name or "").lower().endswith(".zip") or data[:4] != b"PK\x03\x04":
@@ -200,6 +258,7 @@ class CaseService:
             self._history(c, "WAITING", "original ZIP attached; Smart Parser not started")
             self._save(c)
         self._audit("CASE_CREATED", c, customer_name=customer_name, reporting_period=reporting_period,
+                    **({"reporting_period_detected_from": detected["basis"]} if detected else {}),
                     zip_filename=c["zip"]["filename"], zip_sha256=sha, zip_size=len(data),
                     assigned_to=assigned_to)
         return c

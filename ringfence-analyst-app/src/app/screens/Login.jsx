@@ -42,7 +42,7 @@ export default function LoginScreen({ onSignIn, app, appError, kind, store }) {
         <input className="rf-input rf-input--lg" type="password" name="password" autoComplete="current-password"
           value={password} onChange={(e) => setPassword(e.target.value)} disabled={busy} required /></label>
       <Button type="submit" variant="primary" size="lg" block loading={busy}>{busy ? 'Signing in…' : 'Sign in'}</Button>
-      <p className="rf-help" style={{ margin: 0 }}>Your session is kept by the server and ends when you sign out or after a period of inactivity. Use synthetic evidence only.</p>
+      <p className="rf-help" style={{ margin: 0 }}>Your session is kept by the server and ends when you sign out or after a period of inactivity.</p>
     </form>
   </LoginFrame>;
   if (!auth.checked) return <LoginFrame><div className="rf-login__form" aria-busy="true"><h2 id="login-title" className="page-title" style={{ margin: 0 }}>Sign in</h2><p className="rf-muted">Checking your session…</p></div></LoginFrame>;
@@ -67,7 +67,7 @@ export default function LoginScreen({ onSignIn, app, appError, kind, store }) {
           </div>
         </div>
         <Button type="submit" variant="primary" size="lg" block loading={busy}>{busy ? 'Signing in…' : 'Sign in'}</Button>
-        <p className="rf-help" style={{ margin: 0 }}>This is a simulated session. The reviewer identity comes from <span className="rf-mono">GET /api/app</span>, one analyst per server process. Use synthetic evidence only.</p>
+        <p className="rf-help" style={{ margin: 0 }}>This is a simulated session. The reviewer identity comes from <span className="rf-mono">GET /api/app</span>, one analyst per server process.</p>
       </form>;
   }
 }
@@ -77,9 +77,9 @@ function LoginFrame({ children }) {
     <section className="rf-login__brand">
       <div className="rf-row" style={{ gap: 10 }}><Mark size={28} /><span style={{ fontSize: 18, fontWeight: 600 }}>Ringfence</span></div>
       <h1 className="display" style={{ margin: '64px 0 0', maxWidth: 440 }}>Safeguarding evidence, on the record.</h1>
-      <p className="rf-login__lede">Process customer evidence, decide what needs a person, seal the package and run the UC-042 reconciliation. Defer a case at any point and resume where you left off. Every step is traceable to its source.</p>
+      <p className="rf-login__lede">Process customer evidence, decide what needs a person, seal the package and run the reconciliation. Defer a case at any point and resume where you left off. Every step is traceable to its source.</p>
       <ol className="rf-login__journey">{JOURNEY.map((s) => <li key={s[0]}><span className="rf-mono">{s[0]}</span><div>{s[1]}<small>{s[2]}</small></div></li>)}</ol>
-      <div className="rf-login__foot">Moorwand safeguarding operations · UC-042 proof of concept · synthetic data only</div>
+      <div className="rf-login__foot">Safeguarding reconciliation for e-money and payment institutions</div>
     </section>
     <section className="rf-login__formwrap">{children}</section>
   </div>;
