@@ -267,6 +267,10 @@ def test_clean_case_not_required_summary_final_pack_verified_and_authorised_by_u
     assert pdf[:5] == b"%PDF-" and hdr["Content-Disposition"].startswith("attachment")
     _, ppdf, _ = R(ctx, "GET", f"cases/{ref}/closure/final-pack/provenance.pdf")
     assert ppdf[:5] == b"%PDF-"
+    # 23 Nov 2026: the analyst edition (renderer 4.0-analyst) is generated beside the provenance record and verified
+    assert "analyst.pdf" in {f["key"] for f in fp["files"]}
+    _, apdf, _ = R(ctx, "GET", f"cases/{ref}/closure/final-pack/analyst.pdf")
+    assert apdf[:5] == b"%PDF-" and b"4.0-analyst" in apdf
     prov = json.loads(R(ctx, "GET", f"cases/{ref}/closure/final-pack/provenance.json")[1])
     assert prov["authorised_by"] == USER and prov["zip"]["sha256"] and all(
         f["original_filename"] and f["file_version_id"] and f["source_sha256"] for f in prov["source_files"])
@@ -287,7 +291,9 @@ def test_clean_case_not_required_summary_final_pack_verified_and_authorised_by_u
 
 
 @needs_closure
-def test_exceptions_case_investigations_decisions_preview_hold_generate_freeze_and_restart(tmp_path):
+def test_exceptions_case_investigations_decisions_preview_hold_generate_freeze_and_restart(tmp_path, monkeypatch):
+    # The AI closing summary is off by the 23 Nov 2026 owner decision; this test keeps its (re-enableable) path covered.
+    monkeypatch.setenv("RINGFENCE_AI_CLOSING_SUMMARY", "on")
     data, customer, period = scenario_zip("scenario_2")
     ctx = ctx_for(tmp_path)
     ref = reconcile(ctx, data, customer, period)
@@ -461,3 +467,12 @@ def test_hypothesis_evidence_resolves_in_citations(tmp_path):
     assert sorted(out) == ["IN-09:BE-1", "IN-09:BE-2"]
     assert (out["IN-09:BE-1"]["original_filename"], out["IN-09:BE-1"]["file_version_id"], out["IN-09:BE-1"]["line"]) == \
         ("stmt.csv", "FV-1", 4)
+
+
+def test_ai_closing_summary_is_off_by_default(monkeypatch):
+    """23 Nov 2026 owner decision: no AI closing summary; the preview needs no AI confirmation for a case with exceptions."""
+    from smartparser.webapp import closure
+    monkeypatch.delenv("RINGFENCE_AI_CLOSING_SUMMARY", raising=False)
+    assert closure.ai_closing_summary() is False
+    monkeypatch.setenv("RINGFENCE_AI_CLOSING_SUMMARY", "on")
+    assert closure.ai_closing_summary() is True

@@ -10,6 +10,7 @@ import { useQuery, useMutation } from '../hooks.js';
 import { Button, WithReason, Panel, KV, Notice, Table, Segmented, Tabs, Empty, Skeleton, Dialog, Pill, Enum, Ref, Hash, Money, Stats, SegBar, Outcome, Icon, Glyph, cx } from '../../ui/index.jsx';
 import { fmtDateTime, sevLevel, reconRunId } from '../format.js';
 import ExceptionWorkspace from './ExceptionWorkspace.jsx';
+import StartReconButton, { reconAvailability } from './StartRecon.jsx';
 import { useClosure, DeterministicSummary, PackStatusLine, AiState, DecisionCell, ClosureError } from './closure.jsx';
 
 const OUTCOMES = [['PASS', 'pass', 'success', 'success'], ['FAIL', 'fail', 'danger', 'danger'], ['INSUFFICIENT_EVIDENCE', 'ie', 'warning', 'attention'], ['NOT_APPLICABLE', 'na', 'na', 'neutral']];
@@ -47,11 +48,11 @@ export default function ReconTab({ c, app, route, nav, store }) {
   const runs = ((c.package && c.package.jobs) || []).filter((j) => j.kind === 'reconciliation');
   const latest = rec.run_id || reconRunId(c) || (runs.length ? runs[runs.length - 1].run_id : null);
   const runId = route.sub || latest || null;
-  const act = (c.actions && c.actions.reconcile) || { enabled: false, reason: null };
+  const act = reconAvailability(c);
   const completed = c.status === 'COMPLETED';
-  const [confirm, setConfirm] = React.useState(false);
   const go = (rid, exc) => nav('cases/' + ref + '/recon' + (rid ? '/' + rid + (exc ? '/' + exc : '') : ''));
-  const runButton = completed ? null : <WithReason reason={act.enabled ? null : act.reason}><Button variant="primary" icon="play" disabled={!act.enabled} onClick={() => setConfirm(true)}>{runs.length ? 'Run reconciliation again' : 'Run reconciliation'}</Button></WithReason>;
+  // One click, no confirmation: activates the package when needed, then starts the run (StartRecon.jsx).
+  const runButton = completed ? null : <StartReconButton c={c} nav={nav} label={runs.length ? 'Run reconciliation again' : 'Start reconciliation'} />;
   const last = (c.status_history || []).slice(-1)[0];
 
   return <div className="rf-workspace">
@@ -59,10 +60,13 @@ export default function ReconTab({ c, app, route, nav, store }) {
     {c.deferring && <Notice tone="attention" title="Deferral requested">{'Requested ' + fmtDateTime(c.deferral && c.deferral.requested_at) + '. A deferral never interrupts a run: the running operation continues to the end.'}</Notice>}
     {app && app.engine_configured === false && <Notice tone="attention" title="Reconciliation engine not configured">The server reports no UC-042 engine, so reconciliation cannot run here.</Notice>}
     {runId && runId !== latest && latest && <Notice tone="info" compact actions={<Button size="sm" onClick={() => go(latest)}>Show latest run</Button>}>{'You are viewing an earlier run, ' + runId + '. The latest run is ' + latest + '.'}</Notice>}
-    {runId
+    {!runId && !completed && (rec.state === 'RUNNING' || rec.state === 'QUEUED')
+      ? <Panel title="Reconciliation running" sub="The evidence is sealed and the engine is evaluating the controls. Results appear here automatically." actions={<Pill state="RECON_RUNNING" />}>
+          <div className="rf-row" style={{ gap: 8 }}><span className="rf-tone-progress"><Glyph name="progress" /></span><span className="rf-secondary">Starting the run…</span></div>
+        </Panel>
+      : runId
       ? <RunView key={runId} c={c} app={app} runId={runId} isLatest={runId === latest} rec={rec} runs={runs} store={store} go={go} route={route} runButton={runButton} nav={nav} />
       : <NotRun c={c} app={app} act={act} runButton={runButton} nav={nav} />}
-    {confirm && <ConfirmRun c={c} app={app} onClose={() => setConfirm(false)} onDone={(r) => { setConfirm(false); const rid = r && r.case && r.case.progress && r.case.progress.reconciliation && r.case.progress.reconciliation.run_id; go(rid || null); }} />}
   </div>;
 }
 
@@ -70,7 +74,7 @@ function SnapshotPanel({ c, app }) {
   const a = c.activation;
   return <Panel title="Snapshot" sub="The sealed evidence the engine reconciles">
     {a ? <KV pairs={[['Snapshot', <Ref id={a.snapshot_id} copy />], ['Activated', fmtDateTime(a.activated_at) + (a.activated_by ? ' by ' + a.activated_by : '')], ['Manifest', a.manifest_sha256 ? <Hash sha={a.manifest_sha256} /> : '—'], ['Package', c.package ? <span className="rf-mono">{c.package.package_id}</span> : '—'], ['Engine', app && app.engine_configured ? 'UC-042 reconciliation · configured' : 'Not configured']]} />
-      : <div className="rf-help">No snapshot yet. The package is sealed as a snapshot when it is activated.</div>}
+      : <div className="rf-help">No snapshot yet. The evidence is sealed as a snapshot automatically when reconciliation starts.</div>}
   </Panel>;
 }
 function RunsList({ runs, runId, onSelect }) {
@@ -84,13 +88,13 @@ function RunsList({ runs, runId, onSelect }) {
 
 function NotRun({ c, app, act, runButton, nav }) {
   const ref = c.case_ref;
-  if (!c.activation) {
-    return <div className="rf-split"><Panel><Empty icon="lock" title="Reconciliation needs an activated package" action={c.status === 'COMPLETED' ? null : <Button icon="arrowRight" onClick={() => nav('cases/' + ref + '/package')}>Go to Validation & activation</Button>}>{act.reason || 'The engine reconciles the sealed snapshot created at activation.'}</Empty></Panel><SnapshotPanel c={c} app={app} /></div>;
+  if (!c.activation && !act.enabled) {
+    return <div className="rf-split"><Panel><Empty icon="lock" title="Not ready for reconciliation yet" action={c.status === 'COMPLETED' ? null : <Button icon="arrowRight" onClick={() => nav('cases/' + ref + '/parser')}>Go to Smart Parser</Button>}>{(act.reason ? act.reason + '. ' : '') + 'Finish the Smart Parser step (mapping and checks) first.'}</Empty></Panel><SnapshotPanel c={c} app={app} /></div>;
   }
   return <div className="rf-split">
-    <Panel title={'Run the UC-042 reconciliation on snapshot ' + c.activation.snapshot_id} sub="Uses the existing UC-042 engine through the Smart Parser adapter">
+    <Panel title="Start reconciliation" sub="Runs the UC-042 reconciliation engine on this case's evidence">
       <div className="rf-stack rf-stack--3">
-        <p style={{ margin: 0, fontSize: 13, lineHeight: '20px', color: 'var(--ink-secondary)' }}>The adapter passes the sealed snapshot to the engine. Running it is an explicit analyst action. Results always name their snapshot and run, and when a run completes the case is Completed.</p>
+        <p style={{ margin: 0, fontSize: 13, lineHeight: '20px', color: 'var(--ink-secondary)' }}>All evidence checks have passed. Starting seals the evidence as a snapshot and runs the engine on it. When the run completes the case is Completed.</p>
         <div><div className="rf-label" style={{ marginBottom: 6 }}>Possible outcomes</div>
           <div className="rf-row rf-row--wrap"><Pill state="CLEAN" /><Pill state="EXCEPTIONS_OPEN" /><Pill state="EVIDENCE_INCOMPLETE" /></div></div>
         <div className="rf-help"><Icon name="info" size={12} /> Technical failures (the engine cannot complete a run) are not an outcome. They are shown separately with their error, the case stays In Progress and the run can be started again.</div>
@@ -224,22 +228,5 @@ function ReportDialog({ refKey, runId, onClose }) {
   return <Layer><Dialog eyebrow="Engine report" title={'Reconciliation report · ' + runId} width={760} onClose={onClose} foot={<><span className="rf-spacer" /><Button onClick={onClose}>Close</Button></>}>
     {q.error ? <Notice tone="danger" title="The report could not be loaded" actions={<Button size="sm" onClick={q.reload}>Try again</Button>}>{q.error.message}</Notice>
       : q.data == null ? <span className="rf-skel" style={{ width: '70%' }} /> : <pre className="rfd-pre">{String(q.data)}</pre>}
-  </Dialog></Layer>;
-}
-
-function ConfirmRun({ c, app, onClose, onDone }) {
-  const m = useMutation();
-  const a = c.activation || {};
-  const submit = async () => {
-    const r = await m.run((svc) => svc.reconcileCase(c.case_ref, { expected_revision: c.revision }), { inline: true, success: 'Reconciliation started' });
-    if (r) onDone(r);
-  };
-  return <Layer><Dialog eyebrow={c.case_ref + ' · ' + c.customer_name} title="Run reconciliation" error={m.error} onClose={m.busy ? undefined : onClose}
-    foot={<><span className="rf-spacer" /><Button onClick={onClose} disabled={m.busy}>Cancel</Button><Button variant="primary" icon="play" loading={m.busy} onClick={submit}>{m.busy ? 'Starting…' : 'Run reconciliation'}</Button></>}>
-    <div className="rf-stack rf-stack--3">
-      <KV pairs={[['Snapshot', a.snapshot_id ? <Ref id={a.snapshot_id} /> : '—'], ['Manifest', a.manifest_sha256 ? <Hash sha={a.manifest_sha256} /> : '—'], ['Activated', fmtDateTime(a.activated_at) + (a.activated_by ? ' by ' + a.activated_by : '')], ['Engine', app && app.engine_configured ? 'UC-042 reconciliation via Smart Parser adapter' : 'Not configured']]} />
-      <p style={{ margin: 0, fontSize: 13, lineHeight: '20px', color: 'var(--ink-secondary)' }}>In Progress → Completed when the run completes. If it fails, the error is kept and the case stays In Progress, so you can run it again on this snapshot.</p>
-      <Notice tone="locked" compact>There is no correction or reactivation after reconciliation. The results stay linked to this snapshot.</Notice>
-    </div>
   </Dialog></Layer>;
 }

@@ -222,17 +222,18 @@ def scenario(j: AJ, sc, results):
         j.step(f"{sid}: register {Path(sc['zip']).name} for {sc['customer']} {sc['period']}")
         ref = register(j, sc)
     c = j.case(ref)
-    j.check(f"{sid}.01", "case registered from the scenario ZIP (UI): Waiting, with the ZIP, customer and period",
-            (c["status"], c["customer_name"], c["reporting_period"], c["zip"]["filename"]),
-            ("WAITING", sc["customer"], sc["period"], Path(sc["zip"]).name))
-    j.check(f"{sid}.02", "overview shows the backend status pill and Start action",
-            ("Waiting" in j.text_of(".rf-page, #root"), bool(j.js("[...document.querySelectorAll('button')].some(b => "
-                                                                   "b.textContent.includes('Start Smart Parsing') && !b.disabled)"))),
-            (True, True))
-    j.shot(f"{sid}_overview_waiting")
-    j.button("Start Smart Parsing")
-    j.button("Start Smart Parsing", j.DLG)
-    j.wait("location.hash.includes('/parser')", what="parser tab")
+    if not sc.get("_started"):                       # the queue journey starts the case from the queue itself
+        j.check(f"{sid}.01", "case registered from the scenario ZIP (UI): Waiting, with the ZIP, customer and period",
+                (c["status"], c["customer_name"], c["reporting_period"], c["zip"]["filename"]),
+                ("WAITING", sc["customer"], sc["period"], Path(sc["zip"]).name))
+        j.check(f"{sid}.02", "overview shows the backend status pill and Start action",
+                ("Waiting" in j.text_of(".rf-page, #root"), bool(j.js("[...document.querySelectorAll('button')].some(b => "
+                                                                       "b.textContent.includes('Start Smart Parsing') && !b.disabled)"))),
+                (True, True))
+        j.shot(f"{sid}_overview_waiting")
+        j.button("Start Smart Parsing")              # simplified flow: starts at once, no confirmation dialog
+        j.wait("location.hash.includes('/parser')", what="parser tab")
+        j.check(f"{sid}.02b", "Start Smart Parsing opened no confirmation dialog", j.js(f"{j.DLG} === document"), True)
     c = j.wait_case(ref, lambda x: j.idle(x), timeout=900, what="smart parser run")
     run = c["current_run"]
     # the page polls the case every 3 s (contract §5): wait until it shows the finished run before the screenshot
@@ -279,18 +280,20 @@ def scenario(j: AJ, sc, results):
         c = confirm_reviews(j, ref, sid)
     c = j.wait_case(ref, lambda x: x["progress"]["validation"]["state"] in ("PASSED", "FAILED") and j.idle(x), timeout=300,
                     what="automatic validation")
-    j.check(f"{sid}.04", "automatic validation passed; activation enabled by the backend",
-            (c["progress"]["validation"]["state"], c["actions"]["activate"]["enabled"]), ("PASSED", True))
-    j.nav(f"#/cases/{ref}/package")
-    j.shot(f"{sid}_package")
-    j.button("Activate package")
-    j.js(f"(() => {{ const b = {j.DLG}.querySelector('input[type=checkbox]'); if (b && !b.checked) b.click(); }})()")
-    j.button("Activate package", j.DLG)
+    j.check(f"{sid}.04", "automatic validation passed", c["progress"]["validation"]["state"], "PASSED")
+    # Simplified flow: no Validation & activation screen and no Activate dialog. Once nothing is left for the analyst the
+    # backend activates and reconciles by itself (AUTO_AFTER_SMART_PARSER); with RINGFENCE_AUTO_RECONCILE=off the Smart
+    # Parser screen offers one "Start reconciliation" click (activation + reconciliation, no confirmation).
+    j.nav(f"#/cases/{ref}/parser")
+    time.sleep(3)
+    if not j.case(ref).get("activation"):
+        j.wait("[...document.querySelectorAll('button')].some(b => b.textContent.trim() === 'Start reconciliation' && !b.disabled)"
+               " || /reconciliation (is running|started)/.test(document.body.innerText)", timeout=60, what="Start reconciliation")
+        j.js("[...document.querySelectorAll('button')].find(b => b.textContent.trim() === 'Start reconciliation' && !b.disabled)?.click()")
     c = j.wait_case(ref, lambda x: bool(x.get("activation")), what="activation")
-    j.check(f"{sid}.05", "activated through the UI: snapshot sealed", bool(c["activation"]["snapshot_id"]), True)
-    j.nav(f"#/cases/{ref}/recon")
-    j.button("Run reconciliation")
-    j.button("Run reconciliation", j.DLG)
+    j.shot(f"{sid}_parser_all_passed")
+    j.check(f"{sid}.05", "activated without an Activate screen or dialog: snapshot sealed",
+            (bool(c["activation"]["snapshot_id"]), j.js(f"{j.DLG} === document")), (True, True))
     c = j.wait_case(ref, lambda x: x["status"] == "COMPLETED" or x["progress"]["reconciliation"]["state"] == "FAILED",
                     timeout=900, what="reconciliation")
     rec = c["progress"]["reconciliation"]

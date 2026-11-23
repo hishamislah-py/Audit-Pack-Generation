@@ -11,7 +11,7 @@ import { closureFileUrl } from '../../services/dataService.js';
 import { useClosure, useAiConfig, useJobWatch, ActBtn, AiState, DecisionCell, DeterministicSummary, PackStatusLine, ClosureError, itemText, scalarText } from './closure.jsx';
 
 const INCLUSIONS = [['INCLUDED', 'Included'], ['NOT_INVESTIGATED', 'Not investigated'], ['EXCLUDED_BY_ANALYST', 'Excluded']];
-const FILES = [['pdf', 'Final report (PDF)', 'filePdf'], ['html', 'Final report (HTML)', 'file'], ['json', 'Final pack (JSON)', 'fileOther'], ['manifest', 'Manifest', 'checklist'], ['provenance.pdf', 'Provenance supplement (PDF)', 'filePdf'], ['provenance.json', 'Provenance supplement (JSON)', 'fileOther']];
+const FILES = [['analyst.pdf', 'Analyst edition (PDF, short)', 'filePdf'], ['pdf', 'Technical report (PDF, full)', 'filePdf'], ['html', 'Final report (HTML)', 'file'], ['json', 'Final pack (JSON)', 'fileOther'], ['manifest', 'Manifest', 'checklist'], ['provenance.pdf', 'Provenance supplement (PDF)', 'filePdf'], ['provenance.json', 'Provenance supplement (JSON)', 'fileOther']];
 const fmtN = (n) => (n == null ? '—' : Number(n).toLocaleString('en-GB'));
 const Sev = ({ value }) => <span className={'rf-sev rf-sev--' + sevLevel(value)}><span className="rf-sev__bars" aria-hidden="true"><i /><i /><i /></span>{value || '—'}</span>;
 
@@ -80,7 +80,7 @@ function PreviewFrames({ ref_, preview }) {
   const v = '?preview=' + encodeURIComponent(preview.preview_id || '');
   const url = closureFileUrl(ref_, 'review/preview.' + tab) + v;
   return <div className="rf-stack rf-stack--3">
-    <div className="rf-row rf-row--wrap" style={{ gap: 8 }}><Tabs items={[['pdf', 'PDF'], ['html', 'HTML'], ['json', 'JSON']]} active={tab} onChange={setTab} /><span className="rf-spacer" />
+    <div className="rf-row rf-row--wrap" style={{ gap: 8 }}><Tabs items={[['pdf', 'Audit pack (PDF)'], ['technical.pdf', 'Technical report (PDF)'], ['html', 'HTML'], ['json', 'JSON']]} active={tab} onChange={setTab} /><span className="rf-spacer" />
       <a className="rf-btn rf-btn--quiet rf-btn--sm" href={url} target="_blank" rel="noopener"><Icon name="external" /><span>Open in a new tab</span></a></div>
     <iframe key={tab + preview.preview_id} className="rfe-frame" title={'Closing preview ' + tab.toUpperCase()} src={url} sandbox={tab === 'html' ? '' : undefined} />
   </div>;

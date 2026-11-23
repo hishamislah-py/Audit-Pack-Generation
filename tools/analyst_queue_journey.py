@@ -97,18 +97,18 @@ class QJ(aaj.AJ):
 
 
 def start_from_queue(j: QJ, sc) -> str:
-    """Replaces registration: the case already exists. Work Queue (My cases) -> Start -> the Start confirmation opens."""
+    """Replaces registration: the case already exists. Work Queue (My cases) -> Start -> Smart Parsing starts at once
+    (simplified flow: no Start confirmation) and the case opens on its Smart Parser tab."""
     ref = sc["case_ref"]
     j.nav("#/queue")
     sel = f"document.querySelector('button[aria-label=\"Start {ref}\"]')"
     j.wait(f"{sel} && !{sel}.disabled", timeout=60, what=f"Start button for {ref} in the queue")
     j.js(f"{sel}.click()")
-    j.wait(f"location.hash.startsWith('#/cases/{ref}/overview')", what="case opened from the queue")
-    j.wait(f"{j.DLG} !== document && {j.DLG}.innerText.includes('Start Smart Parsing for this case?')", timeout=30,
-           what="Start confirmation opened by the queue Start")
-    j.check(f"{sc['id']}.00", "queue Start opened the case with the normal Start confirmation (nothing started yet)",
-            (j.case(ref)["status"], j.js("location.hash")), ("WAITING", f"#/cases/{ref}/overview"))
-    j.shot(f"{sc['id']}_start_confirmation")
+    j.wait(f"location.hash.startsWith('#/cases/{ref}/parser')", timeout=60, what="Smart Parser opened from the queue Start")
+    j.check(f"{sc['id']}.00", "queue Start started Smart Parsing at once (no confirmation dialog)",
+            (j.case(ref)["status"], j.js(f"{j.DLG} === document")), ("IN_PROGRESS", True))
+    j.shot(f"{sc['id']}_started_from_queue")
+    sc["_started"] = True
     return ref
 
 

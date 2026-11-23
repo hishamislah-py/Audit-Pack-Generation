@@ -5,7 +5,7 @@ import React from 'react';
 import { useQuery, useMutation } from './hooks.js';
 import { STATES } from '../ui/design.js';
 import { CaseHeader, CaseBanner, Pill, Button, WithReason, Dialog, Notice, Skeleton, Empty, KV, Hash, Bullets } from '../ui/index.jsx';
-import { fmtDateTime, fmtPeriod, periodRange, fmtBytes, missingNotUnreadable } from './format.js';
+import { fmtDateTime, fmtPeriod, periodRange, fmtBytes, missingNotUnreadable, simpleSteps } from './format.js';
 import OverviewTab from './case/Overview.jsx';
 import EvidenceTab from './case/Evidence.jsx';
 import ParserTab from './case/Parser.jsx';
@@ -24,15 +24,14 @@ const stepOf = (c, key) => { const s = (c.steps || []).find((x) => x.key === key
 
 function tabSteps(c) {
   const p = c.progress || {}, o = c.outstanding || {};
-  const val = stepOf(c, 'validation'), act = stepOf(c, 'activation');
   const fixes = missingNotUnreadable(o).length + (o.files_requiring_replacement || []).length + (o.unreadable_members || []).filter((u) => u.open !== false).length;
   const exc = p.reconciliation && p.reconciliation.state === 'COMPLETED' ? p.reconciliation.exceptions : 0;
+  const sp = simpleSteps(c);
   return {
     evidence: fixes ? { count: fixes, countTone: 'attention', title: fixes + ' evidence item(s) need action' } : {},
-    parser: { state: 'STEP_' + stepOf(c, 'smart_parser'), title: 'Smart Parser · ' + stepOf(c, 'smart_parser') },
-    review: { state: 'STEP_' + stepOf(c, 'review'), count: p.decisions_outstanding || null, countTone: 'attention', title: 'Review · ' + stepOf(c, 'review') },
-    package: { state: 'STEP_' + (act === 'done' ? 'done' : val === 'done' ? 'current' : val), locked: !!c.activation, title: c.activation ? 'ACTIVE and locked as ' + c.activation.snapshot_id : 'Validation · ' + val + ', activation · ' + act },
-    recon: { state: 'STEP_' + stepOf(c, 'reconciliation'), count: exc || null, countTone: 'danger', title: 'Reconciliation · ' + stepOf(c, 'reconciliation') },
+    // Smart Parser = parsing + mapping review + validation (one phase).
+    parser: { state: 'STEP_' + sp.parser, count: p.decisions_outstanding || null, countTone: 'attention', title: 'Smart Parser (parsing, mapping, validation) · ' + sp.parser },
+    recon: { state: 'STEP_' + sp.recon, count: exc || null, countTone: 'danger', title: 'Reconciliation · ' + sp.recon },
     closing: c.status === 'COMPLETED' ? { title: 'Closing & Audit Pack · available after reconciliation' } : { title: 'Closing & Audit Pack · after reconciliation completes' }
   };
 }
@@ -49,11 +48,11 @@ function Banner({ c, nav }) {
   return <CaseBanner kind="in-progress" title="In Progress.">{((c.progress && c.progress.summary) || []).slice(0, 2).join(' · ')}</CaseBanner>;
 }
 
-function LifecycleActions({ c, open }) {
+function LifecycleActions({ c, open, busy }) {
   const a = c.actions || {};
   const btn = (kind, label, variant, icon) => {
     const x = a[kind === 'retry' ? 'retry_from_beginning' : kind] || {};
-    const b = <Button variant={variant} icon={icon} disabled={!x.enabled} onClick={() => open(kind)}>{label}</Button>;
+    const b = <Button variant={variant} icon={icon} loading={busy === kind} disabled={!x.enabled || !!busy} onClick={() => open(kind)}>{label}</Button>;
     return x.enabled ? <React.Fragment key={kind}>{b}</React.Fragment> : <WithReason key={kind} reason={x.reason}>{b}</WithReason>;
   };
   const out = [];
@@ -66,10 +65,8 @@ function LifecycleActions({ c, open }) {
   return <div className="rf-row rf-row--top" style={{ flexWrap: 'wrap', justifyContent: 'flex-end' }}>{out}</div>;
 }
 
-/* Start / Defer / Resume / Retry confirmation dialogs (S05, S06). */
+/* Defer / Resume / Retry confirmation dialogs (S06). Start has no dialog (see startNow). */
 const ACTIONS = {
-  start: { eyebrow: 'Start Smart Parsing', title: 'Start Smart Parsing for this case?', confirm: 'Start Smart Parsing', icon: 'play', after: 'parser', success: 'Smart Parsing started',
-    call: (svc, c) => svc.startCase(c.case_ref, { expected_revision: c.revision }) },
   defer: { eyebrow: 'Defer Case', title: 'Defer this case?', confirm: 'Defer Case', icon: 'pause', variant: 'secondary',
     success: (r) => (r && r.status === 'PENDING' ? 'Case deferred · Pending' : 'Deferral requested · the running operation continues'),
     call: (svc, c) => svc.deferCase(c.case_ref, { expected_revision: c.revision }) },
@@ -90,9 +87,6 @@ function ActionDialog({ kind, c, onClose, nav }) {
     if (r) { onClose(); if (d.after) nav('cases/' + c.case_ref + '/' + d.after); }
   };
   let body;
-  if (kind === 'start') body = <>
-    <KV pairs={[['Original ZIP', <span key="z">{c.zip.filename} <span className="rf-muted">· {fmtBytes(c.zip.size)}</span></span>], ['SHA-256', <Hash key="h" sha={c.zip.sha256} />]]} />
-    <Bullets items={[['layers', 'The case takes the In Progress slot. Only one case can be In Progress at a time.'], ['parser', 'Smart Parser reads the original ZIP and runs its stages. Progress is reported by the backend.'], ['mapping', 'Nothing is accepted automatically: columns that need a decision wait for your review.'], ['pause', 'You can defer at any time. A running operation always finishes first.']]} /></>;
   if (kind === 'defer') body = <>
     {op ? <Notice tone="attention" title="An operation is running" compact>{op.kind}{op.job_id ? ' · ' + op.job_id : ''} continues and is not interrupted. The deferral is requested now and takes effect when it finishes.</Notice> : null}
     <Bullets items={[['pause', 'The case becomes Pending and frees the In Progress slot.'], ['lock', 'A Pending case is read-only until you resume it.'], ['check', 'All completed work and recorded decisions are kept.']]} /></>;
@@ -133,15 +127,22 @@ export default function CaseWorkspace({ route, app, nav, store }) {
   const [dlg, setDlg] = React.useState(null);
   React.useEffect(() => { setDlg(null); }, [ref]);
   const c = q.data;
-  // Work queue "Start" (…/overview?action=start): open the normal Start confirmation once the case has loaded. Nothing
-  // starts without that confirmation, and the backend's action availability (one In Progress case, state) still applies.
+  // Start Smart Parsing runs straight away (no confirmation dialog). The backend still decides availability
+  // (one In Progress case, case state) and the expected_revision guard still applies.
+  const startM = useMutation();
+  const startNow = async (cc) => {
+    const r = await startM.run((svc) => svc.startCase(cc.case_ref, { expected_revision: cc.revision }), { success: 'Smart Parsing started' });
+    if (r) nav('cases/' + cc.case_ref + '/parser');
+  };
+  const openAction = (kind) => (kind === 'start' ? startNow(c) : setDlg(kind));
+  // Work queue "Start" (…/overview?action=start): start once the case has loaded.
   const autoStart = React.useRef(!!(route.query && route.query.action === 'start'));
   React.useEffect(() => {
     if (!autoStart.current || !c) return;
     autoStart.current = false;
     const a = c.actions && c.actions.start;
-    if (c.status === 'WAITING' && a && a.enabled) setDlg('start');
-    else store.toast('attention', 'Start is not available for ' + c.case_ref + (a && a.reason ? ': ' + a.reason : ' (' + c.status + ')'));
+    if (c.status === 'WAITING' && a && a.enabled) { startNow(c); return; }
+    store.toast('attention', 'Start is not available for ' + c.case_ref + (a && a.reason ? ': ' + a.reason : ' (' + c.status + ')'));
     nav('cases/' + c.case_ref + '/overview');
   }, [c]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!c) {
@@ -160,8 +161,9 @@ export default function CaseWorkspace({ route, app, nav, store }) {
   </div>;
   return <>
     <CaseHeader c={{ customerId: c.customer_id, customer: c.customer_name, ref: c.case_ref, period: fmtPeriod(c.reporting_period), periodRange: periodRange(c.reporting_period), submission: c.zip.filename, receivedLabel: fmtDateTime(c.created_at) }}
-      onNav={nav} tab={route.tab} onTab={tabNav} state={state} actions={<LifecycleActions c={c} open={setDlg} />} steps={tabSteps(c)} banner={<Banner c={c} nav={nav} />} />
-    <Tab key={c.case_ref + ':' + route.tab} c={c} app={app} route={route} nav={nav} openAction={setDlg} store={store} />
+      onNav={nav} tab={route.tab} onTab={tabNav} state={<>{state}{startM.error && <span className="rf-tone-danger" style={{ fontSize: 12 }}>Could not start: {startM.error}</span>}</>}
+      actions={<LifecycleActions c={c} open={openAction} busy={startM.busy ? 'start' : null} />} steps={tabSteps(c)} banner={<Banner c={c} nav={nav} />} />
+    <Tab key={c.case_ref + ':' + route.tab} c={c} app={app} route={route} nav={nav} openAction={openAction} store={store} />
     {dlg && ACTIONS[dlg] && <ActionDialog kind={dlg} c={c} nav={nav} onClose={() => setDlg(null)} />}
   </>;
 }

@@ -4,7 +4,8 @@
    guarded by c.actions[...] and shows its reason when disabled. */
 import React from 'react';
 import { Button, WithReason, Panel, KV, Notice, Tasks, CaseProgress, Outcome, Pill, Ref, Hash, Enum, Stats, Glyph } from '../../ui/index.jsx';
-import { fmtDateTime, fmtPeriod, fmtBytes, catTitle, catInfo, unreadableOf, missingNotUnreadable } from '../format.js';
+import { fmtDateTime, fmtPeriod, fmtBytes, catTitle, catInfo, unreadableOf, missingNotUnreadable, simpleSteps } from '../format.js';
+import StartReconButton from './StartRecon.jsx';
 
 function Act({ a, label, onClick, variant = 'secondary', size = 'sm', icon, iconRight }) {
   const ok = !!(a && a.enabled);
@@ -93,10 +94,12 @@ export default function OverviewTab({ c, app, nav, openAction }) {
   })) });
   const OTHER = {
     RETRY_FROM_BEGINNING: ['Retry from Beginning', A.retry_from_beginning, () => openAction('retry')],
-    ACTIVATE: ['Open activation', A.activate, () => go('package')],
     RUN_RECONCILIATION: ['Open reconciliation', A.reconcile, () => go('recon')]
   };
+  // Simplified flow: activation is part of "Start reconciliation" (one click, no separate activation screen).
+  const RECON_KINDS = { ACTIVATE: 'Validation passed: ready for reconciliation' };
   if ((o.other || []).length) groups.push({ label: 'Next actions', tone: 'progress', glyph: 'active', items: o.other.map((x) => {
+    if (RECON_KINDS[x.kind]) return { title: 'Start reconciliation', detail: RECON_KINDS[x.kind], action: <StartReconButton c={c} nav={nav} size="sm" /> };
     const d = OTHER[x.kind];
     return { title: d ? d[0] : x.kind, detail: x.detail, action: d ? <Act a={d[1]} label={d[0]} variant="primary" onClick={d[2]} /> : null };
   }) });
@@ -112,7 +115,7 @@ export default function OverviewTab({ c, app, nav, openAction }) {
       <div className="rf-stack">
         <Panel title="Progress" sub={'Last activity ' + fmtDateTime(p.last_activity_at || c.last_activity_at)}>
           <div className="rf-stack rf-stack--3">
-            <CaseProgress steps={c.steps || []} labels />
+            <CaseProgress steps={[simpleSteps(c).parser, simpleSteps(c).recon]} labels={['Smart Parser', 'Reconciliation']} />
             {(p.summary || []).length > 0 && <ul className="rfb-facts" aria-label="Progress facts">{p.summary.map((s, i) => <li key={i}>{i === 0 && live && <span className="rf-tone-progress"><Glyph name="progress" size={10} /></span>}<span>{s}</span></li>)}</ul>}
             <Stats items={[
               { label: 'Categories processed', value: (p.categories_processed != null ? p.categories_processed : '—') + ' / ' + (p.categories_total != null ? p.categories_total : '—'), note: p.required_total != null ? p.required_total + ' required' : null },

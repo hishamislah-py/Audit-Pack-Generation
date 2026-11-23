@@ -41,7 +41,7 @@ export default function ReviewTab({ c, app, route, nav, openAction }) {
   if (!vid) {
     return <div className="rf-page"><PageHead c={c} />
       <Corrections items={corrections} onEvidence={() => nav('cases/' + ref + '/evidence')} />
-      <Panel><Empty icon="checklist" title="No file awaits review" action={<div className="rf-row"><Button icon="file" onClick={() => nav('cases/' + ref + '/evidence')}>Open Evidence</Button><Button onClick={() => nav('cases/' + ref + '/package')}>Validation &amp; activation</Button></div>}>
+      <Panel><Empty icon="checklist" title="No file awaits review" action={<div className="rf-row"><Button icon="file" onClick={() => nav('cases/' + ref + '/evidence')}>Open Evidence</Button><Button onClick={() => nav('cases/' + ref + '/parser')}>Smart Parser</Button></div>}>
         {c.actions.review.reason || 'Every mapping review for the current evidence is complete.'}
       </Empty></Panel>
     </div>;

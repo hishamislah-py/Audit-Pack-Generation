@@ -9,6 +9,14 @@ from smartparser.schemas import SchemaRegistry
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
+
+@pytest.fixture(autouse=True)
+def _manual_reconciliation_step_by_default(monkeypatch):
+    """23 Nov 2026: the server continues from a passed Smart Parser run to activation and reconciliation by itself
+    (cases._maybe_auto_reconcile). The existing tests pin the manual step, which RINGFENCE_AUTO_RECONCILE=off keeps;
+    tests of the automatic step remove the variable (test_auto_reconcile_ai_parallel.py)."""
+    monkeypatch.setenv("RINGFENCE_AUTO_RECONCILE", "off")
+
 LEDGER_OK = (
     "entry_id,entry_date,amount,currency,description\n"
     "E1,2026-10-01,100.00,GBP,Opening\n"

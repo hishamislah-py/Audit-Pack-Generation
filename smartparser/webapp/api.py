@@ -773,7 +773,7 @@ def closure_route(ctx: AppContext, method: str, ref: str, R: list[str], q: dict,
             return cl.exception_history(ref, R[1])
         if R[:1] == ["investigations"] and len(R) == 2:
             return cl.investigation(ref, R[1])
-        if R[:2] == ["review", "preview.pdf"] or R[:2] == ["review", "preview.html"] or R[:2] == ["review", "preview.json"]:
+        if R[:2] in (["review", "preview.pdf"], ["review", "preview.html"], ["review", "preview.json"], ["review", "preview.technical.pdf"]):
             return cl.preview_file(ref, R[1].split(".", 1)[1])
         if R == ["final-pack"]:
             return cl.final_pack(ref)

@@ -314,6 +314,24 @@ def _mapping_flow(mp, P, st, small, mm, Table, TableStyle, Spacer, colors):
     return out
 
 
+def op_analyst_pdf(req):
+    """Analyst edition of a stored final pack (UC-042 renderer 4.0-analyst; 23 Nov 2026). Read-only on its inputs: the
+    final pack, the Ringfence provenance record and the deterministic source pack (used only if its content SHA-256 is the
+    one the final pack pins). No AI request. Writes out_pdf only."""
+    import hashlib
+    from uc042lib.final_pack.report_analyst import ANALYST_RENDERER_VERSION, render_analyst_pdf, verified_source_pack
+    final = json.loads(Path(req["final_pack_json"]).read_text(encoding="utf-8"))
+    pj = Path(req["provenance_json"])
+    prov = json.loads(pj.read_text(encoding="utf-8")) if pj.is_file() else None
+    sp = Path(req["packs_root"]) / final["audit_trail"]["source_pack"]["pack_id"] / "pack.json"
+    pack = verified_source_pack(final, json.loads(sp.read_text(encoding="utf-8"))) if sp.is_file() else None
+    pdf, model = render_analyst_pdf(final, prov, pack)
+    out = Path(req["out_pdf"])
+    out.write_bytes(pdf)
+    return {"renderer": ANALYST_RENDERER_VERSION, "omitted": model["omitted"], "source_pack_verified": pack is not None,
+            "sha256": hashlib.sha256(pdf).hexdigest()}
+
+
 def op_provenance_pdf(req):
     """A small, plain PDF of the Ringfence provenance supplement (reportlab; the library's renderer is not involved)."""
     from xml.sax.saxutils import escape
@@ -350,7 +368,7 @@ def op_provenance_pdf(req):
 
 OPS = {"info": op_info, "generate_pack": op_generate_pack, "investigate": op_investigate, "preview": op_preview,
        "render_preview": op_render_preview, "generate_final": op_generate_final, "verify_final": op_verify_final,
-       "provenance_pdf": op_provenance_pdf}
+       "provenance_pdf": op_provenance_pdf, "analyst_pdf": op_analyst_pdf}
 '''
 
 RUNNER_MAIN = r'''
@@ -571,6 +589,10 @@ class ClosureRunner:
 
     def verify_final(self, path: Path, scratch: Path) -> list:
         return self._call("verify_final", {"path": str(path)}, ai=False, scratch=scratch)["result"]["verify_problems"]
+
+    def analyst_pdf(self, final_pack_json: Path, provenance_json: Path, packs_root: Path, out_pdf: Path, scratch: Path) -> dict:
+        return self._call("analyst_pdf", {"final_pack_json": str(final_pack_json), "provenance_json": str(provenance_json),
+                                          "packs_root": str(packs_root), "out_pdf": str(out_pdf)}, ai=False, scratch=scratch)["result"]
 
     def provenance_pdf(self, provenance_json: Path, out_pdf: Path, scratch: Path) -> dict:
         return self._call("provenance_pdf", {"provenance_json": str(provenance_json), "out_pdf": str(out_pdf)},

@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import threading
 import uuid
@@ -282,6 +283,57 @@ class CaseService:
                     c["last_activity_at"] = now()
                     self._save(c)
                     self._refresh(c)
+        self._maybe_auto_reconcile(j)
+
+    # 23 Nov 2026 demo feedback: once Smart Parsing passes validation with nothing left for the analyst, activation and
+    # reconciliation start by themselves (no extra click), so the automatic AI investigations start as early as possible.
+    # The gates are unchanged: activate() and reconcile() run exactly as for the buttons, under the identity of the
+    # analyst whose action started the Smart Parser job, and their audit events carry trigger=AUTO_AFTER_SMART_PARSER.
+    # RINGFENCE_AUTO_RECONCILE=off restores the manual step.
+    AUTO_TRIGGER = "AUTO_AFTER_SMART_PARSER"
+
+    def _maybe_auto_reconcile(self, j: dict) -> None:
+        if os.environ.get("RINGFENCE_AUTO_RECONCILE", "on").strip().lower() in ("off", "0", "false", "no"):
+            return
+        if j.get("kind") not in ("intake", "resubmission") or j.get("state") != "completed":
+            return
+        if not (j.get("validation") or {}).get("passed"):
+            return
+        a = identity.current()
+        if a is None or a.system:
+            return                                      # only an analyst's own Smart Parser action continues by itself
+        identity.start_thread(self._auto_reconcile, j["package_id"])
+
+    def _auto_reconcile(self, package_id: str) -> None:
+        try:
+            with self.lock:
+                own = self.owner_of(package_id)
+                if own is None or not own[1]:
+                    return                              # not a case package, or no longer the case's current package
+                c = self._refresh(self.load(own[0]["case_ref"]))
+                ref = c["case_ref"]
+                if c["status"] != "IN_PROGRESS" or c.get("deferral") or self._running(c):
+                    return
+                if self.ctx.svc.load(package_id).active_snapshot_id:
+                    return                              # already activated (by the analyst or an earlier trigger)
+                p = self._progress(c)
+                if p["missing_required"] or p["correction_required"] or p["awaiting_review"]                         or p["files_awaiting_review"] or p["decisions_outstanding"]:
+                    return                              # something still needs the analyst: keep the manual step
+                act = self.activate(ref, True, trigger=self.AUTO_TRIGGER)
+                if not act.get("activated"):
+                    return
+                out = self.reconcile(ref, trigger=self.AUTO_TRIGGER)
+            rj = self.ctx.jobs.get(out.get("job_id") or "")
+            a = identity.current()
+            if rj is not None and a is not None:        # who started it: AUTO_INVESTIGATION authorised_by (as api.py)
+                rj["requested_by"] = a.user
+                try:
+                    self.ctx._save_job(rj)
+                except OSError:
+                    pass
+        except Exception:                               # never breaks the job; the manual button still works
+            import traceback
+            traceback.print_exc()
 
     # ============================================================================================ lifecycle
     def _active(self, exclude: str | None = None) -> dict | None:
@@ -733,7 +785,7 @@ class CaseService:
             self._save(c)
             return self.detail(ref)
 
-    def activate(self, ref: str, confirm: bool) -> dict:
+    def activate(self, ref: str, confirm: bool, trigger: str | None = None) -> dict:
         with self.lock:
             c, pid = self._current(ref)
             if confirm is not True:
@@ -741,20 +793,20 @@ class CaseService:
             if self.ctx.svc.load(pid).active_snapshot_id:
                 raise CaseError(409, "ALREADY_ACTIVATED", "the package is already activated (one activation per case)")
             with self.ctx.lock:
-                self._audit("ANALYST_ACTIVATION_REQUESTED", c)
+                self._audit("ANALYST_ACTIVATION_REQUESTED", c, **({"trigger": trigger} if trigger else {}))
                 a = self.ctx.svc.activate(pid)
             c["last_activity_at"] = now()
             self._save(c)
             return {"activated": a.activated, "reason": a.reason,
                     "snapshot_id": a.snapshot.snapshot_id if a.snapshot else None, "case": self.detail(ref)}
 
-    def reconcile(self, ref: str) -> dict:
+    def reconcile(self, ref: str, trigger: str | None = None) -> dict:
         with self.lock:
             c, pid = self._current(ref)
             sid = self.ctx.svc.load(pid).active_snapshot_id
             if not sid:
                 raise CaseError(409, "NOT_ACTIVATED", "activate the package before reconciliation")
-            self._audit("ANALYST_RECONCILIATION_REQUESTED", c, snapshot_id=sid)
+            self._audit("ANALYST_RECONCILIATION_REQUESTED", c, snapshot_id=sid, **({"trigger": trigger} if trigger else {}))
             j = self.ctx.start_reconciliation(pid, sid)
             c["last_activity_at"] = now()
             self._save(c)

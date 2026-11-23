@@ -153,25 +153,24 @@ def main():
                 (c["status"], c["actions"]["start"]["enabled"]), ("WAITING", True))
         L.shot("case_waiting")
         # 4. Start → Smart Parser
-        L.button("Start Smart Parsing")
-        L.button("Start Smart Parsing", DLG)
+        L.button("Start Smart Parsing")                 # simplified flow: no confirmation dialog
         L.wait("location.hash.includes('/parser')", 30, "parser tab")
         c = L.wait_case(ref, idle, 900, "smart parser run")
         L.wait("!document.body.innerText.includes('Not finished')", 30, "parser page refreshed")
         L.check("PARSER.01", "Smart Parser run completed; automatic validation passed",
                 (c["current_run"]["status"], c["progress"]["validation"]["state"]), ("COMPLETED", "PASSED"))
         L.shot("smart_parser")
-        # 5. Validation & activation
-        L.js(f"location.hash = '#/cases/{ref}/package'")
-        L.button("Activate package")
-        L.js(f"(() => {{ const b = {DLG}.querySelector('input[type=checkbox]'); if (b && !b.checked) b.click(); }})()")
-        L.button("Activate package", DLG)
+        # 5. Activation + reconciliation: automatic once everything passed (AUTO_AFTER_SMART_PARSER); with
+        #    RINGFENCE_AUTO_RECONCILE=off, one "Start reconciliation" click on the Smart Parser screen (no dialogs).
+        time.sleep(3)
+        if not L.case(ref).get("activation"):
+            L.wait("[...document.querySelectorAll('button')].some(b => b.textContent.trim() === 'Start reconciliation' && !b.disabled)"
+                   " || /reconciliation (is running|started)/.test(document.body.innerText)", 60, "Start reconciliation")
+            L.js("[...document.querySelectorAll('button')].find(b => b.textContent.trim() === 'Start reconciliation' && !b.disabled)?.click()")
         c = L.wait_case(ref, lambda x: bool(x.get("activation")), 120, "activation")
-        L.check("ACT.01", "package activated in the UI (snapshot sealed)", bool(c["activation"]["snapshot_id"]), True)
+        L.check("ACT.01", "package activated without an Activate screen or dialog (snapshot sealed)", bool(c["activation"]["snapshot_id"]), True)
         # 6. Reconciliation
         L.js(f"location.hash = '#/cases/{ref}/recon'")
-        L.button("Run reconciliation")
-        L.button("Run reconciliation", DLG)
         c = L.wait_case(ref, lambda x: x["status"] == "COMPLETED" or x["progress"]["reconciliation"]["state"] == "FAILED", 900, "reconciliation")
         L.wait("document.querySelector('.rf-outcome')", 60, "outcome")
         time.sleep(1)

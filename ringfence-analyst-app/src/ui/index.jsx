@@ -120,8 +120,10 @@ export function AppShell({ analyst, active, activeCase, onNav, menuOpen, onMenu,
     <main className="rf-main">{children}</main>{overlay}
   </div>;
 }
-export const LIFECYCLE = [['overview', 'Overview'], ['evidence', 'Evidence'], ['parser', 'Smart Parser'], ['review', 'Review'], ['package', 'Validation & activation'], ['recon', 'Reconciliation'], ['closing', 'Closing & Audit Pack']];
-export function Lifecycle({ active, steps = {}, onTab }) {
+// Review and Validation & activation are part of the Smart Parser phase (their screens stay reachable from it).
+export const LIFECYCLE = [['overview', 'Overview'], ['evidence', 'Evidence'], ['parser', 'Smart Parser'], ['recon', 'Reconciliation'], ['closing', 'Closing & Audit Pack']];
+export function Lifecycle({ active: tabId, steps = {}, onTab }) {
+  const active = tabId === 'review' || tabId === 'package' ? 'parser' : tabId;
   const tab = ([id, label]) => {
     const s = steps[id] || {};
     const st = s.state ? stateOf(s.state) : null;
@@ -153,8 +155,9 @@ const STEP_CODE = { d: 'done', c: 'current', a: 'attention', f: 'failed', p: 'pa
 const STEP_LABEL = { done: 'done', current: 'started, not finished', attention: 'needs attention', failed: 'failed', paused: 'paused · case Pending', todo: 'not started' };
 export function CaseProgress({ steps, facts = [], live, labels, notes }) {
   const st = Array.isArray(steps) ? steps.map((x) => (x && x.state) || x) : steps.split('').map((c) => STEP_CODE[c]); // contract steps[] or codes
-  const label = st.map((s, i) => STEP_NAMES[i] + ' ' + STEP_LABEL[s]).join(', ');
-  if (labels) return <div className="rf-cprog rf-cprog--labeled"><ol className="rf-cprog__steps" aria-label={label}>{st.map((s, i) => <li key={i}><i className={'is-' + s} /><span className="rf-cprog__name">{STEP_NAMES[i]}</span><span className="rf-cprog__state">{(notes && notes[i]) || STEP_LABEL[s]}</span></li>)}</ol></div>;
+  const names = Array.isArray(labels) ? labels : STEP_NAMES;
+  const label = st.map((s, i) => names[i] + ' ' + STEP_LABEL[s]).join(', ');
+  if (labels) return <div className="rf-cprog rf-cprog--labeled"><ol className="rf-cprog__steps" aria-label={label} style={{ gridTemplateColumns: 'repeat(' + st.length + ', minmax(0, 1fr))' }}>{st.map((s, i) => <li key={i}><i className={'is-' + s} /><span className="rf-cprog__name">{names[i]}</span><span className="rf-cprog__state">{(notes && notes[i]) || STEP_LABEL[s]}</span></li>)}</ol></div>;
   return <div className="rf-cprog"><span className="rf-cprog__track" role="img" aria-label={label}>{st.map((s, i) => <i key={i} className={'is-' + s} title={STEP_NAMES[i] + ' · ' + STEP_LABEL[s]} />)}</span>
     <div className="rf-cprog__facts">{facts.map((f, i) => <span key={i}>{i === 0 && live && <><span className="rf-tone-progress"><Glyph name="progress" size={10} /></span> </>}{f}</span>)}</div></div>;
 }

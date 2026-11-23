@@ -78,6 +78,17 @@ export const analystOf = (app, authUser) => {
 /* Contract step keys → labels, and step state → CaseProgress state. */
 export const STEP_KEYS = ['smart_parser', 'review', 'validation', 'activation', 'reconciliation'];
 export const stepStates = (c) => STEP_KEYS.map((k) => ((c && c.steps) || []).find((s) => s.key === k) || { key: k, state: 'todo' }).map((s) => s.state);
+/* Simplified flow: Smart Parser covers parsing, mapping review and validation; activation happens inside
+   "Start reconciliation". Merges the backend's step states (unchanged) into the two visible phases. */
+export function mergeStates(list) {
+  if (list.includes('failed')) return 'failed';
+  if (list.includes('attention')) return 'attention';
+  if (list.includes('paused')) return 'paused';
+  if (list.every((s) => s === 'done')) return 'done';
+  if (list.every((s) => s === 'todo')) return 'todo';
+  return 'current';
+}
+export const simpleSteps = (c) => { const [sp, rv, va, , rc] = stepStates(c); return { parser: mergeStates([sp, rv, va]), recon: rc }; };
 /* Run stage status (contract §3.5) → Stages component state. */
 export const STAGE_STATE = { pending: 'pending', running: 'running', completed: 'done', requires_review: 'attention', requires_attention: 'attention', not_required: 'skipped', blocked: 'pending', failed: 'failed' };
 export const STAGE_LABEL = { pending: 'Pending', running: 'Running', completed: 'Completed', requires_review: 'Requires review', requires_attention: 'Requires attention', not_required: 'Not required', blocked: 'Blocked', failed: 'Failed' };
