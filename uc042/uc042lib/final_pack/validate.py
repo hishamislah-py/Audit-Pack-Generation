@@ -1,8 +1,9 @@
 """Deterministic validation of an assembled final pack (spec 06 §5.4, Phase 1 §9). It re-checks the inputs independently
 of how assemble.py built the document; any problem prevents publication. Errors are specific and actionable."""
 import re
+import unicodedata
 
-from ..investigation.validation import CAUSE_PATTERNS, RESOLUTION_PATTERNS, claims_nonexistence
+from ..investigation.validation import CAUSE_PATTERNS, RESOLUTION_PATTERNS, claims_nonexistence, evidence_classes
 from .content import cited_ids
 from .model import (ACKNOWLEDGEMENT_TEXT, CURRENT_RENDERER_VERSION, FINAL_PACK_ID_RE, FINAL_PACK_SCHEMA_VERSION,
                     OUTCOME_FINAL_PACK_SCHEMA_VERSION, SUPPORTED_PACK_SCHEMAS)
@@ -86,7 +87,14 @@ def _investigation_checks(final, snapshot):
             if s is None or s.claim != f["description"] or f["finding_id"] in src_hyps:
                 errors.append(f"{f['ref']}: confirmed observation is not a validated confirmed finding of {iid}")
                 continue
-            if not set(f["evidence_refs"]) & (record_ids | result_ids | search_ids):
+            # Findings schema 1.5 (20 Nov 2026, CF-1): the same support rule as the investigation validator
+            # (validation.evidence_classes): a completeness result (MISS-) supports a finding only when the finding
+            # declares EVIDENCE_ABSENCE and the item is traceable to INSUFFICIENT_EVIDENCE control results of the same
+            # exception present in the evidence. Exception references never support; other findings are unchanged.
+            support = record_ids | result_ids | search_ids
+            if s.evidence_basis == "EVIDENCE_ABSENCE":
+                support |= evidence_classes(evidence)["traceable_completeness"]
+            if not set(f["evidence_refs"]) & support:
                 errors.append(f"{f['ref']}: confirmed observation has no supporting source record, control result or search")
             if f["class"] != "EVIDENCE_CONFIRMED_OBSERVATION":
                 errors.append(f"{f['ref']}: wrong classification {f['class']}")
@@ -190,16 +198,20 @@ def _analyst_review_checks(final, snapshot):
             rejected.add(s.investigation_id)
             if e["investigation"]["overall_evidence_assessment"] is not None:
                 errors.append(f"{s.exception_id}: the rejected AI assessment is reported")
+    legitimate = _legitimate_texts(snapshot) if rejected else []
+    cited = _cited_texts(snapshot) if rejected else {}
     for iid in sorted(rejected):  # no AI content of a rejected investigation anywhere: sections, evidence index, provenance
         if any(i["investigation_id"] == iid for i in final["ai_investigations"]) or \
                 any(r.startswith(iid + "#") for r in (k["ref"] for k in final["executive_summary"]["key_confirmed_observations"])) or \
                 any(iid in x["from_investigations"] for x in final["evidence_index"].values()) or \
                 any(i["investigation_id"] == iid for i in final["audit_trail"]["investigations"]):
             errors.append(f"{iid}: AI content of a REJECTED investigation is included in the report")
-        leaked = _rejected_text_in(final, snapshot.bundles.get(iid), _strings(snapshot.pack) +
-                                   [t for a in snapshot.accepted_ids for t in _strings(output_of(snapshot.bundles[a]).model_dump())])
-        if leaked:  # e.g. through a cached summary or any other rendering path
-            errors.append(f"{iid}: text of the REJECTED investigation's AI output appears in the report: {leaked[0][:80]!r}")
+        leaks = _rejected_text_leaks(final, snapshot.bundles.get(iid), legitimate, cited=cited)
+        if leaks:  # e.g. through a cached summary or any other rendering path
+            k = leaks[0]
+            more = "" if len(leaks) == 1 else f"; {len(leaks) - 1} more passage(s)"
+            errors.append(f"{iid}: text of the REJECTED investigation's AI output appears in the report: {k['text'][:80]!r} "
+                          f"(rejected source {k['rejected_source']}; found at {', '.join(k['found_at'][:3])}{more})")
     return errors
 
 
@@ -245,23 +257,213 @@ def _strings(v, skip=()):
     return out
 
 
-def _rejected_text_in(final, bundle, legitimate=(), min_len=40):
-    """AI-written passages of a rejected investigation (assessment, findings, hypotheses, gaps, conflicts, next steps,
-    questions) that appear verbatim in any text of the final pack. The analyst's own wording (reason, comment) is not
-    scanned: an analyst may quote what they reject. A passage that is also deterministic pack text, or text of an accepted
-    investigation, legitimately appears and is not counted."""
+# --------------------------------------------------------------------------------------------------------------
+# Rejected-content leak check (rules revised 22 Nov 2026, D5 / D-04: a live preview was refused because the AI closing
+# summary restated an ACCEPTED investigation's evidence gap in words that a REJECTED investigation also used).
+#
+# Unit of comparison: each SENTENCE (at least `min_len` characters) of a rejected investigation's AI-written passages; a
+# passage of at least `min_len` characters without such a sentence is compared whole. Both sides are normalised the same
+# way (Unicode NFKC, case-folded, typographic quotes/dashes folded, every run of non-alphanumeric characters -> one
+# space) and containment is checked on whole words.
+#
+# A rejected unit LEAKS when it appears in any text of the final pack (except the analyst's own wording: the rejection
+# reason and comments) AND it is NOT attributable to legitimate content, i.e. it does not appear in:
+#   - the deterministic pack (any string of it),
+#   - the AI output of an ACCEPTED investigation of the same snapshot (any string of it),
+#   - the controlled closing-summary input (built from the two above only; it never contains rejected content), or
+#   - the final-pack layer's fixed wording (upper-case string constants of model.py / assemble.py).
+# A sentence the rejected investigation shares word for word with an accepted investigation or the deterministic pack is
+# that source's statement, not leaked rejected content (the closing-summary model never sees rejected content:
+# summary.closing_summary_input). A rejected-only sentence is still refused wherever it appears, and comparing sentences
+# also catches one sentence lifted out of a longer rejected passage (previously only a whole passage was matched).
+#
+# Closing-summary items with citations (key_observations, unverified_hypotheses, evidence_gaps, suggested_next_steps:
+# `source_refs`; unresolved_items: `exception_id`). The summary model writes its own sentences from the controlled input,
+# so it can word an ACCEPTED item exactly as a REJECTED investigation happened to (live, 22 Nov 2026: "The search for
+# C0003 GBP REFUND transactions in the period returned NOT_FOUND." for the accepted gap "The search for REFUND
+# transactions for C0003 GBP in the period returned NOT_FOUND."). A match inside such an item is ATTRIBUTED to the item's
+# own citation, and not counted, only when ALL of these hold for one sentence S of the text of a cited reference, taken
+# from the controlled summary input (which holds accepted and deterministic content only):
+#   (a) every word of the rejected sentence occurs in S (same normalisation; word order may differ), and
+#   (b) every negation word of S (not, no, never, none, nor, neither, without, cannot, n't) occurs in the rejected
+#       sentence (dropping a negation changes the meaning, so it is never attributed).
+# Free summary text without citations (overall_position, summary_text, limitations) and every other part of the report
+# are never attributed this way. The summary's own integrity rules (source fingerprint FV12, refs restricted to
+# allowed_refs FV13) are unchanged.
+# --------------------------------------------------------------------------------------------------------------
+_FOLD = str.maketrans({"‘": "'", "’": "'", "‚": "'", "‛": "'", "“": '"', "”": '"',
+                       "„": '"', "‐": "-", "‑": "-", "‒": "-", "–": "-", "—": "-",
+                       "−": "-", " ": " "})
+_SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=[\"'(\[]?[A-Z0-9])")
+_WORD = re.compile(r"[^\W_]+")
+
+
+def _norm(text):
+    """Comparison form: NFKC, case-folded, quotes/dashes folded, words only, single-spaced."""
+    return " ".join(_WORD.findall(unicodedata.normalize("NFKC", str(text)).translate(_FOLD).casefold()))
+
+
+def _sentences(text):
+    return [t.strip() for t in _SENTENCE_END.split(text.strip()) if t.strip()]
+
+
+def _rejected_passages(bundle):
+    """(source field, text) of every AI-written passage of an investigation: assessment, findings, hypotheses, gaps,
+    conflicts, next steps, questions."""
+    out = output_of(bundle)
+    items = [("investigation_summary", out.investigation_summary)]
+    items += [(f"open_questions[{i}]", q) for i, q in enumerate(out.open_questions)]
+    for i, x in enumerate(out.confirmed_findings):
+        items += [(f"confirmed_findings[{i}].{k}", getattr(x, k)) for k in ("title", "claim", "explanation")]
+    for i, h in enumerate(out.hypotheses):
+        items += [(f"hypotheses[{i}].{k}", getattr(h, k)) for k in ("possible_explanation", "rationale")]
+    items += [(f"missing_evidence[{i}].description", m.description) for i, m in enumerate(out.missing_evidence)]
+    items += [(f"contradictory_evidence[{i}].description", c.description) for i, c in enumerate(out.contradictory_evidence)]
+    for i, s in enumerate(out.recommended_next_steps):
+        items += [(f"recommended_next_steps[{i}].{k}", getattr(s, k)) for k in ("action", "rationale")]
+    return [(src, t.strip()) for src, t in items if isinstance(t, str) and t.strip()]
+
+
+def _legitimate_texts(snapshot):
+    """Text that may legitimately appear in the report although a rejected investigation also says it (rules above)."""
+    from . import assemble as _assemble, model as _model
+    from .summary import closing_summary_input
+    texts = _strings(snapshot.pack)
+    texts += [t for a in snapshot.accepted_ids for t in _strings(output_of(snapshot.bundles[a]).model_dump())]
+    texts += _strings(closing_summary_input(snapshot))
+    texts += [v for mod in (_model, _assemble) for k, v in vars(mod).items() if k.isupper() and isinstance(v, str)]
+    return texts
+
+
+def _located_strings(v, skip=(), path=""):
+    """(JSON path, string) of every string in `v`, skipping the keys in `skip`."""
+    out = []
+    if isinstance(v, dict):
+        for k, y in v.items():
+            if k not in skip:
+                out += _located_strings(y, skip, f"{path}.{k}" if path else str(k))
+    elif isinstance(v, list):
+        for i, y in enumerate(v):
+            out += _located_strings(y, skip, f"{path}[{i}]")
+    elif isinstance(v, str):
+        out.append((path, v))
+    return out
+
+
+_NEGATIONS = frozenset({"not", "no", "never", "none", "nor", "neither", "without", "cannot", "t"})  # "t": from n't
+_SUMMARY_ITEM = re.compile(r"^closing_summary\.output\.(key_observations|unverified_hypotheses|evidence_gaps|"
+                           r"suggested_next_steps|unresolved_items)\[(\d+)\]\.text$")
+
+
+def _cited_texts(snapshot):
+    """{reference: [sentences]} of every citable item of the controlled closing-summary input (accepted and
+    deterministic content only; a rejected investigation's content is not in it)."""
+    from .summary import closing_summary_input
+    data, out = closing_summary_input(snapshot), {}
+
+    def add(ref, texts):
+        out.setdefault(ref, []).extend(x for t in texts if isinstance(t, str) for x in _sentences(t))
+    for x in data["exceptions"]:
+        add(x["exception_id"], _strings(x))
+    for i in data["missing_evidence_register"]:
+        add(i["item_id"], _strings(i))
+    for g in data["investigation_groups"]:
+        add(g["group_id"], _strings(g))
+    for c in data["candidate_relationships"]:
+        add(c["candidate_id"], _strings(c))
+    for inv in data["investigations"]:
+        add(inv["investigation_id"], [inv["ai_assessment"]])
+        for key in ("confirmed_findings", "hypotheses", "evidence_gaps", "conflicts", "next_steps"):
+            for item in inv[key]:
+                add(item["ref"], _strings(item))
+    return out
+
+
+def _attributed_to_citation(final, path, unit_words, cited):
+    """True when the match at `path` lies in a cited closing-summary item and is explained by that item's own citation
+    (rules (a) and (b) above)."""
+    m = _SUMMARY_ITEM.match(path)
+    if not m or not cited:
+        return False
+    try:
+        item = final["closing_summary"]["output"][m.group(1)][int(m.group(2))]
+    except (KeyError, IndexError, TypeError, ValueError):
+        return False
+    if not isinstance(item, dict):
+        return False
+    refs = list(item.get("source_refs") or []) + ([item["exception_id"]] if item.get("exception_id") else [])
+    for ref in refs:
+        for sentence in cited.get(ref, ()):
+            words = set(_norm(sentence).split())
+            if unit_words <= words and (words & _NEGATIONS) <= unit_words:
+                return True
+    return False
+
+
+def _rejected_text_matches(final, bundle, legitimate=(), min_len=40, cited=None):
+    """Every unit of the rejected investigation found in the report, except legitimate text:
+    [{"text", "rejected_source", "found_at": [paths NOT attributable], "attributed_at": [paths attributed to a
+    closing-summary citation]}]. Rules: see the block comment above."""
     if bundle is None:
         return []
-    out = output_of(bundle)
-    passages = [out.investigation_summary, *out.open_questions]
-    passages += [t for x in out.confirmed_findings for t in (x.title, x.claim, x.explanation)]
-    passages += [t for h in out.hypotheses for t in (h.possible_explanation, h.rationale)]
-    passages += [m.description for m in out.missing_evidence] + [c.description for c in out.contradictory_evidence]
-    passages += [t for s in out.recommended_next_steps for t in (s.action, s.rationale)]
-    allowed = "\n".join(legitimate)
-    passages = {p.strip() for p in passages if isinstance(p, str) and len(p.strip()) >= min_len and p.strip() not in allowed}
-    blob = "\n".join(_strings(final, skip=("rejection_reason", "comment")))
-    return sorted(p for p in passages if p in blob)
+    legit = "\n" + "\n".join(f" {_norm(t)} " for t in legitimate) + "\n"
+    report = [(p, f" {_norm(t)} ") for p, t in _located_strings(final, skip=("rejection_reason", "comment"))]
+    units = {}
+    for src, passage in _rejected_passages(bundle):
+        if len(passage) < min_len:
+            continue
+        for u in [x for x in _sentences(passage) if len(x) >= min_len] or [passage]:
+            units.setdefault(u, src)
+    out = []
+    for text, src in units.items():
+        n = f" {_norm(text)} "
+        if not n.strip() or n in legit:
+            continue
+        where = [p for p, t in report if n in t]
+        if not where:
+            continue
+        words = set(n.split())
+        attributed = [p for p in where if _attributed_to_citation(final, p, words, cited)]
+        out.append({"text": text, "rejected_source": src, "found_at": [p for p in where if p not in attributed],
+                    "attributed_at": attributed})
+    return sorted(out, key=lambda k: k["text"])
+
+
+def _rejected_text_leaks(final, bundle, legitimate=(), min_len=40, cited=None):
+    """Every rejected-only unit found in the report outside an attributable citation, as diagnostics
+    [{"text", "rejected_source", "found_at": [JSON paths]}] sorted by text. The analyst's own wording (rejection_reason,
+    comment) is not scanned: an analyst may quote what they reject."""
+    return [{k: m[k] for k in ("text", "rejected_source", "found_at")}
+            for m in _rejected_text_matches(final, bundle, legitimate, min_len, cited) if m["found_at"]]
+
+
+def _rejected_text_in(final, bundle, legitimate=(), min_len=40, cited=None):
+    """The texts of `_rejected_text_leaks` (for callers that need only the leaked passages)."""
+    return [k["text"] for k in _rejected_text_leaks(final, bundle, legitimate, min_len, cited)]
+
+
+def rejected_text_diagnostics(final, snapshot, include_attributed=False):
+    """Structured diagnostics of the rejected-content check (empty when nothing leaks or nothing was rejected):
+    [{"investigation_id", "text", "rejected_source", "found_at"}]. Records WHY a preview or pack was refused. With
+    include_attributed=True the matches attributed to a closing-summary citation are listed too (with "attributed_at")."""
+    if not snapshot.reviewed:
+        return []
+    rejected = sorted({s.investigation_id for s in snapshot.selections if s.inclusion == "INCLUDED"
+                       and snapshot.analyst_reviews[s.investigation_id].decision == "REJECT"})
+    if not rejected:
+        return []
+    legitimate, cited = _legitimate_texts(snapshot), _cited_texts(snapshot)
+    out = []
+    for iid in rejected:
+        for m in _rejected_text_matches(final, snapshot.bundles.get(iid), legitimate, cited=cited):
+            if m["found_at"]:
+                rec = {"investigation_id": iid, **{k: m[k] for k in ("text", "rejected_source", "found_at")}}
+                if include_attributed:
+                    rec["attributed_at"] = m["attributed_at"]
+                out.append(rec)
+            elif include_attributed:
+                out.append({"investigation_id": iid, **m})
+    return out
 
 
 def validate_final_pack(final, snapshot, summary, review, preview=False):

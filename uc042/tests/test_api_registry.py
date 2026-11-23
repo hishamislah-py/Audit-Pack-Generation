@@ -61,7 +61,7 @@ class Registry(ApiCase):
         d = next(self.inv_root.rglob(inv_id))
         self.assertEqual(entry["findings_sha256"], hashlib.sha256((d / "findings.json").read_bytes()).hexdigest())
         self.assertEqual(entry["evidence_packet_file_sha256"], hashlib.sha256((d / "evidence_packet.json").read_bytes()).hexdigest())
-        self.assertEqual(entry["findings_schema_version"], "uc042-investigation-findings/1.4")
+        self.assertEqual(entry["findings_schema_version"], "uc042-investigation-findings/1.5")  # 1.5: evidence_basis (20 Nov 2026)
         self.assertTrue(entry["prompt_version"].endswith("-tools"))
         self.assertTrue(entry["recorded_at"])
         self.assertTrue(self.eligible("SC5A", "EXC-SC5A-01", inv_id)["eligible"])

@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parent.parent
 class Versions(unittest.TestCase):
     def test_prompt_versions_bumped(self):
         self.assertEqual((config.PROMPT_VERSION, config.TOOLS_PROMPT_VERSION),
-                         ("uc042-investigator-prompt/1.7", "uc042-investigator-prompt/2.7-tools"))
+                         ("uc042-investigator-prompt/1.8", "uc042-investigator-prompt/2.8-tools"))
 
 
 class Wording(unittest.TestCase):
@@ -43,10 +43,19 @@ class ValidationUnchanged(CandidateCitationClasses):
     test_sc5a_valid_when_the_candidate_is_only_a_hypothesis = None
     test_candidate_in_a_confirmed_finding_is_still_refused = None
 
-    def test_validator_byte_identical_to_clone_e(self):
+    def test_validator_keeps_every_clone_e_rule(self):
+        """DR-12 changed prompts only (validation byte-identical to Clone E). Findings schema 1.5 (20 Nov 2026) changes the
+        validation deliberately (evidence_basis, traceable completeness results, absence claims); this guard now proves
+        that every refusal message of the Clone E validator is still produced by the current one, so no rule was removed."""
         clone_e = Path("C:/Users/artlptp263user/p10/uc042_e/uc042lib/investigation/validation.py")
         if clone_e.is_file():
-            self.assertEqual(clone_e.read_bytes(), (ROOT / "uc042lib" / "investigation" / "validation.py").read_bytes())
+            current = (ROOT / "uc042lib" / "investigation" / "validation.py").read_text(encoding="utf-8")
+            old = clone_e.read_text(encoding="utf-8")
+            messages = re.findall(r'errors\.append\(f?"([^"]+)"', old)
+            fragments = [s.strip() for m in messages for s in re.split(r"\{[^}]*\}", m) if len(s.strip()) >= 12]
+            self.assertGreater(len(fragments), 15)
+            for s in fragments:
+                self.assertIn(s, current, s)
 
     def test_candidate_in_a_hypothesis_contradictory_evidence_is_valid(self):
         out = self.sc5a_output()

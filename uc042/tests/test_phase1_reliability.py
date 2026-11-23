@@ -122,8 +122,9 @@ class CandidateCitationClasses(Temp):
         _, packet, _ = setup_case("SC5A", "EXC-SC5A-01")
         cc = citation_classes(packet)
         self.assertEqual(cc["hypotheses_only_ids"], ["CAND-SC5A-01"])
-        self.assertNotIn("CAND-SC5A-01", cc["confirmed_finding_ids"])
-        self.assertEqual(set(cc["confirmed_finding_ids"]) | set(cc["hypotheses_only_ids"]), set(packet["allowed_citation_ids"]))  # never widened
+        others = cc["support_ids"] + cc["completeness_ids"] + cc["context_only_ids"]  # view / prompt 1.3 classes
+        self.assertNotIn("CAND-SC5A-01", others)
+        self.assertEqual(sorted(others + cc["hypotheses_only_ids"]), sorted(packet["allowed_citation_ids"]))  # never widened
         for msg in (user_message(packet), tools_user_message(packet, LIMITS)):
             block = json.loads(msg.split("CITATION CLASSES:\n", 1)[1].split("\n\n", 1)[0])
             self.assertEqual(block["hypotheses_only_ids"], ["CAND-SC5A-01"])

@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_serializer, model_validator
 
 PROJECT = Path(__file__).resolve().parents[2]
 # Primary final packs are published OUTSIDE the source repository: uc042lib.runtime_paths.default_final_packs_root()
@@ -42,12 +42,22 @@ CURRENT_RENDERER_VERSION = OUTCOME_RENDERER_VERSION
 UNICODE_RENDERERS = (UNICODE_RENDERER_VERSION, SPLITTING_RENDERER_VERSION, OUTCOME_RENDERER_VERSION)
 OUTCOME_SUMMARY_VERSION = "uc042-outcome-summary/1.0"
 # 1.1: adds status NOT_REQUIRED (a record that no AI closing summary was needed; no text, no provider request).
-SUMMARY_SCHEMA_VERSION = "uc042-closing-summary/1.1"
-# 1.2 (18 Nov 2026): with no citable reference (allowed_refs empty) every citation-dependent list stays empty; an item that
-# cannot cite an allowed reference is omitted; an empty string is never a reference. Validation unchanged except that it
-# names an empty reference explicitly. 1.1 (12 Nov 2026): one negation per disclaimer term.
-SUMMARY_PROMPT_VERSION = "uc042-closing-summary-prompt/1.2"
-SUMMARY_INPUT_VERSION = "uc042-closing-summary-input/1.0"
+# 1.2 (23 Nov 2026, Session 1 TMS demo): the output carries a required group_assessments section (one assessment per engine
+# investigation group and per candidate relationship supplied). Stored 1.0 / 1.1 summaries have no such field: it is omitted
+# when absent, so their bytes, hashes and renderings are unchanged.
+SUMMARY_SCHEMA_VERSION = "uc042-closing-summary/1.2"
+# 1.3 (23 Nov 2026): group assessment instructions. 1.2 (18 Nov 2026): with no citable reference (allowed_refs empty) every
+# citation-dependent list stays empty; an item that cannot cite an allowed reference is omitted; an empty string is never a
+# reference. Validation unchanged except that it names an empty reference explicitly. 1.1 (12 Nov 2026): one negation per
+# disclaimer term.
+SUMMARY_PROMPT_VERSION = "uc042-closing-summary-prompt/1.3"
+# 1.1 (23 Nov 2026): each exception, investigation group, candidate relationship, accepted confirmed finding and conflict
+# also carries its SOURCE evidence record IDs (only IDs of the pack's evidence register), group links / candidate detail
+# text, and allowed_source_refs (their union): the only IDs a group assessment may cite as supporting or contradicting
+# evidence. Engine control-result IDs are never source records.
+SUMMARY_INPUT_VERSION = "uc042-closing-summary-input/1.1"
+RELATIONSHIP_VERDICTS = ("EVIDENCE_BACKED", "UNVERIFIED", "COINCIDENCE_REJECTED")
+ASSESSMENT_CONFIDENCE = ("LOW", "MEDIUM", "HIGH")
 SUPPORTED_PACK_SCHEMAS = {"uc042-pack/0.1"}
 
 FINAL_PACK_ID_RE = re.compile(r"^FAP-[A-Z0-9]{1,12}-PER-\d{4}-\d{2}-v\d{1,4}-[0-9a-f]{12}$")
@@ -195,6 +205,30 @@ class UnresolvedItem(_Strict):
     text: str = Field(min_length=10)
 
 
+class GroupAssessment(_Strict):
+    """One related-exception assessment (summary schema 1.2): an engine investigation group (GRP-) or a candidate
+    relationship (CAND-) from the input. The common cause is ALWAYS a hypothesis; supporting / contradicting evidence are
+    SOURCE record IDs from allowed_source_refs only. Validated deterministically in summary.validate_closing_summary."""
+    group_id: str = Field(description="The GRP- group ID or CAND- candidate ID being assessed (from the input)")
+    exception_ids: list[str] = Field(min_length=1, description="The exception IDs of that group or candidate; when a group "
+                                     "is split into several assessments, the part this assessment covers (the parts must "
+                                     "cover each exception of the group exactly once)")
+    related_exception_ids: list[str] = Field(description="Other exceptions of this pack that appear related (may be empty)")
+    relationship_verdict: Literal[RELATIONSHIP_VERDICTS] = Field(
+        description="EVIDENCE_BACKED: the link is supported by cited source records. UNVERIFIED: plausible but not "
+                    "established. COINCIDENCE_REJECTED: an apparent link (for example the same date and amount) is "
+                    "contradicted or unsupported by the records")
+    common_cause_hypothesis: str = Field(min_length=10, description="The likely common cause, worded as an unverified "
+                                         "hypothesis (may, could, possibly), or an explicit statement that the evidence is "
+                                         "insufficient or that no common cause is supported")
+    supporting_evidence: list[str] = Field(description="Source record IDs from allowed_source_refs that support the link")
+    contradicting_evidence: list[str] = Field(description="Source record IDs from allowed_source_refs that contradict it")
+    missing_evidence: list[str] = Field(description="Evidence that would confirm or rule out the link (plain statements)")
+    analyst_action: str = Field(min_length=10, description="What the analyst should check or do next (a recommendation)")
+    confidence: Literal[ASSESSMENT_CONFIDENCE] = Field(description="Confidence in the verdict (an UNVERIFIED verdict is never HIGH)")
+    rationale: str = Field(min_length=10, description="Why this verdict, referring to the cited records")
+
+
 class ClosingSummaryOutput(_Strict):
     """Exactly what the model returns for the closing summary."""
     overall_position: str = Field(min_length=30, description="Overall reconciliation position, as reported by the engine")
@@ -205,6 +239,18 @@ class ClosingSummaryOutput(_Strict):
     evidence_gaps: list[SummaryItem] = Field(description="Material evidence gaps")
     suggested_next_steps: list[SummaryItem] = Field(description="Suggested next actions (recommendations only)")
     limitations: list[str] = Field(description="Important limitations of the records and of this summary")
+    # Summary schema 1.2. Required by validation for input 1.1 (one per supplied group and candidate; [] when none). None =
+    # a summary written before 1.2: omitted when serialised so stored summaries keep their exact bytes and hashes.
+    group_assessments: Optional[list[GroupAssessment]] = Field(
+        default=None, description="One assessment per investigation group and candidate relationship in the input "
+                                  "(an empty list when the input has none)")
+
+    @model_serializer(mode="wrap")
+    def _omit_absent_group_assessments(self, handler):
+        data = handler(self)
+        if isinstance(data, dict) and data.get("group_assessments") is None:
+            data.pop("group_assessments", None)
+        return data
 
 
 class ClosingSummary(_Strict):

@@ -20,10 +20,13 @@ DET_WORKFLOW_VERSION = "uc042-investigation-graph/3.0-det"     # deterministic r
 # message (about 3 characters per token, as the tool loop estimates). Tools mode keeps its own per-request guard.
 ENV_SINGLE_REQUEST_MAX_INPUT_TOKENS = "UC042_SINGLE_REQUEST_MAX_INPUT_TOKENS"
 DEFAULT_SINGLE_REQUEST_MAX_INPUT_TOKENS = 150000
-PROMPT_VERSION = "uc042-investigator-prompt/1.7"              # 1.1: contradiction rules; 1.2: schema 1.4 explanatory fields;
+PROMPT_VERSION = "uc042-investigator-prompt/1.8"              # 1.1: contradiction rules; 1.2: schema 1.4 explanatory fields;
 # 1.3 / 2.3: the prompt names every causal phrase the findings validation refuses (validation.CAUSE_PATTERNS, unchanged);
 # 2.2 named only two of them, so a live investigation was refused for "due to" (12 Nov 2026).
-TOOLS_PROMPT_VERSION = "uc042-investigator-prompt/2.7-tools"
+TOOLS_PROMPT_VERSION = "uc042-investigator-prompt/2.8-tools"
+# 1.8 / 2.8-tools (20 Nov 2026, live M3 refusal): the five kinds of citable ID, the four citation classes of model view
+# 1.3, evidence_basis (findings schema 1.5), and absent / not assessable / not retrieved. The earlier prompts listed the
+# exception and MISS- IDs as finding support (confirmed_finding_ids) although validation never accepted them as such.
 # 1.7 / 2.7-tools (review DR-12): the citation-class rule names a hypothesis's own contradictory_evidence field and the
 # top-level contradictory_evidence list separately; the verified_links amounts column is described as model view 1.2 has it
 # (signed, one-to-one only, null = not compared). Validation unchanged.
@@ -31,7 +34,9 @@ TOOLS_PROMPT_VERSION = "uc042-investigator-prompt/2.7-tools"
 # 1.5 / 2.5-tools (phase 4): OpenAI requests carry the lossless model view (packet_view.py), no duplicated schema.
 # 1.4 / 2.4-tools (token-optimisation copy, phase 1): citation classes (CAND- hypotheses only) and concise-output
 # guidance; investigations use UC042_INVESTIGATION_MAX_OUTPUT_TOKENS.
-FINDINGS_SCHEMA_VERSION = "uc042-investigation-findings/1.4"   # 1.3: compared contradictions; 1.4: finding/hypothesis explanations
+FINDINGS_SCHEMA_VERSION = "uc042-investigation-findings/1.5"   # 1.3: compared contradictions; 1.4: finding/hypothesis explanations;
+# 1.5: confirmed-finding evidence_basis (SOURCE_EVIDENCE / CONTROL_RESULT / EVIDENCE_ABSENCE), additive; older artefacts
+# load with it as "not supplied" and keep their bytes
 PACKET_VERSION = "uc042-evidence-packet/1.0"
 LEDGER_VERSION = "uc042-evidence-ledger/1.0"
 

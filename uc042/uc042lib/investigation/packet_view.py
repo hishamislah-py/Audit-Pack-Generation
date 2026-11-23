@@ -23,15 +23,19 @@ What the view changes, and nothing else:
   * repetitive control results are laid out the same way;
   * a relationship edge is omitted only when it is exactly derivable: a 'cited_by_control_result' edge from a result to a
     record listed in that result's evidence_ids, whose join_key equals the record's own join_key;
-  * citable IDs are given as citation classes (confirmed_finding_ids / hypotheses_only_ids); candidate relationships are
-    listed as hypotheses-only. The classes describe allowed_citation_ids and never widen it;
+  * citable IDs are given as citation classes (view 1.3: support_ids / completeness_ids / context_only_ids /
+    hypotheses_only_ids); candidate relationships are listed as hypotheses-only. The classes partition
+    allowed_citation_ids and never widen it;
   * group-shared material (provenance, records, links, group results) comes before exception-specific material, so
     members of one investigation group share a longer identical prefix (prompt caching).
 JSON is written compactly (no insignificant whitespace). No prose summary ever replaces a record."""
 import hashlib
 import json
 
-MODEL_VIEW_VERSION = "uc042-model-view/1.2"  # 1.1 (phase 5): verified_links in tool vocabulary; contextual associations separated;
+MODEL_VIEW_VERSION = "uc042-model-view/1.3"  # 1.3 (20 Nov 2026): four citation classes (support / completeness / context
+# only / hypotheses only) replace confirmed_finding_ids, which listed exception and MISS- IDs as finding support although
+# validation never accepted them as such (live M3 refusal). Partition of allowed_citation_ids, never widened.
+# 1.1 (phase 5): verified_links in tool vocabulary; contextual associations separated;
 # 1.2 (independent review, not yet released; one version for the whole revision): order-preserving exact reconstruction
 # (DR-05), one-to-one signed amount comparison (DR-04), missing-value sentinel / per-record provenance / fail-closed
 # invariant (DR-06), evidence_ids_without_derivable_edge wording (DR-07)
@@ -70,8 +74,10 @@ READING_GUIDE = (
     "evidence_ids are also edges ('cited_by_control_result') and are not repeated there, except the pairs in "
     "evidence_ids_without_derivable_edge (edges not derivable from evidence_ids). packet_order, relationship_order, "
     "derived_order, source_file_index: storage order and provenance only, no evidential meaning. {\"__missing_key__\":true}: "
-    "the row has no such key. citation_classes: which IDs may "
-    "support a confirmed finding and which are hypotheses only. verified_links: every identifier link between records "
+    "the row has no such key. citation_classes: support_ids (source records, control results, searches) may support a "
+    "confirmed finding; completeness_ids (MISS- items) support only an EVIDENCE_ABSENCE finding about this exception; "
+    "context_only_ids (exception, group and conflict IDs) identify what is investigated and never support a finding on "
+    "their own; hypotheses_only_ids are unverified candidates. verified_links: every identifier link between records "
     "of this evidence, in the follow_relationship vocabulary, already established by Python. "
     "contextual_associations_NOT_VERIFIED_JOINS: date or free-text coincidences, context only, never proof of a link.")
 
@@ -176,11 +182,23 @@ def _fmt(v):
     return format(v, "f")
 
 
-def _citation_classes(packet):
-    candidates = {c["candidate_id"] for c in packet.get("candidate_relationships", [])}
+def citation_class_ids(packet):
+    """Partition of allowed_citation_ids into the four model-facing classes (view 1.3), each in allowed order. The same
+    deterministic classes are enforced by validation.evidence_classes; nothing outside allowed_citation_ids is added."""
+    candidates = {c["candidate_id"] for c in packet.get("candidate_relationships") or []}
+    completeness = {m["item_id"] for m in packet.get("missing_evidence") or []}
+    context = {packet["exception"]["exception_id"]} | {e["exception_id"] for e in packet.get("related_exceptions") or []}
+    context |= {c["conflict_id"] for c in packet.get("conflicts") or []}
+    if packet.get("investigation_group"):
+        context.add(packet["investigation_group"]["group_id"])
     allowed = list(packet.get("allowed_citation_ids", []))
-    return {"confirmed_finding_ids": [i for i in allowed if i not in candidates],
+    return {"support_ids": [i for i in allowed if i not in candidates | completeness | context],
+            "completeness_ids": [i for i in allowed if i in completeness and i not in candidates],
+            "context_only_ids": [i for i in allowed if i in context and i not in candidates | completeness],
             "hypotheses_only_ids": [i for i in allowed if i in candidates]}
+
+
+_citation_classes = citation_class_ids
 
 
 ORDER = "packet_order"  # a row's position in the stored packet's list (records, control results)
@@ -378,5 +396,6 @@ def reconstruct_packet(view):
             "retrieval_truncated": view["retrieval_truncated"], "related_exceptions": view["related_exceptions"],
             "investigation_route": view["investigation_route"], "investigation_scope": view["investigation_scope"],
             "exception": view["exception"],
-            "allowed_citation_ids": sorted(cc["confirmed_finding_ids"] + cc["hypotheses_only_ids"]),
+            "allowed_citation_ids": sorted(cc["support_ids"] + cc["completeness_ids"] + cc["context_only_ids"]
+                                           + cc["hypotheses_only_ids"]),
             **view.get("packet_extras", {})}

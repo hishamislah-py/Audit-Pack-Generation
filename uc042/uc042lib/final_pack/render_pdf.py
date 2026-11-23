@@ -44,7 +44,9 @@ OK, WARN, BAD, MUTED, LINE, PANEL = (colors.HexColor(c) for c in ("#1e7d3c", "#a
 _MAP = {"−": "-", "→": "->", "←": "<-", "≤": "<=", "≥": ">=", "≠": "!=", " ": " ", "‑": "-",
         "‐": "-", " ": " ", " ": " ", "≈": "~", "×": "x"}
 KIND_COLOUR = {"confirmed": OK, "assessment": MUTED, "hypothesis": WARN, "gap": MUTED, "conflict": BAD, "unresolved": BAD,
-               "info": MUTED, "step": MUTED, "rejected": BAD, "accepted": OK}  # rejected / accepted: analyst reviews (schema 1.1)
+               "info": MUTED, "step": MUTED, "rejected": BAD, "accepted": OK,  # rejected / accepted: analyst reviews (schema 1.1)
+               # closing-summary group assessments (summary schema 1.2); never present in packs written before it
+               "relationship_backed": MUTED, "relationship_unverified": WARN, "relationship_rejected": BAD}
 FONT_DIR = Path(__file__).resolve().parent / "fonts"
 ENV_FALLBACK_FONTS = "UC042_PDF_FALLBACK_FONTS"  # optional: os.pathsep-separated .ttf/.ttc paths, tried in order
 
@@ -316,11 +318,11 @@ def _item(b, st, width, kv=False):
              ("LINEBEFORE", (0, 0), (0, -1), 3 if not kv else 0.6, colour), ("BOX", (0, 0), (-1, -1), 0.4, LINE)]
     if not kv:
         style.append(("SPAN", (0, 0), (-1, 0)))
-    if b.get("kind") in ("assessment", "gap") or kv:
+    if b.get("kind") in ("assessment", "gap", "relationship_backed") or kv:
         style.append(("BACKGROUND", (0, 0), (-1, -1), PANEL))
-    if b.get("kind") == "hypothesis":
+    if b.get("kind") in ("hypothesis", "relationship_unverified"):
         style += [("BOX", (0, 0), (-1, -1), 1.2, WARN, None, (3, 2))]
-    if b.get("kind") in ("conflict", "rejected"):
+    if b.get("kind") in ("conflict", "rejected", "relationship_rejected"):
         style += [("BOX", (0, 0), (-1, -1), 1.2, BAD)]
     t.setStyle(TableStyle(style))
     return t
