@@ -103,10 +103,15 @@ function FinalPack({ c, cl }) {
   const files = (Array.isArray(f.files) && f.files.length && typeof f.files[0] === 'object'
     ? f.files.map((x) => ({ key: x.key, name: x.name, sha256: x.sha256, url: x.url || closureFileUrl(ref, 'final-pack/' + x.key) }))
     : FILES.map((x) => ({ key: x[0], url: closureFileUrl(ref, 'final-pack/' + x[0]) })))
-    .map((x) => Object.assign(x, { label: (LABEL[x.key] || [0, x.key])[1], icon: (LABEL[x.key] || [0, 0, 'file'])[2] }));
+    .map((x) => Object.assign(x, { label: (LABEL[x.key] || [0, x.key])[1], icon: (LABEL[x.key] || [0, 0, 'file'])[2] }))
+    .sort((a, b) => (a.key === 'analyst.pdf' ? -1 : b.key === 'analyst.pdf' ? 1 : 0));   // the short audit pack first
+  const main = files.find((x) => x.key === 'analyst.pdf') || files.find((x) => x.key === 'pdf');
   return <Panel title="Final audit pack" sub={<span className="rf-mono">{f.final_pack_id}</span>}
     actions={verified ? <span className="rfe-verified"><Icon name="seal" size={14} />Verified</span> : failed ? <Pill state="GENERATION_FAILED" label={failTitle} /> : <Pill state={f.status || 'GENERATING'} />}>
     <div className="rf-stack rf-stack--3">
+      {verified && main && <div className="rf-row rf-row--wrap" style={{ gap: 8 }}>
+        <a className="rf-btn rf-btn--primary" href={main.url + (main.url.includes('?') ? '&' : '?') + 'download=1'}><Icon name="filePdf" size={14} /><span>Download audit pack (PDF)</span></a>
+        <a className="rf-btn rf-btn--secondary" href={main.url} target="_blank" rel="noopener"><Icon name="external" size={14} /><span>Open</span></a></div>}
       {q.error && <Notice tone="danger" compact title="Final pack details could not be loaded">{q.error.message}</Notice>}
       {failed && <Notice tone="danger" title={failTitle}>{problems.length ? <ul className="rfe-list">{problems.map((p, i) => <li key={i}>{itemText(p)}</li>)}</ul> : 'The backend reported no detail.'} {integrityFailed ? 'The files on disk no longer match the hashes recorded when the pack was generated. Downloads are refused; nothing is repaired, overwritten or re-signed.' : 'A pack that does not verify is never treated as generated.'}</Notice>}
       <KV pairs={[['Status', <Pill state={f.status} />], ['Integrity', integrityFailed ? <Pill state="GENERATION_FAILED" label="Integrity check failed" /> : verified ? 'Files match the hashes recorded at generation' + (f.integrity_checked_at ? ' (checked ' + fmtDateTime(f.integrity_checked_at) + ')' : '') : '—'], ['Authorised by', f.authorised_by || '—'], ['Generated', fmtDateTime(f.generated_at)]]} />
@@ -127,6 +132,85 @@ function History({ c }) {
         rows={ev.slice().reverse().map((e, i) => { const det = e.details || {}; return { key: e.event_id || i, cells: { at: <span className="rf-nowrap">{fmtDateTime(e.at || e.created_at)}</span>, t: <Enum>{e.event_type || e.type}</Enum>, by: e.actor_id || e.actor || det.actor, d: <span className="rf-mono rfe-small rf-wrap">{['exception_id', 'investigation_id', 'review_id', 'preview_id', 'failure_id', 'final_pack_id', 'pack_id', 'job_id'].filter((k) => det[k]).map((k) => det[k]).join(' · ') || (e.reason ? itemText(e.reason) : '')}</span> } }; })} />
         : <div style={{ padding: 16 }} className="rf-help">No closure events yet.</div>}
   </Panel>;
+}
+
+/* One-click audit pack (23 Nov 2026, owner): no separate preview, tick-box or confirmation dialog. The button runs the
+   existing backend steps in order - open the review if needed, assemble the pack (no AI), GENERATE with the sign-off -
+   and the sign-off wording sits next to the button, so the click is the analyst's explicit acknowledgement. The backend
+   gates are unchanged: every AI finding must have an analyst decision first. */
+const SIGN_OFF = 'Generating signs off this audit pack. It does not resolve any exception or establish compliance; unresolved exceptions appear as UNRESOLVED.';
+function GenerateAuditPack({ cl, openExc, onStarted }) {
+  const m = useMutation();
+  const [phase, setPhase] = React.useState(null);
+  const ex = cl.exceptions || [];
+  const aiBusy = ex.filter((e) => e.ai_state === 'QUEUED' || e.ai_state === 'RUNNING');
+  const pending = ex.filter((e) => e.review_state === 'PENDING_REVIEW');
+  const blockers = (((cl.review || {}).readiness || {}).blockers || []).map(itemText)
+    .filter((b) => !/^preview (required|stale)/i.test(b) && !/closing review/i.test(b) && !pending.some((e) => b.indexOf(e.exception_id) > -1));
+  const packOk = cl.pack && cl.pack.status === 'GENERATED';
+  if (cl.frozen) return null;
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const waitFor = async (svc, pred, what, timeout) => {
+    const end = Date.now() + timeout;
+    while (Date.now() < end) {
+      const v = await svc.getClosure(cl.case_ref);
+      const r = pred(v);
+      if (r) return v;
+      await sleep(1500);
+    }
+    throw { error: 'TIMEOUT', message: what + ' is taking longer than expected. It continues on the server; refresh in a moment.' };
+  };
+  const go = () => m.run(async (svc) => {
+    const ref = cl.case_ref;
+    let v = await svc.getClosure(ref);
+    if (!(v.review && v.review.review_id)) {
+      setPhase('Opening the review…');
+      await svc.openClosingReview(ref, { expected_revision: v.revision });
+      v = await svc.getClosure(ref);
+    }
+    let pv = v.review && v.review.current_preview;
+    if (!pv || pv.stale) {
+      setPhase('Assembling the audit pack…');
+      const before = pv ? pv.preview_id : null;
+      const r = await svc.requestClosingPreview(ref, { confirm_ai: false, expected_revision: v.revision });
+      v = await waitFor(svc, (x) => {
+        const c2 = x.review && x.review.current_preview;
+        const f = x.review && x.review.last_preview_failure;
+        if (f && (!c2 || String(f.at || '') > String(c2.created_at || ''))) throw { error: 'PREVIEW_FAILED', message: itemText(f.error) };
+        return c2 && !c2.stale && (r.reused || c2.preview_id !== before);
+      }, 'Assembling the audit pack', 240000);
+      pv = v.review.current_preview;
+    }
+    setPhase('Generating the final audit pack…');
+    const g = await svc.decideClosingReview(ref, { decision: 'GENERATE', acknowledgement_accepted: true,
+      acknowledged_summary_unavailable: pv.closing_summary_status === 'UNAVAILABLE', snapshot_sha256: pv.snapshot_sha256, expected_revision: v.revision });
+    if (onStarted) onStarted(g.job_id || (g.decision && g.decision.job_id));
+    await waitFor(svc, (x) => {
+      if (x.last_generation_failure && !x.frozen) throw { error: 'GENERATION_FAILED', message: itemText(x.last_generation_failure.error || x.last_generation_failure) };
+      return x.frozen;
+    }, 'Generating the audit pack', 300000);
+    return g;
+  }, { inline: true, success: 'Audit pack generated' }).finally(() => setPhase(null));
+  const ready = packOk && !aiBusy.length && !pending.length && !blockers.length;
+  return <section className="rfg" aria-label="Audit pack">
+    <div className="rfg-main">
+      <div>
+        <div className="rfg-title">Audit pack</div>
+        {!packOk ? <div className="rfg-text">The audit pack is not available yet{cl.pack && cl.pack.reason ? ': ' + cl.pack.reason : '.'}</div>
+          : aiBusy.length ? <div className="rfg-text">Waiting for the AI to finish {aiBusy.length} investigation{aiBusy.length === 1 ? '' : 's'}…</div>
+          : pending.length ? <div className="rfg-text">Decide on {pending.length === 1 ? 'one AI finding' : pending.length + ' AI findings'} first:
+              <span className="rfg-chips">{pending.map((e) => <Button key={e.exception_id} size="sm" variant="link" iconRight="arrowRight" onClick={() => openExc(e.exception_id)}>{e.exception_id}</Button>)}</span></div>
+          : blockers.length ? <div className="rfg-text">Before generating: <ul className="rfe-list">{blockers.map((b, i) => <li key={i}>{b}</li>)}</ul></div>
+          : <div className="rfg-text">Everything is decided. Generate the audit pack in one step.</div>}
+        {m.busy && phase && <div className="rfg-phase"><span className="rf-live" />{phase}</div>}
+        {m.error && <Notice tone="danger" compact title="The audit pack was not generated">{m.error.message || String(m.error)}</Notice>}
+      </div>
+      <div className="rfg-act">
+        <Button variant="primary" icon="seal" loading={m.busy} disabled={!ready || m.busy} onClick={go}>Generate audit pack</Button>
+      </div>
+    </div>
+    {ready && <div className="rfg-sign"><Icon name="lock" size={12} /> {SIGN_OFF}</div>}
+  </section>;
 }
 
 function Usage({ u, ai }) {
@@ -205,10 +289,13 @@ export default function ClosingTab({ c, app, nav, store }) {
       : cl.frozen && <Notice tone="locked" title="Closure frozen">The final pack has been generated and verified. Closure is read-only.</Notice>)}
     <div className="rfe-grid">
       <div className="rf-stack">
+        <GenerateAuditPack cl={cl} openExc={openExc} onStarted={(jid) => jid && jobs.watch(jid, 'Final pack generation')} />
+        <FinalPack c={c} cl={cl} />
         <DeterministicSummary s={cl.deterministic_summary} />
+        <Investigations cl={cl} openExc={openExc} />
+        <details className="rfx-more"><summary>Review details, selections and the preview</summary><div className="rf-stack" style={{ padding: 12 }}>
         <PackStatusLine pack={cl.pack} />
         <Readiness cl={cl} openExc={openExc} />
-        <Investigations cl={cl} openExc={openExc} />
         <Selections cl={cl} busy={m.busy} onSet={setSel} openExc={openExc} />
         <Decisions cl={cl} />
         <Panel title="Closing review" sub={rv.review_id ? <span className="rf-mono">{rv.review_id}{rv.status ? ' · ' + rv.status : ''}</span> : 'Not opened'}
@@ -237,7 +324,7 @@ export default function ClosingTab({ c, app, nav, store }) {
             </div>
           </div>
         </Panel>
-        <FinalPack c={c} cl={cl} />
+        </div></details>
       </div>
       <aside className="rf-stack">
         <Panel title="AI" sub="Server configuration">
