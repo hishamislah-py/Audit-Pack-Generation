@@ -112,7 +112,19 @@ def op_info(req):
 def op_generate_pack(req):
     from uc042lib.pack import generate as G
     from uc042lib.period import PeriodConfig
-    rec = G.generate(Path(req["case_dir"]), Path(req["packs_root"]), PeriodConfig.from_id(req["period"]))
+    # TMS (23 Nov 2026): build the pack with the rules the reconciliation recorded (I-3), so an engine run with relationship
+    # discovery yields a pack with the relationship register; default-rule runs (and older engines) are unchanged.
+    rules = None
+    try:
+        from uc042lib.validate import rules_of_reconciliation
+        stored = rules_of_reconciliation(Path(req["case_dir"]))
+        rules = None if stored in (None, "ENRICHMENT_OFF") else stored
+    except ImportError:
+        pass
+    if rules is None:
+        rec = G.generate(Path(req["case_dir"]), Path(req["packs_root"]), PeriodConfig.from_id(req["period"]))
+    else:
+        rec = G.generate(Path(req["case_dir"]), Path(req["packs_root"]), PeriodConfig.from_id(req["period"]), rules=rules)
     return {"record": rec}
 
 

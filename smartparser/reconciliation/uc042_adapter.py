@@ -42,18 +42,34 @@ ENGINE_RUNNER = r'''
 import json, sys
 sys.dont_write_bytecode = True
 uc042_root, input_dir, case_dir, period = sys.argv[1:5]
+discovery = sys.argv[5] if len(sys.argv) > 5 else "off"   # TMS: engine relationship discovery (opt-in; default off)
 sys.path.insert(0, uc042_root)
 from uc042lib.prepare import prepare_case
 from uc042lib.validate import Validator, case_status, write_outputs
 intake = prepare_case(input_dir, case_dir, period)
-v = Validator(case_dir, period)
+if discovery == "on":
+    from uc042lib.validate import ENRICHED_RULES
+    v = Validator(case_dir, period, rules=ENRICHED_RULES)
+else:
+    v = Validator(case_dir, period)
 results = v.run()
 status = case_status(v)
-totals = write_outputs(case_dir, results, v.exceptions, status, v.groups, v.candidates, v.pdf, v.period, v.rules)
+if discovery == "on":   # the enrichment state is recorded with the outputs (rules_of_reconciliation reads it back)
+    totals = write_outputs(case_dir, results, v.exceptions, status, v.groups, v.candidates, v.pdf, v.period, v.rules,
+                           enrichment_state=v.enrichment)
+else:
+    totals = write_outputs(case_dir, results, v.exceptions, status, v.groups, v.candidates, v.pdf, v.period, v.rules)
 print(json.dumps({"intake": intake, "results": len(results), "totals": totals, "case_status": status,
                   "exceptions": v.exceptions, "groups": v.groups, "candidates": v.candidates,
                   "period": v.period.period_id}, default=str))
 '''
+
+
+def relationship_discovery() -> str:
+    """TMS (23 Nov 2026): "on" runs the UC-042 engine with its relationship discovery (EngineRules.enrichment_v1), so the
+    audit pack carries the relationship register; anything else keeps the approved default rules. Opt-in, read from
+    RINGFENCE_ENGINE_RELATIONSHIP_DISCOVERY in the app's own environment (the engine subprocess environment is stripped)."""
+    return "on" if os.environ.get("RINGFENCE_ENGINE_RELATIONSHIP_DISCOVERY", "").strip().lower() == "on" else "off"
 
 
 class ReconciliationError(RuntimeError):
@@ -140,7 +156,8 @@ def run_reconciliation(svc, package_id: str, snapshot_id: str, uc042_root: str |
     env = {k: v for k, v in os.environ.items() if not k.upper().startswith(("UC042_", "OPENAI", "ANTHROPIC", "GROQ"))}
     env.update(PYTHONDONTWRITEBYTECODE="1", PYTHONIOENCODING="utf-8")
     proc = subprocess.run([python or sys.executable, "-B", "-c", ENGINE_RUNNER, str(uc042_root), str(run / "input"),
-                           str(run / "case"), period], cwd=str(run), env=env, capture_output=True, text=True,
+                           str(run / "case"), period, relationship_discovery()], cwd=str(run), env=env,
+                          capture_output=True, text=True,
                           encoding="utf-8", timeout=600)
     _write_text(run / "engine_stdout.json", proc.stdout)
     _write_text(run / "engine_stderr.txt", proc.stderr)
