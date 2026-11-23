@@ -7,3 +7,5 @@
 @import './app-case-c.css';
 @import './app-case-d.css';
 @import './app-closure.css';
+/* Money20/20 shared theme (Green & Mint), loaded last */
+@import './theme-green-mint.css';

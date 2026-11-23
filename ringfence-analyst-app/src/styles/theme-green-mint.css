@@ -1,0 +1,106 @@
+/* Money20/20 shared theme: "Green & Mint" (light), from the Scheme Compliance Assistant theme kit (theme.css /
+   components.css / THEME_GUIDE.md). 23 Nov 2026: every Money20/20 use case shares this look. Loaded LAST, so it maps the
+   Ringfence tokens onto the kit's values; components keep using the Ringfence tokens. Layout is unchanged. */
+:root, [data-theme="light"] {
+  /* surfaces */
+  --canvas: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-muted: #F7FFF9;
+  --surface-sunken: #EEF8F2;
+  --surface-hover: #EAF8F0;
+  --surface-selected: #C9F0DB;
+  /* shell (top bar): the kit's dark forest green */
+  --surface-inverse: #0B3D2E;
+  --surface-inverse-raised: #052D22;
+  --line-inverse: rgba(201, 240, 219, 0.14);
+  --on-inverse: #C9F0DB;
+  --on-inverse-muted: #9FBDB1;
+  /* lines */
+  --line-subtle: rgba(11, 61, 46, 0.08);
+  --line: rgba(11, 61, 46, 0.14);
+  --line-strong: rgba(11, 61, 46, 0.55);
+  /* text */
+  --ink: #0F2C25;
+  --ink-secondary: #4D6B5F;
+  --ink-muted: #4D6B5F;
+  --ink-disabled: #8AA39A;
+  /* brand = the kit's green family */
+  --brand-50: #E9FFF4;
+  --brand-100: #C9F0DB;
+  --brand-200: #A3E0BF;
+  --brand-500: #16AB6D;
+  --brand-600: #0F7F50;
+  --brand-700: #0B6E45;
+  --brand-800: #0B3D2E;
+  --on-brand: #FFFFFF;
+  --focus-ring: #0F7F50;
+  /* status (kit section 3.6, light) */
+  --success-bg: #C9F0DB;  --success-line: #16AB6D;  --success-fg: #0B6E45;  --success-mark: #16AB6D;
+  --attention-bg: #FFFAEB; --attention-line: #F5C56B; --attention-fg: #B54708; --attention-mark: #DC6803;
+  --danger-bg: #FEF3F2;   --danger-line: #F4A9A3;   --danger-fg: #B42318;   --danger-mark: #B42318;
+  --neutral-bg: #EEF3F1;  --neutral-line: rgba(11, 61, 46, 0.14); --neutral-fg: #4D6B5F; --neutral-mark: #9FBDB1;
+  --sealed-bg: #0B3D2E;
+  --sealed-fg: #FFFFFF;
+  --scrim: rgba(5, 45, 34, 0.45);
+  --shadow-popover: 0 4px 12px rgba(9, 35, 28, 0.10), 0 1px 3px rgba(9, 35, 28, 0.06);
+  --shadow-overlay: 0 20px 48px rgba(9, 35, 28, 0.20), 0 2px 8px rgba(9, 35, 28, 0.10);
+  --shadow-drawer: -12px 0 32px rgba(9, 35, 28, 0.12);
+  /* shape and type */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --font-sans: Inter, "Inter var", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  /* kit tokens used directly by the Ringfence-specific pieces below */
+  --gm-shell: #0B3D2E; --gm-shell-deep: #052D22; --gm-mint: #C9F0DB; --gm-teal: #2DD4BF; --gm-fill: #0F7F50;
+  --gm-card-top: 3px solid #0B3D2E; --gm-card-shadow: 0 1px 2px rgba(9, 35, 28, 0.06), 0 4px 12px rgba(9, 35, 28, 0.04);
+  --gm-table-head: #E9FFF4;
+}
+
+body { font-family: var(--font-sans); color: var(--ink); background: var(--canvas); }
+
+/* Cards: white, hairline border, 3px dark-green top border, light shadow (kit "Card") */
+.rf-panel, .rfx-card, .rfx-more, .rfe-sec, .dash-kpi, .rfg { border-color: var(--line); border-top: var(--gm-card-top); border-radius: 12px; box-shadow: var(--gm-card-shadow); }
+.dash-kpi, .rfg { border-left-width: 1px; border-left-color: var(--line); }
+.dash-kpi__n { color: var(--ink); }
+
+/* Tables: mint header, mint row hover, selected rows with a left indicator */
+.rf-table th, table.rf-table thead th, .rfx-ev__t th { background: var(--gm-table-head); color: var(--ink); }
+.rf-table tbody tr:hover td { background: rgba(201, 240, 219, 0.35); }
+.rf-table tr[aria-selected="true"] td { background: #C9F0DB; }
+
+/* Buttons: primary = kit fill; secondary = mint fill */
+.rf-btn--primary { background: var(--gm-fill); border-color: var(--gm-fill); color: #FFFFFF; }
+.rf-btn--primary:hover { background: #0B6E45; border-color: #0B6E45; }
+.rf-btn--primary:active { background: #0B3D2E; }
+.rf-btn--secondary { background: #C9F0DB; border-color: transparent; color: var(--ink); }
+
+/* Links */
+a { color: #0B6E45; }
+
+/* Top bar (shell): active item with the teal indicator */
+.rf-topbar { background: var(--gm-shell); color: var(--gm-mint); }
+.rf-nav__item.is-active { color: #FFFFFF; }
+.rf-nav__item.is-active::after { height: 3px; background: var(--gm-teal); }
+.rf-brand, .rf-brand span { color: #FFFFFF; }
+
+/* Ringfence pieces that were drawn in navy: now the kit's green */
+.rfx-flow__box.is-gap, .rfx-calc tr.is-diff td { background: #FFFAEB; }
+.rfg { border-left: 1px solid var(--line); }
+.rf-signin { background: linear-gradient(180deg, #EEF8F2 0%, #FFFFFF 100%); }
+.rf-signin__card { border-color: var(--line); border-top: 3px solid var(--gm-shell); }
+.rf-signin__brand { color: var(--gm-shell); }
+.rf-signin__name, .rf-signin__title, .rf-signin__label { color: var(--ink); }
+.rf-signin__tag, .rf-signin__sub, .rf-signin__note, .rf-signin__foot { color: var(--ink-secondary); }
+.rf-signin--split .rf-signin__side { background: #F7FFF9; }
+.rf-signin__hero { color: var(--gm-mint);
+  background: radial-gradient(1100px 600px at 10% 0%, rgba(45, 212, 191, 0.16) 0%, rgba(45, 212, 191, 0) 60%), linear-gradient(160deg, #0B3D2E 0%, #072F23 55%, #052D22 100%); }
+.rf-signin__headline span { color: var(--gm-teal); }
+.rf-signin__lede, .rf-signin__ftext { color: #C9F0DB; }
+.rf-signin__chip { border-color: rgba(201, 240, 219, 0.30); color: #C9F0DB; background: rgba(201, 240, 219, 0.06); }
+.rf-signin__feature { border-color: rgba(201, 240, 219, 0.14); background: rgba(201, 240, 219, 0.05); }
+.rf-signin__ficon { background: rgba(45, 212, 191, 0.16); color: var(--gm-teal); }
+.rf-signin__fstep { color: #9FBDB1; }
+.rfe-headline { border-top: 3px solid var(--gm-shell); }
+.rfe-headline--bare { border-top: 0; }

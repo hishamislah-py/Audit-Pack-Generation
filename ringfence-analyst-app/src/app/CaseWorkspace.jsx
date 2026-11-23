@@ -146,7 +146,7 @@ export default function CaseWorkspace({ route, app, nav, store }) {
     nav('cases/' + c.case_ref + '/overview');
   }, [c]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!c) {
-    if (q.error) return <div className="rf-page"><Empty icon="alert" danger title={q.error.error === 'NOT_FOUND' ? 'Case not found' : 'The case could not be loaded'} action={<div className="rf-row"><Button onClick={q.reload}>Try again</Button><Button onClick={() => nav('queue')}>Work queue</Button></div>}>{q.error.message}</Empty></div>;
+    if (q.error) return <div className="rf-page"><Empty icon="alert" danger title={q.error.error === 'NOT_FOUND' ? 'Case not found' : 'The case could not be loaded'} action={<div className="rf-row"><Button onClick={q.reload}>Try again</Button><Button onClick={() => nav('queue')}>Dashboard</Button></div>}>{q.error.message}</Empty></div>;
     return <div className="rf-page"><Skeleton rows={6} /></div>;
   }
   const Tab = TABS[route.tab] || OverviewTab;
