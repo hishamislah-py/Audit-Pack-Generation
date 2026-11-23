@@ -98,5 +98,32 @@ class LiveTC0606Replay(unittest.TestCase):
         self.assertTrue(any("F-05: does_not_establish states or implies the exception is resolved" in e for e in errors), errors)
 
 
+class NonexistenceInDoesNotEstablish(unittest.TestCase):
+    """Live demo rehearsal (23 Nov 2026, port 8953): TC06 EXC-CASE-04 F-05 and TC05 EXC-CASE-02 F-04 were refused by the
+    non-existence rule for the correct framing. The attempt records are preserved in the demo home
+    (investigations/_not_published/.../EXC-CASE-04/2026-11-23T092352+0000-dc7ab4c0.json and
+    .../EXC-CASE-02/2026-11-23T092939+0000-dfccaba5.json)."""
+    LIVE = ["The search results do not establish that such records or activity never existed outside the supplied data.",
+            "That such records or activity never existed outside the supplied data."]
+    REFUSED = ["The transaction never existed in any system.",                 # the owner-approved schema 1.4 case
+               "The ledger never existed and the refund was not posted.",
+               "No ledger was found; the records never existed.",
+               "The searches were thorough, but the records never existed."]
+
+    def test_live_framings_are_accepted_in_does_not_establish(self):
+        from uc042lib.investigation.validation import claims_nonexistence_in_dne
+        for t in self.LIVE:
+            self.assertFalse(claims_nonexistence_in_dne(t), t)
+
+    def test_unframed_absolute_statements_are_still_refused(self):
+        from uc042lib.investigation.validation import claims_nonexistence_in_dne
+        for t in self.REFUSED:
+            self.assertTrue(claims_nonexistence_in_dne(t), t)
+
+    def test_other_fields_keep_the_existing_rule(self):
+        from uc042lib.investigation.validation import claims_nonexistence
+        self.assertTrue(claims_nonexistence("That such records or activity never existed outside the supplied data."))
+
+
 if __name__ == "__main__":
     unittest.main()

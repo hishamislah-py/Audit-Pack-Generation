@@ -108,9 +108,32 @@ def _check_explanations(out):
                     break
         if asserts_resolution(text):
             errors.append(f"{item}: {name} states or implies the exception is resolved, closed or approved")
-        if claims_nonexistence(text):
+        if (claims_nonexistence_in_dne(text) if name == "does_not_establish" else claims_nonexistence(text)):
             errors.append(f"{item}: {name} claims evidence does not exist; absence from the supplied data is only 'not found'")
     return errors
+
+
+def claims_nonexistence_in_dne(text):
+    """The non-existence rule for does_not_establish (23 Nov 2026, live demo rehearsal: two investigations refused for the
+    correct framing). The field lists what the evidence does NOT establish, so a non-existence phrase there is accepted only
+    when it is explicitly framed as not established: (a) a VERB negator governs it in the same clause ("The searches do not
+    establish that such records or activity never existed ..."), however far away, with no contrast word or "and" between;
+    or (b) the clause is a "that"-complement of the field's implied "does not establish" ("That such records never existed
+    outside the supplied data."). An unframed absolute statement ("The transaction never existed in any system.") is still
+    refused, exactly as before."""
+    for m in NONEXISTENCE_PATTERN.finditer(text):
+        clause = re.split(r"[.;:!?]", text[:m.start()])[-1]
+        if NEGATION_BEFORE.search(text[:m.start()]):
+            continue                                                       # the existing rule already accepts it
+        if re.match(r"\s*that\b", clause, re.I):
+            continue                                                       # (b) "That X never existed ..."
+        negators = list(_RES_NEGATOR.finditer(clause)) + list(re.finditer(r"\b(?:do|does|did) not\b", clause, re.I))
+        if negators:
+            gap = clause[max(n.end() for n in negators):]
+            if not _RES_BLOCK.search(gap):
+                continue                                                   # (a) negated in the same clause
+        return True
+    return False
 
 
 INSUF = "INSUFFICIENT_EVIDENCE"
