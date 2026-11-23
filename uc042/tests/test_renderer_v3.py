@@ -7,6 +7,7 @@ import re
 import shutil
 import tempfile
 import unittest
+import unittest.mock
 from decimal import Decimal
 from pathlib import Path
 
@@ -19,6 +20,7 @@ from uc042lib.final_pack.model import (CURRENT_RENDERER_VERSION, OUTCOME_FINAL_P
                                        SPLITTING_RENDERER_VERSION, ClosingSummaryOutput)
 from uc042lib.final_pack.report import block_texts, build_report, build_report_v2
 from uc042lib.final_pack.report_v3 import money, unformat
+from uc042lib.final_pack import summary as summary_module
 
 ROOT = Path(__file__).resolve().parent.parent
 HISTORICAL = ROOT / "docs" / "token_optimisation" / "zip_submission" / "pdf_fix" / "live3" / "final_packs"
@@ -101,8 +103,21 @@ class A_Clean(MatrixCase):
         self.check(final, pack, snap)
 
     def test_not_required_is_refused_when_a_summary_is_required(self):
-        with self.assertRaises(Exception):
-            build("SC2", {"EXC-SC2-01": "ACCEPT"}, self.tmp, summary="not_required")
+        # Only while the AI closing summary is enabled (it is off since the 23 Nov 2026 owner decision).
+        with unittest.mock.patch.object(summary_module, "AI_CLOSING_SUMMARY_ENABLED", True):
+            with self.assertRaises(Exception):
+                build("SC2", {"EXC-SC2-01": "ACCEPT"}, self.tmp, summary="not_required")
+
+    def test_ai_closing_summary_off_by_owner_decision(self):
+        """23 Nov 2026: no AI closing summary. A pack with exceptions records NOT_REQUIRED, validates, makes no summary
+        request and says plainly that no AI closing summary is produced."""
+        self.assertIs(summary_module.ai_closing_summary_enabled(), False)
+        final, pack, snap = build("SC2", {"EXC-SC2-01": "ACCEPT"}, self.tmp, summary="not_required")
+        self.assertEqual(final["closing_summary"]["status"], "NOT_REQUIRED")
+        self.assertIs(closing_summary_required(snap), False)
+        text = " ".join(block_texts(build_report(final)))
+        self.assertIn("No AI closing summary is produced for this report.", text)
+        self.assertNotIn("Most important evidence-supported observations", text)
 
 
 # ------------------------------------------------------------------------------------------------------------ B / H

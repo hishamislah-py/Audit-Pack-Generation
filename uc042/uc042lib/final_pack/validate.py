@@ -133,7 +133,7 @@ def _summary_checks(final, snapshot, summary, review, preview):
         errors += [f"closing summary: {e}" for e in validate_closing_summary(summary.output, closing_summary_input(snapshot))]  # FV13
         if summary.model_metadata.get("simulated"):
             errors.append("closing summary is simulated output, not AI analysis")
-    elif summary.status == "NOT_REQUIRED":  # schema 1.3: no exception and no included investigation, no AI request made
+    elif summary.status == "NOT_REQUIRED":  # schema 1.3: no AI request made (none needed, or the AI summary is not used)
         if not snapshot.reviewed:
             errors.append("a NOT_REQUIRED closing summary needs final-pack schema 1.3 (a pack assembled with analyst reviews)")
         if closing_summary_required(snapshot):

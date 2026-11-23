@@ -5,11 +5,12 @@ the technical appendix. Run from uc042/: python -m unittest tests.test_renderer_
 (UC042_TEST_REPOSITORIES=sqlite for the SQL repositories)."""
 import json
 import unittest
+import unittest.mock
 
 from tests.api_support import AI_OK, ApiCase
 from tests.final_pack_support import PACK, raw
 from tests.renderer_v3_support import norm, pdf_text
-from uc042lib.final_pack import verify_final_pack
+from uc042lib.final_pack import summary as summary_module, verify_final_pack
 from uc042lib.final_pack.model import ClosingSummaryOutput, CURRENT_RENDERER_VERSION, OUTCOME_FINAL_PACK_SCHEMA_VERSION
 from uc042lib.investigation.llm import LLMCallError
 
@@ -81,8 +82,12 @@ class CleanPack(V3Case):
 
 
 class ExceptionPack(V3Case):
+    """The AI closing-summary path, kept testable although the summary is off by the 23 Nov 2026 owner decision."""
     def setUp(self):
         super().setUp()
+        p = unittest.mock.patch.object(summary_module, "AI_CLOSING_SUMMARY_ENABLED", True)
+        p.start()
+        self.addCleanup(p.stop)
         job = self.run_investigation_job("SC5A", "EXC-SC5A-01")
         self.assertEqual(job["status"], "COMPLETED", job)
         self.accept_investigation(job["result"]["investigation_id"], comment="Agrees with the records.")

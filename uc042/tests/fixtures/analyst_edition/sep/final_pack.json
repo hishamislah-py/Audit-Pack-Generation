@@ -1,0 +1,5739 @@
+{
+ "ai_investigations": [
+  {
+   "assessment": {
+    "class": "AI_INVESTIGATIVE_ASSESSMENT",
+    "overall_evidence_assessment": "PARTIALLY_SUFFICIENT",
+    "ref": "INV-EXC-CASE-02-79d61ec09f24#ASSESSMENT",
+    "summary": "The 2026-09-15 GBP/C0002 roll-forward control reports FAIL, with a computed balance of 48257.08 and a reported snapshot balance of 47813.53. A settlement line records 443.55 against a transaction identifier, but the available evidence does not establish that transaction's client. The firm's pool-level internal reconciliation and the bank/cash-book settlement records are different scopes and do not establish the client balance's accuracy. Posting-level client ledger evidence and the referenced transaction record are not available in the supplied searches."
+   },
+   "classification_summary": {
+    "CONFLICTING_EVIDENCE": [
+     "C-01"
+    ],
+    "EVIDENCE_BACKED": [
+     "F-01",
+     "F-02",
+     "F-03",
+     "F-04"
+    ],
+    "HYPOTHESIS": [
+     "H-01"
+    ],
+    "INSUFFICIENT_EVIDENCE": [
+     "M-01",
+     "M-02"
+    ],
+    "deterministic_conflicts": [
+     "CONF-01"
+    ],
+    "evidence_gaps": {
+     "additional_gaps_identified_by_ai": [],
+     "engine_missing_evidence": [],
+     "searched_not_found": [
+      "M-01",
+      "M-02"
+     ]
+    },
+    "not_found_searches": [
+     "SEARCH-03",
+     "SEARCH-04"
+    ],
+    "unverified_candidate_relationships": [
+     "CAND-CASE-01"
+    ]
+   },
+   "confirmed_findings": [
+    {
+     "amounts_and_dates": [
+      {
+       "evidence_id": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+       "field": "computed",
+       "value": "48257.08"
+      },
+      {
+       "evidence_id": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+       "field": "reported",
+       "value": "47813.53"
+      },
+      {
+       "evidence_id": "IN-03:CBS-20260915-C0002-GBP",
+       "field": "as_at_ts",
+       "value": "2026-09-15T17:00:00+01:00"
+      },
+      {
+       "evidence_id": "IN-03:CBS-20260915-C0002-GBP",
+       "field": "balance",
+       "value": "47813.53"
+      },
+      {
+       "evidence_id": "IN-03:CBS-20260915-C0002-GBP",
+       "field": "currency",
+       "value": "GBP"
+      },
+      {
+       "evidence_id": "IN-03:CBS-20260915-C0002-GBP",
+       "field": "recon_date",
+       "value": "2026-09-15"
+      },
+      {
+       "evidence_id": "IN-03:CBS-20260914-C0002-GBP",
+       "field": "as_at_ts",
+       "value": "2026-09-14T17:00:00+01:00"
+      },
+      {
+       "evidence_id": "IN-03:CBS-20260914-C0002-GBP",
+       "field": "balance",
+       "value": "48492.79"
+      },
+      {
+       "evidence_id": "IN-03:CBS-20260914-C0002-GBP",
+       "field": "currency",
+       "value": "GBP"
+      },
+      {
+       "evidence_id": "IN-03:CBS-20260914-C0002-GBP",
+       "field": "recon_date",
+       "value": "2026-09-14"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00006",
+       "field": "amount",
+       "value": "738.94"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00006",
+       "field": "auth_ts",
+       "value": "2026-09-15T08:35:00+01:00"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00006",
+       "field": "clearing_date",
+       "value": "2026-09-15"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00006",
+       "field": "currency",
+       "value": "GBP"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00006",
+       "field": "executed_ts",
+       "value": "2026-09-15T08:35:00+01:00"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00010",
+       "field": "amount",
+       "value": "536.88"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00010",
+       "field": "auth_ts",
+       "value": "2026-09-15T10:15:00+01:00"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00010",
+       "field": "clearing_date",
+       "value": "2026-09-15"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00010",
+       "field": "currency",
+       "value": "GBP"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00010",
+       "field": "executed_ts",
+       "value": "2026-09-15T15:00:00+01:00"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00011",
+       "field": "amount",
+       "value": "437.77"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00011",
+       "field": "auth_ts",
+       "value": "2026-09-15T11:15:00+01:00"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00011",
+       "field": "clearing_date",
+       "value": "2026-09-15"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00011",
+       "field": "currency",
+       "value": "GBP"
+      },
+      {
+       "evidence_id": "IN-11:TX-0915-00011",
+       "field": "executed_ts",
+       "value": "2026-09-15T15:00:00+01:00"
+      }
+     ],
+     "audit_relevance": "This is the reported control outcome for the client-balance exception.",
+     "class": "EVIDENCE_CONFIRMED_OBSERVATION",
+     "description": "The GBP/C0002 roll-forward control for 2026-09-15 reports FAIL: computed 48257.08 and reported 47813.53.",
+     "does_not_establish": "It does not establish whether the snapshot, a transaction, or another client-ledger record is inaccurate.",
+     "establishes": "The engine reports FAIL with computed 48257.08 and reported 47813.53 for GBP/C0002 on 2026-09-15. The 17:00 snapshot record shows 47813.53.",
+     "evidence_refs": [
+      "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+      "IN-03:CBS-20260915-C0002-GBP",
+      "IN-03:CBS-20260914-C0002-GBP",
+      "IN-11:TX-0915-00006",
+      "IN-11:TX-0915-00010",
+      "IN-11:TX-0915-00011"
+     ],
+     "evidence_relationship": "The engine result identifies scope GBP/C0002 2026-09-15 and reports the roll-forward and snapshot values; the source snapshot records 47813.53 at 17:00.",
+     "finding_id": "F-01",
+     "linked_relationships": [
+      {
+       "from": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+       "join_key": "snapshot_id=CBS-20260914-C0002-GBP",
+       "relationship": "cited_by_control_result",
+       "to": "IN-03:CBS-20260914-C0002-GBP"
+      },
+      {
+       "from": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+       "join_key": "snapshot_id=CBS-20260915-C0002-GBP",
+       "relationship": "cited_by_control_result",
+       "to": "IN-03:CBS-20260915-C0002-GBP"
+      },
+      {
+       "from": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+       "join_key": "txn_id=TX-0915-00006",
+       "relationship": "cited_by_control_result",
+       "to": "IN-11:TX-0915-00006"
+      },
+      {
+       "from": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+       "join_key": "txn_id=TX-0915-00010",
+       "relationship": "cited_by_control_result",
+       "to": "IN-11:TX-0915-00010"
+      },
+      {
+       "from": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+       "join_key": "txn_id=TX-0915-00011",
+       "relationship": "cited_by_control_result",
+       "to": "IN-11:TX-0915-00011"
+      }
+     ],
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#F-01",
+     "related_open_items": [
+      "INV-EXC-CASE-02-79d61ec09f24#H-01"
+     ],
+     "supporting_records": [
+      "IN-03:CBS-20260915-C0002-GBP",
+      "IN-03:CBS-20260914-C0002-GBP",
+      "IN-11:TX-0915-00006",
+      "IN-11:TX-0915-00010",
+      "IN-11:TX-0915-00011"
+     ],
+     "title": "Roll-forward control reports a balance difference"
+    },
+    {
+     "amounts_and_dates": [
+      {
+       "evidence_id": "IN-13:SL-SB-GBP-20260915-0003",
+       "field": "amount",
+       "value": "443.55"
+      },
+      {
+       "evidence_id": "IN-13:SL-SB-GBP-20260915-0003",
+       "field": "currency",
+       "value": "GBP"
+      },
+      {
+       "evidence_id": "IN-13:SL-SB-GBP-20260915-0003",
+       "field": "dc_indicator",
+       "value": "D"
+      }
+     ],
+     "audit_relevance": "The line's amount matches the roll-forward difference, but the record alone does not establish a client-level link.",
+     "class": "EVIDENCE_CONFIRMED_OBSERVATION",
+     "description": "Settlement line SL-SB-GBP-20260915-0003 records 443.55 against transaction identifier TX-0915-00009.",
+     "does_not_establish": "It does not establish that TX-0915-00009 belongs to C0002 or affected C0002's balance.",
+     "establishes": "The settlement line records amount 443.55 and references TX-0915-00009.",
+     "evidence_refs": [
+      "IN-13:SL-SB-GBP-20260915-0003"
+     ],
+     "evidence_relationship": "The line is recorded in batch SB-GBP-20260915 with a D indicator and amount 443.55.",
+     "finding_id": "F-02",
+     "linked_relationships": [],
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#F-02",
+     "related_open_items": [
+      "INV-EXC-CASE-02-79d61ec09f24#H-01",
+      "INV-EXC-CASE-02-79d61ec09f24#M-02"
+     ],
+     "supporting_records": [
+      "IN-13:SL-SB-GBP-20260915-0003"
+     ],
+     "title": "Settlement line records an amount and transaction identifier"
+    },
+    {
+     "amounts_and_dates": [
+      {
+       "evidence_id": "IN-05:IRR-EMONEY-GBP-20260915",
+       "field": "currency",
+       "value": "GBP"
+      },
+      {
+       "evidence_id": "IN-05:IRR-EMONEY-GBP-20260915",
+       "field": "difference_reported",
+       "value": "0.00"
+      },
+      {
+       "evidence_id": "IN-05:IRR-EMONEY-GBP-20260915",
+       "field": "item_a",
+       "value": "328310.94"
+      },
+      {
+       "evidence_id": "IN-05:IRR-EMONEY-GBP-20260915",
+       "field": "item_b",
+       "value": "0.00"
+      },
+      {
+       "evidence_id": "IN-05:IRR-EMONEY-GBP-20260915",
+       "field": "item_c",
+       "value": "0.00"
+      },
+      {
+       "evidence_id": "IN-05:IRR-EMONEY-GBP-20260915",
+       "field": "item_d",
+       "value": "0.00"
+      },
+      {
+       "evidence_id": "IN-05:IRR-EMONEY-GBP-20260915",
+       "field": "performed_at_ts",
+       "value": "2026-09-15T17:35:00+01:00"
+      },
+      {
+       "evidence_id": "IN-05:IRR-EMONEY-GBP-20260915",
+       "field": "recon_date",
+       "value": "2026-09-15"
+      },
+      {
+       "evidence_id": "IN-05:IRR-EMONEY-GBP-20260915",
+       "field": "reconciliation_point_ts",
+       "value": "2026-09-15T17:00:00+01:00"
+      },
+      {
+       "evidence_id": "IN-05:IRR-EMONEY-GBP-20260915",
+       "field": "requirement_reported",
+       "value": "328310.94"
+      },
+      {
+       "evidence_id": "IN-05:IRR-EMONEY-GBP-20260915",
+       "field": "resource_reported",
+       "value": "328310.94"
+      }
+     ],
+     "audit_relevance": "This is a currency/pool-level reconciliation view, distinct from the individual client's roll-forward.",
+     "class": "EVIDENCE_CONFIRMED_OBSERVATION",
+     "description": "The firm's GBP pool-level internal reconciliation record reports requirement and resource of 328310.94 and difference 0.00 for 2026-09-15.",
+     "does_not_establish": "It does not establish the accuracy of C0002's individual balance or independently verify the pool figures.",
+     "establishes": "The firm's record reports GBP requirement and resource of 328310.94 and a difference of 0.00.",
+     "evidence_refs": [
+      "IN-05:IRR-EMONEY-GBP-20260915"
+     ],
+     "evidence_relationship": "The internal reconciliation record identifies the GBP currency and POOL-EMONEY scope and reports those values.",
+     "finding_id": "F-03",
+     "linked_relationships": [],
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#F-03",
+     "related_open_items": [],
+     "supporting_records": [
+      "IN-05:IRR-EMONEY-GBP-20260915"
+     ],
+     "title": "Internal reconciliation record reports equal pool-level figures"
+    },
+    {
+     "amounts_and_dates": [
+      {
+       "evidence_id": "IN-12:SB-GBP-20260915",
+       "field": "currency",
+       "value": "GBP"
+      },
+      {
+       "evidence_id": "IN-12:SB-GBP-20260915",
+       "field": "cycle_date",
+       "value": "2026-09-15"
+      },
+      {
+       "evidence_id": "IN-12:SB-GBP-20260915",
+       "field": "gross_amount",
+       "value": "2868.50"
+      },
+      {
+       "evidence_id": "IN-12:SB-GBP-20260915",
+       "field": "net_amount_reported",
+       "value": "2868.50"
+      },
+      {
+       "evidence_id": "IN-12:SB-GBP-20260915",
+       "field": "settlement_date",
+       "value": "2026-09-15"
+      },
+      {
+       "evidence_id": "IN-12:SB-GBP-20260915",
+       "field": "total_adjustments",
+       "value": "0.00"
+      },
+      {
+       "evidence_id": "IN-12:SB-GBP-20260915",
+       "field": "total_fees",
+       "value": "0.00"
+      },
+      {
+       "evidence_id": "IN-10:LE-GBP-0915-0005",
+       "field": "amount",
+       "value": "2868.50"
+      },
+      {
+       "evidence_id": "IN-10:LE-GBP-0915-0005",
+       "field": "currency",
+       "value": "GBP"
+      },
+      {
+       "evidence_id": "IN-10:LE-GBP-0915-0005",
+       "field": "dc_indicator",
+       "value": "C"
+      },
+      {
+       "evidence_id": "IN-10:LE-GBP-0915-0005",
+       "field": "posted_ts",
+       "value": "2026-09-15T15:00:00+01:00"
+      },
+      {
+       "evidence_id": "IN-09:BE-GBP-0915-SB1",
+       "field": "amount",
+       "value": "2868.50"
+      },
+      {
+       "evidence_id": "IN-09:BE-GBP-0915-SB1",
+       "field": "booking_date",
+       "value": "2026-09-15"
+      },
+      {
+       "evidence_id": "IN-09:BE-GBP-0915-SB1",
+       "field": "booking_ts",
+       "value": "2026-09-15T15:00:00+01:00"
+      },
+      {
+       "evidence_id": "IN-09:BE-GBP-0915-SB1",
+       "field": "currency",
+       "value": "GBP"
+      },
+      {
+       "evidence_id": "IN-09:BE-GBP-0915-SB1",
+       "field": "dc_indicator",
+       "value": "D"
+      },
+      {
+       "evidence_id": "IN-09:BE-GBP-0915-SB1",
+       "field": "value_date",
+       "value": "2026-09-15"
+      }
+     ],
+     "audit_relevance": "This cross-check concerns the safeguarding-account settlement flow, not C0002's client-level balance.",
+     "class": "EVIDENCE_CONFIRMED_OBSERVATION",
+     "description": "The batch, cash-book entry, and bank statement entry record the 2026-09-15 settlement under reference SB-GBP-20260915 for 2868.50.",
+     "does_not_establish": "It does not establish which client, if any, is associated with the unresolved settlement line or explain the C0002 balance difference.",
+     "establishes": "The batch header, firm's cash book, and bank statement entry record the same settlement reference and amount of 2868.50.",
+     "evidence_refs": [
+      "IN-12:SB-GBP-20260915",
+      "IN-10:LE-GBP-0915-0005",
+      "IN-09:BE-GBP-0915-SB1"
+     ],
+     "evidence_relationship": "The batch header reports net amount 2868.50; the cash book records 2868.50 with a C indicator and the bank statement records 2868.50 with a D indicator under the same reference.",
+     "finding_id": "F-04",
+     "linked_relationships": [
+      {
+       "from": "IN-12:SB-GBP-20260915",
+       "join_key": "account_id=SGA-GBP-01, bank_reference|end_to_end_ref=SB-GBP-20260915",
+       "relationship": "bank.bank_reference = batch.expected_bank_reference",
+       "to": "IN-09:BE-GBP-0915-SB1"
+      },
+      {
+       "from": "IN-12:SB-GBP-20260915",
+       "join_key": "account_id=SGA-GBP-01, payment_reference=SB-GBP-20260915",
+       "relationship": "cashbook.payment_reference = batch.expected_bank_reference",
+       "to": "IN-10:LE-GBP-0915-0005"
+      }
+     ],
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#F-04",
+     "related_open_items": [],
+     "supporting_records": [
+      "IN-12:SB-GBP-20260915",
+      "IN-10:LE-GBP-0915-0005",
+      "IN-09:BE-GBP-0915-SB1"
+     ],
+     "title": "Settlement reference and amount appear in batch, cash book, and bank entry"
+    }
+   ],
+   "conflicts": [
+    {
+     "class": "CONFLICT",
+     "compared_evidence": [
+      "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+      "IN-03:CBS-20260915-C0002-GBP"
+     ],
+     "description": "The engine's roll-forward value and the recorded 17:00 client snapshot differ for GBP/C0002 on 2026-09-15.",
+     "evidence_refs": [
+      "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+      "IN-03:CBS-20260915-C0002-GBP"
+     ],
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#C-01",
+     "same_measure_and_scope": "Both concern the GBP balance for client C0002 at the 2026-09-15 17:00 reconciliation point: the control reports a computed roll-forward balance of 48257.08, while the snapshot record reports 47813.53.",
+     "source": "AI"
+    },
+    {
+     "class": "CONFLICT",
+     "compared_evidence": [],
+     "description": "Engine recomputed 48257.08 but the firm's record reports 47813.53 (CBAL-ROLLFWD|GBP/C0002 2026-09-15).",
+     "evidence_refs": [
+      "CBAL-ROLLFWD|GBP/C0002 2026-09-15"
+     ],
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#CONF-01",
+     "same_measure_and_scope": null,
+     "source": "DETERMINISTIC"
+    }
+   ],
+   "evidence_examined": {
+    "llm_calls": 2,
+    "records_final": 25,
+    "records_initial": 20,
+    "retrieval_truncated": false,
+    "searches": 7,
+    "source_files": [
+     "IN-03",
+     "IN-05",
+     "IN-09",
+     "IN-10",
+     "IN-11",
+     "IN-12",
+     "IN-13"
+    ],
+    "tool_calls_requested": 3,
+    "tool_rounds": 1,
+    "tools_used": [
+     "search_customer_transactions",
+     "get_customer_balance_snapshots",
+     "get_settlement_batch"
+    ]
+   },
+   "evidence_gaps": [
+    {
+     "class": "EVIDENCE_GAP",
+     "description": "The supplied search for posting-level client ledger records for C0002 returned NOT_FOUND.",
+     "expected_source": "Posting-level client ledger for C0002 covering the roll-forward period.",
+     "impact": "Without those postings, the transaction-level ledger activity underlying the snapshot cannot be assessed from the supplied evidence.",
+     "item_id": "M-01",
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#M-01",
+     "related_ids": [
+      "SEARCH-03"
+     ],
+     "subtypes": [
+      "SEARCHED_NOT_FOUND"
+     ]
+    },
+    {
+     "class": "EVIDENCE_GAP",
+     "description": "The supplied search for transaction TX-0915-00009, referenced by the settlement line, returned NOT_FOUND.",
+     "expected_source": "Client transaction record for TX-0915-00009, including its client attribution.",
+     "impact": "The settlement line's client and any effect on C0002's balance cannot be established from the available evidence.",
+     "item_id": "M-02",
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#M-02",
+     "related_ids": [
+      "SEARCH-04",
+      "IN-13:SL-SB-GBP-20260915-0003"
+     ],
+     "subtypes": [
+      "SEARCHED_NOT_FOUND"
+     ]
+    }
+   ],
+   "evidence_ledger_sha256": "771c69f05664c1d578fd31e6137c3af3dd441253d3fac26ae02113d280abb9b6",
+   "evidence_packet_sha256": "3a71d511b6b9103a822c5ee1506390363acf0b4a25772429e60457eb2166f39d",
+   "exception_id": "EXC-CASE-02",
+   "findings_sha256": "2af240cbc884ff0c4d77ddac20867f7609d2172c832c4a47cdf1e991a9d19a98",
+   "hypotheses": [
+    {
+     "class": "HYPOTHESIS",
+     "contradictory_evidence": [],
+     "description": "The settlement line for 443.55 could be connected to the C0002 roll-forward difference if its missing transaction belongs to C0002; this would be a possible link to EXC-CASE-01, not an established relationship.",
+     "hypothesis_id": "H-01",
+     "limitations": "The settlement line has no client identifier, and the supplied transaction search did not find TX-0915-00009. The amount match does not establish client attribution or a relationship between the exceptions.",
+     "rationale": "The candidate relationship identifies an amount match between the settlement line and the roll-forward difference, while noting that attribution rests on amounts only.",
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#H-01",
+     "supporting_evidence": [
+      "CAND-CASE-01",
+      "IN-13:SL-SB-GBP-20260915-0003",
+      "IN-03:CBS-20260914-C0002-GBP",
+      "IN-03:CBS-20260915-C0002-GBP",
+      "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+      "SEARCH-04",
+      "EXC-CASE-01"
+     ],
+     "verification_status": "NOT_ESTABLISHED"
+    }
+   ],
+   "investigated_at": "2026-11-23T10:29:19+00:00",
+   "investigation_id": "INV-EXC-CASE-02-79d61ec09f24",
+   "investigation_mode": "tools",
+   "model": "gpt-6-luna",
+   "next_steps": [
+    {
+     "action": "Obtain the posting-level client ledger for C0002 covering the prior snapshot through the 2026-09-15 17:00 point.",
+     "class": "SUGGESTED_NEXT_STEP",
+     "evidence_needed": "Dated ledger postings with transaction identifiers, directions, amounts, and resulting balance.",
+     "rationale": "The supplied search did not find posting-level ledger evidence, so the detailed client balance activity cannot be assessed.",
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#S-01"
+    },
+    {
+     "action": "Obtain the source transaction record and client attribution for TX-0915-00009, and check whether the transaction export is complete.",
+     "class": "SUGGESTED_NEXT_STEP",
+     "evidence_needed": "The transaction record or a complete transaction export containing TX-0915-00009 and its client, status, direction, and amount.",
+     "rationale": "The settlement line references this identifier, but it was not found in the supplied transaction data; the matching amount alone does not establish client attribution.",
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#S-02"
+    },
+    {
+     "action": "Obtain the source calculation or ledger extract used to produce the 2026-09-15 C0002 snapshot.",
+     "class": "SUGGESTED_NEXT_STEP",
+     "evidence_needed": "The snapshot-generation source data and audit trail for C0002's GBP balance at the 17:00 reconciliation point.",
+     "rationale": "This would allow the reviewer to compare the recorded snapshot with the underlying balance activity without assuming which record is inaccurate.",
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#S-03"
+    }
+   ],
+   "not_found_searches": [
+    {
+     "description": "Posting-level client ledger for C0002",
+     "search_id": "SEARCH-03"
+    },
+    {
+     "description": "Transaction TX-0915-00009 referenced by settlement line SL-SB-GBP-20260915-0003",
+     "search_id": "SEARCH-04"
+    }
+   ],
+   "open_questions": [
+    {
+     "class": "OPEN_QUESTION",
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#Q-01",
+     "text": "What client and transaction details correspond to TX-0915-00009?"
+    },
+    {
+     "class": "OPEN_QUESTION",
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#Q-02",
+     "text": "What posting-level client ledger activity supports the 2026-09-15 C0002 snapshot?"
+    },
+    {
+     "class": "OPEN_QUESTION",
+     "ref": "INV-EXC-CASE-02-79d61ec09f24#Q-03",
+     "text": "Which underlying balance or transaction records account for the difference reported by the roll-forward control?"
+    }
+   ],
+   "provider": "openai",
+   "route": "unverified_relationship",
+   "simulated": false,
+   "unverified_relationships": [
+    {
+     "basis": "DATE_AND_AMOUNT_COINCIDENCE",
+     "candidate_id": "CAND-CASE-01",
+     "exception_ids": "EXC-CASE-01; EXC-CASE-02",
+     "label": "UNVERIFIED - NOT EVIDENCE-BACKED"
+    }
+   ],
+   "validation": {
+    "revalidated": true,
+    "status": "VALID"
+   },
+   "versions": {
+    "findings_schema": "uc042-investigation-findings/1.5",
+    "prompt": "uc042-investigator-prompt/2.9-tools",
+    "tool_registry": "uc042-evidence-tools/1.0",
+    "workflow": "uc042-investigation-graph/2.0-tools"
+   }
+  }
+ ],
+ "analyst_reviews": {
+  "accepted": 1,
+  "notice": "Each selected AI investigation was reviewed by the analyst. An ACCEPTED investigation's AI content is reported in this pack. A REJECTED investigation's AI summary, findings, hypotheses and recommendations are excluded from this report; the analyst's reason for rejection, shown exactly as recorded, is the review content for that exception. The original AI investigation is kept unchanged by the application. Neither decision resolves an exception.",
+  "rejected": 1
+ },
+ "audit_trail": {
+  "analyst_reviews": [
+   {
+    "analyst_review_id": "AR-7A04E6AA3D6E",
+    "decided_at": "2026-11-23T10:29:34+00:00",
+    "decision": "REJECT",
+    "findings_sha256": "4fe046666c19e6155bd805da2a7021a411ec06f2665583c1c436455e3b832972",
+    "investigation_id": "INV-EXC-CASE-01-eb566d409c96",
+    "revision": 1
+   },
+   {
+    "analyst_review_id": "AR-D95A3128C9E3",
+    "decided_at": "2026-11-23T10:29:54+00:00",
+    "decision": "ACCEPT",
+    "findings_sha256": "2af240cbc884ff0c4d77ddac20867f7609d2172c832c4a47cdf1e991a9d19a98",
+    "investigation_id": "INV-EXC-CASE-02-79d61ec09f24",
+    "revision": 1
+   }
+  ],
+  "assembler_version": "uc042-final-assembler/1.0",
+  "closing_summary": {
+   "closing_summary_sha256": "77b879e7403597d03ae65d059371ac0ace65c4c2d45d422e165a92d1faa471cd",
+   "model": "gpt-6-luna",
+   "prompt_version": "uc042-closing-summary-prompt/1.8",
+   "provider": "openai",
+   "source_fingerprint": "74b93aa2991005f9193a56e045f03d03be05a3f0fb87502618e8c89fd3529965",
+   "status": "GENERATED"
+  },
+  "investigations": [
+   {
+    "artefact_path": "investigations/PACK-CASE-PER-2026-09-914b21ddc93e/EXC-CASE-02/INV-EXC-CASE-02-79d61ec09f24",
+    "evidence_ledger_sha256": "771c69f05664c1d578fd31e6137c3af3dd441253d3fac26ae02113d280abb9b6",
+    "evidence_packet_sha256": "3a71d511b6b9103a822c5ee1506390363acf0b4a25772429e60457eb2166f39d",
+    "exception_id": "EXC-CASE-02",
+    "findings_sha256": "2af240cbc884ff0c4d77ddac20867f7609d2172c832c4a47cdf1e991a9d19a98",
+    "investigation_id": "INV-EXC-CASE-02-79d61ec09f24",
+    "verified": true,
+    "versions": {
+     "findings_schema": "uc042-investigation-findings/1.5",
+     "prompt": "uc042-investigator-prompt/2.9-tools",
+     "tool_registry": "uc042-evidence-tools/1.0",
+     "workflow": "uc042-investigation-graph/2.0-tools"
+    }
+   }
+  ],
+  "review_snapshot_sha256": "0c23e54b15102b1b900f62a7afc7ec42f2b23fec773a8639ed3da2b00f9b5c33",
+  "source_pack": {
+   "pack_content_sha256": "914b21ddc93e1f743cc478892981414150e29b9d9e312c3d2fa6b20d5c5ef76c",
+   "pack_id": "PACK-CASE-PER-2026-09-914b21ddc93e"
+  },
+  "traceability": "report item ref -> ai_investigations[].* (evidence_refs) -> evidence_index (file, line, file SHA-256, retrieved_via, join_key) -> investigation evidence ledger (ledger SHA-256) -> source CSV line (file SHA-256 in source_inventory.inputs); deterministic figures -> result_ids -> original pack control_register (pack_content_sha256)",
+  "validation_rules_version": "uc042-investigation-findings/1.5"
+ },
+ "closing_summary": {
+  "created_at": "2026-11-23T10:30:38+00:00",
+  "model_metadata": {
+   "attempts": 1,
+   "model": "gpt-6-luna",
+   "prompt_version": "uc042-closing-summary-prompt/1.8",
+   "provider": "openai",
+   "provider_response": {
+    "request_id": "req_979f4e325164463bbfc36859e82ef33a",
+    "resolved_model": "gpt-6-luna",
+    "response_id": "resp_019b74498b41ceae016b0415bc978887d09790db3ac3751c90",
+    "responses": [
+     {
+      "incomplete_reason": null,
+      "input_chars": 13151,
+      "input_items": 1,
+      "instructions_chars": 13212,
+      "latency_seconds": 18.635,
+      "max_output_tokens": 8000,
+      "model": "gpt-6-luna",
+      "request_id": "req_979f4e325164463bbfc36859e82ef33a",
+      "resolved_model": "gpt-6-luna",
+      "response_id": "resp_019b74498b41ceae016b0415bc978887d09790db3ac3751c90",
+      "sdk_max_retries": 2,
+      "status": "completed",
+      "turn": 1,
+      "usage": {
+       "cached_input_tokens": 0,
+       "input_tokens": 8139,
+       "output_tokens": 2565,
+       "reasoning_tokens": 652,
+       "total_tokens": 10704
+      }
+     }
+    ],
+    "status": "completed"
+   },
+   "simulated": false,
+   "summary_schema_version": "uc042-closing-summary/1.4",
+   "usage": {
+    "cached_input_tokens": 0,
+    "input_tokens": 8139,
+    "latency_seconds": 18.75,
+    "output_tokens": 2565,
+    "reasoning_tokens": 652,
+    "total_tokens": 10704
+   }
+  },
+  "output": {
+   "evidence_gaps": [
+    {
+     "source_refs": [
+      "INV-EXC-CASE-02-79d61ec09f24#M-01"
+     ],
+     "text": "The supplied search for posting-level client ledger records for C0002 returned NOT_FOUND; this does not establish that the records do not exist."
+    },
+    {
+     "source_refs": [
+      "INV-EXC-CASE-02-79d61ec09f24#M-02"
+     ],
+     "text": "The supplied search for transaction TX-0915-00009, referenced by the settlement line, returned NOT_FOUND; this does not establish that the transaction record does not exist."
+    }
+   ],
+   "group_assessments": [
+    {
+     "analyst_action": "Obtain the source transaction record and client attribution for TX-0915-00009, then compare it with C0002's posting-level ledger.",
+     "common_cause_hypothesis": "The settlement line and C0002 roll-forward difference may be related if the referenced transaction belongs to C0002, but the supplied evidence is insufficient to establish that link.",
+     "common_cause_status": "UNVERIFIED",
+     "confidence": "LOW",
+     "contradicting_evidence": [],
+     "exception_ids": [
+      "EXC-CASE-01",
+      "EXC-CASE-02"
+     ],
+     "group_id": "CAND-CASE-01",
+     "missing_evidence": [
+      "The client attribution for TX-0915-00009 is needed to establish whether it belongs to C0002.",
+      "The source transaction record and complete transaction export or export job log are needed to verify the transaction and its attribution."
+     ],
+     "rationale": "The settlement line records 443.55 against TX-0915-00009, while the C0002 roll-forward difference is also reported as 443.55. The records do not establish that the transaction belongs to C0002; the relationship remains a candidate based on amounts.",
+     "related_exception_ids": [],
+     "relationship_verdict": "UNVERIFIED",
+     "supporting_evidence": [
+      "IN-13:SL-SB-GBP-20260915-0003",
+      "IN-03:CBS-20260914-C0002-GBP",
+      "IN-03:CBS-20260915-C0002-GBP"
+     ]
+    },
+    {
+     "analyst_action": "Verify the completeness of the transaction export and establish the client attribution of TX-0915-00009 before assessing whether the batch issue relates to C0002.",
+     "common_cause_hypothesis": "Missing transaction lines from settlement batch SB-GBP-20260915 may contribute to both exceptions, but the supplied records do not establish that this is their common cause.",
+     "common_cause_status": "UNVERIFIED",
+     "confidence": "LOW",
+     "contradicting_evidence": [],
+     "exception_ids": [
+      "EXC-CASE-01",
+      "EXC-CASE-02"
+     ],
+     "group_id": "CC-CASE-01",
+     "missing_evidence": [
+      "The client of the missing transaction is not established by the settlement line.",
+      "A complete transaction export or the export job log is needed to investigate the missing transaction."
+     ],
+     "rationale": "The records show a settlement line referencing a transaction absent from the transaction export, and the line's amount matches the C0002 roll-forward difference. The line carries no client attribution, so the shared-cause inference is not established.",
+     "related_exception_ids": [],
+     "relationship_verdict": "UNVERIFIED",
+     "supporting_evidence": [
+      "IN-12:SB-GBP-20260915",
+      "IN-13:SL-SB-GBP-20260915-0003"
+     ]
+    }
+   ],
+   "key_observations": [
+    {
+     "source_refs": [
+      "INV-EXC-CASE-02-79d61ec09f24#F-01"
+     ],
+     "text": "The GBP/C0002 roll-forward control for 2026-09-15 reports a computed balance of 48257.08 and a reported snapshot balance of 47813.53. The finding does not establish which record is inaccurate."
+    },
+    {
+     "source_refs": [
+      "INV-EXC-CASE-02-79d61ec09f24#F-03"
+     ],
+     "text": "The firm's pool-level GBP internal reconciliation record reports requirement and resource of 328310.94 and a difference of 0.00; the investigation notes this does not establish the accuracy of C0002's individual balance."
+    },
+    {
+     "source_refs": [
+      "INV-EXC-CASE-02-79d61ec09f24#F-04"
+     ],
+     "text": "The batch header, cash-book entry and bank statement entry record the 2026-09-15 settlement under reference SB-GBP-20260915 for 2868.50. This finding does not identify a client for the unresolved settlement line or explain the C0002 difference."
+    }
+   ],
+   "limitations": [
+    "The accepted investigation for EXC-CASE-02 is assessed as partially sufficient.",
+    "The supplied records do not establish which record is inaccurate in the C0002 roll-forward.",
+    "The candidate link and suspected common cause rely on an amount match; client attribution is not established.",
+    "A search result of NOT_FOUND means the item was not found in the supplied search, not that the record does not exist.",
+    "This is not an audit opinion. It does not certify compliance. It does not state that the reconciliation is clean."
+   ],
+   "overall_position": "The deterministic engine reports FAILURES_PRESENT and EXCEPTIONS_OPEN for 2026-09-01 through 2026-09-30. Of 1,886 control results, 2 are FAIL and 1,884 are PASS. There are 2 open high-severity exceptions. Evidence completeness is reported as COMPLETE.",
+   "suggested_next_steps": [
+    {
+     "source_refs": [
+      "INV-EXC-CASE-02-79d61ec09f24#S-01"
+     ],
+     "text": "Obtain the posting-level client ledger for C0002 covering the prior snapshot through the 2026-09-15 17:00 point."
+    },
+    {
+     "source_refs": [
+      "INV-EXC-CASE-02-79d61ec09f24#S-02"
+     ],
+     "text": "Obtain the source transaction record and client attribution for TX-0915-00009, and check whether the transaction export is complete."
+    },
+    {
+     "source_refs": [
+      "INV-EXC-CASE-02-79d61ec09f24#S-03"
+     ],
+     "text": "Obtain the source calculation or ledger extract used to produce the 2026-09-15 C0002 snapshot."
+    }
+   ],
+   "summary_text": "Two high-severity exceptions remain unresolved. The accepted investigation for the C0002 roll-forward exception confirms that the 2026-09-15 control reports a difference between its computed balance and the recorded snapshot, but does not establish which record is inaccurate. A possible link to the batch-arithmetic exception rests on matching amounts; the supplied records do not establish that the settlement transaction belongs to C0002. Further ledger and transaction evidence is needed. This is not an audit opinion. It does not certify compliance.",
+   "unresolved_items": [
+    {
+     "exception_id": "EXC-CASE-01",
+     "text": "The batch-arithmetic exception remains unresolved; the supplied input does not provide an accepted investigation finding establishing its cause."
+    },
+    {
+     "exception_id": "EXC-CASE-02",
+     "text": "The C0002 roll-forward exception remains unresolved. The accepted investigation is assessed as partially sufficient and does not determine which record is inaccurate."
+    }
+   ],
+   "unverified_hypotheses": [
+    {
+     "source_refs": [
+      "INV-EXC-CASE-02-79d61ec09f24#H-01",
+      "CAND-CASE-01"
+     ],
+     "text": "The settlement line for 443.55 may be related to the C0002 roll-forward difference if its referenced transaction belongs to C0002. The amount match alone does not establish that attribution or a relationship."
+    },
+    {
+     "source_refs": [
+      "CC-CASE-01",
+      "CAND-CASE-01"
+     ],
+     "text": "Transactions from settlement batch SB-GBP-20260915 missing from the transaction export could be a common cause of the two exceptions, but the supplied records do not establish that cause or connect the missing transaction to C0002."
+    }
+   ]
+  },
+  "prompt_version": "uc042-closing-summary-prompt/1.8",
+  "snapshot_sha256": "0c23e54b15102b1b900f62a7afc7ec42f2b23fec773a8639ed3da2b00f9b5c33",
+  "source_fingerprint": "74b93aa2991005f9193a56e045f03d03be05a3f0fb87502618e8c89fd3529965",
+  "status": "GENERATED",
+  "summary_schema_version": "uc042-closing-summary/1.4",
+  "unavailable_reason": "",
+  "validation_findings": []
+ },
+ "evidence_index": {
+  "IN-03:CBS-20260914-C0002-GBP": {
+   "cited_by": [
+    "INV-EXC-CASE-02-79d61ec09f24#F-01",
+    "INV-EXC-CASE-02-79d61ec09f24#H-01"
+   ],
+   "fields": {
+    "as_at_ts": "2026-09-14T17:00:00+01:00",
+    "asset_pool_id": "POOL-EMONEY",
+    "balance": "48492.79",
+    "client_id": "C0002",
+    "currency": "GBP",
+    "recon_date": "2026-09-14",
+    "snapshot_id": "CBS-20260914-C0002-GBP"
+   },
+   "file_id": "IN-03",
+   "file_sha256": "d28ff85d5871975d2f7231bacbd88179d9861b8b68003b793e21893c9b09dddc",
+   "from_investigations": [
+    "INV-EXC-CASE-02-79d61ec09f24"
+   ],
+   "join_key": "snapshot_id=CBS-20260914-C0002-GBP",
+   "record_type": "Client balance snapshots at each 17:00 point",
+   "retrieved_via": "cited by control result CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "source_file": "source_data/client_balance_snapshots_2026-09.csv",
+   "source_line": 123
+  },
+  "IN-03:CBS-20260915-C0002-GBP": {
+   "cited_by": [
+    "INV-EXC-CASE-02-79d61ec09f24#C-01",
+    "INV-EXC-CASE-02-79d61ec09f24#F-01",
+    "INV-EXC-CASE-02-79d61ec09f24#H-01"
+   ],
+   "fields": {
+    "as_at_ts": "2026-09-15T17:00:00+01:00",
+    "asset_pool_id": "POOL-EMONEY",
+    "balance": "47813.53",
+    "client_id": "C0002",
+    "currency": "GBP",
+    "recon_date": "2026-09-15",
+    "snapshot_id": "CBS-20260915-C0002-GBP"
+   },
+   "file_id": "IN-03",
+   "file_sha256": "d28ff85d5871975d2f7231bacbd88179d9861b8b68003b793e21893c9b09dddc",
+   "from_investigations": [
+    "INV-EXC-CASE-02-79d61ec09f24"
+   ],
+   "join_key": "snapshot_id=CBS-20260915-C0002-GBP",
+   "record_type": "Client balance snapshots at each 17:00 point",
+   "retrieved_via": "cited by control result CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "source_file": "source_data/client_balance_snapshots_2026-09.csv",
+   "source_line": 135
+  },
+  "IN-05:IRR-EMONEY-GBP-20260915": {
+   "cited_by": [
+    "INV-EXC-CASE-02-79d61ec09f24#F-03"
+   ],
+   "fields": {
+    "actions_taken_text": "Client ledger extract and safeguarding cash book taken at 17:00; requirement and resource compared; no difference. D+1 comparison not performed (synthetic convention, gap G-R05).",
+    "asset_pool_id": "POOL-EMONEY",
+    "currency": "GBP",
+    "d1_requirement": "",
+    "d1_resource": "",
+    "difference_reported": "0.00",
+    "item_a": "328310.94",
+    "item_b": "0.00",
+    "item_c": "0.00",
+    "item_d": "0.00",
+    "method": "STANDARD",
+    "performed_at_ts": "2026-09-15T17:35:00+01:00",
+    "preparer_id": "U-12",
+    "recon_date": "2026-09-15",
+    "recon_run_id": "IRR-EMONEY-GBP-20260915",
+    "reconciliation_point_ts": "2026-09-15T17:00:00+01:00",
+    "requirement_reported": "328310.94",
+    "resource_reported": "328310.94",
+    "reviewer_id": "U-04"
+   },
+   "file_id": "IN-05",
+   "file_sha256": "450d8977bcda98ee2a233dcc207ebeb0426a9e70d7d1b1d0bd8094176dd9d617",
+   "from_investigations": [
+    "INV-EXC-CASE-02-79d61ec09f24"
+   ],
+   "join_key": "currency=GBP, recon_date=2026-09-15",
+   "record_type": "Internal reconciliation records (as reported by the firm)",
+   "retrieved_via": "internal reconciliation record for the currency and date (as reported by the firm)",
+   "source_file": "source_data/internal_recon_records_2026-09.csv",
+   "source_line": 22
+  },
+  "IN-09:BE-GBP-0915-SB1": {
+   "cited_by": [
+    "INV-EXC-CASE-02-79d61ec09f24#F-04"
+   ],
+   "fields": {
+    "account_id": "SGA-GBP-01",
+    "amount": "2868.50",
+    "bank_entry_id": "BE-GBP-0915-SB1",
+    "bank_reference": "SB-GBP-20260915",
+    "booking_date": "2026-09-15",
+    "booking_ts": "2026-09-15T15:00:00+01:00",
+    "counterparty_name": "Synthetic Card Scheme",
+    "currency": "GBP",
+    "dc_indicator": "D",
+    "end_to_end_ref": "",
+    "narrative_text": "SCHEME SETTLEMENT SB-GBP-20260915",
+    "statement_id": "ST-SGA-GBP-01-20260915-EOD",
+    "value_date": "2026-09-15"
+   },
+   "file_id": "IN-09",
+   "file_sha256": "28df3e2a115a2d8b88115cd8c6dae39c8a3d71124b99641ee4846a68c18f54b0",
+   "from_investigations": [
+    "INV-EXC-CASE-02-79d61ec09f24"
+   ],
+   "join_key": "account_id=SGA-GBP-01, bank_reference|end_to_end_ref=SB-GBP-20260915",
+   "record_type": "Bank statement entries",
+   "retrieved_via": "bank entry carrying the batch reference",
+   "source_file": "source_data/bank_statement_entries_2026-09.csv",
+   "source_line": 127
+  },
+  "IN-10:LE-GBP-0915-0005": {
+   "cited_by": [
+    "INV-EXC-CASE-02-79d61ec09f24#F-04"
+   ],
+   "fields": {
+    "account_id": "SGA-GBP-01",
+    "amount": "2868.50",
+    "currency": "GBP",
+    "dc_indicator": "C",
+    "entry_type": "SCHEME_SETTLEMENT",
+    "ledger_entry_id": "LE-GBP-0915-0005",
+    "payment_reference": "SB-GBP-20260915",
+    "posted_ts": "2026-09-15T15:00:00+01:00"
+   },
+   "file_id": "IN-10",
+   "file_sha256": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7",
+   "from_investigations": [
+    "INV-EXC-CASE-02-79d61ec09f24"
+   ],
+   "join_key": "account_id=SGA-GBP-01, payment_reference=SB-GBP-20260915",
+   "record_type": "Safeguarding-account cash book (firm ledger)",
+   "retrieved_via": "cash-book entry carrying the batch reference",
+   "source_file": "source_data/sga_cashbook_entries_2026-09.csv",
+   "source_line": 109
+  },
+  "IN-11:TX-0915-00006": {
+   "cited_by": [
+    "INV-EXC-CASE-02-79d61ec09f24#F-01"
+   ],
+   "fields": {
+    "amount": "738.94",
+    "auth_ts": "2026-09-15T08:35:00+01:00",
+    "clearing_date": "2026-09-15",
+    "client_id": "C0002",
+    "currency": "GBP",
+    "direction": "CR",
+    "executed_ts": "2026-09-15T08:35:00+01:00",
+    "original_txn_id": "",
+    "payment_reference": "",
+    "settlement_batch_id": "AQ-GBP-20260915",
+    "status": "SETTLED",
+    "txn_id": "TX-0915-00006",
+    "txn_type": "LOAD_CARD"
+   },
+   "file_id": "IN-11",
+   "file_sha256": "8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202",
+   "from_investigations": [
+    "INV-EXC-CASE-02-79d61ec09f24"
+   ],
+   "join_key": "txn_id=TX-0915-00006",
+   "record_type": "Client transactions",
+   "retrieved_via": "cited by control result CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "source_file": "source_data/transactions_2026-09.csv",
+   "source_line": 199
+  },
+  "IN-11:TX-0915-00010": {
+   "cited_by": [
+    "INV-EXC-CASE-02-79d61ec09f24#F-01"
+   ],
+   "fields": {
+    "amount": "536.88",
+    "auth_ts": "2026-09-15T10:15:00+01:00",
+    "clearing_date": "2026-09-15",
+    "client_id": "C0002",
+    "currency": "GBP",
+    "direction": "DR",
+    "executed_ts": "2026-09-15T15:00:00+01:00",
+    "original_txn_id": "",
+    "payment_reference": "",
+    "settlement_batch_id": "SB-GBP-20260915",
+    "status": "SETTLED",
+    "txn_id": "TX-0915-00010",
+    "txn_type": "SPEND"
+   },
+   "file_id": "IN-11",
+   "file_sha256": "8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202",
+   "from_investigations": [
+    "INV-EXC-CASE-02-79d61ec09f24"
+   ],
+   "join_key": "txn_id=TX-0915-00010",
+   "record_type": "Client transactions",
+   "retrieved_via": "cited by control result CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "source_file": "source_data/transactions_2026-09.csv",
+   "source_line": 205
+  },
+  "IN-11:TX-0915-00011": {
+   "cited_by": [
+    "INV-EXC-CASE-02-79d61ec09f24#F-01"
+   ],
+   "fields": {
+    "amount": "437.77",
+    "auth_ts": "2026-09-15T11:15:00+01:00",
+    "clearing_date": "2026-09-15",
+    "client_id": "C0002",
+    "currency": "GBP",
+    "direction": "DR",
+    "executed_ts": "2026-09-15T15:00:00+01:00",
+    "original_txn_id": "",
+    "payment_reference": "",
+    "settlement_batch_id": "SB-GBP-20260915",
+    "status": "SETTLED",
+    "txn_id": "TX-0915-00011",
+    "txn_type": "SPEND"
+   },
+   "file_id": "IN-11",
+   "file_sha256": "8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202",
+   "from_investigations": [
+    "INV-EXC-CASE-02-79d61ec09f24"
+   ],
+   "join_key": "txn_id=TX-0915-00011",
+   "record_type": "Client transactions",
+   "retrieved_via": "cited by control result CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+   "source_file": "source_data/transactions_2026-09.csv",
+   "source_line": 206
+  },
+  "IN-12:SB-GBP-20260915": {
+   "cited_by": [
+    "INV-EXC-CASE-02-79d61ec09f24#F-04"
+   ],
+   "fields": {
+    "account_id": "SGA-GBP-01",
+    "batch_id": "SB-GBP-20260915",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "cycle_date": "2026-09-15",
+    "direction": "FROM_FIRM",
+    "expected_bank_reference": "SB-GBP-20260915",
+    "gross_amount": "2868.50",
+    "net_amount_reported": "2868.50",
+    "settlement_date": "2026-09-15",
+    "total_adjustments": "0.00",
+    "total_fees": "0.00"
+   },
+   "file_id": "IN-12",
+   "file_sha256": "2e25a4fdee7179e965f9c2ec48f56331dac31ce6aaae1840002bc54178caef87",
+   "from_investigations": [
+    "INV-EXC-CASE-02-79d61ec09f24"
+   ],
+   "join_key": "batch_id=SB-GBP-20260915",
+   "record_type": "Settlement batch headers (generic synthetic format)",
+   "retrieved_via": "cited by control result C11-BATCH-ARITH|SB-GBP-20260915",
+   "source_file": "source_data/settlement_batches_2026-09.csv",
+   "source_line": 43
+  },
+  "IN-13:SL-SB-GBP-20260915-0003": {
+   "cited_by": [
+    "INV-EXC-CASE-02-79d61ec09f24#F-02",
+    "INV-EXC-CASE-02-79d61ec09f24#H-01",
+    "INV-EXC-CASE-02-79d61ec09f24#M-02"
+   ],
+   "fields": {
+    "amount": "443.55",
+    "batch_id": "SB-GBP-20260915",
+    "currency": "GBP",
+    "dc_indicator": "D",
+    "fee_code": "",
+    "line_id": "SL-SB-GBP-20260915-0003",
+    "line_type": "TXN",
+    "txn_id": "TX-0915-00009"
+   },
+   "file_id": "IN-13",
+   "file_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+   "from_investigations": [
+    "INV-EXC-CASE-02-79d61ec09f24"
+   ],
+   "join_key": "line_id=SL-SB-GBP-20260915-0003",
+   "record_type": "Settlement batch lines",
+   "retrieved_via": "cited by control result C11-BATCH-ARITH|SB-GBP-20260915",
+   "source_file": "source_data/settlement_lines_2026-09.csv",
+   "source_line": 201
+  }
+ },
+ "exception_register": [
+  {
+   "exception": {
+    "account_id": "",
+    "affected": "C11-BATCH-ARITH SB-GBP-20260915 [FAIL]",
+    "affected_result_ids": [
+     "C11-BATCH-ARITH|SB-GBP-20260915"
+    ],
+    "affected_results": 1,
+    "amount": "",
+    "category": "C11-BATCH-ARITH",
+    "cause_category": "",
+    "control_codes": [
+     "C11"
+    ],
+    "currency": "",
+    "evidence": "IN-12:settlement_batches_2026-09.csv#L43; IN-13:settlement_lines_2026-09.csv#L199-L204",
+    "evidence_ids": [
+     "IN-12:SB-GBP-20260915",
+     "IN-13:SL-SB-GBP-20260915-0001",
+     "IN-13:SL-SB-GBP-20260915-0002",
+     "IN-13:SL-SB-GBP-20260915-0003",
+     "IN-13:SL-SB-GBP-20260915-0004",
+     "IN-13:SL-SB-GBP-20260915-0005",
+     "IN-13:SL-SB-GBP-20260915-0006"
+    ],
+    "evidence_status": "",
+    "evidence_status_detail": "",
+    "exception_id": "EXC-CASE-01",
+    "first_date": "",
+    "flags": "",
+    "investigation_group_id": "",
+    "last_date": "",
+    "related_records": "",
+    "review_status": "AWAITING_HUMAN_REVIEW",
+    "root_cause": "C11-BATCH-ARITH|SB-GBP-20260915",
+    "severity": "High",
+    "status": "OPEN"
+   },
+   "investigation": {
+    "analyst_review": {
+     "ai_content": "EXCLUDED_REJECTED_BY_ANALYST",
+     "analyst_review_id": "AR-7A04E6AA3D6E",
+     "decided_at": "2026-11-23T10:29:34+00:00",
+     "decision": "REJECT",
+     "disposition": "REJECTED_BY_ANALYST",
+     "findings_schema_version": "uc042-investigation-findings/1.5",
+     "findings_sha256": "4fe046666c19e6155bd805da2a7021a411ec06f2665583c1c436455e3b832972",
+     "investigation_id": "INV-EXC-CASE-01-eb566d409c96",
+     "rejection_reason": "it showcaes the error and it is a duplication error",
+     "reviewer": {
+      "display_name": "analyst@ringfence.demo",
+      "user_id": "analyst@ringfence.demo"
+     },
+     "revision": 1
+    },
+    "inclusion": "INCLUDED",
+    "investigation_id": "INV-EXC-CASE-01-eb566d409c96",
+    "investigation_mode": "tools",
+    "other_attempts": {
+     "not_published": 0,
+     "published_ineligible": [],
+     "published_not_selected": []
+    },
+    "overall_evidence_assessment": null,
+    "reason": ""
+   },
+   "resolution_status": "UNRESOLVED"
+  },
+  {
+   "exception": {
+    "account_id": "",
+    "affected": "CBAL-ROLLFWD GBP/C0002 2026-09-15 [FAIL]",
+    "affected_result_ids": [
+     "CBAL-ROLLFWD|GBP/C0002 2026-09-15"
+    ],
+    "affected_results": 1,
+    "amount": "",
+    "category": "CBAL-ROLLFWD",
+    "cause_category": "",
+    "control_codes": [
+     "C04"
+    ],
+    "currency": "",
+    "evidence": "IN-03:client_balance_snapshots_2026-09.csv#L123; IN-03:client_balance_snapshots_2026-09.csv#L135; IN-11:transactions_2026-09.csv#L199; IN-11:transactions_2026-09.csv#L205; IN-11:transactions_2026-09.csv#L206",
+    "evidence_ids": [
+     "IN-03:CBS-20260914-C0002-GBP",
+     "IN-03:CBS-20260915-C0002-GBP",
+     "IN-11:TX-0915-00006",
+     "IN-11:TX-0915-00010",
+     "IN-11:TX-0915-00011"
+    ],
+    "evidence_status": "",
+    "evidence_status_detail": "",
+    "exception_id": "EXC-CASE-02",
+    "first_date": "",
+    "flags": "",
+    "investigation_group_id": "",
+    "last_date": "",
+    "related_records": "",
+    "review_status": "AWAITING_HUMAN_REVIEW",
+    "root_cause": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+    "severity": "High",
+    "status": "OPEN"
+   },
+   "investigation": {
+    "analyst_review": {
+     "analyst_review_id": "AR-D95A3128C9E3",
+     "comment": "agrred",
+     "decided_at": "2026-11-23T10:29:54+00:00",
+     "decision": "ACCEPT",
+     "findings_schema_version": "uc042-investigation-findings/1.5",
+     "findings_sha256": "2af240cbc884ff0c4d77ddac20867f7609d2172c832c4a47cdf1e991a9d19a98",
+     "investigation_id": "INV-EXC-CASE-02-79d61ec09f24",
+     "reviewer": {
+      "display_name": "analyst@ringfence.demo",
+      "user_id": "analyst@ringfence.demo"
+     },
+     "revision": 1
+    },
+    "inclusion": "INCLUDED",
+    "investigation_id": "INV-EXC-CASE-02-79d61ec09f24",
+    "investigation_mode": "tools",
+    "other_attempts": {
+     "not_published": 0,
+     "published_ineligible": [],
+     "published_not_selected": []
+    },
+    "overall_evidence_assessment": "PARTIALLY_SUFFICIENT",
+    "reason": ""
+   },
+   "resolution_status": "UNRESOLVED"
+  }
+ ],
+ "executive_summary": {
+  "deterministic": {
+   "candidate_relationships": 1,
+   "control_outcomes": {
+    "applicable_controls": [
+     "C01",
+     "C03",
+     "C04",
+     "C05",
+     "C05/C07",
+     "C06",
+     "C06/C08",
+     "C07",
+     "C08",
+     "C09",
+     "C10",
+     "C11",
+     "C12",
+     "C13",
+     "C14",
+     "C16",
+     "DQ",
+     "DQ22",
+     "DQ23"
+    ],
+    "by_outcome": {
+     "FAIL": 2,
+     "PASS": 1884
+    },
+    "check_types": 33,
+    "check_types_with_results": 32,
+    "checks_all_passed_or_not_applicable": [
+     "V01-SCHEMA",
+     "V01-PDF",
+     "C03-POLICY",
+     "C03-POINT",
+     "C01-COVER",
+     "C14-COVER",
+     "C07-COVER",
+     "DQ23-STATEMENT",
+     "DQ22-CONTINUITY",
+     "BC-VS-EOD",
+     "CASH-BANK-LINK",
+     "C04-REQUIREMENT",
+     "C05-RESOURCE",
+     "C06-DIFFERENCE",
+     "C07-BANK-EVIDENCE",
+     "RC2-LEDGER",
+     "C08-DIFFERENCE",
+     "C11-BATCH-BANK",
+     "C11-TXN-LINE",
+     "FUND-TOPUP",
+     "RC4-DIRECT",
+     "C09-ALLOCATION",
+     "C11-BANK-ENTRY",
+     "C12-REFUND",
+     "CBAL-NONNEG",
+     "C13-CURRENCY",
+     "C10-DESIGNATION",
+     "C16-GOVERNANCE",
+     "C16-RETURN",
+     "DISC-LOG"
+    ],
+    "checks_no_findings": [
+     "BANK-CASH-LINK"
+    ],
+    "checks_not_fully_assessed": [],
+    "checks_with_failures": [
+     "C11-BATCH-ARITH",
+     "CBAL-ROLLFWD"
+    ],
+    "summary": "FAILURES_PRESENT",
+    "total_results": 1886
+   },
+   "engine_case_status": "EXCEPTIONS_OPEN",
+   "evidence_completeness": "COMPLETE",
+   "exception_review": "AWAITING_HUMAN_REVIEW",
+   "exceptions": {
+    "by_severity": {
+     "High": 2
+    },
+    "open": 2,
+    "total": 2
+   },
+   "generation_status": "GENERATED",
+   "investigation_groups": 0,
+   "missing_evidence_items": 0,
+   "pack_review_status": "NOT_REVIEWED"
+  },
+  "exceptions": {
+   "by_severity": {
+    "High": 2
+   },
+   "total": 2,
+   "unresolved": 2
+  },
+  "investigations": {
+   "by_assessment": {
+    "PARTIALLY_SUFFICIENT": 1
+   },
+   "included": 1,
+   "modes": {
+    "tools": 1
+   }
+  },
+  "key_confirmed_observations": [
+   {
+    "description": "The GBP/C0002 roll-forward control for 2026-09-15 reports FAIL: computed 48257.08 and reported 47813.53.",
+    "ref": "INV-EXC-CASE-02-79d61ec09f24#F-01",
+    "title": "Roll-forward control reports a balance difference"
+   },
+   {
+    "description": "Settlement line SL-SB-GBP-20260915-0003 records 443.55 against transaction identifier TX-0915-00009.",
+    "ref": "INV-EXC-CASE-02-79d61ec09f24#F-02",
+    "title": "Settlement line records an amount and transaction identifier"
+   },
+   {
+    "description": "The firm's GBP pool-level internal reconciliation record reports requirement and resource of 328310.94 and difference 0.00 for 2026-09-15.",
+    "ref": "INV-EXC-CASE-02-79d61ec09f24#F-03",
+    "title": "Internal reconciliation record reports equal pool-level figures"
+   },
+   {
+    "description": "The batch, cash-book entry, and bank statement entry record the 2026-09-15 settlement under reference SB-GBP-20260915 for 2868.50.",
+    "ref": "INV-EXC-CASE-02-79d61ec09f24#F-04",
+    "title": "Settlement reference and amount appear in batch, cash book, and bank entry"
+   }
+  ],
+  "material_unexplained_differences": [],
+  "outstanding_evidence_gaps": {
+   "by_subtype": {
+    "AI_IDENTIFIED": 0,
+    "ENGINE_MISSING": 0,
+    "SEARCHED_NOT_FOUND": 2
+   },
+   "engine_missing_items": 0,
+   "refs": [
+    "INV-EXC-CASE-02-79d61ec09f24#M-01",
+    "INV-EXC-CASE-02-79d61ec09f24#M-02"
+   ]
+  },
+  "statement": "2 exception(s); all remain UNRESOLVED and are reported in full."
+ },
+ "final_content_sha256": "2711660abe93978ad3ab48e19adc7068e300732ca9701208f6fceddca207279d",
+ "final_pack_schema_version": "uc042-final-pack/1.3",
+ "human_review": {
+  "acknowledged_summary_unavailable": false,
+  "acknowledgement_accepted": true,
+  "acknowledgement_text": "Generating this pack does not resolve any exception, confirm any hypothesis or establish compliance. Unresolved exceptions will appear as UNRESOLVED.",
+  "closing_summary_sha256": "77b879e7403597d03ae65d059371ac0ace65c4c2d45d422e165a92d1faa471cd",
+  "closing_summary_status": "GENERATED",
+  "comment": "Ringfence provenance — case RF-2026-09-003; reconciliation run RECON-20261123T102720Z-566933c7; snapshot SNAP-001-566933c7; original ZIP 12_Harrowgate_Card_Services_Ltd_September_2026_M2_incomplete.zip sha256 f043adab1fae0cef0fee04e158ec8e6057a27a3357290276c34a0a23d8d2213d; generated by analyst@ringfence.demo (system reviewer analyst@ringfence.demo); source files: IN-01 recon_calendar_2026-09.csv → 01_reconciliation_calendar.csv (FV-3d18d3a83c, e9ef76e28ab7582f348a4917ae45e0e565194a1e4c51dff2bb2d3898f81a6589); IN-02 account_inventory.csv → 02_safeguarding_accounts.csv (FV-d3de34377e, 64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d); IN-03 client_balance_snapshots_2026-09.csv → 03_client_balances_1700.csv (FV-ce9ac751df, d28ff85d5871975d2f7231bacbd88179d9861b8b68003b793e21893c9b09dddc); IN-04 unallocated_register_2026-09.csv → 04_unallocated_receipts.csv (FV-c68b224d9d, cd04ee276180d35e21710f5f161dafab33c564ba567291cd83ab79add7fdf0bb); IN-05 internal_recon_records_2026-09.csv → 05_internal_reconciliations.csv (FV-f5a1978c7d, 450d8977bcda98ee2a233dcc207ebeb0426a9e70d7d1b1d0bd8094176dd9d617); IN-06 external_recon_records_2026-09.csv → 06_external_reconciliations.csv (FV-3616a281a4, b18dd5df473a66580b9b75747aebbf2b0b51e8bcac01816a0b1a219154e7ebf5); IN-07 bank_balance_confirmations_2026-09.csv → 07_bank_balances_1700.csv (FV-68a76de168, 1d9e3ba50d2ec73d0925e7d045466cd24b04b00a075f9c0c6409deec3c60f73c); IN-08 bank_statements_eod_2026-09.csv → 08_bank_eod_statements.csv (FV-a015ef3f1f, 40de6ca1894c81636ca01d843cfebe51e1498db2af3e3fd582e6582efb3b8f67); IN-09 bank_statement_entries_2026-09.csv → 09_bank_statement_lines.csv (FV-7b1aa493eb, 28df3e2a115a2d8b88115cd8c6dae39c8a3d71124b99641ee4846a68c18f54b0); IN-10 sga_cashbook_entries_2026-09.csv → 10_safeguarding_cashbook.csv (FV-811b1702fb, b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7); IN-11 transactions_2026-09.csv → 11_client_transactions.csv (FV-005fe05702, 8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202); IN-12 settlement_batches_2026-09.csv → 12_settlement_batches.csv (FV-d890636b2b, 2e25a4fdee7179e965f9c2ec48f56331dac31ce6aaae1840002bc54178caef87); IN-13 settlement_lines_2026-09.csv → 13_settlement_lines.csv (FV-3bf783dcee, 3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b); IN-14 discrepancy_log_2026-09.csv → 14_breaks_log.csv (FV-d4f250cf85, 8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06); IN-15 ack_letter_SGA-GBP-01.pdf → bank_acknowledgement_GBP.pdf (FV-2859b59af7, 4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742); IN-16 ack_letter_SGA-EUR-01.pdf → bank_acknowledgement_EUR.pdf (FV-601307e2e9, 4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4); IN-17 safeguarding_reconciliation_policy_v1.2.pdf → safeguarding_recon_policy_v1.2.pdf (FV-493fad1ef5, b136586f843384284da370cedfe17637338e5e9d0bbc485d79b9e82c7de5c561); IN-18 governance_register_2026-09.pdf → governance_register_Sep2026.pdf (FV-470676f554, 6c87f85feddcc31e60af000ccc782749ca6c105a986420d80510e1fd58c7acb4); IN-19 rep027_submission_receipt_2026-08.pdf → REP027_receipt_Aug2026.pdf (FV-41d40ac2af, 91743fd3f1c8b8d681fda739dcaf566bd330e0f4eb19a54bce954d80392b550d). Full list also in the Ringfence provenance supplement (ringfence_provenance.json). Column mapping provenance: 19 file(s), 153 column(s) (153 MAPPED, 0 IGNORED, 0 UNRESOLVED; methods: 153 DETERMINISTIC_EXACT); per-column source, rule or proposal, decision and confirmation in the Ringfence provenance supplement (ringfence_provenance.json, mapping_provenance).",
+  "decided_at": "2026-11-23T11:10:32+00:00",
+  "decision": "GENERATE",
+  "prior_decisions": [],
+  "review_decision_id": "RD-EB7EAA2F5F73",
+  "review_session_id": "RS-FD8CEC2595AB",
+  "reviewer": {
+   "display_name": "analyst@ringfence.demo",
+   "user_id": "analyst@ringfence.demo"
+  },
+  "snapshot_sha256": "0c23e54b15102b1b900f62a7afc7ec42f2b23fec773a8639ed3da2b00f9b5c33"
+ },
+ "limitations": [
+  {
+   "source": "PACK",
+   "text": "Resource items B-D are taken as reported (0.00); no independent source exists."
+  },
+  {
+   "source": "PACK",
+   "text": "The D+1 comparison is not performed (synthetic convention)."
+  },
+  {
+   "source": "PACK",
+   "text": "PDF key details are parsed from a fixed synthetic layout; no human confirmation of extracted fields."
+  },
+  {
+   "source": "PACK",
+   "text": "Results show the internal consistency of illustrative synthetic data, not operational truth or compliance."
+  },
+  {
+   "source": "PACK",
+   "text": "Monthly totals are not included: the engine does not calculate them and the pack performs no financial calculation (D4)."
+  },
+  {
+   "source": "ASSEMBLER",
+   "text": "EXC-CASE-01: AI investigation INV-EXC-CASE-01-eb566d409c96 was REJECTED by the analyst; its AI summary, findings, hypotheses and recommendations are excluded from this report. The analyst's reason is reported in the analyst review section."
+  },
+  {
+   "source": "ASSEMBLER",
+   "text": "AI investigations examine one exception at a time; there is no group-level AI investigation."
+  },
+  {
+   "source": "ASSEMBLER",
+   "text": "Supporting PDF documents (IN-15..IN-19) are not used as AI evidence."
+  },
+  {
+   "source": "ASSEMBLER",
+   "text": "Reported values are copied from the deterministic engine and source records; this report recalculates nothing."
+  },
+  {
+   "source": "ASSEMBLER",
+   "text": "AI requests use the OpenAI Responses API with store=False (no application-state storage). OpenAI's default abuse-monitoring retention still applies unless the organisation has approved Zero Data Retention or Modified Abuse Monitoring; this has not been established for this project."
+  }
+ ],
+ "metadata": {
+  "accounts": [
+   {
+    "account_class": "OWN_FUNDS",
+    "account_id": "OWN-EUR-01",
+    "account_number_masked": "****1206",
+    "currency": "EUR",
+    "designation_name": "",
+    "evidence_id": "IN-02:OWN-EUR-01"
+   },
+   {
+    "account_class": "OWN_FUNDS",
+    "account_id": "OWN-GBP-01",
+    "account_number_masked": "****1190",
+    "currency": "GBP",
+    "designation_name": "",
+    "evidence_id": "IN-02:OWN-GBP-01"
+   },
+   {
+    "account_class": "RELEVANT_FUNDS_BANK",
+    "account_id": "SGA-EUR-01",
+    "account_number_masked": "****8823",
+    "currency": "EUR",
+    "designation_name": "Synthetic EMI Ltd Safeguarding Account (EUR)",
+    "evidence_id": "IN-02:SGA-EUR-01"
+   },
+   {
+    "account_class": "RELEVANT_FUNDS_BANK",
+    "account_id": "SGA-GBP-01",
+    "account_number_masked": "****4471",
+    "currency": "GBP",
+    "designation_name": "Synthetic EMI Ltd Safeguarding Account (GBP)",
+    "evidence_id": "IN-02:SGA-GBP-01"
+   }
+  ],
+  "asset_pool_id": "POOL-EMONEY",
+  "completeness": {
+   "closing_summary": "GENERATED",
+   "engine_case_status": "EXCEPTIONS_OPEN",
+   "evidence_completeness": "COMPLETE",
+   "investigation_coverage": {
+    "accepted_by_analyst": 1,
+    "exceptions": 2,
+    "excluded_by_analyst": 0,
+    "included": 2,
+    "not_investigated": 0,
+    "rejected_by_analyst": 1
+   }
+  },
+  "currency_scope": [
+   "EUR",
+   "GBP"
+  ],
+  "entity": {
+   "entity_id": "SYN-EMI-001",
+   "notice": "Illustrative synthetic entity identifier for the UC-042 POC (decision D2); not a confirmed Moorwand production identifier."
+  },
+  "final_pack_id": "FAP-CASE-PER-2026-09-v1-2711660abe93",
+  "generated_at": "2026-11-23T11:10:32+00:00",
+  "reconciliation_days_count": 22,
+  "report_renderer": "uc042-final-report-renderer/3.0-unicode",
+  "reporting_period": {
+   "end": "2026-09-30",
+   "period_id": "PER-2026-09",
+   "start": "2026-09-01"
+  },
+  "source_pack": {
+   "pack_content_sha256": "914b21ddc93e1f743cc478892981414150e29b9d9e312c3d2fa6b20d5c5ef76c",
+   "pack_id": "PACK-CASE-PER-2026-09-914b21ddc93e",
+   "pack_schema_version": "uc042-pack/0.1",
+   "processing_run_id": "RUN-75214c6daeccefb8"
+  },
+  "status": "GENERATED",
+  "supersedes_final_pack_id": null,
+  "version": 1
+ },
+ "outcome_summary": {
+  "derived_counts": [
+   "checks_listed",
+   "exceptions_total",
+   "exceptions_unresolved",
+   "source_files_total",
+   "required_files_total",
+   "required_files_present",
+   "optional_files_total",
+   "optional_files_present",
+   "missing_evidence_items",
+   "ai_investigations_included",
+   "analyst_decisions_accept",
+   "analyst_decisions_reject",
+   "exceptions_not_investigated",
+   "exceptions_excluded_by_analyst",
+   "accounts"
+  ],
+  "figures": {
+   "accounts": 4,
+   "ai_investigations_included": 1,
+   "analyst_decisions_accept": 1,
+   "analyst_decisions_reject": 1,
+   "checks_listed": 33,
+   "checks_no_findings": [
+    "BANK-CASH-LINK"
+   ],
+   "checks_not_fully_assessed": [],
+   "checks_total": 33,
+   "checks_with_failures": [
+    "C11-BATCH-ARITH",
+    "CBAL-ROLLFWD"
+   ],
+   "checks_with_results": 32,
+   "control_outcome_summary": "FAILURES_PRESENT",
+   "control_results_by_outcome": {
+    "FAIL": 2,
+    "PASS": 1884
+   },
+   "control_results_failed": 2,
+   "control_results_insufficient_evidence": 0,
+   "control_results_not_applicable": 0,
+   "control_results_passed": 1884,
+   "control_results_total": 1886,
+   "currencies": [
+    "EUR",
+    "GBP"
+   ],
+   "engine_case_status": "EXCEPTIONS_OPEN",
+   "engine_missing_evidence_items": 0,
+   "evidence_completeness": "COMPLETE",
+   "exceptions_by_severity": {
+    "High": 2
+   },
+   "exceptions_excluded_by_analyst": 0,
+   "exceptions_not_investigated": 0,
+   "exceptions_total": 2,
+   "exceptions_unresolved": 2,
+   "missing_evidence_items": 0,
+   "optional_files_present": 2,
+   "optional_files_total": 2,
+   "reconciliation_days": 22,
+   "required_files_present": 17,
+   "required_files_total": 17,
+   "source_files_total": 19
+  },
+  "generated_by": "Deterministic rules applied to the stored engine results (uc042-outcome-summary/1.0). Not generated by AI.",
+  "headline": "1,884 of 1,886 control results passed across 33 checks. 2 failed control results. 2 exceptions raised; all remain UNRESOLVED.",
+  "statements": [
+   "1 check (BANK-CASH-LINK) ran and reported no findings; it emits a result only when a problem is found, so it adds nothing to the passed results.",
+   "Checks with failed results: C11-BATCH-ARITH, CBAL-ROLLFWD.",
+   "All 17 required source files were present (and 2 of 2 optional files).",
+   "The engine recorded no missing evidence.",
+   "AI investigation: 1 AI investigation included after the analyst accepted it; 1 rejected by the analyst (AI content excluded). No AI investigation or analyst decision resolves an exception.",
+   "This is the deterministic reconciliation engine's result for the supplied synthetic data. It is not an independent audit conclusion, not an audit opinion and not a compliance certification."
+  ],
+  "version": "uc042-outcome-summary/1.0"
+ },
+ "reconciliation_results": {
+  "client_balances_note": "Client balances are represented by the C04 requirement (with its composition note) and the CBAL results; the pack computes no client totals.",
+  "control_checks": [
+   {
+    "check_id": "V01-SCHEMA",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "DQ",
+    "control_name": "Data-quality checks",
+    "result_counts": {
+     "PASS": 14
+    }
+   },
+   {
+    "check_id": "V01-PDF",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "DQ",
+    "control_name": "Data-quality checks",
+    "result_counts": {
+     "PASS": 5
+    }
+   },
+   {
+    "check_id": "C03-POLICY",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C03",
+    "control_name": "Reconciliation point",
+    "result_counts": {
+     "PASS": 1
+    }
+   },
+   {
+    "check_id": "C03-POINT",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C03",
+    "control_name": "Reconciliation point",
+    "result_counts": {
+     "PASS": 3
+    }
+   },
+   {
+    "check_id": "C01-COVER",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C01",
+    "control_name": "Internal reconciliation existence",
+    "result_counts": {
+     "PASS": 44
+    }
+   },
+   {
+    "check_id": "C14-COVER",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C14",
+    "control_name": "Reporting period and recon-day completeness",
+    "result_counts": {
+     "PASS": 484
+    }
+   },
+   {
+    "check_id": "C07-COVER",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C07",
+    "control_name": "External existence and statement agreement",
+    "result_counts": {
+     "PASS": 44
+    }
+   },
+   {
+    "check_id": "DQ23-STATEMENT",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "DQ23",
+    "control_name": "Within-statement continuity",
+    "result_counts": {
+     "PASS": 88
+    }
+   },
+   {
+    "check_id": "DQ22-CONTINUITY",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "DQ22",
+    "control_name": "Cross-day continuity",
+    "result_counts": {
+     "PASS": 86
+    }
+   },
+   {
+    "check_id": "BC-VS-EOD",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C07",
+    "control_name": "External existence and statement agreement",
+    "result_counts": {
+     "PASS": 44
+    }
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C05/C07",
+    "control_name": "Resource / External existence and statement agreement",
+    "result_counts": {
+     "PASS": 222
+    }
+   },
+   {
+    "check_id": "C04-REQUIREMENT",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C04",
+    "control_name": "Requirement",
+    "result_counts": {
+     "PASS": 44
+    }
+   },
+   {
+    "check_id": "C05-RESOURCE",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C05",
+    "control_name": "Resource",
+    "result_counts": {
+     "PASS": 44
+    }
+   },
+   {
+    "check_id": "C06-DIFFERENCE",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C06",
+    "control_name": "Internal difference handling",
+    "result_counts": {
+     "PASS": 44
+    }
+   },
+   {
+    "check_id": "C07-BANK-EVIDENCE",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C07",
+    "control_name": "External existence and statement agreement",
+    "result_counts": {
+     "PASS": 44
+    }
+   },
+   {
+    "check_id": "RC2-LEDGER",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C07",
+    "control_name": "External existence and statement agreement",
+    "result_counts": {
+     "PASS": 44
+    }
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C08",
+    "control_name": "External difference handling",
+    "result_counts": {
+     "PASS": 44
+    }
+   },
+   {
+    "check_id": "C11-BATCH-ARITH",
+    "check_outcome": "FAILURES_PRESENT",
+    "control_code": "C11",
+    "control_name": "Settlement",
+    "result_counts": {
+     "FAIL": 1,
+     "PASS": 87
+    }
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C11",
+    "control_name": "Settlement",
+    "result_counts": {
+     "PASS": 88
+    }
+   },
+   {
+    "check_id": "C11-TXN-LINE",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C11",
+    "control_name": "Settlement",
+    "result_counts": {
+     "PASS": 1
+    }
+   },
+   {
+    "check_id": "FUND-TOPUP",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C06",
+    "control_name": "Internal difference handling",
+    "result_counts": {
+     "PASS": 44
+    }
+   },
+   {
+    "check_id": "RC4-DIRECT",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C09",
+    "control_name": "Receipts mapping",
+    "result_counts": {
+     "PASS": 90
+    }
+   },
+   {
+    "check_id": "C09-ALLOCATION",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C09",
+    "control_name": "Receipts mapping",
+    "result_counts": {
+     "PASS": 2
+    }
+   },
+   {
+    "check_id": "C11-BANK-ENTRY",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C11",
+    "control_name": "Settlement",
+    "result_counts": {
+     "PASS": 1
+    }
+   },
+   {
+    "check_id": "C12-REFUND",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C12",
+    "control_name": "Reversal validity",
+    "result_counts": {
+     "PASS": 2
+    }
+   },
+   {
+    "check_id": "CBAL-NONNEG",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C04",
+    "control_name": "Requirement",
+    "result_counts": {
+     "PASS": 1
+    }
+   },
+   {
+    "check_id": "CBAL-ROLLFWD",
+    "check_outcome": "FAILURES_PRESENT",
+    "control_code": "C04",
+    "control_name": "Requirement",
+    "result_counts": {
+     "FAIL": 1,
+     "PASS": 263
+    }
+   },
+   {
+    "check_id": "C13-CURRENCY",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C13",
+    "control_name": "Currency ownership",
+    "result_counts": {
+     "PASS": 1
+    }
+   },
+   {
+    "check_id": "C10-DESIGNATION",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C10",
+    "control_name": "Designation",
+    "result_counts": {
+     "PASS": 2
+    }
+   },
+   {
+    "check_id": "C16-GOVERNANCE",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C16",
+    "control_name": "Checklist",
+    "result_counts": {
+     "PASS": 1
+    }
+   },
+   {
+    "check_id": "C16-RETURN",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C16",
+    "control_name": "Checklist",
+    "result_counts": {
+     "PASS": 1
+    }
+   },
+   {
+    "check_id": "DISC-LOG",
+    "check_outcome": "ALL_PASSED_OR_NOT_APPLICABLE",
+    "control_code": "C06/C08",
+    "control_name": "Internal difference handling / External difference handling",
+    "result_counts": {
+     "PASS": 1
+    }
+   },
+   {
+    "check_id": "BANK-CASH-LINK",
+    "check_outcome": "NO_FINDINGS",
+    "check_outcome_note": "The engine ran this check (evidence gate open) and it emits a result only for a safeguarding bank entry without a cash-book counterpart; none were found.",
+    "control_code": "C05/C07",
+    "control_name": "Resource / External existence and statement agreement",
+    "result_counts": {}
+   }
+  ],
+  "control_outcomes": {
+   "applicable_controls": [
+    "C01",
+    "C03",
+    "C04",
+    "C05",
+    "C05/C07",
+    "C06",
+    "C06/C08",
+    "C07",
+    "C08",
+    "C09",
+    "C10",
+    "C11",
+    "C12",
+    "C13",
+    "C14",
+    "C16",
+    "DQ",
+    "DQ22",
+    "DQ23"
+   ],
+   "by_outcome": {
+    "FAIL": 2,
+    "PASS": 1884
+   },
+   "check_types": 33,
+   "check_types_with_results": 32,
+   "checks_all_passed_or_not_applicable": [
+    "V01-SCHEMA",
+    "V01-PDF",
+    "C03-POLICY",
+    "C03-POINT",
+    "C01-COVER",
+    "C14-COVER",
+    "C07-COVER",
+    "DQ23-STATEMENT",
+    "DQ22-CONTINUITY",
+    "BC-VS-EOD",
+    "CASH-BANK-LINK",
+    "C04-REQUIREMENT",
+    "C05-RESOURCE",
+    "C06-DIFFERENCE",
+    "C07-BANK-EVIDENCE",
+    "RC2-LEDGER",
+    "C08-DIFFERENCE",
+    "C11-BATCH-BANK",
+    "C11-TXN-LINE",
+    "FUND-TOPUP",
+    "RC4-DIRECT",
+    "C09-ALLOCATION",
+    "C11-BANK-ENTRY",
+    "C12-REFUND",
+    "CBAL-NONNEG",
+    "C13-CURRENCY",
+    "C10-DESIGNATION",
+    "C16-GOVERNANCE",
+    "C16-RETURN",
+    "DISC-LOG"
+   ],
+   "checks_no_findings": [
+    "BANK-CASH-LINK"
+   ],
+   "checks_not_fully_assessed": [],
+   "checks_with_failures": [
+    "C11-BATCH-ARITH",
+    "CBAL-ROLLFWD"
+   ],
+   "summary": "FAILURES_PRESENT",
+   "total_results": 1886
+  },
+  "external_by_account_day": [
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "260019.50",
+    "bank_balance_reported": "260019.50",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-01",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "260019.50",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-01/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-01/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-01/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "82544.62",
+    "bank_balance_reported": "82544.62",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-01",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "82544.62",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-01/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-01/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-01/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "265243.37",
+    "bank_balance_reported": "265243.37",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-02",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "265243.37",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-02/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-02/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-02/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "82606.85",
+    "bank_balance_reported": "82606.85",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-02",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "82606.85",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-02/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-02/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-02/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "274659.95",
+    "bank_balance_reported": "274659.95",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-03",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "274659.95",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-03/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-03/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-03/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "85256.04",
+    "bank_balance_reported": "85256.04",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-03",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "85256.04",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-03/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-03/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-03/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "281975.67",
+    "bank_balance_reported": "281975.67",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-04",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "281975.67",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-04/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-04/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-04/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "87732.20",
+    "bank_balance_reported": "87732.20",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-04",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "87732.20",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-04/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-04/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-04/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "286715.45",
+    "bank_balance_reported": "286715.45",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-07",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "286715.45",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-07/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-07/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-07/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "88972.18",
+    "bank_balance_reported": "88972.18",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-07",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "88972.18",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-07/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-07/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-07/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "297830.35",
+    "bank_balance_reported": "297830.35",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-08",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "297830.35",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-08/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-08/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-08/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "89956.84",
+    "bank_balance_reported": "89956.84",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-08",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "89956.84",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-08/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-08/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-08/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "303696.81",
+    "bank_balance_reported": "303696.81",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-09",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "303696.81",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-09/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-09/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-09/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "91903.46",
+    "bank_balance_reported": "91903.46",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-09",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "91903.46",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-09/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-09/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-09/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "307169.12",
+    "bank_balance_reported": "307169.12",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-10",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "307169.12",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-10/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-10/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-10/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "93879.77",
+    "bank_balance_reported": "93879.77",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-10",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "93879.77",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-10/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-10/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-10/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "313081.31",
+    "bank_balance_reported": "313081.31",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-11",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "313081.31",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-11/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-11/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-11/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "95606.43",
+    "bank_balance_reported": "95606.43",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-11",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "95606.43",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-11/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-11/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-11/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "322733.29",
+    "bank_balance_reported": "322733.29",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-14",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "322733.29",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-14/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-14/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-14/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "97797.08",
+    "bank_balance_reported": "97797.08",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-14",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "97797.08",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-14/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-14/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-14/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "328310.94",
+    "bank_balance_reported": "328310.94",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-15",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "328310.94",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-15/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-15/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-15/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "98500.35",
+    "bank_balance_reported": "98500.35",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-15",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "98500.35",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-15/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-15/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-15/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "334413.00",
+    "bank_balance_reported": "334413.00",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-16",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "334413.00",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-16/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-16/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-16/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "101242.61",
+    "bank_balance_reported": "101242.61",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-16",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "101242.61",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-16/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-16/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-16/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "341484.46",
+    "bank_balance_reported": "341484.46",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-17",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "341484.46",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-17/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-17/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-17/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "102132.77",
+    "bank_balance_reported": "102132.77",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-17",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "102132.77",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-17/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-17/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-17/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "346075.68",
+    "bank_balance_reported": "346075.68",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-18",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "346075.68",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-18/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-18/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-18/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "104192.87",
+    "bank_balance_reported": "104192.87",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-18",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "104192.87",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-18/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-18/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-18/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "351541.68",
+    "bank_balance_reported": "351541.68",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-21",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "351541.68",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-21/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-21/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-21/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "107179.34",
+    "bank_balance_reported": "107179.34",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-21",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "107179.34",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-21/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-21/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-21/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "355960.22",
+    "bank_balance_reported": "355960.22",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-22",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "355960.22",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-22/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-22/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-22/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "108576.45",
+    "bank_balance_reported": "108576.45",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-22",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "108576.45",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-22/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-22/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-22/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "363313.17",
+    "bank_balance_reported": "363313.17",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-23",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "363313.17",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-23/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-23/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-23/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "108900.74",
+    "bank_balance_reported": "108900.74",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-23",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "108900.74",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-23/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-23/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-23/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "370603.29",
+    "bank_balance_reported": "370603.29",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-24",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "370603.29",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-24/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-24/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-24/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "110250.18",
+    "bank_balance_reported": "110250.18",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-24",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "110250.18",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-24/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-24/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-24/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "375461.46",
+    "bank_balance_reported": "375461.46",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-25",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "375461.46",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-25/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-25/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-25/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "114425.40",
+    "bank_balance_reported": "114425.40",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-25",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "114425.40",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-25/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-25/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-25/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "378706.65",
+    "bank_balance_reported": "378706.65",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-28",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "378706.65",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-28/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-28/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-28/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "116026.43",
+    "bank_balance_reported": "116026.43",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-28",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "116026.43",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-28/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-28/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-28/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "388744.47",
+    "bank_balance_reported": "388744.47",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-29",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "388744.47",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-29/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-29/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-29/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "119053.82",
+    "bank_balance_reported": "119053.82",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-29",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "119053.82",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-29/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-29/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-29/SGA-EUR-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_balance": "395844.86",
+    "bank_balance_reported": "395844.86",
+    "bank_outcome": "PASS",
+    "currency": "GBP",
+    "date": "2026-09-30",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "395844.86",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-30/SGA-GBP-01",
+     "RC2-LEDGER|2026-09-30/SGA-GBP-01",
+     "C08-DIFFERENCE|2026-09-30/SGA-GBP-01"
+    ],
+    "timing": {}
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_balance": "118555.00",
+    "bank_balance_reported": "118555.00",
+    "bank_outcome": "PASS",
+    "currency": "EUR",
+    "date": "2026-09-30",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "evidence_status": "",
+    "ledger_balance": "118555.00",
+    "ledger_outcome": "PASS",
+    "result_ids": [
+     "C07-BANK-EVIDENCE|2026-09-30/SGA-EUR-01",
+     "RC2-LEDGER|2026-09-30/SGA-EUR-01",
+     "C08-DIFFERENCE|2026-09-30/SGA-EUR-01"
+    ],
+    "timing": {}
+   }
+  ],
+  "internal_by_currency_day": [
+   {
+    "currency": "GBP",
+    "date": "2026-09-01",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "260019.50",
+    "items_b_to_d": "0.00",
+    "requirement": "260019.50",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "260019.50",
+    "resource": "260019.50",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-01/GBP",
+     "C05-RESOURCE|2026-09-01/GBP",
+     "C06-DIFFERENCE|2026-09-01/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-01",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "82544.62",
+    "items_b_to_d": "0.00",
+    "requirement": "82544.62",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "82544.62",
+    "resource": "82544.62",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-01/EUR",
+     "C05-RESOURCE|2026-09-01/EUR",
+     "C06-DIFFERENCE|2026-09-01/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-02",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "265243.37",
+    "items_b_to_d": "0.00",
+    "requirement": "265243.37",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "265243.37",
+    "resource": "265243.37",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-02/GBP",
+     "C05-RESOURCE|2026-09-02/GBP",
+     "C06-DIFFERENCE|2026-09-02/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-02",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "82606.85",
+    "items_b_to_d": "0.00",
+    "requirement": "82606.85",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "82606.85",
+    "resource": "82606.85",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-02/EUR",
+     "C05-RESOURCE|2026-09-02/EUR",
+     "C06-DIFFERENCE|2026-09-02/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-03",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "274659.95",
+    "items_b_to_d": "0.00",
+    "requirement": "274659.95",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "274659.95",
+    "resource": "274659.95",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-03/GBP",
+     "C05-RESOURCE|2026-09-03/GBP",
+     "C06-DIFFERENCE|2026-09-03/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-03",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "85256.04",
+    "items_b_to_d": "0.00",
+    "requirement": "85256.04",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "85256.04",
+    "resource": "85256.04",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-03/EUR",
+     "C05-RESOURCE|2026-09-03/EUR",
+     "C06-DIFFERENCE|2026-09-03/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-04",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "281975.67",
+    "items_b_to_d": "0.00",
+    "requirement": "281975.67",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "281975.67",
+    "resource": "281975.67",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-04/GBP",
+     "C05-RESOURCE|2026-09-04/GBP",
+     "C06-DIFFERENCE|2026-09-04/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-04",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "87732.20",
+    "items_b_to_d": "0.00",
+    "requirement": "87732.20",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "87732.20",
+    "resource": "87732.20",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-04/EUR",
+     "C05-RESOURCE|2026-09-04/EUR",
+     "C06-DIFFERENCE|2026-09-04/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-07",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "286715.45",
+    "items_b_to_d": "0.00",
+    "requirement": "286715.45",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "286715.45",
+    "resource": "286715.45",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-07/GBP",
+     "C05-RESOURCE|2026-09-07/GBP",
+     "C06-DIFFERENCE|2026-09-07/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-07",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "88972.18",
+    "items_b_to_d": "0.00",
+    "requirement": "88972.18",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "88972.18",
+    "resource": "88972.18",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-07/EUR",
+     "C05-RESOURCE|2026-09-07/EUR",
+     "C06-DIFFERENCE|2026-09-07/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-08",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "297830.35",
+    "items_b_to_d": "0.00",
+    "requirement": "297830.35",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "297830.35",
+    "resource": "297830.35",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-08/GBP",
+     "C05-RESOURCE|2026-09-08/GBP",
+     "C06-DIFFERENCE|2026-09-08/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-08",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "89956.84",
+    "items_b_to_d": "0.00",
+    "requirement": "89956.84",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "89956.84",
+    "resource": "89956.84",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-08/EUR",
+     "C05-RESOURCE|2026-09-08/EUR",
+     "C06-DIFFERENCE|2026-09-08/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-09",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "303696.81",
+    "items_b_to_d": "0.00",
+    "requirement": "303696.81",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "303696.81",
+    "resource": "303696.81",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-09/GBP",
+     "C05-RESOURCE|2026-09-09/GBP",
+     "C06-DIFFERENCE|2026-09-09/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-09",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "91903.46",
+    "items_b_to_d": "0.00",
+    "requirement": "91903.46",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "91903.46",
+    "resource": "91903.46",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-09/EUR",
+     "C05-RESOURCE|2026-09-09/EUR",
+     "C06-DIFFERENCE|2026-09-09/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-10",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "307169.12",
+    "items_b_to_d": "0.00",
+    "requirement": "307169.12",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "307169.12",
+    "resource": "307169.12",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-10/GBP",
+     "C05-RESOURCE|2026-09-10/GBP",
+     "C06-DIFFERENCE|2026-09-10/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-10",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "93879.77",
+    "items_b_to_d": "0.00",
+    "requirement": "93879.77",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "93879.77",
+    "resource": "93879.77",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-10/EUR",
+     "C05-RESOURCE|2026-09-10/EUR",
+     "C06-DIFFERENCE|2026-09-10/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-11",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "313081.31",
+    "items_b_to_d": "0.00",
+    "requirement": "313081.31",
+    "requirement_composition": "sum of 8 non-negative client balances + 1 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "313081.31",
+    "resource": "313081.31",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-11/GBP",
+     "C05-RESOURCE|2026-09-11/GBP",
+     "C06-DIFFERENCE|2026-09-11/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-11",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "95606.43",
+    "items_b_to_d": "0.00",
+    "requirement": "95606.43",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "95606.43",
+    "resource": "95606.43",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-11/EUR",
+     "C05-RESOURCE|2026-09-11/EUR",
+     "C06-DIFFERENCE|2026-09-11/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-14",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "322733.29",
+    "items_b_to_d": "0.00",
+    "requirement": "322733.29",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "322733.29",
+    "resource": "322733.29",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-14/GBP",
+     "C05-RESOURCE|2026-09-14/GBP",
+     "C06-DIFFERENCE|2026-09-14/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-14",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "97797.08",
+    "items_b_to_d": "0.00",
+    "requirement": "97797.08",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "97797.08",
+    "resource": "97797.08",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-14/EUR",
+     "C05-RESOURCE|2026-09-14/EUR",
+     "C06-DIFFERENCE|2026-09-14/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-15",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "328310.94",
+    "items_b_to_d": "0.00",
+    "requirement": "328310.94",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "328310.94",
+    "resource": "328310.94",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-15/GBP",
+     "C05-RESOURCE|2026-09-15/GBP",
+     "C06-DIFFERENCE|2026-09-15/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-15",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "98500.35",
+    "items_b_to_d": "0.00",
+    "requirement": "98500.35",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "98500.35",
+    "resource": "98500.35",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-15/EUR",
+     "C05-RESOURCE|2026-09-15/EUR",
+     "C06-DIFFERENCE|2026-09-15/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-16",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "334413.00",
+    "items_b_to_d": "0.00",
+    "requirement": "334413.00",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "334413.00",
+    "resource": "334413.00",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-16/GBP",
+     "C05-RESOURCE|2026-09-16/GBP",
+     "C06-DIFFERENCE|2026-09-16/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-16",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "101242.61",
+    "items_b_to_d": "0.00",
+    "requirement": "101242.61",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "101242.61",
+    "resource": "101242.61",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-16/EUR",
+     "C05-RESOURCE|2026-09-16/EUR",
+     "C06-DIFFERENCE|2026-09-16/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-17",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "341484.46",
+    "items_b_to_d": "0.00",
+    "requirement": "341484.46",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "341484.46",
+    "resource": "341484.46",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-17/GBP",
+     "C05-RESOURCE|2026-09-17/GBP",
+     "C06-DIFFERENCE|2026-09-17/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-17",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "102132.77",
+    "items_b_to_d": "0.00",
+    "requirement": "102132.77",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "102132.77",
+    "resource": "102132.77",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-17/EUR",
+     "C05-RESOURCE|2026-09-17/EUR",
+     "C06-DIFFERENCE|2026-09-17/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-18",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "346075.68",
+    "items_b_to_d": "0.00",
+    "requirement": "346075.68",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "346075.68",
+    "resource": "346075.68",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-18/GBP",
+     "C05-RESOURCE|2026-09-18/GBP",
+     "C06-DIFFERENCE|2026-09-18/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-18",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "104192.87",
+    "items_b_to_d": "0.00",
+    "requirement": "104192.87",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "104192.87",
+    "resource": "104192.87",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-18/EUR",
+     "C05-RESOURCE|2026-09-18/EUR",
+     "C06-DIFFERENCE|2026-09-18/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-21",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "351541.68",
+    "items_b_to_d": "0.00",
+    "requirement": "351541.68",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "351541.68",
+    "resource": "351541.68",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-21/GBP",
+     "C05-RESOURCE|2026-09-21/GBP",
+     "C06-DIFFERENCE|2026-09-21/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-21",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "107179.34",
+    "items_b_to_d": "0.00",
+    "requirement": "107179.34",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "107179.34",
+    "resource": "107179.34",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-21/EUR",
+     "C05-RESOURCE|2026-09-21/EUR",
+     "C06-DIFFERENCE|2026-09-21/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-22",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "355960.22",
+    "items_b_to_d": "0.00",
+    "requirement": "355960.22",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "355960.22",
+    "resource": "355960.22",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-22/GBP",
+     "C05-RESOURCE|2026-09-22/GBP",
+     "C06-DIFFERENCE|2026-09-22/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-22",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "108576.45",
+    "items_b_to_d": "0.00",
+    "requirement": "108576.45",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "108576.45",
+    "resource": "108576.45",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-22/EUR",
+     "C05-RESOURCE|2026-09-22/EUR",
+     "C06-DIFFERENCE|2026-09-22/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-23",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "363313.17",
+    "items_b_to_d": "0.00",
+    "requirement": "363313.17",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "363313.17",
+    "resource": "363313.17",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-23/GBP",
+     "C05-RESOURCE|2026-09-23/GBP",
+     "C06-DIFFERENCE|2026-09-23/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-23",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "108900.74",
+    "items_b_to_d": "0.00",
+    "requirement": "108900.74",
+    "requirement_composition": "sum of 4 non-negative client balances + 1 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "108900.74",
+    "resource": "108900.74",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-23/EUR",
+     "C05-RESOURCE|2026-09-23/EUR",
+     "C06-DIFFERENCE|2026-09-23/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-24",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "370603.29",
+    "items_b_to_d": "0.00",
+    "requirement": "370603.29",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "370603.29",
+    "resource": "370603.29",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-24/GBP",
+     "C05-RESOURCE|2026-09-24/GBP",
+     "C06-DIFFERENCE|2026-09-24/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-24",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "110250.18",
+    "items_b_to_d": "0.00",
+    "requirement": "110250.18",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "110250.18",
+    "resource": "110250.18",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-24/EUR",
+     "C05-RESOURCE|2026-09-24/EUR",
+     "C06-DIFFERENCE|2026-09-24/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-25",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "375461.46",
+    "items_b_to_d": "0.00",
+    "requirement": "375461.46",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "375461.46",
+    "resource": "375461.46",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-25/GBP",
+     "C05-RESOURCE|2026-09-25/GBP",
+     "C06-DIFFERENCE|2026-09-25/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-25",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "114425.40",
+    "items_b_to_d": "0.00",
+    "requirement": "114425.40",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "114425.40",
+    "resource": "114425.40",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-25/EUR",
+     "C05-RESOURCE|2026-09-25/EUR",
+     "C06-DIFFERENCE|2026-09-25/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-28",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "378706.65",
+    "items_b_to_d": "0.00",
+    "requirement": "378706.65",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "378706.65",
+    "resource": "378706.65",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-28/GBP",
+     "C05-RESOURCE|2026-09-28/GBP",
+     "C06-DIFFERENCE|2026-09-28/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-28",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "116026.43",
+    "items_b_to_d": "0.00",
+    "requirement": "116026.43",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "116026.43",
+    "resource": "116026.43",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-28/EUR",
+     "C05-RESOURCE|2026-09-28/EUR",
+     "C06-DIFFERENCE|2026-09-28/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-29",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "388744.47",
+    "items_b_to_d": "0.00",
+    "requirement": "388744.47",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "388744.47",
+    "resource": "388744.47",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-29/GBP",
+     "C05-RESOURCE|2026-09-29/GBP",
+     "C06-DIFFERENCE|2026-09-29/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-29",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "119053.82",
+    "items_b_to_d": "0.00",
+    "requirement": "119053.82",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "119053.82",
+    "resource": "119053.82",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-29/EUR",
+     "C05-RESOURCE|2026-09-29/EUR",
+     "C06-DIFFERENCE|2026-09-29/EUR"
+    ]
+   },
+   {
+    "currency": "GBP",
+    "date": "2026-09-30",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "395844.86",
+    "items_b_to_d": "0.00",
+    "requirement": "395844.86",
+    "requirement_composition": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "395844.86",
+    "resource": "395844.86",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-30/GBP",
+     "C05-RESOURCE|2026-09-30/GBP",
+     "C06-DIFFERENCE|2026-09-30/GBP"
+    ]
+   },
+   {
+    "currency": "EUR",
+    "date": "2026-09-30",
+    "difference": "0.00",
+    "difference_outcome": "PASS",
+    "difference_reported": "0.00",
+    "item_a": "118555.00",
+    "items_b_to_d": "0.00",
+    "requirement": "118555.00",
+    "requirement_composition": "sum of 4 non-negative client balances + 0 open unallocated receipt(s)",
+    "requirement_outcome": "PASS",
+    "requirement_reported": "118555.00",
+    "resource": "118555.00",
+    "resource_outcome": "PASS",
+    "result_ids": [
+     "C04-REQUIREMENT|2026-09-30/EUR",
+     "C05-RESOURCE|2026-09-30/EUR",
+     "C06-DIFFERENCE|2026-09-30/EUR"
+    ]
+   }
+  ],
+  "opening_positions": {
+   "bank_first_statement": [
+    {
+     "account_id": "OWN-EUR-01",
+     "currency": "EUR",
+     "evidence_id": "IN-08:ST-OWN-EUR-01-20260901-EOD",
+     "opening_balance_amount": "150000.00",
+     "opening_balance_dc": "C",
+     "statement_date": "2026-09-01"
+    },
+    {
+     "account_id": "OWN-GBP-01",
+     "currency": "GBP",
+     "evidence_id": "IN-08:ST-OWN-GBP-01-20260901-EOD",
+     "opening_balance_amount": "500000.00",
+     "opening_balance_dc": "C",
+     "statement_date": "2026-09-01"
+    },
+    {
+     "account_id": "SGA-EUR-01",
+     "currency": "EUR",
+     "evidence_id": "IN-08:ST-SGA-EUR-01-20260901-EOD",
+     "opening_balance_amount": "80000.00",
+     "opening_balance_dc": "C",
+     "statement_date": "2026-09-01"
+    },
+    {
+     "account_id": "SGA-GBP-01",
+     "currency": "GBP",
+     "evidence_id": "IN-08:ST-SGA-GBP-01-20260901-EOD",
+     "opening_balance_amount": "250000.00",
+     "opening_balance_dc": "C",
+     "statement_date": "2026-09-01"
+    }
+   ],
+   "cash_book": [
+    {
+     "account_id": "SGA-EUR-01",
+     "amount": "80000.00",
+     "currency": "EUR",
+     "dc_indicator": "D",
+     "evidence_id": "IN-10:LE-EUR-0831-0000",
+     "posted_ts": "2026-08-31T17:00:00+01:00"
+    },
+    {
+     "account_id": "SGA-GBP-01",
+     "amount": "250000.00",
+     "currency": "GBP",
+     "dc_indicator": "D",
+     "evidence_id": "IN-10:LE-GBP-0831-0000",
+     "posted_ts": "2026-08-31T17:00:00+01:00"
+    }
+   ],
+   "client_snapshots": [
+    {
+     "as_at_ts": "2026-08-31T17:00:00+01:00",
+     "balance": "40000.00",
+     "client_id": "C0001",
+     "currency": "GBP",
+     "evidence_id": "IN-03:CBS-20260831-C0001-GBP"
+    },
+    {
+     "as_at_ts": "2026-08-31T17:00:00+01:00",
+     "balance": "35000.00",
+     "client_id": "C0002",
+     "currency": "GBP",
+     "evidence_id": "IN-03:CBS-20260831-C0002-GBP"
+    },
+    {
+     "as_at_ts": "2026-08-31T17:00:00+01:00",
+     "balance": "32500.00",
+     "client_id": "C0003",
+     "currency": "GBP",
+     "evidence_id": "IN-03:CBS-20260831-C0003-GBP"
+    },
+    {
+     "as_at_ts": "2026-08-31T17:00:00+01:00",
+     "balance": "30000.00",
+     "client_id": "C0004",
+     "currency": "GBP",
+     "evidence_id": "IN-03:CBS-20260831-C0004-GBP"
+    },
+    {
+     "as_at_ts": "2026-08-31T17:00:00+01:00",
+     "balance": "30000.00",
+     "client_id": "C0005",
+     "currency": "GBP",
+     "evidence_id": "IN-03:CBS-20260831-C0005-GBP"
+    },
+    {
+     "as_at_ts": "2026-08-31T17:00:00+01:00",
+     "balance": "28500.00",
+     "client_id": "C0006",
+     "currency": "GBP",
+     "evidence_id": "IN-03:CBS-20260831-C0006-GBP"
+    },
+    {
+     "as_at_ts": "2026-08-31T17:00:00+01:00",
+     "balance": "27500.00",
+     "client_id": "C0007",
+     "currency": "GBP",
+     "evidence_id": "IN-03:CBS-20260831-C0007-GBP"
+    },
+    {
+     "as_at_ts": "2026-08-31T17:00:00+01:00",
+     "balance": "26500.00",
+     "client_id": "C0008",
+     "currency": "GBP",
+     "evidence_id": "IN-03:CBS-20260831-C0008-GBP"
+    },
+    {
+     "as_at_ts": "2026-08-31T17:00:00+01:00",
+     "balance": "25000.00",
+     "client_id": "C0101",
+     "currency": "EUR",
+     "evidence_id": "IN-03:CBS-20260831-C0101-EUR"
+    },
+    {
+     "as_at_ts": "2026-08-31T17:00:00+01:00",
+     "balance": "20000.00",
+     "client_id": "C0102",
+     "currency": "EUR",
+     "evidence_id": "IN-03:CBS-20260831-C0102-EUR"
+    },
+    {
+     "as_at_ts": "2026-08-31T17:00:00+01:00",
+     "balance": "18000.00",
+     "client_id": "C0103",
+     "currency": "EUR",
+     "evidence_id": "IN-03:CBS-20260831-C0103-EUR"
+    },
+    {
+     "as_at_ts": "2026-08-31T17:00:00+01:00",
+     "balance": "17000.00",
+     "client_id": "C0104",
+     "currency": "EUR",
+     "evidence_id": "IN-03:CBS-20260831-C0104-EUR"
+    }
+   ]
+  },
+  "settlements": [
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260901",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1176.04",
+    "settlement_date": "2026-09-01"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260901",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "5561.11",
+    "settlement_date": "2026-09-01"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260901",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1088.48",
+    "settlement_date": "2026-09-01"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260901",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "2299.18",
+    "settlement_date": "2026-09-01"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260902",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "759.74",
+    "settlement_date": "2026-09-02"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260902",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "5551.27",
+    "settlement_date": "2026-09-02"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260902",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1174.51",
+    "settlement_date": "2026-09-02"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260902",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "3665.88",
+    "settlement_date": "2026-09-02"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260903",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1452.49",
+    "settlement_date": "2026-09-03"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260903",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "4730.93",
+    "settlement_date": "2026-09-03"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260903",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "956.29",
+    "settlement_date": "2026-09-03"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260903",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1734.66",
+    "settlement_date": "2026-09-03"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260904",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1307.85",
+    "settlement_date": "2026-09-04"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260904",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "6646.56",
+    "settlement_date": "2026-09-04"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260904",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1003.25",
+    "settlement_date": "2026-09-04"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260904",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "3744.78",
+    "settlement_date": "2026-09-04"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260907",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1493.95",
+    "settlement_date": "2026-09-07"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260907",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "5226.08",
+    "settlement_date": "2026-09-07"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260907",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "966.23",
+    "settlement_date": "2026-09-07"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260907",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "2640.40",
+    "settlement_date": "2026-09-07"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260908",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1034.21",
+    "settlement_date": "2026-09-08"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260908",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "9954.50",
+    "settlement_date": "2026-09-08"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260908",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "792.05",
+    "settlement_date": "2026-09-08"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260908",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "2858.93",
+    "settlement_date": "2026-09-08"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260909",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1696.87",
+    "settlement_date": "2026-09-09"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260909",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "4128.52",
+    "settlement_date": "2026-09-09"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260909",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "975.65",
+    "settlement_date": "2026-09-09"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260909",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "3255.87",
+    "settlement_date": "2026-09-09"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260910",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1334.02",
+    "settlement_date": "2026-09-10"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260910",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "5723.67",
+    "settlement_date": "2026-09-10"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260910",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "991.78",
+    "settlement_date": "2026-09-10"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260910",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "3412.75",
+    "settlement_date": "2026-09-10"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260911",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "2000.97",
+    "settlement_date": "2026-09-11"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260911",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "3499.50",
+    "settlement_date": "2026-09-11"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260911",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1025.99",
+    "settlement_date": "2026-09-11"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260911",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "3754.78",
+    "settlement_date": "2026-09-11"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260914",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1099.16",
+    "settlement_date": "2026-09-14"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260914",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "8380.49",
+    "settlement_date": "2026-09-14"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260914",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "695.84",
+    "settlement_date": "2026-09-14"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260914",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "2621.22",
+    "settlement_date": "2026-09-14"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260915",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1339.82",
+    "settlement_date": "2026-09-15"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260915",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "4683.12",
+    "settlement_date": "2026-09-15"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260915",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1113.98",
+    "settlement_date": "2026-09-15"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260915",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "FAIL",
+    "net_amount_reported": "2868.50",
+    "settlement_date": "2026-09-15"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260916",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1637.11",
+    "settlement_date": "2026-09-16"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260916",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "4303.02",
+    "settlement_date": "2026-09-16"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260916",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "675.54",
+    "settlement_date": "2026-09-16"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260916",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "2928.27",
+    "settlement_date": "2026-09-16"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260917",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "778.06",
+    "settlement_date": "2026-09-17"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260917",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "6431.06",
+    "settlement_date": "2026-09-17"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260917",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "883.26",
+    "settlement_date": "2026-09-17"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260917",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "3564.51",
+    "settlement_date": "2026-09-17"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260918",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "913.19",
+    "settlement_date": "2026-09-18"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260918",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "5586.53",
+    "settlement_date": "2026-09-18"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260918",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "866.96",
+    "settlement_date": "2026-09-18"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260918",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "2729.99",
+    "settlement_date": "2026-09-18"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260921",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1980.62",
+    "settlement_date": "2026-09-21"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260921",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "3555.45",
+    "settlement_date": "2026-09-21"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260921",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "942.82",
+    "settlement_date": "2026-09-21"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260921",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "2327.38",
+    "settlement_date": "2026-09-21"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260922",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "2104.53",
+    "settlement_date": "2026-09-22"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260922",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "4675.38",
+    "settlement_date": "2026-09-22"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260922",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1241.65",
+    "settlement_date": "2026-09-22"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260922",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "3065.90",
+    "settlement_date": "2026-09-22"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260923",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "908.25",
+    "settlement_date": "2026-09-23"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260923",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "5382.03",
+    "settlement_date": "2026-09-23"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260923",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1490.50",
+    "settlement_date": "2026-09-23"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260923",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "3659.90",
+    "settlement_date": "2026-09-23"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260924",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1190.66",
+    "settlement_date": "2026-09-24"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260924",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "5495.05",
+    "settlement_date": "2026-09-24"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260924",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "847.45",
+    "settlement_date": "2026-09-24"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260924",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "2225.14",
+    "settlement_date": "2026-09-24"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260925",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "2349.58",
+    "settlement_date": "2026-09-25"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260925",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "4647.75",
+    "settlement_date": "2026-09-25"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260925",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "669.92",
+    "settlement_date": "2026-09-25"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260925",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "3036.57",
+    "settlement_date": "2026-09-25"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260928",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1567.95",
+    "settlement_date": "2026-09-28"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260928",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "6245.79",
+    "settlement_date": "2026-09-28"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260928",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "691.95",
+    "settlement_date": "2026-09-28"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260928",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "3215.08",
+    "settlement_date": "2026-09-28"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260929",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1808.74",
+    "settlement_date": "2026-09-29"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260929",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "5572.48",
+    "settlement_date": "2026-09-29"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260929",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "909.79",
+    "settlement_date": "2026-09-29"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260929",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1959.22",
+    "settlement_date": "2026-09-29"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-EUR-20260930",
+    "counterparty_type": "ACQUIRER",
+    "currency": "EUR",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1516.18",
+    "settlement_date": "2026-09-30"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "AQ-GBP-20260930",
+    "counterparty_type": "ACQUIRER",
+    "currency": "GBP",
+    "direction": "TO_FIRM",
+    "fee_top_up_outcome": "PASS",
+    "lines_outcome": "PASS",
+    "net_amount_reported": "6083.87",
+    "settlement_date": "2026-09-30"
+   },
+   {
+    "account_id": "SGA-EUR-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-EUR-20260930",
+    "counterparty_type": "SCHEME",
+    "currency": "EUR",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "1229.98",
+    "settlement_date": "2026-09-30"
+   },
+   {
+    "account_id": "SGA-GBP-01",
+    "bank_outcome": "PASS",
+    "batch_id": "SB-GBP-20260930",
+    "counterparty_type": "SCHEME",
+    "currency": "GBP",
+    "direction": "FROM_FIRM",
+    "fee_top_up_outcome": null,
+    "lines_outcome": "PASS",
+    "net_amount_reported": "2720.15",
+    "settlement_date": "2026-09-30"
+   }
+  ]
+ },
+ "relationships": {
+  "candidate_relationships": [
+   {
+    "basis": "DATE_AND_AMOUNT_COINCIDENCE",
+    "candidate_id": "CAND-CASE-01",
+    "detail": "line SL-SB-GBP-20260915-0003 references TX-0915-00009 (443.55), absent from the transaction export; C0002's roll-forward on 2026-09-15 differs by the same amount. No record links the transaction to this client.",
+    "evidence": "IN-13:settlement_lines_2026-09.csv#L201; IN-03:client_balance_snapshots_2026-09.csv#L123",
+    "evidence_ids": [
+     "IN-13:SL-SB-GBP-20260915-0003",
+     "IN-03:CBS-20260914-C0002-GBP"
+    ],
+    "exception_ids": "EXC-CASE-01; EXC-CASE-02",
+    "label": "UNVERIFIED — NOT EVIDENCE-BACKED; not an investigation group"
+   }
+  ],
+  "candidate_statement": "Candidate relationships are UNVERIFIED and NOT EVIDENCE-BACKED; they are not investigation groups.",
+  "group_statement": "No investigation groups were formed.",
+  "investigation_groups": [],
+  "relationship_register": {
+   "common_causes": [
+    {
+     "all_missing_lines_accounted_for": true,
+     "common_cause_id": "CC-CASE-01",
+     "confirmed_facts": [
+      "1 line(s) of SB-GBP-20260915 reference transaction IDs absent from the transaction export: TX-0915-00009 (443.55)",
+      "batch SB-GBP-20260915 header, lines and bank entry are compared by C11 (see its result)"
+     ],
+     "exception_ids": [
+      "EXC-CASE-01",
+      "EXC-CASE-02"
+     ],
+     "missing_evidence": [
+      "the client of each missing transaction (settlement lines carry no client_id)",
+      "a complete transaction export or the export job log"
+     ],
+     "note": "line combinations are disjoint",
+     "proposed_common_cause": "transactions of settlement batch SB-GBP-20260915 missing from the transaction export",
+     "provenance": {
+      "discovered_by": "engine relationship discovery (enrichment-v1)",
+      "rule": "COMMON_CAUSE"
+     },
+     "status": "SUSPECTED",
+     "supporting_records": [
+      "IN-12:SB-GBP-20260915",
+      "IN-13:SL-SB-GBP-20260915-0003"
+     ],
+     "unaccounted_lines": [],
+     "unverified_inferences": [
+      "SL-SB-GBP-20260915-0003 (443.55) of SB-GBP-20260915 equals to C0002's roll-forward difference 443.55 on 2026-09-15. Settlement lines carry no client: the attribution rests on amounts only."
+     ]
+    }
+   ],
+   "relationships": [
+    {
+     "amounts": {
+      "combinations": 1,
+      "lines_total": "443.55",
+      "roll_forward_difference": "443.55"
+     },
+     "basis": "SL-SB-GBP-20260915-0003 (443.55) of SB-GBP-20260915 equals to C0002's roll-forward difference 443.55 on 2026-09-15. Settlement lines carry no client: the attribution rests on amounts only.",
+     "contradicting_records": [],
+     "engine_status": "CANDIDATE",
+     "exception_ids": [
+      "EXC-CASE-01",
+      "EXC-CASE-02"
+     ],
+     "limitations": [
+      "amounts only: a candidate, never a confirmed relationship"
+     ],
+     "link_type": "LINE-SUM MATCH",
+     "proof": {
+      "calculation": "443.55 = 443.55",
+      "chronology": [],
+      "corroboration": [],
+      "established": [
+       "the amounts of SL-SB-GBP-20260915-0003 (443.55) sum to C0002's roll-forward difference"
+      ],
+      "faulty_record": "",
+      "limitations": [
+       "amounts only: a candidate, never a confirmed relationship"
+      ],
+      "missing_evidence": [
+       "the client of each missing transaction"
+      ],
+      "not_established": [
+       "that the missing transactions belong to this client (settlement lines carry no client)"
+      ],
+      "proof_version": "uc042-relationship-proof/1.0",
+      "quantities": [
+       {
+        "name": "settlement line SL-SB-GBP-20260915-0003 (TX-0915-00009, absent from the transaction export)",
+        "record": "IN-13:SL-SB-GBP-20260915-0003",
+        "value": "443.55"
+       },
+       {
+        "name": "C0002 roll-forward difference 2026-09-14->2026-09-15",
+        "record": "IN-03:CBS-20260915-C0002-GBP",
+        "value": "443.55"
+       }
+      ],
+      "records": [
+       "IN-13:SL-SB-GBP-20260915-0003",
+       "IN-03:CBS-20260914-C0002-GBP",
+       "IN-03:CBS-20260915-C0002-GBP"
+      ],
+      "relationship_type": "AMOUNT_COMBINATION",
+      "requirement_effect": "",
+      "result": "SUM_EQUAL",
+      "rule": "LINE-SUM MATCH"
+     },
+     "provenance": {
+      "discovered_by": "engine relationship discovery (enrichment-v1)",
+      "rule": "LINE-SUM MATCH"
+     },
+     "relationship_id": "REL-CASE-01",
+     "relationship_type": "AMOUNT_COMBINATION",
+     "status": "CANDIDATE",
+     "supporting_records": [
+      "IN-13:SL-SB-GBP-20260915-0003",
+      "IN-03:CBS-20260914-C0002-GBP",
+      "IN-03:CBS-20260915-C0002-GBP"
+     ]
+    }
+   ],
+   "schema": "uc042-relationship-register/1.1",
+   "statement": "Relationships discovered deterministically by the engine. Discovery never establishes a cause: a CONFIRMED relationship carries the engine's proof that its exceptions are connected (often through one faulty record), and that proof states separately what it does NOT establish (usually why the record is wrong). A CANDIDATE rests on amounts or indirect links only, a REJECTED relationship must not be used as support, and a common cause is at most SUSPECTED until an analyst verifies it."
+  }
+ },
+ "source_inventory": {
+  "dataset": {
+   "baseline": "",
+   "baseline_manifest_sha256": "",
+   "dataset": "case",
+   "scenario_id": "CASE",
+   "scenario_name": ""
+  },
+  "dataset_note": "scenario_name is a synthetic test label from the dataset metadata",
+  "files": [
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 1,
+    "description": "Reconciliation-day calendar",
+    "evidence_id": "IN-01",
+    "evidence_kind": "RAW_SOURCE",
+    "key_details": {},
+    "record_count": "30",
+    "record_unit": "data_rows",
+    "requirement": "REQUIRED",
+    "sha256": "e9ef76e28ab7582f348a4917ae45e0e565194a1e4c51dff2bb2d3898f81a6589",
+    "source_file": "source_data/recon_calendar_2026-09.csv"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 1,
+    "description": "Institution and account inventory",
+    "evidence_id": "IN-02",
+    "evidence_kind": "RAW_SOURCE",
+    "key_details": {},
+    "record_count": "4",
+    "record_unit": "data_rows",
+    "requirement": "REQUIRED",
+    "sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d",
+    "source_file": "source_data/account_inventory.csv"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 3,
+    "description": "Client balance snapshots at each 17:00 point",
+    "evidence_id": "IN-03",
+    "evidence_kind": "RAW_SOURCE",
+    "key_details": {},
+    "record_count": "276",
+    "record_unit": "data_rows",
+    "requirement": "REQUIRED",
+    "sha256": "d28ff85d5871975d2f7231bacbd88179d9861b8b68003b793e21893c9b09dddc",
+    "source_file": "source_data/client_balance_snapshots_2026-09.csv"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 1,
+    "description": "Unallocated receipts register",
+    "evidence_id": "IN-04",
+    "evidence_kind": "RAW_SOURCE",
+    "key_details": {},
+    "record_count": "2",
+    "record_unit": "data_rows",
+    "requirement": "REQUIRED",
+    "sha256": "cd04ee276180d35e21710f5f161dafab33c564ba567291cd83ab79add7fdf0bb",
+    "source_file": "source_data/unallocated_register_2026-09.csv"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 2,
+    "description": "Internal reconciliation records (as reported by the firm)",
+    "evidence_id": "IN-05",
+    "evidence_kind": "RAW_SOURCE",
+    "key_details": {},
+    "record_count": "44",
+    "record_unit": "data_rows",
+    "requirement": "REQUIRED",
+    "sha256": "450d8977bcda98ee2a233dcc207ebeb0426a9e70d7d1b1d0bd8094176dd9d617",
+    "source_file": "source_data/internal_recon_records_2026-09.csv"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 1,
+    "description": "External reconciliation records (as reported by the firm)",
+    "evidence_id": "IN-06",
+    "evidence_kind": "RAW_SOURCE",
+    "key_details": {},
+    "record_count": "44",
+    "record_unit": "data_rows",
+    "requirement": "REQUIRED",
+    "sha256": "b18dd5df473a66580b9b75747aebbf2b0b51e8bcac01816a0b1a219154e7ebf5",
+    "source_file": "source_data/external_recon_records_2026-09.csv"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 2,
+    "description": "Bank balance confirmations at 17:00",
+    "evidence_id": "IN-07",
+    "evidence_kind": "RAW_SOURCE",
+    "key_details": {},
+    "record_count": "44",
+    "record_unit": "data_rows",
+    "requirement": "REQUIRED",
+    "sha256": "1d9e3ba50d2ec73d0925e7d045466cd24b04b00a075f9c0c6409deec3c60f73c",
+    "source_file": "source_data/bank_balance_confirmations_2026-09.csv"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 1,
+    "description": "End-of-day bank statement headers",
+    "evidence_id": "IN-08",
+    "evidence_kind": "RAW_SOURCE",
+    "key_details": {},
+    "record_count": "88",
+    "record_unit": "data_rows",
+    "requirement": "REQUIRED",
+    "sha256": "40de6ca1894c81636ca01d843cfebe51e1498db2af3e3fd582e6582efb3b8f67",
+    "source_file": "source_data/bank_statements_eod_2026-09.csv"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 2,
+    "description": "Bank statement entries",
+    "evidence_id": "IN-09",
+    "evidence_kind": "RAW_SOURCE",
+    "key_details": {},
+    "record_count": "266",
+    "record_unit": "data_rows",
+    "requirement": "REQUIRED",
+    "sha256": "28df3e2a115a2d8b88115cd8c6dae39c8a3d71124b99641ee4846a68c18f54b0",
+    "source_file": "source_data/bank_statement_entries_2026-09.csv"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 89,
+    "description": "Safeguarding-account cash book (firm ledger)",
+    "evidence_id": "IN-10",
+    "evidence_kind": "RAW_SOURCE",
+    "key_details": {},
+    "record_count": "224",
+    "record_unit": "data_rows",
+    "requirement": "REQUIRED",
+    "sha256": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7",
+    "source_file": "source_data/sga_cashbook_entries_2026-09.csv"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 2,
+    "description": "Client transactions",
+    "evidence_id": "IN-11",
+    "evidence_kind": "RAW_SOURCE",
+    "key_details": {},
+    "record_count": "421",
+    "record_unit": "data_rows",
+    "requirement": "REQUIRED",
+    "sha256": "8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202",
+    "source_file": "source_data/transactions_2026-09.csv"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 1,
+    "description": "Settlement batch headers (generic synthetic format)",
+    "evidence_id": "IN-12",
+    "evidence_kind": "RAW_SOURCE",
+    "key_details": {},
+    "record_count": "88",
+    "record_unit": "data_rows",
+    "requirement": "REQUIRED",
+    "sha256": "2e25a4fdee7179e965f9c2ec48f56331dac31ce6aaae1840002bc54178caef87",
+    "source_file": "source_data/settlement_batches_2026-09.csv"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 1,
+    "description": "Settlement batch lines",
+    "evidence_id": "IN-13",
+    "evidence_kind": "RAW_SOURCE",
+    "key_details": {},
+    "record_count": "420",
+    "record_unit": "data_rows",
+    "requirement": "REQUIRED",
+    "sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+    "source_file": "source_data/settlement_lines_2026-09.csv"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 2,
+    "description": "Discrepancy and corrective-action log",
+    "evidence_id": "IN-14",
+    "evidence_kind": "RAW_SOURCE",
+    "key_details": {},
+    "record_count": "0",
+    "record_unit": "data_rows",
+    "requirement": "REQUIRED",
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "source_file": "source_data/discrepancy_log_2026-09.csv"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 2,
+    "description": "Acknowledgement letter, SGA-GBP-01",
+    "evidence_id": "IN-15",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "key_details": {
+     "Account name": "Synthetic EMI Ltd Safeguarding Account (GBP)",
+     "Account number": "****4471",
+     "Currency": "GBP",
+     "Institution": "Example Bank plc",
+     "Letter date": "2024-03-01",
+     "Letter reference": "ACK-INST01-4471"
+    },
+    "record_count": "1",
+    "record_unit": "pages",
+    "requirement": "REQUIRED",
+    "sha256": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742",
+    "source_file": "supporting_documents/ack_letter_SGA-GBP-01.pdf"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 2,
+    "description": "Acknowledgement letter, SGA-EUR-01",
+    "evidence_id": "IN-16",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "key_details": {
+     "Account name": "Synthetic EMI Ltd Safeguarding Account (EUR)",
+     "Account number": "****8823",
+     "Currency": "EUR",
+     "Institution": "Example Bank plc",
+     "Letter date": "2024-03-01",
+     "Letter reference": "ACK-INST01-8823"
+    },
+    "record_count": "1",
+    "record_unit": "pages",
+    "requirement": "REQUIRED",
+    "sha256": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4",
+    "source_file": "supporting_documents/ack_letter_SGA-EUR-01.pdf"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 2,
+    "description": "Safeguarding reconciliation policy v1.2",
+    "evidence_id": "IN-17",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "key_details": {
+     "Document version": "1.2",
+     "Effective date": "2026-05-07",
+     "Frequency": "Each reconciliation day",
+     "Internal reconciliation basis": "Per currency",
+     "Reconciliation method": "STANDARD",
+     "Reconciliation point": "17:00 Europe/London",
+     "Safeguarding method": "SEGREGATION"
+    },
+    "record_count": "1",
+    "record_unit": "pages",
+    "requirement": "REQUIRED",
+    "sha256": "b136586f843384284da370cedfe17637338e5e9d0bbc485d79b9e82c7de5c561",
+    "source_file": "supporting_documents/safeguarding_reconciliation_policy_v1.2.pdf"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 2,
+    "description": "Governance register",
+    "evidence_id": "IN-18",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "key_details": {
+     "Accountable person": "A. Example (synthetic)",
+     "Allocated from": "2026-05-07",
+     "Role": "Chief Financial Officer (synthetic)"
+    },
+    "record_count": "1",
+    "record_unit": "pages",
+    "requirement": "OPTIONAL",
+    "sha256": "6c87f85feddcc31e60af000ccc782749ca6c105a986420d80510e1fd58c7acb4",
+    "source_file": "supporting_documents/governance_register_2026-09.pdf"
+   },
+   {
+    "availability": "PRESENT",
+    "cited_by_count": 2,
+    "description": "Monthly safeguarding return receipt (August)",
+    "evidence_id": "IN-19",
+    "evidence_kind": "SUPPORTING_DOCUMENT",
+    "key_details": {
+     "Due date": "2026-09-21",
+     "Period": "2026-08",
+     "Return": "REP027 monthly safeguarding return",
+     "Submission reference": "SYN-RD-2026-08-0001",
+     "Submitted at": "2026-09-17T11:02:00+01:00"
+    },
+    "record_count": "1",
+    "record_unit": "pages",
+    "requirement": "OPTIONAL",
+    "sha256": "91743fd3f1c8b8d681fda739dcaf566bd330e0f4eb19a54bce954d80392b550d",
+    "source_file": "supporting_documents/rep027_submission_receipt_2026-08.pdf"
+   }
+  ],
+  "fingerprints": {
+   "baseline_manifest_sha256": "",
+   "configuration_fingerprint": "c3b391a6376670bf0c1ff52b661da29756ccce0ac25d576ece17a3f97625678e",
+   "correlation_version": "deterministic-v2-enrichment",
+   "engine_fingerprint": "a77639b73c0e1f9280a68f5dc1531aa607ed8185bb43f38db548db2e84c97859",
+   "pack_layer_fingerprint": "48a302e0a529cc67fcef4a1818a88b3af274e0ca356c61379604f17ac865620d"
+  },
+  "inputs": [
+   {
+    "file_id": "IN-01",
+    "matches": true,
+    "relative_path": "source_data/recon_calendar_2026-09.csv",
+    "sha256_actual": "e9ef76e28ab7582f348a4917ae45e0e565194a1e4c51dff2bb2d3898f81a6589",
+    "sha256_manifest": "e9ef76e28ab7582f348a4917ae45e0e565194a1e4c51dff2bb2d3898f81a6589"
+   },
+   {
+    "file_id": "IN-02",
+    "matches": true,
+    "relative_path": "source_data/account_inventory.csv",
+    "sha256_actual": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d",
+    "sha256_manifest": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d"
+   },
+   {
+    "file_id": "IN-03",
+    "matches": true,
+    "relative_path": "source_data/client_balance_snapshots_2026-09.csv",
+    "sha256_actual": "d28ff85d5871975d2f7231bacbd88179d9861b8b68003b793e21893c9b09dddc",
+    "sha256_manifest": "d28ff85d5871975d2f7231bacbd88179d9861b8b68003b793e21893c9b09dddc"
+   },
+   {
+    "file_id": "IN-04",
+    "matches": true,
+    "relative_path": "source_data/unallocated_register_2026-09.csv",
+    "sha256_actual": "cd04ee276180d35e21710f5f161dafab33c564ba567291cd83ab79add7fdf0bb",
+    "sha256_manifest": "cd04ee276180d35e21710f5f161dafab33c564ba567291cd83ab79add7fdf0bb"
+   },
+   {
+    "file_id": "IN-05",
+    "matches": true,
+    "relative_path": "source_data/internal_recon_records_2026-09.csv",
+    "sha256_actual": "450d8977bcda98ee2a233dcc207ebeb0426a9e70d7d1b1d0bd8094176dd9d617",
+    "sha256_manifest": "450d8977bcda98ee2a233dcc207ebeb0426a9e70d7d1b1d0bd8094176dd9d617"
+   },
+   {
+    "file_id": "IN-06",
+    "matches": true,
+    "relative_path": "source_data/external_recon_records_2026-09.csv",
+    "sha256_actual": "b18dd5df473a66580b9b75747aebbf2b0b51e8bcac01816a0b1a219154e7ebf5",
+    "sha256_manifest": "b18dd5df473a66580b9b75747aebbf2b0b51e8bcac01816a0b1a219154e7ebf5"
+   },
+   {
+    "file_id": "IN-07",
+    "matches": true,
+    "relative_path": "source_data/bank_balance_confirmations_2026-09.csv",
+    "sha256_actual": "1d9e3ba50d2ec73d0925e7d045466cd24b04b00a075f9c0c6409deec3c60f73c",
+    "sha256_manifest": "1d9e3ba50d2ec73d0925e7d045466cd24b04b00a075f9c0c6409deec3c60f73c"
+   },
+   {
+    "file_id": "IN-08",
+    "matches": true,
+    "relative_path": "source_data/bank_statements_eod_2026-09.csv",
+    "sha256_actual": "40de6ca1894c81636ca01d843cfebe51e1498db2af3e3fd582e6582efb3b8f67",
+    "sha256_manifest": "40de6ca1894c81636ca01d843cfebe51e1498db2af3e3fd582e6582efb3b8f67"
+   },
+   {
+    "file_id": "IN-09",
+    "matches": true,
+    "relative_path": "source_data/bank_statement_entries_2026-09.csv",
+    "sha256_actual": "28df3e2a115a2d8b88115cd8c6dae39c8a3d71124b99641ee4846a68c18f54b0",
+    "sha256_manifest": "28df3e2a115a2d8b88115cd8c6dae39c8a3d71124b99641ee4846a68c18f54b0"
+   },
+   {
+    "file_id": "IN-10",
+    "matches": true,
+    "relative_path": "source_data/sga_cashbook_entries_2026-09.csv",
+    "sha256_actual": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7",
+    "sha256_manifest": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7"
+   },
+   {
+    "file_id": "IN-11",
+    "matches": true,
+    "relative_path": "source_data/transactions_2026-09.csv",
+    "sha256_actual": "8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202",
+    "sha256_manifest": "8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202"
+   },
+   {
+    "file_id": "IN-12",
+    "matches": true,
+    "relative_path": "source_data/settlement_batches_2026-09.csv",
+    "sha256_actual": "2e25a4fdee7179e965f9c2ec48f56331dac31ce6aaae1840002bc54178caef87",
+    "sha256_manifest": "2e25a4fdee7179e965f9c2ec48f56331dac31ce6aaae1840002bc54178caef87"
+   },
+   {
+    "file_id": "IN-13",
+    "matches": true,
+    "relative_path": "source_data/settlement_lines_2026-09.csv",
+    "sha256_actual": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+    "sha256_manifest": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b"
+   },
+   {
+    "file_id": "IN-14",
+    "matches": true,
+    "relative_path": "source_data/discrepancy_log_2026-09.csv",
+    "sha256_actual": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "sha256_manifest": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06"
+   },
+   {
+    "file_id": "IN-15",
+    "matches": true,
+    "relative_path": "supporting_documents/ack_letter_SGA-GBP-01.pdf",
+    "sha256_actual": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742",
+    "sha256_manifest": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742"
+   },
+   {
+    "file_id": "IN-16",
+    "matches": true,
+    "relative_path": "supporting_documents/ack_letter_SGA-EUR-01.pdf",
+    "sha256_actual": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4",
+    "sha256_manifest": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4"
+   },
+   {
+    "file_id": "IN-17",
+    "matches": true,
+    "relative_path": "supporting_documents/safeguarding_reconciliation_policy_v1.2.pdf",
+    "sha256_actual": "b136586f843384284da370cedfe17637338e5e9d0bbc485d79b9e82c7de5c561",
+    "sha256_manifest": "b136586f843384284da370cedfe17637338e5e9d0bbc485d79b9e82c7de5c561"
+   },
+   {
+    "file_id": "IN-18",
+    "matches": true,
+    "relative_path": "supporting_documents/governance_register_2026-09.pdf",
+    "sha256_actual": "6c87f85feddcc31e60af000ccc782749ca6c105a986420d80510e1fd58c7acb4",
+    "sha256_manifest": "6c87f85feddcc31e60af000ccc782749ca6c105a986420d80510e1fd58c7acb4"
+   },
+   {
+    "file_id": "IN-19",
+    "matches": true,
+    "relative_path": "supporting_documents/rep027_submission_receipt_2026-08.pdf",
+    "sha256_actual": "91743fd3f1c8b8d681fda739dcaf566bd330e0f4eb19a54bce954d80392b550d",
+    "sha256_manifest": "91743fd3f1c8b8d681fda739dcaf566bd330e0f4eb19a54bce954d80392b550d"
+   }
+  ],
+  "intake": [
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-01",
+    "original_path": "IN-01__FV-3d18d3a83c.csv",
+    "reason": "identified by CSV header",
+    "sha256": "e9ef76e28ab7582f348a4917ae45e0e565194a1e4c51dff2bb2d3898f81a6589"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-02",
+    "original_path": "IN-02__FV-d3de34377e.csv",
+    "reason": "identified by CSV header",
+    "sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-03",
+    "original_path": "IN-03__FV-ce9ac751df.csv",
+    "reason": "identified by CSV header",
+    "sha256": "d28ff85d5871975d2f7231bacbd88179d9861b8b68003b793e21893c9b09dddc"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-04",
+    "original_path": "IN-04__FV-c68b224d9d.csv",
+    "reason": "identified by CSV header",
+    "sha256": "cd04ee276180d35e21710f5f161dafab33c564ba567291cd83ab79add7fdf0bb"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-05",
+    "original_path": "IN-05__FV-f5a1978c7d.csv",
+    "reason": "identified by CSV header",
+    "sha256": "450d8977bcda98ee2a233dcc207ebeb0426a9e70d7d1b1d0bd8094176dd9d617"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-06",
+    "original_path": "IN-06__FV-3616a281a4.csv",
+    "reason": "identified by CSV header",
+    "sha256": "b18dd5df473a66580b9b75747aebbf2b0b51e8bcac01816a0b1a219154e7ebf5"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-07",
+    "original_path": "IN-07__FV-68a76de168.csv",
+    "reason": "identified by CSV header",
+    "sha256": "1d9e3ba50d2ec73d0925e7d045466cd24b04b00a075f9c0c6409deec3c60f73c"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-08",
+    "original_path": "IN-08__FV-a015ef3f1f.csv",
+    "reason": "identified by CSV header",
+    "sha256": "40de6ca1894c81636ca01d843cfebe51e1498db2af3e3fd582e6582efb3b8f67"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-09",
+    "original_path": "IN-09__FV-7b1aa493eb.csv",
+    "reason": "identified by CSV header",
+    "sha256": "28df3e2a115a2d8b88115cd8c6dae39c8a3d71124b99641ee4846a68c18f54b0"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-10",
+    "original_path": "IN-10__FV-811b1702fb.csv",
+    "reason": "identified by CSV header",
+    "sha256": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-11",
+    "original_path": "IN-11__FV-005fe05702.csv",
+    "reason": "identified by CSV header",
+    "sha256": "8832aa64dbd8c5b4c5882259ff6848c89d36e79ec140109b83f44898df2ab202"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-12",
+    "original_path": "IN-12__FV-d890636b2b.csv",
+    "reason": "identified by CSV header",
+    "sha256": "2e25a4fdee7179e965f9c2ec48f56331dac31ce6aaae1840002bc54178caef87"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-13",
+    "original_path": "IN-13__FV-3bf783dcee.csv",
+    "reason": "identified by CSV header",
+    "sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-14",
+    "original_path": "IN-14__FV-d4f250cf85.csv",
+    "reason": "identified by CSV header",
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-15",
+    "original_path": "IN-15__FV-2859b59af7.pdf",
+    "reason": "identified by PDF key details",
+    "sha256": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-16",
+    "original_path": "IN-16__FV-601307e2e9.pdf",
+    "reason": "identified by PDF key details",
+    "sha256": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-17",
+    "original_path": "IN-17__FV-493fad1ef5.pdf",
+    "reason": "identified by PDF key details; policy v1.2 (SYNTHETIC_PROJECT_DOCUMENT) SELECTED for reconciliation: policy v1.2 (effective 2026-05-07) applies to September 2026",
+    "sha256": "b136586f843384284da370cedfe17637338e5e9d0bbc485d79b9e82c7de5c561"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-18",
+    "original_path": "IN-18__FV-470676f554.pdf",
+    "reason": "identified by PDF key details",
+    "sha256": "6c87f85feddcc31e60af000ccc782749ca6c105a986420d80510e1fd58c7acb4"
+   },
+   {
+    "decision": "ACCEPTED",
+    "file_id": "IN-19",
+    "original_path": "IN-19__FV-41d40ac2af.pdf",
+    "reason": "identified by PDF key details",
+    "sha256": "91743fd3f1c8b8d681fda739dcaf566bd330e0f4eb19a54bce954d80392b550d"
+   }
+  ],
+  "missing_evidence": {
+   "items": [],
+   "optional_not_provided": [],
+   "statement": "No required evidence is missing."
+  },
+  "processing_run_id": "RUN-75214c6daeccefb8"
+ },
+ "statements": {
+  "ai_disclaimer": "AI-generated content in this report (investigation assessments, observations, hypotheses and the closing summary) was produced by a language model from the supplied reconciliation and investigation records and validated by deterministic rules. It is an aid to human review, not an audit or compliance opinion.",
+  "closing_summary_notice": "AI-generated summary based only on the supplied reconciliation and investigation records. It is not an independent audit opinion, not a compliance certification, and does not resolve any exception.",
+  "generate_meaning": "GENERATE authorised assembly of this report. It does not resolve exceptions, prove hypotheses, certify a clean reconciliation or establish regulatory compliance.",
+  "not_a_compliance_opinion": "This pack presents deterministic checks of synthetic evidence. It is not a compliance opinion, does not establish operational correctness, and does not establish the cause of any exception.",
+  "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA (decision D6): all records, timings, references and fee treatments are illustrative conventions for the UC-042 POC, not confirmed Moorwand practice."
+ }
+}

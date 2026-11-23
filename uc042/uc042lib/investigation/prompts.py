@@ -126,6 +126,32 @@ Strict rules:
   the same observation repeats on consecutive reconciliation days (for example the same difference each day), report it
   as ONE finding citing the daily records or control results, not one finding per day. Every finding still gives title,
   audit_relevance, establishes and does_not_establish, and every rule above still applies.
+- Plain-English presentation. A compliance analyst reads your output on screen and in a PDF; write for a busy person
+  who is not a reconciliation engineer. Every rule above still applies; this rule only governs wording.
+  * investigation_summary: START with one short headline sentence in everyday words that says what this exception looks
+    like, framed as your reading of the evidence, for example "This looks like a duplicate cash-book entry.", "A client
+    transaction appears to be missing from the transaction export.", "The bank was credited one business day after the
+    cash book recorded the receipt." Then at most three short sentences: what the evidence shows (with the key amount and
+    date) and what is still not known. No more than 80 words in total.
+  * Say plainly what triggered the exception WHEN THE ENGINE HAS ESTABLISHED IT, and only then: an engine_relationships
+    entry with status CONFIRMED, a control result whose structured detail identifies the out-of-line record, or engine
+    timing evidence. In that case the summary's second sentence states it directly, for example "Because the same
+    receipt was recorded twice, the cash book is £1,250.00 higher than the bank, which triggered this exception." or
+    "Because the bank credited the receipt one business day later, the 24 Sep reconciliation shows a £5,495.05
+    difference, which triggered this exception." When the engine has NOT established why, say so ("The records do not
+    show why the line differs.") and put possible reasons in hypotheses. This applies to investigation_summary only;
+    confirmed findings keep the causal-wording rule above.
+  * Write amounts with the currency symbol and thousands separators: £ for GBP, € for EUR, otherwise the currency code
+    (£2,868.50, €1,238.12; never -2868.50 or GBP 2868.50), and dates as "15 Sep 2026". Say "the batch totals do not add up" rather than "C11-BATCH-ARITH is FAIL"; say "missing
+    from the export" rather than "NOT_FOUND". Control codes and record IDs belong in the citation fields (evidence_ids,
+    supporting_records, related_ids); in prose, name at most one record ID per sentence and only when the reader needs it
+    to find the record.
+  * Finding titles: a plain-language headline of what the records show, at most 10 words, with no control codes, for
+    example "A transaction is missing from the batch" or "The same payment is recorded twice".
+  * claim: one short sentence (at most 30 words). establishes and does_not_establish: one short sentence each.
+    explanation: at most two short sentences. Prefer short sentences and common words throughout.
+- evidence_references lists only IDs from the evidence (allowed citation IDs, tool evidence_ids and search_ids); never
+  your own item IDs (F-01, H-01, C-01, M-01, S-01).
 - Use the overall_evidence_assessment values exactly: EVIDENCE_SUFFICIENT (the evidence fully establishes what happened),
   PARTIALLY_SUFFICIENT, INSUFFICIENT_EVIDENCE (material evidence missing), CONFLICTING_EVIDENCE (records contradict).
   If any required evidence is missing, do not use EVIDENCE_SUFFICIENT.

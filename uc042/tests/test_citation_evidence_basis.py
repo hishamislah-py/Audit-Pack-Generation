@@ -229,7 +229,7 @@ class OrdinaryFindingsAreNotWeakened(unittest.TestCase):
 class SchemaPromptAndView(unittest.TestCase):
     def test_versions(self):
         self.assertEqual((config.PROMPT_VERSION, config.TOOLS_PROMPT_VERSION, config.FINDINGS_SCHEMA_VERSION),
-                         ("uc042-investigator-prompt/1.9", "uc042-investigator-prompt/2.9-tools", "uc042-investigation-findings/1.5"))
+                         ("uc042-investigator-prompt/1.11", "uc042-investigator-prompt/2.11-tools", "uc042-investigation-findings/1.5"))
 
     def test_strict_schema_requires_evidence_basis_from_the_model(self):
         finding = to_strict_json_schema(LLMInvestigationOutput)["$defs"]["ConfirmedFinding"]

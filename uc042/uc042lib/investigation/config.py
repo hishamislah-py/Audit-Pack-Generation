@@ -20,10 +20,14 @@ DET_WORKFLOW_VERSION = "uc042-investigation-graph/3.0-det"     # deterministic r
 # message (about 3 characters per token, as the tool loop estimates). Tools mode keeps its own per-request guard.
 ENV_SINGLE_REQUEST_MAX_INPUT_TOKENS = "UC042_SINGLE_REQUEST_MAX_INPUT_TOKENS"
 DEFAULT_SINGLE_REQUEST_MAX_INPUT_TOKENS = 150000
-PROMPT_VERSION = "uc042-investigator-prompt/1.9"              # 1.1: contradiction rules; 1.2: schema 1.4 explanatory fields;
+PROMPT_VERSION = "uc042-investigator-prompt/1.11"              # 1.1: contradiction rules; 1.2: schema 1.4 explanatory fields;
 # 1.3 / 2.3: the prompt names every causal phrase the findings validation refuses (validation.CAUSE_PATTERNS, unchanged);
 # 2.2 named only two of them, so a live investigation was refused for "due to" (12 Nov 2026).
-TOOLS_PROMPT_VERSION = "uc042-investigator-prompt/2.9-tools"
+TOOLS_PROMPT_VERSION = "uc042-investigator-prompt/2.11-tools"
+# 1.10 / 2.10-tools (23 Nov 2026, demo feedback): plain-English presentation rule (headline-first summary, amounts with
+# currency, no control codes in prose, short titles and sentences). Wording only; no validation rule changed.
+# 1.11 / 2.11-tools (23 Nov 2026, owner): the summary states what triggered the exception when the engine established it;
+# £/€ symbols; evidence_references never lists the output's own item IDs (validation now drops them with a note).
 # 1.9 / 2.9-tools (23 Nov 2026, live prompt-1.8 verification): engine relationships. The evidence of an enriched pack
 # carries engine_relationships (relationship register 1.1 with proofs); the prompt never mentioned them, so a live TC06-01
 # investigation called an engine-CONFIRMED relationship merely possible. Now: CONFIRMED = an engine result reported as a

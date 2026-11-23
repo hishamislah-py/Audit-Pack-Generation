@@ -225,9 +225,12 @@ def _s_outcome(f):
     cs = f["closing_summary"]
     if not f["exception_register"] and cs["status"] != "NOT_REQUIRED":
         out += _closing_summary_blocks(f)  # only possible for a pack assembled with a summary despite no exception
-    elif cs["status"] == "NOT_REQUIRED":
+    elif cs["status"] == "NOT_REQUIRED" and not f["exception_register"]:
         out.append(_para("No AI closing summary was required: no exceptions were raised and no AI investigation is included. "
                          "No AI request was made for this summary."))
+    elif cs["status"] == "NOT_REQUIRED":
+        out.append(_para("No AI closing summary is produced for this report. Each exception is reported with the engine's "
+                         "results, its AI investigation where one is included, and the analyst's decision and note."))
     else:
         out.append(_para("The AI-generated closing summary (or the statement that it is unavailable) is in "
                          "'Exceptions and investigations'."))
@@ -831,7 +834,8 @@ def _s_appendix(f):
     pairs = [("Status", cs["status"]), ("Summary schema", rec["summary_schema_version"]), ("Prompt version", cs["prompt_version"]),
              ("Input fingerprint", cs["source_fingerprint"]), ("Record SHA-256", cs["closing_summary_sha256"])]
     if cs["status"] == "NOT_REQUIRED":
-        pairs.append(("Provider request", "none: no AI closing summary was required (no exception, no included investigation)"))
+        pairs.append(("Provider request", "none: no AI closing summary was required (no exception, no included investigation)"
+                      if not f["exception_register"] else "none: the AI closing summary is not used"))
     else:
         pairs.append(("Provider / model", f"{_v(cs['provider'], 'none recorded')} {_v(cs['model'], '')}".strip()))
     if cs["status"] == "UNAVAILABLE":

@@ -5,6 +5,7 @@ fingerprinted. The assembler only accepts a supplied summary and re-checks its f
 The input contains no file paths, no dataset or scenario names and no raw evidence rows: only the deterministic summary,
 exception summaries and the selected, validated investigation content (with their reference IDs).
 """
+import os
 import hashlib
 import json
 import re
@@ -639,9 +640,27 @@ def unavailable_closing_summary(snapshot, reason, findings=()):
                           created_at=datetime.now(timezone.utc).isoformat(timespec="seconds"))
 
 
+# 23 Nov 2026 owner decision: the AI closing summary is not used. Each exception already carries its own AI
+# investigation and the analyst's ACCEPT / REJECT with the analyst's note, and the report carries the deterministic
+# outcome summary; a second AI text over the whole case was judged unnecessary. With this off, every pack records a
+# NOT_REQUIRED closing summary and no closing-summary AI request is ever made. Re-enable with the environment variable
+# RINGFENCE_AI_CLOSING_SUMMARY=on (the same switch the Ringfence app reads, so app and engine always agree), or by setting
+# AI_CLOSING_SUMMARY_ENABLED to True/False in code (None = read the environment; tests use this).
+AI_CLOSING_SUMMARY_ENABLED = None
+
+
+def ai_closing_summary_enabled():
+    if AI_CLOSING_SUMMARY_ENABLED is not None:
+        return bool(AI_CLOSING_SUMMARY_ENABLED)
+    return os.environ.get("RINGFENCE_AI_CLOSING_SUMMARY", "off").strip().lower() in ("on", "1", "true", "yes")
+
+
 def closing_summary_required(snapshot):
-    """An AI closing summary is required only when there is something for it to summarise beyond the deterministic
-    figures: at least one exception or at least one included (accepted) investigation. Final-pack schema 1.3."""
+    """An AI closing summary is required only when it is enabled (AI_CLOSING_SUMMARY_ENABLED) and there is something
+    for it to summarise beyond the deterministic figures: at least one exception or at least one included (accepted)
+    investigation. Final-pack schema 1.3."""
+    if not ai_closing_summary_enabled():
+        return False
     return bool(snapshot.pack["exception_register"]["exceptions"]) or bool(list(snapshot.accepted_ids))
 
 

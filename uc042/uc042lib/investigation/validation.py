@@ -264,7 +264,14 @@ def validate_output(out, packet, case):
     search_ids = {s["search_id"] for s in packet["searches"]}
     candidate_ids = {c["candidate_id"] for c in packet["candidate_relationships"]}
     cited = _cited(out)
-    unknown = sorted((cited | set(out.evidence_references)) - allowed)
+    # 23 Nov 2026 (live prompt 1.10, TC06-04): the model listed its OWN item IDs (F-01, H-01, C-01, M-01, S-01) in
+    # evidence_references. Those are not citations of anything; they are dropped by the normalisation below (refs =
+    # cited | allowed references) instead of refusing the whole investigation. A real unknown packet ID is still refused,
+    # and own IDs cited inside a finding's evidence fields are still refused (they are in `cited`).
+    own_ids = {f.finding_id for f in out.confirmed_findings} | {h.hypothesis_id for h in out.hypotheses} |         {c.item_id for c in out.contradictory_evidence} | {m.item_id for m in out.missing_evidence} |         {s.step_id for s in out.recommended_next_steps}
+    if set(out.evidence_references) & own_ids:
+        notes.append("evidence_references listed the output's own item IDs; they are not citations and were dropped")
+    unknown = sorted((cited | (set(out.evidence_references) - own_ids)) - allowed)
     if unknown:
         errors.append(f"cites IDs not present in the evidence packet: {unknown[:10]}")
     errors += _check_findings(out, evidence_classes(packet))  # schema 1.5: support, evidence basis, absence claims
