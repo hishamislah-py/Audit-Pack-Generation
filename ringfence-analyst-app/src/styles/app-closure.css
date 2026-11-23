@@ -185,3 +185,23 @@ button.rfe-cite:focus-visible { outline: 2px solid var(--focus-ring); outline-of
 .rf-signin .rf-login__form { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: none; }
 .rf-signin__note { margin: 0; font-size: 12px; line-height: 17px; color: #46505c; text-align: center; }
 .rf-signin__foot { font-size: 12px; color: #46505c; }
+
+/* Split sign-in: product story left, sign-in card right (navy palette) */
+.rf-signin--split { flex-direction: row; align-items: stretch; justify-content: stretch; gap: 0; padding: 0; background: #f4f6f9; }
+.rf-signin__hero { flex: 1.25 1 0; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 20px; padding: 56px 64px;
+  color: #e8eef5; background: radial-gradient(1200px 600px at 10% 0%, #2a4769 0%, rgba(42,71,105,0) 60%), linear-gradient(160deg, #1f3550 0%, #14243a 55%, #0e1a2a 100%); }
+.rf-signin__herobrand { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 700; color: #ffffff; }
+.rf-signin__chip { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border: 1px solid rgba(255,255,255,.25); border-radius: 999px; font-size: 12px; color: #d4dde8; background: rgba(255,255,255,.06); }
+.rf-signin__headline { margin: 8px 0 0; font-size: 44px; line-height: 52px; font-weight: 700; color: #ffffff; letter-spacing: -.01em; }
+.rf-signin__headline span { color: #9fb8d6; }
+.rf-signin__lede { margin: 0; max-width: 620px; font-size: 16px; line-height: 26px; color: #c9d4e1; }
+.rf-signin__features { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; max-width: 760px; margin-top: 12px; }
+.rf-signin__feature { padding: 18px 18px 16px; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; background: rgba(255,255,255,.04); }
+.rf-signin__fhead { display: flex; align-items: center; justify-content: space-between; }
+.rf-signin__ficon { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; background: rgba(255,255,255,.10); color: #ffffff; }
+.rf-signin__fstep { font-size: 12px; font-weight: 600; color: #8ea6c2; letter-spacing: .06em; }
+.rf-signin__ftitle { margin-top: 12px; font-size: 15px; font-weight: 700; color: #ffffff; }
+.rf-signin__ftext { margin-top: 4px; font-size: 13px; line-height: 20px; color: #b9c6d6; }
+.rf-signin__side { flex: 0 0 520px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 32px; background: #f7f8fa; }
+.rf-signin--split .rf-signin__card { box-shadow: 0 10px 34px rgba(24,33,44,.10); }
+@media (max-width: 1100px) { .rf-signin__hero { display: none; } .rf-signin__side { flex: 1 1 auto; } }

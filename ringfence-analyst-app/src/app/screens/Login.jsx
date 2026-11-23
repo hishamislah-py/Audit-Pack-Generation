@@ -31,7 +31,7 @@ export default function LoginScreen({ onSignIn, app, appError, kind, store }) {
   };
   if (auth.enabled) return <LoginFrame>
     <form className="rf-login__form" onSubmit={signIn} aria-labelledby="login-title" noValidate>
-      <div><h2 id="login-title" className="rf-signin__title">Sign in</h2><p className="rf-signin__sub">Use your analyst account.</p></div>
+      <div><h2 id="login-title" className="rf-signin__title">Welcome back</h2><p className="rf-signin__sub">Sign in to continue to Ringfence.</p></div>
       {error && <div role="alert"><Notice tone="danger" title="Sign-in failed" compact>{error}</Notice></div>}
       {appError && !error && <Notice tone="danger" title="The analyst identity could not be read" compact>{appError}</Notice>}
       <label className={'rf-field' + (error ? ' is-error' : '')}><span className="rf-signin__label">Email</span>
@@ -71,13 +71,31 @@ export default function LoginScreen({ onSignIn, app, appError, kind, store }) {
   }
 }
 
+const FEATURES = [
+  ['archive', 'Evidence intake', 'Customer ZIPs are read and mapped automatically. Anything unusual comes to you.'],
+  ['checklist', 'Daily reconciliation', 'Internal and external reconciliations checked for every day and account against fixed rules.'],
+  ['search', 'AI investigation', 'Each exception explained in plain English with the records behind it. You accept or reject.'],
+  ['filePdf', 'Audit pack', 'One click produces a short, signed-off PDF with every figure traced to its source.']
+];
+
 function LoginFrame({ children }) {
-  // One centred sign-in card (23 Nov 2026 owner request): no marketing panel, aligned on every screen size.
-  return <div className="rf-signin">
-    <div className="rf-signin__card">
-      <div className="rf-signin__brand"><Mark size={30} /><div><div className="rf-signin__name">Ringfence</div><div className="rf-signin__tag">Safeguarding reconciliation</div></div></div>
-      {children}
-    </div>
-    <div className="rf-signin__foot">Authorised users only · activity is recorded</div>
+  // Split sign-in (23 Nov 2026 owner request): what the product does on the left, the sign-in card on the right.
+  return <div className="rf-signin rf-signin--split">
+    <section className="rf-signin__hero" aria-label="About Ringfence">
+      <div className="rf-signin__herobrand"><Mark size={30} /><span>Ringfence</span></div>
+      <span className="rf-signin__chip"><Icon name="seal" size={12} />Safeguarding reconciliation</span>
+      <h1 className="rf-signin__headline">Client money, reconciled<br /><span>and ready for audit.</span></h1>
+      <p className="rf-signin__lede">Upload a customer’s evidence, let the engine reconcile every safeguarding account and client balance, review what the AI finds, and sign off an audit-ready pack, all in one workspace.</p>
+      <div className="rf-signin__features">{FEATURES.map(([icon, title, text], i) => <div key={title} className="rf-signin__feature">
+        <div className="rf-signin__fhead"><span className="rf-signin__ficon"><Icon name={icon} size={16} /></span><span className="rf-signin__fstep">{String(i + 1).padStart(2, '0')}</span></div>
+        <div className="rf-signin__ftitle">{title}</div><div className="rf-signin__ftext">{text}</div></div>)}</div>
+    </section>
+    <section className="rf-signin__side">
+      <div className="rf-signin__card">
+        <div className="rf-signin__brand"><Mark size={30} /><div><div className="rf-signin__name">Ringfence</div><div className="rf-signin__tag">Safeguarding reconciliation</div></div></div>
+        {children}
+      </div>
+      <div className="rf-signin__foot">Authorised users only · activity is recorded</div>
+    </section>
   </div>;
 }
