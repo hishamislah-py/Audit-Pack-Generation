@@ -3,7 +3,7 @@ of how assemble.py built the document; any problem prevents publication. Errors 
 import re
 import unicodedata
 
-from ..investigation.validation import CAUSE_PATTERNS, RESOLUTION_PATTERNS, claims_nonexistence, evidence_classes
+from ..investigation.validation import CAUSE_PATTERNS, asserts_resolution, claims_nonexistence, evidence_classes
 from .content import cited_ids
 from .model import (ACKNOWLEDGEMENT_TEXT, CURRENT_RENDERER_VERSION, FINAL_PACK_ID_RE, FINAL_PACK_SCHEMA_VERSION,
                     OUTCOME_FINAL_PACK_SCHEMA_VERSION, SUPPORTED_PACK_SCHEMAS)
@@ -166,7 +166,7 @@ def _text_checks(final):
             text = f"{f['title'] or ''} {f['description']} {f['establishes'] or ''}"
             if any(re.search(p, text, re.I) for p in CAUSE_PATTERNS):
                 errors.append(f"{f['ref']}: cause stated in a confirmed observation")
-            if any(re.search(p, text, re.I) for p in RESOLUTION_PATTERNS):
+            if asserts_resolution(text):   # the same negation-aware rule as investigation validation (23 Nov 2026)
                 errors.append(f"{f['ref']}: resolution stated in a confirmed observation")
     return errors
 

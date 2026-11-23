@@ -19,6 +19,33 @@ def claims_nonexistence(text):
     return any(not NEGATION_BEFORE.search(text[:m.start()]) for m in NONEXISTENCE_PATTERN.finditer(text))
 
 
+# Resolution claims, negation-aware (23 Nov 2026, live TC06-06 refusal of "It does not establish bank movement for this
+# settlement line or resolve the discrepancy"). A resolution pattern is NOT asserted only when, in the same clause, a VERB
+# negator governs it: "does not / cannot / never / neither ... nor / without ..." followed by the matched words, either
+# directly ("does not resolve the exception") or through or/nor coordination ("does not establish X or resolve Y"). Bare
+# "not"/"no" (for example "not material", "no evidence") never negate; a contrast word (but, however, yet, although ...) or
+# "and" between the negator and the match, or a clause break (. ; : ! ?), keeps the claim asserted. Every other resolution
+# rule is unchanged.
+_RES_NEGATOR = re.compile(r"\b(?:does not|do not|did not|doesn't|don't|didn't|cannot|can not|can't|could not|couldn't|"
+                          r"will not|won't|would not|wouldn't|may not|must not|should not|never|neither|nor|without)\b", re.I)
+_RES_BLOCK = re.compile(r"\b(?:but|however|yet|although|though|whereas|while|instead|and)\b", re.I)
+
+
+def asserts_resolution(text):
+    """True when `text` states or implies that an exception is resolved, closed or approved (RESOLUTION_PATTERNS), unless
+    that occurrence is negated as described above."""
+    for p in RESOLUTION_PATTERNS:
+        for m in re.finditer(p, text, re.I):
+            clause = re.split(r"[.;:!?]", text[:m.start()])[-1]
+            negators = list(_RES_NEGATOR.finditer(clause))
+            if negators:
+                gap = clause[negators[-1].end():]
+                if len(gap) <= 120 and not _RES_BLOCK.search(gap):
+                    continue                                   # negated occurrence: not a resolution claim
+            return True
+    return False
+
+
 # Reconciliation views, keyed by evidence-ID prefix (source file, or control-result check ID). Figures from different
 # views measure different things and may legitimately differ, so they cannot form a contradiction. IDs not listed here
 # (CONF-, IN-14 log entries, exceptions, other checks) are not judged by this rule.
@@ -79,7 +106,7 @@ def _check_explanations(out):
                 if m:
                     errors.append(f"{item}: {name} states a cause ('{m.group(0)}'); causes must be hypotheses")
                     break
-        if any(re.search(p, text, re.I) for p in RESOLUTION_PATTERNS):
+        if asserts_resolution(text):
             errors.append(f"{item}: {name} states or implies the exception is resolved, closed or approved")
         if claims_nonexistence(text):
             errors.append(f"{item}: {name} claims evidence does not exist; absence from the supplied data is only 'not found'")
@@ -233,10 +260,8 @@ def validate_output(out, packet, case):
             errors.append(f"{f.finding_id}: appears to substitute zero for a balance while evidence is missing")
     for text_name, text in [("investigation_summary", out.investigation_summary)] + \
                            [(f.finding_id, f"{f.claim} {f.explanation}") for f in out.confirmed_findings]:
-        for p in RESOLUTION_PATTERNS:
-            if re.search(p, text, re.I):
-                errors.append(f"{text_name}: states or implies the exception is resolved, closed or approved")
-                break
+        if asserts_resolution(text):
+            errors.append(f"{text_name}: states or implies the exception is resolved, closed or approved")
     texts = [("investigation_summary", out.investigation_summary)] + \
             [(f.finding_id, f"{f.claim} {f.explanation}") for f in out.confirmed_findings] + \
             [(m.item_id, m.description) for m in out.missing_evidence]
