@@ -74,12 +74,32 @@ def register_assessments(si):
         a(c["common_cause_id"], list(c["exception_ids"]), "UNVERIFIED", c["supporting_records"][:4], [], "MEDIUM",
           "SCRIPTED: " + c["proposed_common_cause"] + " may be a common cause; it is not established.",
           list(c["missing_evidence"]) or ["SCRIPTED: evidence that would confirm the common cause."])
+    if reg.get("confirmed_relationship_ids") is not None:   # input 1.4 / summary 1.3: common cause kept apart
+        for x in out:
+            x["common_cause_status"] = ("NOT_ESTABLISHED" if x["relationship_verdict"] != "UNVERIFIED" else "UNVERIFIED")
     return out
+
+
+def register_dispositions(si):
+    """Summary 1.3: ACKNOWLEDGED for every CONFIRMED relationship, copied from the register (the cautious default answer)."""
+    reg = si["relationship_register"]
+    if reg.get("confirmed_relationship_ids") is None:
+        return None
+    rels = {r["relationship_id"]: r for r in reg["relationships"]}
+    return [{"relationship_id": rid, "exception_ids": rels[rid]["exception_ids"],
+             "relationship_type": rels[rid]["relationship_type"], "disposition": "ACKNOWLEDGED",
+             "reason": "SCRIPTED: the engine's proof shows the exceptions share the cited record.",
+             "cited_evidence": (rels[rid]["proof"] or {}).get("records", [])[:3], "contradicting_evidence": [],
+             "missing_evidence": list((rels[rid]["proof"] or {}).get("not_established", [])), "why_engine_evidence_insufficient": "",
+             "confidence": "HIGH", "limitations": []} for rid in reg["confirmed_relationship_ids"]]
 
 
 def scripted(si, edit=None):
     def put(d):
         d["group_assessments"] = register_assessments(si)
+        disp = register_dispositions(si)
+        if disp is not None:
+            d["relationship_dispositions"] = disp
         if edit:
             edit(d)
     return summary_output(si, put)

@@ -396,7 +396,7 @@ class LiveTC06SummaryRefusal(unittest.TestCase):
     def test_prompt_1_4_states_the_citation_contract(self):
         from uc042lib.final_pack.model import SUMMARY_PROMPT_VERSION
         from uc042lib.final_pack.summary import SUMMARY_INSTRUCTIONS
-        self.assertEqual(SUMMARY_PROMPT_VERSION, "uc042-closing-summary-prompt/1.6")
+        self.assertEqual(SUMMARY_PROMPT_VERSION, "uc042-closing-summary-prompt/1.7")
         flat = " ".join(SUMMARY_INSTRUCTIONS.split())
         self.assertIn("allowed_refs (exception, investigation, finding, hypothesis, gap, conflict, next-step, group, candidate "
                       "and MISS- IDs) is the ONLY list for every source_refs", flat)
@@ -441,8 +441,11 @@ class RelationshipReasoning(unittest.TestCase):
         from uc042lib.final_pack.summary import SUMMARY_INSTRUCTIONS
         flat = " ".join(SUMMARY_INSTRUCTIONS.split())
         for needle in ("1. Origin:", "2. Connecting records:", "3. Shared keys:", "4. Chronology:", "5. Contradictions:",
-                       "6. Coincidence:", "7. Decide:", "Matching amounts, dates or labels are NEVER sufficient evidence",
-                       "supports a shared cause only if that linked record is itself the one that is out of line",
+                       "6. Coincidence:", "7. Decide.", "Matching amounts, dates or labels are NEVER sufficient evidence",
+                       # prompt 1.7 (23 Nov 2026): lineage connects exceptions (not "a shared cause") when the linked record is
+                       # the faulty one; step 7 separates detection record, faulty record, causing record and reason
+                       "connects exceptions only if that linked record is itself the one that is out of line",
+                       "Different detection records NEVER show that two exceptions are unrelated or have different causes",
                        "Never invent evidence or force a common cause"):
             self.assertIn(needle, flat)
 

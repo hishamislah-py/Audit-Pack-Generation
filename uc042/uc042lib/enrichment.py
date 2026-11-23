@@ -22,6 +22,7 @@ from decimal import Decimal
 from itertools import combinations
 
 from .money import batch_net_signed, parse_unsigned, signed
+from .relproof import make_proof
 from .structure import parse_ts
 
 PASS, FAIL, INSUF = "PASS", "FAIL", "INSUFFICIENT_EVIDENCE"
@@ -492,6 +493,7 @@ class CorrelationContext:
         self.eid_of_root = {x["root_cause"]: x["exception_id"] for x in exc}
         self.relationships, self._links, self.timing_traces = [], [], []
         self.txn_explained = set()
+        self._snapshot_proofs = {}
         self.snaps = _snap_index(v)
         self.batches = {b["batch_id"]: b for b in v.rows("IN-12")}
         self.lines = defaultdict(list)
@@ -508,10 +510,12 @@ class CorrelationContext:
         self._snapshot_lineage()
 
     # helpers
-    def _rel(self, a, b, link_type, strength, basis, cites, amounts=None, shared=()):
+    def _rel(self, a, b, link_type, strength, basis, cites, amounts=None, shared=(), rtype=None, proof=None):
+        # rtype / proof (evidence-bearing relationships, 23 Nov 2026): the relationship type and, for a CONFIRMED link, the
+        # structured proof of the confirmation (uc042lib.relproof); for CANDIDATE / REJECTED, the comparison that failed
         self.relationships.append({"exception_ids": sorted([a, b]), "link_type": link_type, "strength": strength,
                                    "basis": basis, "shared_records": list(shared), "amounts": amounts or {},
-                                   "evidence": [c for c in cites if c]})
+                                   "evidence": [c for c in cites if c], "relationship_type": rtype, "proof": proof})
         if strength == CONFIRMED and a != b:
             self._links.append((a, b, link_type, basis, [c for c in cites if c]))
 
@@ -589,9 +593,29 @@ class CorrelationContext:
                          f"(roll-forward - snapshot) is {ci['diff']}" +
                          (" — equal: the transaction-side discrepancy explains the roll-forward failure" if ok else
                           f" — not equal to the transaction-side discrepancy ({total}): unreconciled"))
+                tref = self.v.ref("IN-11", t)
+                proof = make_proof(
+                    "L4 TRANSACTION LINEAGE (G-08)", "TRANSACTION_LINEAGE", faulty_record=tref if ok else "",
+                    result="EQUAL" if ok else "NOT_EQUAL",
+                    quantities=[(f"transaction-side discrepancy ({what})", delta, tref)]
+                    + ([("transaction-side discrepancies in the window, total", total, "")] if len(ds) > 1 else [])
+                    + [(f"{ci['client']} roll-forward difference {ci['prev']}->{ci['cur']} (roll-forward - snapshot)", ci["diff"], ci["cites"][1])],
+                    calculation=(f"{t['txn_id']} (executed {t['executed_ts']}) is inside {ci['client']}'s roll-forward window "
+                                 f"{ci['prev']} 17:00 -> {ci['cur']} 17:00; transaction-side discrepancy {total} vs roll-forward "
+                                 f"difference {ci['diff']}: " + ("equal" if ok else "not equal")),
+                    chronology=[(t["executed_ts"][:10], f"{t['txn_id']} executed ({i})"),
+                                (ci["cur"], f"{ci['client']} roll-forward fails by {ci['diff']} ({y})")],
+                    established=[f"{t['txn_id']} is the record behind both {i} and {y}"] + (
+                        [f"its discrepancy ({total}) equals {ci['client']}'s roll-forward difference ({ci['diff']}), so "
+                         f"{ci['client']}'s snapshot is consistent with the bank and the transaction record is the one out of line"]
+                        if ok else []),
+                    not_established=[] if ok else ["that the transaction accounts for the whole roll-forward difference"],
+                    missing_evidence=["the corrected transaction amount from the transaction system"] if ok else
+                    ["the other movements in the roll-forward window"],
+                    records=[tref] + ci["cites"])
                 self._rel(i, y, "L4 TRANSACTION LINEAGE", CONFIRMED if ok else CANDIDATE, basis,
-                          [self.v.ref("IN-11", t)] + ci["cites"], {"transaction_side": str(total), "roll_forward_difference": str(ci["diff"])},
-                          [("IN-11", t["txn_id"])])
+                          [tref] + ci["cites"], {"transaction_side": str(total), "roll_forward_difference": str(ci["diff"])},
+                          [("IN-11", t["txn_id"])], "TRANSACTION_LINEAGE", proof)
 
     # L6 duplicate lineage (G-05)
     def _duplicate_lineage(self):
@@ -637,12 +661,30 @@ class CorrelationContext:
                     continue
                 total = sum((e for ts, e, _ in dups[acct] if ts <= pt), ZERO)
                 ok = total in measures
+                cref, yref = self.v.ref("IN-10", c), (self.rows_of[y][0]["evidence"].split(";")[0]).strip()
+                proof = make_proof(
+                    "L6 DUPLICATE LINEAGE (G-05)", "DUPLICATE_LINEAGE", faulty_record=cref if ok else "",
+                    result="EQUAL" if ok else "NOT_EQUAL",
+                    quantities=[(f"ledger effect of duplicate rows on {acct} up to {d} 17:00", total, cref)]
+                    + [(f"{ky} discrepancy measured by {y}", m, yref) for m in measures],
+                    calculation=(f"duplicate {key} posted {c['posted_ts']} (before the {d} 17:00 point); duplicate effect {total} vs "
+                                 f"{y}'s discrepancy {' or '.join(map(str, measures))}: " + ("equal" if ok else "not equal")),
+                    chronology=[(c["posted_ts"][:10], f"duplicate cash-book row {key} posted ({i})"),
+                                (d, f"{ky} on {acct} measures a discrepancy ({y})")],
+                    requirement_effect=(f"the duplicate inflates the {acct} cash-book balance (item A of the resource)"
+                                        if ky in ("INTERNAL_DIFFERENCE", "C05-RESOURCE") else ""),
+                    established=[f"duplicate cash-book row {key} is inside the {acct} ledger balance {y} measures"]
+                    + ([f"its effect ({total}) equals {y}'s discrepancy"] if ok else []),
+                    not_established=["why the row was posted twice"] if ok else ["that the duplicate accounts for the discrepancy"],
+                    missing_evidence=["the cash-book posting log for the duplicated row"],
+                    records=[cref, yref])
                 self._rel(i, y, "L6 DUPLICATE LINEAGE", CONFIRMED if ok else CANDIDATE,
                           f"duplicate cash-book row {key} (ledger effect {total if len(dups[acct]) > 1 else Decimal(dups[acct][0][1])}) is "
                           f"inside the {acct} ledger at the {d} point used by this check; its discrepancy "
                           + ("equals the duplicate's effect" if ok else f"({', '.join(map(str, measures))}) does not equal it ({total})"),
-                          [self.v.ref("IN-10", c)] + [(self.rows_of[y][0]["evidence"].split(";")[0]).strip()],
-                          {"duplicate_effect": str(total), "check_discrepancy": [str(m) for m in measures]}, [("IN-10", key)])
+                          [cref, yref],
+                          {"duplicate_effect": str(total), "check_discrepancy": [str(m) for m in measures]}, [("IN-10", key)],
+                          "DUPLICATE_LINEAGE", proof)
 
     # L5 timing trace (G-12) and traceability record
     def _timing_lineage(self):
@@ -696,6 +738,18 @@ class CorrelationContext:
                     shared = sorted(self.records[y] & keys)
                     if y != i and shared:
                         related.append(y)
+                        tcites = [v.ref("IN-10", c)] + ([v.ref("IN-09", b)] if b else [])
+                        proof = make_proof(
+                            "L5 TIMING TRACE (G-12)", "TIMING_TRACE", result="EQUAL" if covers else "PARTIAL",
+                            quantities=[(f"bank-ledger difference {acct} {d0}", amount, ""),
+                                        ("explained by timing items in window", explained, tcites[0])],
+                            calculation=f"timing items in window explain {explained} of the {d0} difference {amount}: "
+                                        + ("the whole difference" if covers else "part of it"),
+                            chronology=[(c["posted_ts"][:10], f"ledger entry {c['ledger_entry_id']} posted")]
+                            + ([(b["booking_ts"][:10], f"bank entry {b['bank_entry_id']} booked")] if b else []),
+                            established=[f"{i} and {y} share the timing record(s) {', '.join(f'{s}:{k}' for s, k in shared)}"],
+                            not_established=["timing evidence explains a difference; it never resolves it"],
+                            records=tcites)
                         self._rel(i, y, "L5 TIMING TRACE", CONFIRMED if covers else CANDIDATE,
                                   f"timing item {c['ledger_entry_id']}" + (f" / {b['bank_entry_id']}" if b else "") +
                                   f" (ref {c['payment_reference']}, {EVIDENCE_CLASS[it['status']].lower()}) is behind the {d0} "
@@ -722,11 +776,29 @@ class CorrelationContext:
                 if y1 in self.txn_explained or y2 in self.txn_explained:
                     continue
                 ok = a["diff"] != ZERO and b["diff"] == -a["diff"]
+                sref = self.v.ref("IN-03", snap)
+                proof = make_proof(
+                    "L7 SNAPSHOT LINEAGE", "SHARED_FAULTY_RECORD", faulty_record=sref if ok else "",
+                    result="EQUAL_AND_OPPOSITE" if ok else "NOT_REVERSED",
+                    quantities=[(f"{a['client']} roll-forward difference {a['prev']}->{a['cur']} (roll-forward - snapshot)", a["diff"], sref),
+                                (f"{a['client']} roll-forward difference {b['prev']}->{b['cur']} (roll-forward - snapshot)", b["diff"], sref),
+                                (f"snapshot {snap['snapshot_id']} balance", snap["balance"], sref)],
+                    calculation=(f"snapshot {snap['snapshot_id']} closes the {a['prev']}->{a['cur']} roll-forward (difference {a['diff']}) "
+                                 f"and opens the {b['prev']}->{b['cur']} roll-forward (difference {b['diff']}); "
+                                 + (f"{a['diff']} + {b['diff']} = 0.00: equal and opposite" if ok else "they do not reverse")),
+                    chronology=[(a["cur"], f"{a['client']}'s snapshot does not match its roll-forward ({y1})"),
+                                (b["cur"], f"the next roll-forward, opened from that snapshot, reverses by {b['diff']} ({y2})")],
+                    established=([f"snapshot {snap['snapshot_id']} is out of line by {-a['diff']} (snapshot - roll-forward): the "
+                                  "surrounding snapshots and movements agree, only this snapshot does not"] if ok else
+                                 [f"snapshot {snap['snapshot_id']} is shared by both roll-forwards"]),
+                    not_established=[] if ok else ["that the snapshot is the faulty record"],
+                    missing_evidence=["the client-balance system's record of how the snapshot was produced"],
+                    records=[sref])
                 self._rel(y1, y2, "L7 SNAPSHOT LINEAGE", CONFIRMED if ok else CANDIDATE,
                           f"snapshot {snap['snapshot_id']} closes one roll-forward ({a['diff']}) and opens the next ({b['diff']})"
                           + ("; equal and opposite: the snapshot is the common input" if ok else "; the differences do not reverse"),
-                          [self.v.ref("IN-03", snap)], {"first": str(a["diff"]), "second": str(b["diff"])},
-                          [("IN-03", snap["snapshot_id"])])
+                          [sref], {"first": str(a["diff"]), "second": str(b["diff"])},
+                          [("IN-03", snap["snapshot_id"])], "SHARED_FAULTY_RECORD", proof)
 
     # F. L3(b) restriction
     def allow_snapshot_lineage(self, x, y):
@@ -737,7 +809,7 @@ class CorrelationContext:
         if y in self.txn_explained:
             self._rel(x, y, "L3 LINEAGE (b)", REJECTED,
                       f"{ci['client']}'s roll-forward failure on {ci['cur']} is explained by a transaction-side discrepancy, so its "
-                      "snapshot is not shown to be a faulty input to the requirement", ci["cites"])
+                      "snapshot is not shown to be a faulty input to the requirement", ci["cites"], rtype="CAUSAL_PROPAGATION")
             return False
         kind, parts = self.kind[x], self.by_id[x]["root_cause"].split("|")
         if kind == "INTERNAL_DIFFERENCE":
@@ -752,11 +824,95 @@ class CorrelationContext:
         pool = sum((-c["diff"] for j, c in self.cbal.items() if j not in self.txn_explained and c["ccy"] == ci["ccy"]
                     and c["cur"] == ci["cur"]), ZERO)
         if err == target or pool == target:
+            # evidence-bearing relationships (23 Nov 2026): keep the proof of the SUCCESSFUL check, which was discarded before
+            self._snapshot_proofs[(x, y)] = self._snapshot_requirement_proof(x, y, kind, r, target, err, pool)
             return True
         self._rel(x, y, "L3 LINEAGE (b)", CANDIDATE,
                   f"{ci['client']}'s {ci['cur']} snapshot is an input to the {ci['ccy']} requirement, but its error ({err}) does not "
-                  f"reconcile with the {kind} amount ({target})", ci["cites"], {"snapshot_error": str(err), "target": str(target)})
+                  f"reconcile with the {kind} amount ({target})", ci["cites"], {"snapshot_error": str(err), "target": str(target)},
+                  rtype="CAUSAL_PROPAGATION")
         return False
+
+    def snapshot_lineage_proof(self, x, y):
+        """The proof recorded when allow_snapshot_lineage(x, y) confirmed the link; None when no quantitative check ran."""
+        return self._snapshot_proofs.get((x, y))
+
+    def _snapshot_requirement_proof(self, x, y, kind, r, target, err, pool):
+        """G-18 confirmation: the client snapshot behind roll-forward failure y is out of line by exactly the amount of the
+        requirement-side exception x, and no transaction-side discrepancy explains it. Figures are the engine's own results."""
+        v, ci = self.v, self.cbal[y]
+        ccy, d, client = ci["ccy"], ci["cur"], ci["client"]
+        scope = f"{d}/{ccy}"
+        snap = self.snaps[(ccy, client)][d]
+        sref = v.ref("IN-03", snap)
+        rf = self._first(y, "CBAL-ROLLFWD")
+        r04, r05, r06 = _result(v, "C04-REQUIREMENT", scope), _result(v, "C05-RESOURCE", scope), _result(v, "C06-DIFFERENCE", scope)
+        run = next((row for row in v.rows("IN-05") if row["recon_date"] == str(d) and row["currency"] == ccy), None)
+        rref = v.ref("IN-05", run) if run else ""
+        resource = ((r05 or {}).get("structured") or {}).get("resource")
+        exact = err == target
+        peers = [(j, c) for j, c in self.cbal.items() if j != y and c["ccy"] == ccy and c["cur"] == d]
+        q = [(f"{client} snapshot balance {d} (reported)", rf["reported"] if rf else snap["balance"], sref),
+             (f"{client} roll-forward balance {d} (previous snapshot + movements)", rf["computed"] if rf else "", ci["cites"][0]),
+             (f"snapshot error (snapshot - roll-forward)", err, sref)]
+        if r04 and r04.get("computed"):
+            q.append((f"{ccy} requirement {d} (recomputed from the snapshots)", r04["computed"], rref))
+            q.append((f"{ccy} requirement {d} (reported)", r04["reported"], rref))
+        if resource:
+            q.append((f"{ccy} resource {d}", resource, rref))
+        if r06 and r06.get("computed"):
+            q.append((f"internal difference {d} (resource - requirement)", r06["computed"], rref))
+        what = ("requirement in excess of the resource (= - internal difference)" if kind == "INTERNAL_DIFFERENCE"
+                else "requirement recomputed - reported")
+        q.append((f"{what}: the amount the snapshot error must explain", target, rref))
+        if not exact:
+            q.append((f"pooled error of unexplained {ccy} snapshots on {d}", pool, ""))
+        effect = ""
+        try:
+            bal, rfb = Decimal(rf["reported"]), Decimal(rf["computed"])
+            if kind == "INTERNAL_DIFFERENCE" and r04 and r04.get("computed") and resource and bal >= ZERO and rfb >= ZERO:
+                req = Decimal(r04["computed"])
+                effect = (f"the {ccy} requirement on {d} ({req}) is the sum of the client snapshots and includes {client}'s "
+                          f"snapshot balance {bal}; with {client}'s roll-forward balance {rfb} instead it would be {req - err}, "
+                          f"against a resource of {resource}: the snapshot error {err} is " +
+                          ("the whole internal difference" if exact else "part of the pooled snapshot error"))
+        except (TypeError, ValueError, ArithmeticError, KeyError):
+            effect = ""
+        if not effect:
+            effect = f"{client}'s {d} snapshot is an input to the {ccy} requirement for {d}"
+        reversal = [rel for rel in self.relationships if rel["link_type"] == "L7 SNAPSHOT LINEAGE" and rel["strength"] == CONFIRMED
+                    and y in rel["exception_ids"]]
+        reversed_by = [o for rel in reversal for o in rel["exception_ids"]
+                       if o != y and o in self.cbal and self.cbal[o]["prev"] == ci["cur"]]
+        corroboration = [f"{o}: the next roll-forward ({self.cbal[o]['prev']}->{self.cbal[o]['cur']}), opened from the same snapshot, "
+                         f"reverses by {self.cbal[o]['diff']} (equal and opposite, engine L7 CONFIRMED)" for o in reversed_by]
+        excluded = [f"{c['client']} ({j}) has a roll-forward difference on {d} too, but it is explained transaction-side, so its "
+                    "snapshot is excluded" for j, c in peers if j in self.txn_explained]
+        others = [f"{c['client']} ({j}) snapshot error {-c['diff']}" for j, c in peers if j not in self.txn_explained]
+        established = [f"{client}'s {d} snapshot {snap['snapshot_id']} is overstated by {err} against its roll-forward"
+                       if err > ZERO else f"{client}'s {d} snapshot {snap['snapshot_id']} is understated by {-err} against its roll-forward",
+                       (f"the snapshot error {err} equals the {what} ({target}) exactly" if exact else
+                        f"the pooled error of the unexplained {ccy} snapshots ({pool}) equals the {what} ({target})"),
+                       f"no transaction-side discrepancy explains {client}'s roll-forward failure",
+                       f"{y} is the failed roll-forward of this snapshot and {x} is the {ccy} result that includes it: one faulty "
+                       "record behind both exceptions (they were detected by different checks on different records)"]
+        if reversed_by:
+            established.append("the next day's equal and opposite reversal shows the snapshot itself is the faulty record")
+        return make_proof(
+            "L3 LINEAGE (b) snapshot in requirement (G-18)", "CAUSAL_PROPAGATION", faulty_record=sref,
+            result="EQUAL" if exact else "POOL_EQUAL", quantities=q,
+            calculation=(f"snapshot error = {rf['reported'] if rf else '?'} - {rf['computed'] if rf else '?'} = {err}; "
+                         + (f"{what} = {target}; equal" if exact else f"pooled snapshot error {pool} = {what} {target}")),
+            chronology=[(ci["prev"], f"{client}'s previous snapshot (opening of the roll-forward)"),
+                        (d, f"{client}'s snapshot fails its roll-forward by {ci['diff']} ({y})"),
+                        (d, f"the {ccy} requirement includes that snapshot; {kind} {target} ({x})")]
+            + [(self.cbal[o]["cur"], f"the next roll-forward reverses by {self.cbal[o]['diff']} ({o})") for o in reversed_by],
+            requirement_effect=effect, corroboration=corroboration + excluded,
+            established=established,
+            not_established=([] if exact else [f"how the pooled error divides between {client} and: {'; '.join(others)}"]),
+            missing_evidence=[f"how {client}'s {d} snapshot was produced (client-balance system extract or adjustment log)"],
+            limitations=(["exclusivity: transaction-explained snapshots are excluded; " + "; ".join(excluded)] if excluded else []),
+            records=[sref, ci["cites"][0]] + ([rref] if rref else []))
 
     def links(self):
         return list(self._links)
@@ -833,7 +989,18 @@ class CorrelationContext:
                              ". Settlement lines carry no client: the attribution rests on amounts only.")
                 self._rel(i, y, "LINE-SUM MATCH", CANDIDATE, rel_basis, [v.ref("IN-13", ln) for ln in s] + ci["cites"],
                           {"lines_total": str(sum((need[ln["line_id"]] for ln in s), ZERO)), "roll_forward_difference": str(ci["diff"]),
-                           "combinations": len(subsets)})
+                           "combinations": len(subsets)}, rtype="AMOUNT_COMBINATION", proof=make_proof(
+                    "LINE-SUM MATCH", "AMOUNT_COMBINATION", result="SUM_EQUAL" if unique else "SUM_EQUAL_AMBIGUOUS",
+                    quantities=[(f"settlement line {ln['line_id']} ({ln['txn_id']}, absent from the transaction export)",
+                                 need[ln["line_id"]], v.ref("IN-13", ln)) for ln in s]
+                    + [(f"{ci['client']} roll-forward difference {ci['prev']}->{ci['cur']}", ci["diff"], ci["cites"][1])],
+                    calculation=f"{' + '.join(str(need[ln['line_id']]) for ln in s)} = {ci['diff']}"
+                    + ("" if unique else f" ({len(subsets)} different combinations match)"),
+                    established=[f"the amounts of {desc} sum to {ci['client']}'s roll-forward difference"],
+                    not_established=["that the missing transactions belong to this client (settlement lines carry no client)"],
+                    missing_evidence=["the client of each missing transaction"],
+                    limitations=["amounts only: a candidate, never a confirmed relationship"],
+                    records=[v.ref("IN-13", ln) for ln in s] + ci["cites"]))
                 self.relationships[-1]["candidate_basis"] = "LINE_SUM_MATCH" if unique else "LINE_SUM_MATCH_AMBIGUOUS"
             unique = {y: ss[0] for y, ss in matches.items() if len(ss) == 1}
             used = [ln["line_id"] for s in unique.values() for ln in s]

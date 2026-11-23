@@ -45,7 +45,11 @@ OUTCOME_SUMMARY_VERSION = "uc042-outcome-summary/1.0"
 # 1.2 (23 Nov 2026, Session 1 TMS demo): the output carries a required group_assessments section (one assessment per engine
 # investigation group and per candidate relationship supplied). Stored 1.0 / 1.1 summaries have no such field: it is omitted
 # when absent, so their bytes, hashes and renderings are unchanged.
-SUMMARY_SCHEMA_VERSION = "uc042-closing-summary/1.2"
+# 1.3 (23 Nov 2026, evidence-bearing relationships): each group assessment also carries common_cause_status (whether an
+# underlying common cause is established - a question SEPARATE from whether the exceptions are related), and the output
+# carries relationship_dispositions: one ACKNOWLEDGED / CHALLENGED record per CONFIRMED relationship of the engine's register
+# (a challenge never changes the engine's status). Both are omitted when absent, so stored 1.0-1.2 summaries keep their bytes.
+SUMMARY_SCHEMA_VERSION = "uc042-closing-summary/1.3"
 # 1.4 (23 Nov 2026): the two ID lists are spelt out (allowed_refs only for source_refs; allowed_source_refs only for group
 # assessment evidence), unverified_hypotheses must cite a hypothesis or CAND- ref, related_exception_ids guidance; live TC06
 # refusal (an unverified_hypotheses item cited source records). Validation unchanged.
@@ -58,7 +62,11 @@ SUMMARY_SCHEMA_VERSION = "uc042-closing-summary/1.2"
 # is itself out of line. Validation unchanged.
 # 1.6 (23 Nov 2026): relationship_register interpretation (CONFIRMED / CANDIDATE / REJECTED relationships; CC- common causes
 # are assessment units, at most UNVERIFIED). Validation adds: CC- units; no EVIDENCE_BACKED over a register-REJECTED pair.
-SUMMARY_PROMPT_VERSION = "uc042-closing-summary-prompt/1.6"
+# 1.7 (23 Nov 2026, evidence-bearing relationships): step 7 rewritten (detection record vs faulty record vs the record that
+# caused the discrepancy vs the reason for the fault; different detection records never imply different causes); the engine's
+# proofs are interpreted, not rediscovered; relationship_dispositions (ACKNOWLEDGED / CHALLENGED) and common_cause_status.
+# Validation adds the relationship-disposition and common-cause rules (summary.py _check_relationship_dispositions).
+SUMMARY_PROMPT_VERSION = "uc042-closing-summary-prompt/1.7"
 # 1.1 (23 Nov 2026): each exception, investigation group, candidate relationship, accepted confirmed finding and conflict
 # also carries its SOURCE evidence record IDs (only IDs of the pack's evidence register), group links / candidate detail
 # text, and allowed_source_refs (their union): the only IDs a group assessment may cite as supporting or contradicting
@@ -68,9 +76,16 @@ SUMMARY_PROMPT_VERSION = "uc042-closing-summary-prompt/1.6"
 # 1.3 (23 Nov 2026): relationship_register (engine relationship discovery: relationships with status, basis, amounts,
 # supporting / contradicting source records; common causes with confirmed facts, unverified inferences, missing evidence),
 # present only for enriched engine runs.
-SUMMARY_INPUT_VERSION = "uc042-closing-summary-input/1.3"
+# 1.4 (23 Nov 2026): the relationship register 1.1 fields (relationship_type, engine_status, proof with source records,
+# limitations) and confirmed_relationship_ids (the relationships that need a disposition). Absent for default-rule runs.
+SUMMARY_INPUT_VERSION = "uc042-closing-summary-input/1.4"
 RELATIONSHIP_VERDICTS = ("EVIDENCE_BACKED", "UNVERIFIED", "COINCIDENCE_REJECTED")
 ASSESSMENT_CONFIDENCE = ("LOW", "MEDIUM", "HIGH")
+# Summary schema 1.3: the common-cause question, kept apart from relationship_verdict. EVIDENCE_BACKED = the exceptions share
+# one originating fault shown by CONFIRMED (acknowledged) engine relationships; UNVERIFIED = plausible, not established;
+# NOT_ESTABLISHED = no common cause is supported (always for a rejected relationship).
+COMMON_CAUSE_STATUSES = ("EVIDENCE_BACKED", "UNVERIFIED", "NOT_ESTABLISHED")
+RELATIONSHIP_DISPOSITIONS = ("ACKNOWLEDGED", "CHALLENGED")
 SUPPORTED_PACK_SCHEMAS = {"uc042-pack/0.1"}
 
 FINAL_PACK_ID_RE = re.compile(r"^FAP-[A-Z0-9]{1,12}-PER-\d{4}-\d{2}-v\d{1,4}-[0-9a-f]{12}$")
@@ -169,6 +184,14 @@ class PriorDecision(_Strict):
     comment: str = ""
 
 
+class ChallengeReview(_Strict):
+    """Summary schema 1.3: the analyst's explanation on an AI CHALLENGE of an engine-CONFIRMED relationship. It is recorded
+    beside the engine's status and the AI's challenge; it never changes the engine's status (no position does)."""
+    relationship_id: str = Field(min_length=1)
+    analyst_position: Literal["ENGINE_RELATIONSHIP_UPHELD", "AI_CHALLENGE_SUPPORTED", "FURTHER_EVIDENCE_REQUIRED"]
+    analyst_explanation: str = Field(min_length=10)
+
+
 class ReviewRecord(_Strict):
     """The human decision, supplied by the caller (later: the review service). Never invented by the library."""
     review_decision_id: str = Field(min_length=1)
@@ -183,12 +206,22 @@ class ReviewRecord(_Strict):
     closing_summary_sha256: str = Field(pattern=SHA256_RE.pattern, description="Hash of the closing summary the reviewer read")
     acknowledged_summary_unavailable: bool = False
     prior_decisions: list[PriorDecision] = Field(default_factory=list)
+    # Optional (23 Nov 2026): the analyst's explanation per AI-CHALLENGED relationship. Omitted when empty, so every review
+    # record without it serialises exactly as before.
+    relationship_challenge_reviews: list[ChallengeReview] = Field(default_factory=list)
 
     @field_validator("decided_at")
     @classmethod
     def _iso(cls, v):
         datetime.fromisoformat(v)
         return v
+
+    @model_serializer(mode="wrap")
+    def _omit_empty_challenge_reviews(self, handler):
+        data = handler(self)
+        if isinstance(data, dict) and not data.get("relationship_challenge_reviews"):
+            data.pop("relationship_challenge_reviews", None)
+        return data
 
 
 class GenerationInfo(_Strict):
@@ -240,6 +273,43 @@ class GroupAssessment(_Strict):
     analyst_action: str = Field(min_length=10, description="What the analyst should check or do next (a recommendation)")
     confidence: Literal[ASSESSMENT_CONFIDENCE] = Field(description="Confidence in the verdict (an UNVERIFIED verdict is never HIGH)")
     rationale: str = Field(min_length=10, description="Why this verdict, referring to the cited records")
+    # Summary schema 1.3 (None in stored 1.2 assessments: omitted when serialised, so their bytes and hashes are unchanged)
+    common_cause_status: Optional[Literal[COMMON_CAUSE_STATUSES]] = Field(
+        default=None, description="Separate from relationship_verdict: is an underlying COMMON CAUSE established? "
+                                  "EVIDENCE_BACKED only when every exception of this assessment is connected through "
+                                  "acknowledged CONFIRMED engine relationships to one originating faulty record; UNVERIFIED "
+                                  "when plausible but not established; NOT_ESTABLISHED when no common cause is supported "
+                                  "(always for COINCIDENCE_REJECTED). Exceptions can be related (EVIDENCE_BACKED) while the "
+                                  "reason for the fault stays NOT_ESTABLISHED")
+
+    @model_serializer(mode="wrap")
+    def _omit_absent_common_cause_status(self, handler):
+        data = handler(self)
+        if isinstance(data, dict) and data.get("common_cause_status") is None:
+            data.pop("common_cause_status", None)
+        return data
+
+
+class RelationshipDisposition(_Strict):
+    """Summary schema 1.3: the AI's explicit position on ONE CONFIRMED relationship of the engine's register. ACKNOWLEDGED keeps
+    the engine's relationship as it is; CHALLENGED records a reasoned, cited disagreement for the analyst. Neither changes the
+    engine's status: the register is reproduced unchanged and a challenge is shown separately ("AI challenge - not accepted by
+    the engine"). Validated deterministically in summary._check_relationship_dispositions."""
+    relationship_id: str = Field(description="The REL- ID of a CONFIRMED relationship from confirmed_relationship_ids")
+    exception_ids: list[str] = Field(min_length=2, description="Exactly the engine's exception_ids of that relationship")
+    relationship_type: str = Field(description="Exactly the engine's relationship_type of that relationship")
+    disposition: Literal[RELATIONSHIP_DISPOSITIONS] = Field(
+        description="ACKNOWLEDGED: the engine's proof is accepted. CHALLENGED: a formal, cited disagreement (never on the "
+                    "ground that the exceptions were detected on different records)")
+    reason: str = Field(min_length=10, description="Why: for ACKNOWLEDGED, what the proof shows; for CHALLENGED, the challenge")
+    cited_evidence: list[str] = Field(description="Source record IDs from allowed_source_refs relied on")
+    contradicting_evidence: list[str] = Field(description="CHALLENGED only: source record IDs that contradict the engine's "
+                                              "proof (not merely the exceptions' own detection records); empty when ACKNOWLEDGED")
+    missing_evidence: list[str] = Field(description="Evidence that would settle the point (plain statements)")
+    why_engine_evidence_insufficient: str = Field(description="CHALLENGED only: why the engine's proof does not establish the "
+                                                  "relationship; an empty string when ACKNOWLEDGED")
+    confidence: Literal[ASSESSMENT_CONFIDENCE] = Field(description="Confidence in this disposition")
+    limitations: list[str] = Field(description="Limitations of this disposition (required for CHALLENGED)")
 
 
 class ClosingSummaryOutput(_Strict):
@@ -257,12 +327,19 @@ class ClosingSummaryOutput(_Strict):
     group_assessments: Optional[list[GroupAssessment]] = Field(
         default=None, description="One assessment per investigation group and candidate relationship in the input "
                                   "(an empty list when the input has none)")
+    # Summary schema 1.3: one disposition per CONFIRMED relationship of the input's relationship register (input 1.4);
+    # None for summaries written without a register 1.1 (omitted when serialised).
+    relationship_dispositions: Optional[list[RelationshipDisposition]] = Field(
+        default=None, description="One ACKNOWLEDGED or CHALLENGED record per ID in confirmed_relationship_ids (an empty list "
+                                  "when there is none)")
 
     @model_serializer(mode="wrap")
     def _omit_absent_group_assessments(self, handler):
         data = handler(self)
-        if isinstance(data, dict) and data.get("group_assessments") is None:
-            data.pop("group_assessments", None)
+        if isinstance(data, dict):
+            for key in ("group_assessments", "relationship_dispositions"):
+                if data.get(key) is None:
+                    data.pop(key, None)
         return data
 
 

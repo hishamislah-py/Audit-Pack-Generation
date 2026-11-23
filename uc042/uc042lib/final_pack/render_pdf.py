@@ -46,7 +46,9 @@ _MAP = {"−": "-", "→": "->", "←": "<-", "≤": "<=", "≥": ">=", "≠": "
 KIND_COLOUR = {"confirmed": OK, "assessment": MUTED, "hypothesis": WARN, "gap": MUTED, "conflict": BAD, "unresolved": BAD,
                "info": MUTED, "step": MUTED, "rejected": BAD, "accepted": OK,  # rejected / accepted: analyst reviews (schema 1.1)
                # closing-summary group assessments (summary schema 1.2); never present in packs written before it
-               "relationship_backed": MUTED, "relationship_unverified": WARN, "relationship_rejected": BAD}
+               "relationship_backed": MUTED, "relationship_unverified": WARN, "relationship_rejected": BAD,
+               # evidence-bearing relationships (23 Nov 2026): the engine's decision and an AI challenge are distinct kinds
+               "engine_relationship": OK, "ai_challenge": WARN}
 FONT_DIR = Path(__file__).resolve().parent / "fonts"
 ENV_FALLBACK_FONTS = "UC042_PDF_FALLBACK_FONTS"  # optional: os.pathsep-separated .ttf/.ttc paths, tried in order
 
@@ -320,7 +322,7 @@ def _item(b, st, width, kv=False):
         style.append(("SPAN", (0, 0), (-1, 0)))
     if b.get("kind") in ("assessment", "gap", "relationship_backed") or kv:
         style.append(("BACKGROUND", (0, 0), (-1, -1), PANEL))
-    if b.get("kind") in ("hypothesis", "relationship_unverified"):
+    if b.get("kind") in ("hypothesis", "relationship_unverified", "ai_challenge"):
         style += [("BOX", (0, 0), (-1, -1), 1.2, WARN, None, (3, 2))]
     if b.get("kind") in ("conflict", "rejected", "relationship_rejected"):
         style += [("BOX", (0, 0), (-1, -1), 1.2, BAD)]

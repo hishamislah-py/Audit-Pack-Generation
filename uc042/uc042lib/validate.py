@@ -32,7 +32,7 @@ from decimal import Decimal
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from . import enrichment, schema
+from . import enrichment, relproof, schema
 from .money import batch_net_signed, parse_signed, parse_unsigned, signed
 from .period import MONTH_TOKEN, PeriodConfig, bank_holidays, resolve
 from .period import business_day_after as _business_day_after
@@ -159,6 +159,10 @@ class Validator:
         self.exceptions = []
         self.groups = []
         self.candidates = []
+        # Structured correlation links (23 Nov 2026, evidence-bearing relationships): one dict per link that formed an
+        # investigation group, with its relationship type and the proof of its confirmation. In memory only (read by the
+        # pack's relationship register for enriched runs); the group link TEXT, and so every default-rule output, is unchanged.
+        self.relationship_links = []
         self.enrichment = None  # uc042lib.enrichment state when rules.enrichment_v1 is on
 
     # --- result helpers -------------------------------------------------
@@ -1465,9 +1469,15 @@ def _correlate_exceptions(self):
     ctx = enrichment.CorrelationContext(self, exc, rows_of) if enriched else None
     links = []
 
-    def link(a, b, kind, basis, cites):
+    def link(a, b, kind, basis, cites, rtype=None, proof=None, source="correlation"):
         if a != b:
             links.append((min(a, b), max(a, b), kind, basis, cites))
+            # evidence-bearing relationships: the same link as structured data (type + proof); not part of any output text
+            self.relationship_links.append({"exception_ids": [min(a, b), max(a, b)], "link_type": kind, "basis": basis,
+                                            "cites": list(cites), "relationship_type": rtype, "proof": proof, "source": source})
+
+    def first_fail(i, check):
+        return next((r for r in rows_of[i] if r["check_id"] == check and r["outcome"] == FAIL), None)
 
     ids = [x["exception_id"] for x in exc]
     kind_of = {x["exception_id"]: x["root_cause"].split("|")[0] for x in exc}
@@ -1477,7 +1487,14 @@ def _correlate_exceptions(self):
             shared = info[a][0] & info[b][0]
             if shared:
                 acct, rf = sorted(shared)[0]
-                link(a, b, "L1 REFERENCE", f"both involve reference {rf} on {acct}", info[a][2][:1] + info[b][2][:1])
+                cites = info[a][2][:1] + info[b][2][:1]
+                link(a, b, "L1 REFERENCE", f"both involve reference {rf} on {acct}", cites, "SHARED_REFERENCE", relproof.make_proof(
+                    "L1 REFERENCE", "SHARED_REFERENCE", result="SAME_REFERENCE",
+                    calculation=f"the records behind {a} and the records behind {b} carry the same reference {rf} on account {acct}",
+                    established=[f"{a} and {b} involve records with the same reference {rf} on {acct}"],
+                    not_established=["whether the shared reference is the record that is out of line, and what caused either exception"],
+                    limitations=["a shared reference connects the records; it does not reconcile amounts"],
+                    records=info[a][2] + info[b][2]))
     # L2 persistence of internal differences
     internal = sorted(((date.fromisoformat(x["root_cause"].split("|")[1].split("/")[0]), x["root_cause"].split("/")[-1], x["exception_id"])
                        for x in exc if kind_of[x["exception_id"]] == "INTERNAL_DIFFERENCE"))
@@ -1485,8 +1502,25 @@ def _correlate_exceptions(self):
     for (d1, c1, a), (d2, c2, b) in zip(internal, internal[1:]):
         nxt = [x for x in self.recon_days if x > d1][:1]
         if c1 == c2 and nxt == [d2] and value[a] == value[b] and value[a] is not None:
-            link(a, b, "L2 PERSISTENCE", f"same internal difference {value[a]} on consecutive reconciliation days ({c1})",
-                 [rows_of[a][0]["evidence"].split(";")[0], rows_of[b][0]["evidence"].split(";")[0]])
+            ra, rb = first_fail(a, "C06-DIFFERENCE"), first_fail(b, "C06-DIFFERENCE")
+            ev = [rows_of[a][0]["evidence"].split(";")[0], rows_of[b][0]["evidence"].split(";")[0]]
+            link(a, b, "L2 PERSISTENCE", f"same internal difference {value[a]} on consecutive reconciliation days ({c1})", ev,
+                 "PERSISTENCE", relproof.make_proof(
+                     "L2 PERSISTENCE", "PERSISTENCE", result="CONSECUTIVE_EQUAL",
+                     quantities=[(f"internal difference (resource - requirement) {c1} {d1}", value[a], ev[0]),
+                                 (f"internal difference (resource - requirement) {c1} {d2}", value[b], ev[1])]
+                     + ([(f"reported difference {d1}", ra["reported"], ev[0])] if ra else [])
+                     + ([(f"reported difference {d2}", rb["reported"], ev[1])] if rb else []),
+                     calculation=f"recomputed internal difference {d1} = {value[a]}; next reconciliation day {d2} = {value[b]}; "
+                                 "equal (same currency, consecutive reconciliation days)",
+                     chronology=[(d1, f"internal difference {value[a]} {c1} ({a})"), (d2, f"the same difference {value[b]} persists ({b})")],
+                     requirement_effect=f"the {c1} resource differs from the requirement by {value[a]} on both {d1} and {d2}",
+                     established=[f"the internal difference {value[a]} {c1} recurs unchanged from {d1} to {d2}: the second day carries "
+                                  "the first day's unresolved difference forward"],
+                     not_established=["which record or item is behind the difference", "what caused the difference"],
+                     missing_evidence=["the item(s) making up the internal difference on the first day"],
+                     limitations=["persistence connects two days of the same difference; it does not identify the faulty record"],
+                     records=ev))
     # L3 lineage
     for x in exc:
         kind, parts = kind_of[x["exception_id"]], x["root_cause"].split("|")
@@ -1496,9 +1530,30 @@ def _correlate_exceptions(self):
                 for e in info[y["exception_id"]][1].values():
                     if e["account_id"] == acct and date.fromisoformat(e["booking_date"]) == d0 and parse_ts(e["booking_ts"]) <= self.point(d0):
                         b = self.bc_by.get((acct, d0))
+                        cites = [self.ref("IN-09", e)] + ([self.ref("IN-07", b)] if b else [])
+                        effect, diff = signed(e["amount"], e["dc_indicator"], "bank"), Decimal(parts[3])
+                        equal = effect == diff
                         link(x["exception_id"], y["exception_id"], "L3 LINEAGE",
                              f"bank entry {e['bank_entry_id']} is inside the {d0} 17:00 balance of {acct}, where the difference begins",
-                             [self.ref("IN-09", e)] + ([self.ref("IN-07", b)] if b else []))
+                             cites, "BALANCE_LINEAGE", relproof.make_proof(
+                                 "L3 LINEAGE (bank entry in balance)", "BALANCE_LINEAGE",
+                                 faulty_record=cites[0] if equal else "",
+                                 result="EQUAL" if equal else "SHARED_RECORD_AMOUNT_NOT_EQUAL",
+                                 quantities=[(f"bank entry {e['bank_entry_id']} effect on the bank balance", effect, cites[0]),
+                                             (f"bank-ledger difference {acct} {d0} (bank - ledger)", diff, cites[-1])],
+                                 calculation=(f"bank entry {e['bank_entry_id']} booked {e['booking_ts']} (before the {d0} 17:00 point) "
+                                              f"moves the bank balance by {effect}; the bank-ledger difference beginning {d0} is "
+                                              f"{diff}; " + ("equal" if equal else "not equal")),
+                                 chronology=[(e["booking_date"], f"bank entry {e['bank_entry_id']} booked ({y['exception_id']})"),
+                                             (d0, f"bank-ledger difference {diff} on {acct} begins ({x['exception_id']})")],
+                                 established=[f"bank entry {e['bank_entry_id']} (involved in {y['exception_id']}) is inside the {d0} "
+                                              f"17:00 bank balance of {acct} where {x['exception_id']}'s difference begins"]
+                                 + ([f"its amount {effect} equals the whole difference: the entry is the record the ledger "
+                                     "does not reflect"] if equal else []),
+                                 not_established=[] if equal else ["that the entry accounts for the whole difference"],
+                                 missing_evidence=["the ledger posting (or allocation) for the entry"],
+                                 limitations=[] if equal else ["lineage through a shared record only: the amounts do not reconcile"],
+                                 records=cites))
         if kind in ("INTERNAL_DIFFERENCE", "C04-REQUIREMENT"):
             d, ccy = parts[1].split("/")
             for y in exc:
@@ -1510,18 +1565,33 @@ def _correlate_exceptions(self):
                         if ctx is not None and not ctx.allow_snapshot_lineage(x["exception_id"], y["exception_id"]):
                             continue  # enrichment F: only an evidence-backed snapshot input links (G-18)
                         snap = next((r for r in self.rows("IN-03") if r["recon_date"] == d and r["currency"] == ccy and r["client_id"] == client), None)
+                        # the proof of an evidence-backed snapshot link (G-18) is recorded by the enrichment check that allowed
+                        # it; the default rules link any failing snapshot and keep no quantitative proof (none is claimed)
+                        proof = ctx.snapshot_lineage_proof(x["exception_id"], y["exception_id"]) if ctx is not None else None
                         link(x["exception_id"], y["exception_id"], "L3 LINEAGE",
                              f"snapshot of {client} on {d} fails the roll-forward and is an input to the {ccy} requirement on {d}",
-                             [self.ref("IN-03", snap)] if snap else [])
+                             [self.ref("IN-03", snap)] if snap else [], "CAUSAL_PROPAGATION", proof)
             if kind == "INTERNAL_DIFFERENCE":
                 for y in exc:
                     if y["root_cause"] == f"C04-REQUIREMENT|{d}/{ccy}":
+                        ry, rx = first_fail(y["exception_id"], "C04-REQUIREMENT"), first_fail(x["exception_id"], "C06-DIFFERENCE")
+                        ev = rows_of[y["exception_id"]][0]["evidence"].split(";")[0]
                         link(x["exception_id"], y["exception_id"], "L3 LINEAGE",
-                             f"the internal difference for {d}/{ccy} uses the recomputed requirement for the same scope",
-                             [rows_of[y["exception_id"]][0]["evidence"].split(";")[0]])
+                             f"the internal difference for {d}/{ccy} uses the recomputed requirement for the same scope", [ev],
+                             "SHARED_INPUT", relproof.make_proof(
+                                 "L3 LINEAGE (requirement in difference)", "SHARED_INPUT", result="SHARED_RECORD",
+                                 quantities=([("requirement recomputed", ry["computed"], ev), ("requirement reported", ry["reported"], ev)]
+                                             if ry else []) + ([("internal difference recomputed", rx["computed"], ev)] if rx else []),
+                                 calculation=f"internal difference {d}/{ccy} = resource - recomputed requirement for {d}/{ccy}",
+                                 chronology=[(d, f"requirement failure ({y['exception_id']}) and internal difference ({x['exception_id']})")],
+                                 requirement_effect=f"the recomputed {ccy} requirement for {d} is an input to the internal difference",
+                                 established=[f"{x['exception_id']}'s internal difference is computed from the requirement "
+                                              f"that {y['exception_id']} finds misreported"],
+                                 not_established=["which client balance or receipt makes the requirement differ"],
+                                 records=[ev]))
     if ctx is not None:  # enrichment C/D: transaction, duplicate, timing and snapshot lineage (CONFIRMED only)
         for a, b, k, basis, cites in ctx.links():
-            link(a, b, k, basis, cites)
+            link(a, b, k, basis, cites, source="enrichment")   # structured form (type, proof) is in enrichment relationships
     # connected components (deterministic)
     parent = {i: i for i in ids}
 

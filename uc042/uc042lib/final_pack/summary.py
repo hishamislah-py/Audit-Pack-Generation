@@ -101,20 +101,49 @@ def closing_summary_input(snapshot):
     data["shared_record_links"] = _shared_record_links(exceptions)
     reg = pack["investigation_group_register"].get("relationship_register")
     if reg is not None:   # input 1.3: the engine's relationship register (enriched runs only; see uc042lib/pack/relationships.py)
+        v11 = reg.get("schema") == REGISTER_SCHEMA_EVIDENCE   # input 1.4 fields only for a register that carries proofs
+
+        def rel_view(r):
+            out = {"relationship_id": r["relationship_id"], "exception_ids": r["exception_ids"],
+                   "link_type": r["link_type"], "status": r["status"], "basis": r["basis"], "amounts": r["amounts"],
+                   "supporting_records": src(r["supporting_records"]),
+                   "contradicting_records": src(r["contradicting_records"])}
+            if v11:
+                out.update(relationship_type=r["relationship_type"], engine_status=r["engine_status"],
+                           proof=_proof_view(r.get("proof"), records), limitations=list(r.get("limitations") or []))
+            return out
         data["relationship_register"] = {
             "statement": reg["statement"],
-            "relationships": [{"relationship_id": r["relationship_id"], "exception_ids": r["exception_ids"],
-                               "link_type": r["link_type"], "status": r["status"], "basis": r["basis"], "amounts": r["amounts"],
-                               "supporting_records": src(r["supporting_records"]),
-                               "contradicting_records": src(r["contradicting_records"])} for r in reg["relationships"]],
+            "relationships": [rel_view(r) for r in reg["relationships"]],
             "common_causes": [{"common_cause_id": c["common_cause_id"], "exception_ids": c["exception_ids"], "status": c["status"],
                                "proposed_common_cause": c["proposed_common_cause"], "confirmed_facts": c["confirmed_facts"],
                                "unverified_inferences": c["unverified_inferences"], "missing_evidence": c["missing_evidence"],
                                "all_missing_lines_accounted_for": c["all_missing_lines_accounted_for"],
                                "supporting_records": src(c["supporting_records"])} for c in reg["common_causes"]]}
+        if v11:   # input 1.4: every CONFIRMED relationship needs an explicit ACKNOWLEDGED / CHALLENGED disposition
+            data["relationship_register"]["schema"] = reg["schema"]
+            data["relationship_register"]["confirmed_relationship_ids"] = [
+                r["relationship_id"] for r in reg["relationships"] if r["status"] == "CONFIRMED"]
     data["allowed_refs"] = sorted(_refs(data))
     data["allowed_source_refs"] = sorted(_source_refs(data))
     return data
+
+
+REGISTER_SCHEMA_EVIDENCE = "uc042-relationship-register/1.1"
+
+
+def _proof_view(proof, records):
+    """The engine's proof as supplied to the model: every record reference is a source record of the evidence register (a
+    reference that is not one, for example a whole-file citation, is blanked rather than passed on)."""
+    if not proof:
+        return None
+    keep = (lambda i: i if i in records else "")
+    p = {k: proof[k] for k in ("rule", "relationship_type", "calculation", "result", "chronology", "requirement_effect",
+                               "corroboration", "established", "not_established", "missing_evidence", "limitations")}
+    p["faulty_record"] = keep(proof.get("faulty_record") or "")
+    p["quantities"] = [dict(q, record=keep(q.get("record") or "")) for q in proof.get("quantities") or []]
+    p["records"] = [i for i in proof.get("records") or [] if i in records]
+    return p
 
 
 def _shared_record_links(exceptions):
@@ -141,6 +170,9 @@ def _source_refs(data):
     reg = data.get("relationship_register") or {}
     for r in reg.get("relationships", []):
         ids |= set(r["supporting_records"]) | set(r["contradicting_records"])
+        p = r.get("proof") or {}
+        ids |= set(p.get("records") or []) | ({p["faulty_record"]} if p.get("faulty_record") else set())
+        ids |= {q["record"] for q in p.get("quantities") or [] if q.get("record")}
     for c in reg.get("common_causes", []):
         ids |= set(c["supporting_records"])
     return ids
@@ -246,6 +278,169 @@ def _check_group_assessments(output, summary_input):
     return errors, rejected
 
 
+def _check_relationship_dispositions(output, summary_input):
+    """Summary schema 1.3 / input 1.4 (relationship register 1.1, evidence-bearing relationships). Returns a list of errors.
+
+    Rules (numbered as in the 23 Nov 2026 specification):
+      R1  every CONFIRMED relationship carries the engine's proof (input integrity; the register downgrades one without it)
+      R2  every CONFIRMED relationship has exactly one explicit disposition (ACKNOWLEDGED / CHALLENGED); nothing else has one
+      R3  no silent split or rejection: a CONFIRMED pair placed in different parts of a split, assessed COINCIDENCE_REJECTED,
+          or (in an engine investigation group) left UNVERIFIED, needs a CHALLENGED disposition
+      R4  a CHALLENGED disposition carries a reason, cited source records, contradicting records that are NOT merely the
+          relationship's own proof / supporting records or the exceptions' detection records, missing evidence, why the
+          engine's evidence is insufficient, confidence and limitations
+      R5  a disposition keeps the engine's identity (exception_ids and relationship_type exactly as in the register)
+      R6  every group assessment states common_cause_status, separately from relationship_verdict
+      R7  an unverified common cause is never promoted: candidate / common-cause units, and any relationship verdict other than
+          EVIDENCE_BACKED, cannot carry common_cause_status EVIDENCE_BACKED; COINCIDENCE_REJECTED means NOT_ESTABLISHED
+      R8  a rejected (or challenged) relationship never supports an evidence-backed common cause; EVIDENCE_BACKED common cause
+          needs every exception of the assessment connected through acknowledged CONFIRMED relationships
+      R9  every cited record is a source record of the input (allowed_source_refs)
+      R10 the AI never alters the engine's result: dispositions carry no status, and the register is copied unchanged into
+          the final pack (final_pack/validate.py)
+    There is deliberately NO blanket rule against challenges: a reasoned, cited challenge is accepted and shown to the analyst."""
+    reg = summary_input.get("relationship_register") or {}
+    if reg.get("schema") != REGISTER_SCHEMA_EVIDENCE:
+        return (["relationship_dispositions supplied for an input without an evidence-bearing relationship register (1.1)"]
+                if output.relationship_dispositions is not None else [])
+    errors = []
+    sources = set(summary_input["allowed_source_refs"])
+    rels = {r["relationship_id"]: r for r in reg["relationships"]}
+    confirmed = {rid: rels[rid] for rid in reg.get("confirmed_relationship_ids", [])}
+    detection = {x["exception_id"]: set(x["source_evidence_ids"]) for x in summary_input["exceptions"]}
+    # R1
+    for rid, r in confirmed.items():
+        if not r.get("proof") or not r["proof"].get("records"):
+            errors.append(f"input: CONFIRMED relationship {rid} carries no engine proof (the register must downgrade it)")
+    # R2 / R4 / R5 / R9
+    disp = output.relationship_dispositions
+    if disp is None:
+        return errors + ["relationship_dispositions is required: one ACKNOWLEDGED or CHALLENGED record per ID in "
+                         "confirmed_relationship_ids (an empty list when there is none)"]
+    seen = {}
+    for i, d in enumerate(disp):
+        name = f"relationship_dispositions[{i}]"
+        if d.relationship_id not in confirmed:
+            what = (f"its register status is {rels[d.relationship_id]['status']}" if d.relationship_id in rels
+                    else "it is not in the relationship register")
+            errors.append(f"{name}: {d.relationship_id!r} is not a CONFIRMED relationship ({what}); only CONFIRMED relationships "
+                          "are acknowledged or challenged")
+            continue
+        if d.relationship_id in seen:
+            errors.append(f"{name}: {d.relationship_id} has more than one disposition")
+            continue
+        seen[d.relationship_id] = d
+        r = confirmed[d.relationship_id]
+        if sorted(d.exception_ids) != sorted(r["exception_ids"]) or d.relationship_type != r["relationship_type"]:
+            errors.append(f"{name}: does not keep the engine's identity of {d.relationship_id} (exception_ids "
+                          f"{sorted(r['exception_ids'])}, relationship_type {r['relationship_type']}); the AI cannot redefine "
+                          "an engine relationship")
+        for field in ("cited_evidence", "contradicting_evidence"):
+            ids = getattr(d, field)
+            bad = sorted(set(ids) - sources)
+            if bad or any(not str(x).strip() for x in ids):
+                errors.append(f"{name}: {field} must be source record IDs from allowed_source_refs: {bad[:5]}")
+        if d.disposition == "ACKNOWLEDGED":
+            if d.contradicting_evidence or d.why_engine_evidence_insufficient.strip():
+                errors.append(f"{name}: an ACKNOWLEDGED relationship has no contradicting evidence and no "
+                              "why_engine_evidence_insufficient (challenge it instead)")
+        else:
+            own = set(r["supporting_records"]) | set((r.get("proof") or {}).get("records") or [])
+            own |= {(r.get("proof") or {}).get("faulty_record")} - {"", None}
+            own |= set().union(*(detection.get(e, set()) for e in r["exception_ids"]))
+            if len(d.reason.strip()) < 30:
+                errors.append(f"{name}: a CHALLENGED relationship needs a substantive reason")
+            if not d.cited_evidence:
+                errors.append(f"{name}: a CHALLENGED relationship must cite source records")
+            if not d.contradicting_evidence:
+                errors.append(f"{name}: a CHALLENGED relationship must cite contradicting source records")
+            elif not set(d.contradicting_evidence) - own:
+                errors.append(f"{name}: the contradicting evidence is only the relationship's own proof records and the "
+                              "exceptions' detection records; exceptions detected on different records are not evidence "
+                              "against a relationship (a challenge needs a record that contradicts the engine's proof)")
+            if not d.missing_evidence:
+                errors.append(f"{name}: a CHALLENGED relationship must state the missing evidence")
+            if len(d.why_engine_evidence_insufficient.strip()) < 30:
+                errors.append(f"{name}: a CHALLENGED relationship must explain why the engine's evidence is insufficient")
+            if not [t for t in d.limitations if str(t).strip()]:
+                errors.append(f"{name}: a CHALLENGED relationship must state its limitations")
+    missing = sorted(set(confirmed) - set(seen))
+    if missing:
+        errors.append(f"relationship_dispositions: no ACKNOWLEDGED / CHALLENGED disposition for CONFIRMED relationship(s) "
+                      f"{missing[:10]}")
+    challenged = {rid for rid, d in seen.items() if d.disposition == "CHALLENGED"}
+    acknowledged = {frozenset(confirmed[rid]["exception_ids"]) for rid in seen if rid not in challenged}
+    # R3 / R6 / R7 / R8 over the group assessments
+    groups = {g["group_id"] for g in summary_input["investigation_groups"]}
+    unconfirmed_units = {c["candidate_id"] for c in summary_input["candidate_relationships"]}
+    unconfirmed_units |= {c["common_cause_id"] for c in reg.get("common_causes", []) if c["status"] != "CONFIRMED"}
+    rejected_pairs = {frozenset(r["exception_ids"]) for r in reg["relationships"] if r["status"] == "REJECTED"}
+    confirmed_pairs = {frozenset(r["exception_ids"]) for r in confirmed.values()}
+    by_unit = {}
+    for i, a in enumerate(output.group_assessments or []):
+        by_unit.setdefault(a.group_id, []).append((i, a))
+        name = f"group_assessments[{i}]"
+        cc, ex = a.common_cause_status, set(a.exception_ids)
+        if cc is None:
+            errors.append(f"{name}: common_cause_status is required (separate from relationship_verdict)")
+            continue
+        if a.relationship_verdict == "COINCIDENCE_REJECTED" and cc != "NOT_ESTABLISHED":
+            errors.append(f"{name}: a relationship rejected as coincidence has common_cause_status NOT_ESTABLISHED")
+        if cc == "EVIDENCE_BACKED":
+            if a.group_id in unconfirmed_units:
+                errors.append(f"{name}: {a.group_id} is a candidate or an unconfirmed common cause; its common cause cannot be "
+                              "EVIDENCE_BACKED (an unverified common cause is never promoted)")
+            if a.relationship_verdict != "EVIDENCE_BACKED":
+                errors.append(f"{name}: common_cause_status EVIDENCE_BACKED requires relationship_verdict EVIDENCE_BACKED")
+            if any(p <= ex and p not in confirmed_pairs for p in rejected_pairs):
+                errors.append(f"{name}: a rejected relationship cannot support an evidence-backed common cause")
+            if any(frozenset(confirmed[rid]["exception_ids"]) <= ex for rid in challenged):
+                errors.append(f"{name}: a relationship the summary itself CHALLENGES cannot support an evidence-backed common cause")
+            if len(ex) > 1 and not _connected(ex, acknowledged):
+                errors.append(f"{name}: common_cause_status EVIDENCE_BACKED requires every exception to be connected through "
+                              "acknowledged CONFIRMED engine relationships")
+    for rid, r in confirmed.items():
+        if rid in challenged:
+            for unit, items in by_unit.items():
+                for i, a in items:
+                    if set(r["exception_ids"]) <= set(a.exception_ids) and a.relationship_verdict == "EVIDENCE_BACKED":
+                        errors.append(f"group_assessments[{i}]: presents {sorted(r['exception_ids'])} as EVIDENCE_BACKED while "
+                                      f"challenging {rid}")
+            continue
+        pair = set(r["exception_ids"])
+        for unit, items in by_unit.items():
+            covered = set().union(*(set(a.exception_ids) for _, a in items))
+            if not pair <= covered:
+                continue
+            together = [(i, a) for i, a in items if pair <= set(a.exception_ids)]
+            if not together:
+                errors.append(f"group_assessments ({unit}): splits the CONFIRMED relationship {rid} {sorted(pair)} into "
+                              "different assessments without a CHALLENGED disposition (a confirmed relationship is never "
+                              "split or rejected silently)")
+                continue
+            for i, a in together:
+                if a.relationship_verdict == "COINCIDENCE_REJECTED" or (unit in groups and a.relationship_verdict != "EVIDENCE_BACKED"):
+                    errors.append(f"group_assessments[{i}]: assesses the CONFIRMED relationship {rid} {sorted(pair)} as "
+                                  f"{a.relationship_verdict} without a CHALLENGED disposition (acknowledge it as EVIDENCE_BACKED "
+                                  "- the common cause can stay NOT_ESTABLISHED - or challenge it formally)")
+    return errors
+
+
+def _connected(members, pairs):
+    """Whether `members` form one connected component using only the given exception pairs."""
+    members = set(members)
+    start = next(iter(members))
+    seen, todo = {start}, [start]
+    while todo:
+        n = todo.pop()
+        for p in pairs:
+            if n in p and p <= members:
+                for m in p - seen:
+                    seen.add(m)
+                    todo.append(m)
+    return seen == members
+
+
 def _refs(data):
     refs = {x["exception_id"] for x in data["exceptions"]}
     refs |= {i["item_id"] for i in data["missing_evidence_register"]} | {g["group_id"] for g in data["investigation_groups"]}
@@ -322,6 +517,9 @@ def validate_closing_summary(output, summary_input):
     texts += [(f"limitations[{i}]", t) for i, t in enumerate(output.limitations)]
     if "allowed_source_refs" in summary_input:          # input 1.1 / summary schema 1.2: group assessments are required
         errors += _check_group_assessments(output, summary_input)[0]
+        errors += _check_relationship_dispositions(output, summary_input)   # input 1.4 / summary schema 1.3
+        for i, d in enumerate(output.relationship_dispositions or []):
+            texts += [(f"relationship_dispositions[{i}].{k}", getattr(d, k)) for k in ("reason", "why_engine_evidence_insufficient")]
         for i, a in enumerate(output.group_assessments or []):
             texts += [(f"group_assessments[{i}].{k}", getattr(a, k)) for k in ("common_cause_hypothesis", "analyst_action", "rationale")]
             texts += [(f"group_assessments[{i}].missing_evidence[{j}]", t) for j, t in enumerate(a.missing_evidence)]
@@ -401,6 +599,14 @@ Group assessments (group_assessments) - required:
   source documents: never put them there. Never invent an ID.
 - common_cause_hypothesis is always a hypothesis: word it as such ("may", "could", "possibly") or state plainly that the
   evidence is insufficient or that no common cause is supported. It is never a confirmed finding.
+- common_cause_status (when relationship_register carries confirmed_relationship_ids) is a SEPARATE question from
+  relationship_verdict: relationship_verdict = are these exceptions connected? common_cause_status = is one underlying
+  common cause established? EVIDENCE_BACKED only when every exception of the assessment is connected through CONFIRMED
+  relationships you ACKNOWLEDGE to one originating faulty record (never for a CAND- or CC- unit, never with a rejected or
+  challenged relationship inside); UNVERIFIED when plausible but not established; NOT_ESTABLISHED when no common cause is
+  supported (always with COINCIDENCE_REJECTED). Typical: two exceptions produced by the same faulty snapshot are
+  relationship_verdict EVIDENCE_BACKED with common_cause_status NOT_ESTABLISHED, because WHY the snapshot is wrong is not
+  shown.
 - missing_evidence: what would confirm or rule out the link. If nothing supports the link, say the evidence is insufficient.
 - analyst_action: a concrete next check for the analyst. confidence: LOW, MEDIUM or HIGH (an UNVERIFIED verdict is never
   HIGH). rationale: why this verdict, referring to the cited records.
@@ -419,21 +625,42 @@ How to reason about every group and candidate before writing its assessment (do 
 4. Chronology: do the dates support the proposed direction (the cause precedes or coincides with the effect)?
 5. Contradictions: do any records contradict the link (for example the other side of a comparison agreeing with the bank)?
 6. Coincidence: could the similarity be coincidental? Matching amounts, dates or labels are NEVER sufficient evidence of a
-   common cause on their own. A lineage link (a record that is an input to another result) supports a shared cause only if
-   that linked record is itself the one that is out of line; if a member's own origin is a different record (for example
-   a transaction that also fails elsewhere), its apparent link is a coincidence.
-7. Decide: group exceptions that share an originating record (EVIDENCE_BACKED, cite those records); split a group whose
-   members have different originating records into separate assessments (the link of a member with a different origin is
-   COINCIDENCE_REJECTED, citing the records showing its own origin as contradicting evidence); leave a plausible link that
-   no record establishes as UNVERIFIED and say what evidence is missing. Put other exceptions that share a batch,
-   reference, client or originating record with the members in related_exception_ids. Never invent evidence or force a
-   common cause.
+   relationship on their own. A lineage link (a record that is an input to another result) connects exceptions only if
+   that linked record is itself the one that is out of line; if a member's own FAULTY record is a different record (for
+   example a transaction that also fails elsewhere), its apparent link is a coincidence. A member merely DETECTED on a
+   different record is not thereby a coincidence (see step 7).
+7. Decide. Keep four things apart for every member exception:
+   (a) the DETECTION record: where the engine noticed the exception (the check and record it failed on, its
+       source_evidence_ids). Exceptions are routinely detected on DIFFERENT records by DIFFERENT checks - for example an
+       internal difference detected on the requirement-vs-resource record and a roll-forward failure detected on a client
+       snapshot. Different detection records NEVER show that two exceptions are unrelated or have different causes.
+   (b) the FAULTY record: the source record shown to be out of line (a relationship proof's faulty_record, or an accepted
+       investigation's confirmed finding).
+   (c) the record that CAUSED the discrepancy: the faulty record whose error flows into the exception's figure (a proof's
+       requirement_effect, calculation and chronology show how).
+   (d) the REASON for the fault: why that record is wrong (a data-entry, system or process error ...). It is usually NOT
+       established; a proof lists it under not_established.
+   Exceptions connected through the SAME faulty record are related even when detected on different records:
+   relationship_verdict EVIDENCE_BACKED (cite the proof's records), while common_cause_status says separately whether the
+   REASON is established (usually NOT_ESTABLISHED or UNVERIFIED). Split a group only when a member's own faulty record is a
+   different record that the engine has not connected to the others (its link is then COINCIDENCE_REJECTED or UNVERIFIED,
+   citing the records showing its own origin) - and never split or reject an engine-CONFIRMED relationship without
+   CHALLENGING it formally (see relationship_dispositions). Leave a plausible link that no record establishes as UNVERIFIED
+   and say what evidence is missing. Put other exceptions that share a batch, reference, client or faulty record with the
+   members in related_exception_ids. Never invent evidence or force a common cause.
 
 relationship_register (present only when the engine ran its relationship discovery): the engine has ALREADY discovered the
 low-level financial relationships deterministically from the source records. Interpret them; do not rediscover them from
 amounts yourself, and never override them with a weaker basis.
-- relationships (REL- IDs): CONFIRMED = a shared source record or reference connects the exceptions AND the amounts
-  reconcile exactly - it may support EVIDENCE_BACKED (cite its supporting_records). CANDIDATE = an indirect link (for
+- relationships (REL- IDs): CONFIRMED = a shared source record or reference connects the exceptions and the engine kept
+  its PROOF - it supports EVIDENCE_BACKED (cite its supporting_records and proof records). Each relationship carries a
+  relationship_type (for example CAUSAL_PROPAGATION: one faulty record produces both exceptions; SHARED_FAULTY_RECORD;
+  TRANSACTION_LINEAGE; DUPLICATE_LINEAGE; PERSISTENCE; BALANCE_LINEAGE; SHARED_INPUT; SHARED_REFERENCE) and a proof:
+  faulty_record, quantities, calculation, result, chronology, requirement_effect (how the faulty record changes the
+  client-money requirement or resource), corroboration, established, not_established, missing_evidence, limitations.
+  READ THE PROOF: it already reconciles the amounts and names the faulty record; do not recompute or rediscover it.
+  engine_status is the engine's own status; a relationship with status CANDIDATE but engine_status CONFIRMED had no proof
+  and is treated as a candidate (see its limitations). CANDIDATE = an indirect link (for
   example settlement lines whose amounts sum to a client's roll-forward difference): the attribution rests on amounts only,
   so it is at most UNVERIFIED (cite its supporting_records and state its basis as a hypothesis). REJECTED = the engine found
   the apparent link contradicted or unsupported: never place those exceptions in one EVIDENCE_BACKED relationship and never
@@ -445,6 +672,23 @@ amounts yourself, and never override them with a weaker basis.
   are not in a group or candidate you are assessing into related_exception_ids of those assessments too.
 - CONFIRMED relationship IDs may be cited in key_observations; CANDIDATE and REJECTED relationship IDs and CC- IDs are
   hypotheses or context, never observations on their own.
+
+relationship_dispositions (required when relationship_register carries confirmed_relationship_ids; otherwise omit it or
+return null):
+- Write exactly ONE disposition for EVERY ID in confirmed_relationship_ids and none for anything else. Copy its
+  exception_ids and relationship_type exactly from the register.
+- ACKNOWLEDGED: you accept the engine's proof. reason: what the proof shows, in one or two sentences; cited_evidence: its
+  records; contradicting_evidence: []; why_engine_evidence_insufficient: ""; missing_evidence: the proof's open points
+  (for example why the faulty record is wrong); limitations: may be empty. Then keep its exceptions together in one
+  EVIDENCE_BACKED group assessment.
+- CHALLENGED: a formal, reasoned disagreement for the analyst - only when a source record CONTRADICTS the engine's proof
+  (not when the exceptions were merely detected on different records, and not when only the reason for the fault is
+  unknown). Required: reason, cited_evidence, contradicting_evidence (at least one record that is not one of the proof's
+  own records or the exceptions' detection records), missing_evidence, why_engine_evidence_insufficient, confidence and
+  limitations. A challenge NEVER changes the engine's status: the engine's relationship stays CONFIRMED in the pack and
+  your challenge is shown beside it for the analyst to decide.
+- Splitting a CONFIRMED pair into different assessments, assessing it COINCIDENCE_REJECTED, or leaving it UNVERIFIED in an
+  engine investigation group is allowed only with a CHALLENGED disposition; otherwise the summary is refused.
 Return ONLY the structured output."""
 
 

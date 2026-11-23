@@ -33,7 +33,13 @@ def build_case(pack, exception_id):
     related_ids.discard(exception_id)
     missing = [m for m in pack["missing_evidence_register"]["items"]
                if m["related_exception_id"] in ({exception_id} | related_ids)]
-    return {"pack_id": pack["metadata"]["pack_id"], "pack_content_sha256": pack["audit_trail"]["pack_content_sha256"],
+    case_extra = {}
+    reg = pack["investigation_group_register"].get("relationship_register")
+    if reg and reg.get("schema") == "uc042-relationship-register/1.1":
+        # evidence-bearing relationships (23 Nov 2026; enriched packs only, so every other packet is unchanged): the engine's
+        # relationships of THIS exception with their proofs, so the investigation sees why a link is CONFIRMED / REJECTED
+        case_extra["engine_relationships"] = [r for r in reg["relationships"] if exception_id in r["exception_ids"]]
+    return {**case_extra, "pack_id": pack["metadata"]["pack_id"], "pack_content_sha256": pack["audit_trail"]["pack_content_sha256"],
             "exception": x, "results": [results[i] for i in x["affected_result_ids"] if i in results],
             "group": group, "candidates": candidates,
             "related_exceptions": [exc_by_id[i] for i in sorted(related_ids) if i in exc_by_id],
@@ -376,6 +382,15 @@ def build_packet(case, scope, route, col):
                         "difference_sign": "bank minus ledger (C08); resource minus requirement (C06)",
                         "reconciliation_point": "17:00 Europe/London each reconciliation day"},
     }
+    if case.get("engine_relationships") is not None:
+        packet["engine_relationships_CONTEXT"] = {
+            "note": ("The engine's deterministic relationships of this exception (relationship register 1.1), with the proof of "
+                     "each confirmation. Context only: cite the records through allowed_citation_ids. A CONFIRMED relationship "
+                     "connects the exceptions (often through one faulty record); its proof says what is NOT established. "
+                     "Exceptions detected on different records can still share one faulty record."),
+            "relationships": [{k: r[k] for k in ("relationship_id", "exception_ids", "link_type", "relationship_type", "status",
+                                                  "engine_status", "basis", "proof", "limitations")}
+                              for r in case["engine_relationships"]]}
     packet["allowed_citation_ids"] = _citation_ids(case, packet["source_records"], control_results, col.searches, conflicts)
     packet["packet_sha256"] = hashlib.sha256(canonical(packet).encode("utf-8")).hexdigest()
     return packet

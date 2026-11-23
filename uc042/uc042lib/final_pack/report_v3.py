@@ -175,6 +175,8 @@ def build_report_v3(final):
                 ("evidence", "Evidence completeness and source inventory", _s_evidence)]
     if final["exception_register"]:
         sections.append(("exceptions", "Exceptions and investigations", _s_exceptions))
+    if final.get("relationship_assessments") is not None:   # evidence-bearing relationships; absent in every older pack
+        sections.append(("relationships", "Engine relationships and AI assessments", _s_relationships))
     sections += [("review", "Analyst review and decision record", _s_review),
                  ("limitations", "Limitations and disclosures", _s_limitations),
                  ("appendix", "Technical appendix", _s_appendix)]
@@ -568,6 +570,21 @@ GROUP_VERDICT_TEXT = {"EVIDENCE_BACKED": "EVIDENCE-BACKED RELATIONSHIP - CAUSE N
                       "COINCIDENCE_REJECTED": "COINCIDENCE - RELATIONSHIP REJECTED"}
 
 
+COMMON_CAUSE_TEXT = {"EVIDENCE_BACKED": "COMMON CAUSE EVIDENCE-BACKED", "UNVERIFIED": "COMMON CAUSE UNVERIFIED",
+                     "NOT_ESTABLISHED": "COMMON CAUSE NOT ESTABLISHED"}
+RELATIONSHIP_VERDICT_TEXT = {"EVIDENCE_BACKED": "EVIDENCE-BACKED RELATIONSHIP", "UNVERIFIED": "UNVERIFIED RELATIONSHIP - NOT ESTABLISHED",
+                             "COINCIDENCE_REJECTED": "COINCIDENCE - RELATIONSHIP REJECTED"}
+
+
+def _assessment_badge(a):
+    """Summary schema 1.3: the relationship and the common cause are two separate verdicts, so the badge states both. A 1.2
+    assessment (no common_cause_status) keeps its exact earlier badge."""
+    if a.get("common_cause_status") is None:
+        return GROUP_VERDICT_TEXT.get(a["relationship_verdict"], a["relationship_verdict"])
+    return (f"{RELATIONSHIP_VERDICT_TEXT.get(a['relationship_verdict'], a['relationship_verdict'])} - "
+            f"{COMMON_CAUSE_TEXT.get(a['common_cause_status'], a['common_cause_status'])}")
+
+
 def _group_assessment_blocks(o):
     """Closing-summary schema 1.2 group assessments. Absent (a summary written before 1.2): nothing is rendered, so stored
     packs re-render byte for byte. Present: every assessment is rendered (none can disappear), an empty list says so."""
@@ -582,16 +599,77 @@ def _group_assessment_blocks(o):
     for a in gas:
         out.append({"type": "item", "kind": GROUP_VERDICT_KIND.get(a["relationship_verdict"], "info"),
                     "heading": f"{a['group_id']}: {', '.join(a['exception_ids'])}",
-                    "badge": GROUP_VERDICT_TEXT.get(a["relationship_verdict"], a["relationship_verdict"]), "fields": [
+                    "badge": _assessment_badge(a), "fields": [
                         ("Related exceptions", ", ".join(a["exception_ids"] + [x for x in a["related_exception_ids"]
                                                                                if x not in a["exception_ids"]])),
                         ("Relationship verdict", f"{a['relationship_verdict']} (confidence {a['confidence']})"),
+                        *([("Common cause status (separate from the relationship)", a["common_cause_status"])]
+                          if a.get("common_cause_status") is not None else []),
                         ("Likely common cause (HYPOTHESIS - NOT ESTABLISHED)", a["common_cause_hypothesis"]),
                         ("Supporting evidence (source records)", ", ".join(a["supporting_evidence"]) or "None cited."),
                         ("Contradicting evidence (source records)", ", ".join(a["contradicting_evidence"]) or "None cited."),
                         ("Missing evidence", "; ".join(a["missing_evidence"]) or "None stated."),
                         ("Recommended analyst action (not done)", a["analyst_action"]),
                         ("Rationale", a["rationale"])]})
+    return out
+
+
+def _proof_fields(p):
+    if not p:
+        return [("Engine proof", "None recorded.")]
+    return [("Engine rule", p["rule"]), ("Faulty record", p["faulty_record"] or "Not identified by this rule."),
+            ("Figures", "; ".join(f"{q['name']}: {q['value']}" + (f" [{q['record']}]" if q["record"] else "")
+                                  for q in p["quantities"]) or "None."),
+            ("Calculation", p["calculation"] or "None."), ("Result", p["result"]),
+            ("Chronology", "; ".join(f"{c['date']}: {c['event']}" for c in p["chronology"]) or "None."),
+            ("Effect on the requirement / resource", p["requirement_effect"] or "None stated."),
+            ("Corroboration", "; ".join(p["corroboration"]) or "None."),
+            ("Established by the engine", "; ".join(p["established"]) or "None."),
+            ("NOT established", "; ".join(p["not_established"]) or "None stated."),
+            ("Missing evidence", "; ".join(p["missing_evidence"]) or "None stated."),
+            ("Limitations", "; ".join(p["limitations"]) or "None."),
+            ("Records", ", ".join(p["records"]) or "None.")]
+
+
+def _s_relationships(f):
+    """Evidence-bearing relationships: each CONFIRMED engine relationship with its proof (the ENGINE's decision), followed by
+    the AI's acknowledgement or challenge and the analyst's explanation, each in its own clearly labelled block. A challenge
+    is never presented as changing the engine's status."""
+    ra = f["relationship_assessments"]
+    out = [_notice("info", ra["notice"])]
+    if not ra["items"]:
+        return out + [_para("The engine confirmed no relationship between exceptions in this pack.")]
+    for it in ra["items"]:
+        out.append(_sub(f"{it['relationship_id']}: {', '.join(it['exception_ids'])}"))
+        out.append({"type": "item", "kind": "engine_relationship",
+                    "heading": f"Engine decision - {it['relationship_type']}",
+                    "badge": f"ENGINE: {it['engine_status']} (deterministic)",
+                    "fields": [("Engine status", it["engine_status"]), ("Register status", it["register_status"])]
+                    + _proof_fields(it["proof"])})
+        d = it["ai_disposition_detail"]
+        if d is None:
+            out.append(_notice("warn", "AI assessment of this relationship: NOT AVAILABLE (no AI closing summary in this pack)."))
+        elif d["disposition"] == "ACKNOWLEDGED":
+            out.append({"type": "item", "kind": "relationship_backed", "heading": "AI assessment", "badge": "AI: ACKNOWLEDGED",
+                        "fields": [("Reason", d["reason"]), ("Cited records", ", ".join(d["cited_evidence"]) or "None cited."),
+                                   ("Missing evidence", "; ".join(d["missing_evidence"]) or "None stated."),
+                                   ("Confidence", d["confidence"])]})
+        else:
+            out.append({"type": "item", "kind": "ai_challenge", "heading": "AI challenge - not accepted by the engine",
+                        "badge": "AI: CHALLENGED - ENGINE STATUS UNCHANGED",
+                        "fields": [("Reason", d["reason"]), ("Cited records", ", ".join(d["cited_evidence"])),
+                                   ("Contradicting records", ", ".join(d["contradicting_evidence"])),
+                                   ("Why the engine evidence is insufficient (AI view)", d["why_engine_evidence_insufficient"]),
+                                   ("Missing evidence", "; ".join(d["missing_evidence"])),
+                                   ("Confidence", d["confidence"]), ("Limitations", "; ".join(d["limitations"]))]})
+        for a in it["common_cause_assessments"]:
+            out.append(_para(f"Common-cause assessment ({a['group_id']}: {', '.join(a['exception_ids'])}): relationship "
+                             f"{a['relationship_verdict']}; common cause {a.get('common_cause_status') or 'not stated'}. "
+                             f"{a['common_cause_hypothesis']}"))
+        n = it["analyst_explanation"]
+        if d is not None and d["disposition"] == "CHALLENGED":
+            out.append(_para("Analyst explanation: " + (f"{n['analyst_position']} - {n['analyst_explanation']}" if n
+                                                        else "not recorded.")))
     return out
 
 
