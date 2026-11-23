@@ -559,8 +559,12 @@ def _gap_parts(f):
     return out
 
 
-GROUP_VERDICT_KIND = {"EVIDENCE_BACKED": "assessment", "UNVERIFIED": "hypothesis", "COINCIDENCE_REJECTED": "rejected"}
-GROUP_VERDICT_TEXT = {"EVIDENCE_BACKED": "EVIDENCE-BACKED RELATIONSHIP", "UNVERIFIED": "UNVERIFIED RELATIONSHIP",
+# Dedicated block kinds (styled like assessment / hypothesis / rejected in the PDF): investigation hypotheses keep the
+# 'hypothesis' kind for themselves, so the two are never mixed in the report structure.
+GROUP_VERDICT_KIND = {"EVIDENCE_BACKED": "relationship_backed", "UNVERIFIED": "relationship_unverified",
+                      "COINCIDENCE_REJECTED": "relationship_rejected"}
+GROUP_VERDICT_TEXT = {"EVIDENCE_BACKED": "EVIDENCE-BACKED RELATIONSHIP - CAUSE NOT ESTABLISHED",
+                      "UNVERIFIED": "UNVERIFIED RELATIONSHIP - NOT ESTABLISHED",
                       "COINCIDENCE_REJECTED": "COINCIDENCE - RELATIONSHIP REJECTED"}
 
 

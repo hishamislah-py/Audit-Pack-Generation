@@ -210,6 +210,13 @@ class Scenarios(unittest.TestCase):
             self.assertIn(t, b["html"].replace("&#x27;", "'").replace("&amp;", "&"), (tc, t))
         self.assertIn(norm("Likely common cause (HYPOTHESIS - NOT ESTABLISHED)"), b["pdf"])
 
+    def test_every_tc_passes_the_renderer_audit_integrity_checks(self):
+        from tests.renderer_v3_support import audit_integrity, render_all
+        for tc, b in BUILT.items():
+            pdf, html = render_all(b["final"])
+            self.assertEqual(render_pdf(b["final"]), pdf, f"{tc}: PDF not byte-reproducible")
+            self.assertEqual(audit_integrity(b["final"], b["pack"], pdf, html, b["snap"]), [], tc)
+
     def test_every_tc_publishes_a_final_pack_with_validated_group_assessments(self):
         for tc, b in BUILT.items():
             self.assertEqual(b["summary"].status, "GENERATED", tc)

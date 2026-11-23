@@ -109,8 +109,10 @@ class OutputValidation(SummaryCase):
     def test_structured_output_schema(self):
         from openai.lib._pydantic import to_strict_json_schema
         schema = to_strict_json_schema(ClosingSummaryOutput)
+        # summary schema 1.2 (Session 1, 23 Nov 2026): group_assessments is part of the structured output
         self.assertEqual(set(schema["required"]), {"overall_position", "summary_text", "key_observations", "unresolved_items",
-                                                   "unverified_hypotheses", "evidence_gaps", "suggested_next_steps", "limitations"})
+                                                   "unverified_hypotheses", "evidence_gaps", "suggested_next_steps", "limitations",
+                                                   "group_assessments"})
         self.assertIn("not an audit opinion", SUMMARY_INSTRUCTIONS)
 
 
@@ -121,7 +123,7 @@ class GenerationAndFailures(SummaryCase):
         self.assertEqual((s.status, s.output, s.snapshot_sha256, s.source_fingerprint),
                          ("GENERATED", out, self.snap.sha256, summary_fingerprint(self.input)))
         self.assertEqual((s.model_metadata["provider"], s.model_metadata["model"], s.model_metadata["simulated"]), ("openai", "gpt-6-luna", False))
-        self.assertEqual(s.model_metadata["prompt_version"], "uc042-closing-summary-prompt/1.2")
+        self.assertEqual(s.model_metadata["prompt_version"], "uc042-closing-summary-prompt/1.3")   # 1.3: group assessments
         kw = inv._client.responses.with_raw_response.parse.call_args.kwargs
         self.assertIs(kw["text_format"], ClosingSummaryOutput)
         self.assertEqual((kw["store"], kw["instructions"]), (False, SUMMARY_INSTRUCTIONS))
