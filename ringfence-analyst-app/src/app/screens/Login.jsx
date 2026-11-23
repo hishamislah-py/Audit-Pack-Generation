@@ -7,7 +7,6 @@ import { Button, Notice, Mark, Icon, Enum } from '../../ui/index.jsx';
 import { useAppState } from '../hooks.js';
 import '../format.js';
 
-const JOURNEY = [['01', 'Received', 'Customer ZIP attached to its case'], ['02', 'Parsed', 'Smart Parser classifies and maps evidence'], ['03', 'Reviewed', 'You decide what the parser could not'], ['04', 'Validated', 'PV-01 to PV-09 pass'], ['05', 'Activated', 'Package sealed as a snapshot'], ['06', 'Completed', 'UC-042 reconciliation reports the outcome']];
 
 export default function LoginScreen({ onSignIn, app, appError, kind, store }) {
   const st = useAppState();
@@ -32,17 +31,17 @@ export default function LoginScreen({ onSignIn, app, appError, kind, store }) {
   };
   if (auth.enabled) return <LoginFrame>
     <form className="rf-login__form" onSubmit={signIn} aria-labelledby="login-title" noValidate>
-      <div><h2 id="login-title" className="page-title" style={{ margin: 0 }}>Sign in</h2><p className="rf-muted" style={{ margin: '4px 0 0', fontSize: 13 }}>Internal access for safeguarding analysts.</p></div>
+      <div><h2 id="login-title" className="rf-signin__title">Sign in</h2><p className="rf-signin__sub">Use your analyst account.</p></div>
       {error && <div role="alert"><Notice tone="danger" title="Sign-in failed" compact>{error}</Notice></div>}
       {appError && !error && <Notice tone="danger" title="The analyst identity could not be read" compact>{appError}</Notice>}
-      <label className={'rf-field' + (error ? ' is-error' : '')}><span className="rf-strong">Username</span>
+      <label className={'rf-field' + (error ? ' is-error' : '')}><span className="rf-signin__label">Email</span>
         <input ref={userRef} className="rf-input rf-input--lg" name="username" autoComplete="username" autoCapitalize="none" spellCheck={false}
           value={username} onChange={(e) => setUsername(e.target.value)} disabled={busy} required /></label>
-      <label className={'rf-field' + (error ? ' is-error' : '')}><span className="rf-strong">Password</span>
+      <label className={'rf-field' + (error ? ' is-error' : '')}><span className="rf-signin__label">Password</span>
         <input className="rf-input rf-input--lg" type="password" name="password" autoComplete="current-password"
           value={password} onChange={(e) => setPassword(e.target.value)} disabled={busy} required /></label>
       <Button type="submit" variant="primary" size="lg" block loading={busy}>{busy ? 'Signing in…' : 'Sign in'}</Button>
-      <p className="rf-help" style={{ margin: 0 }}>Your session is kept by the server and ends when you sign out or after a period of inactivity.</p>
+      <p className="rf-signin__note">You are signed out automatically after a period of inactivity.</p>
     </form>
   </LoginFrame>;
   if (!auth.checked) return <LoginFrame><div className="rf-login__form" aria-busy="true"><h2 id="login-title" className="page-title" style={{ margin: 0 }}>Sign in</h2><p className="rf-muted">Checking your session…</p></div></LoginFrame>;
@@ -73,14 +72,12 @@ export default function LoginScreen({ onSignIn, app, appError, kind, store }) {
 }
 
 function LoginFrame({ children }) {
-  return <div className="rf-login">
-    <section className="rf-login__brand">
-      <div className="rf-row" style={{ gap: 10 }}><Mark size={28} /><span style={{ fontSize: 18, fontWeight: 600 }}>Ringfence</span></div>
-      <h1 className="display" style={{ margin: '64px 0 0', maxWidth: 440 }}>Safeguarding evidence, on the record.</h1>
-      <p className="rf-login__lede">Process customer evidence, decide what needs a person, seal the package and run the reconciliation. Defer a case at any point and resume where you left off. Every step is traceable to its source.</p>
-      <ol className="rf-login__journey">{JOURNEY.map((s) => <li key={s[0]}><span className="rf-mono">{s[0]}</span><div>{s[1]}<small>{s[2]}</small></div></li>)}</ol>
-      <div className="rf-login__foot">Safeguarding reconciliation for e-money and payment institutions</div>
-    </section>
-    <section className="rf-login__formwrap">{children}</section>
+  // One centred sign-in card (23 Nov 2026 owner request): no marketing panel, aligned on every screen size.
+  return <div className="rf-signin">
+    <div className="rf-signin__card">
+      <div className="rf-signin__brand"><Mark size={30} /><div><div className="rf-signin__name">Ringfence</div><div className="rf-signin__tag">Safeguarding reconciliation</div></div></div>
+      {children}
+    </div>
+    <div className="rf-signin__foot">Authorised users only · activity is recorded</div>
   </div>;
 }

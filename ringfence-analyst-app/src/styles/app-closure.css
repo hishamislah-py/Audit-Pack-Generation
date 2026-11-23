@@ -172,3 +172,16 @@ button.rfe-cite:focus-visible { outline: 2px solid var(--focus-ring); outline-of
 .dash-count { min-width: 26px; padding: 2px 8px; border-radius: 999px; background: var(--surface-muted); border: 1px solid var(--line-subtle); font-size: 12px; font-weight: 600; text-align: center; color: var(--ink-secondary); }
 .reg-period { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 .reg-period__v { font-size: 18px; font-weight: 700; color: var(--ink); }
+
+/* Sign-in: one centred card (23 Nov 2026) */
+.rf-signin { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 32px 16px; background: linear-gradient(180deg, #eef1f5 0%, #f7f8fa 100%); }
+.rf-signin__card { width: 100%; max-width: 420px; padding: 32px 32px 28px; border: 1px solid #d6dbe1; border-top: 4px solid #1f3550; border-radius: 12px; background: #ffffff; box-shadow: 0 8px 30px rgba(24,33,44,.08); }
+.rf-signin__brand { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; color: #1f3550; }
+.rf-signin__name { font-size: 20px; line-height: 24px; font-weight: 700; color: #18212c; }
+.rf-signin__tag { font-size: 12px; line-height: 16px; color: #46505c; }
+.rf-signin__title { margin: 0; font-size: 22px; line-height: 28px; font-weight: 700; color: #18212c; }
+.rf-signin__sub { margin: 4px 0 0; font-size: 13px; color: #46505c; }
+.rf-signin__label { font-size: 13px; font-weight: 600; color: #18212c; }
+.rf-signin .rf-login__form { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: none; }
+.rf-signin__note { margin: 0; font-size: 12px; line-height: 17px; color: #46505c; text-align: center; }
+.rf-signin__foot { font-size: 12px; color: #46505c; }
