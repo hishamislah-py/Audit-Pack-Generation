@@ -237,12 +237,18 @@ def op_generate_final(req):
     comment = r["comment"]
     if unsupported_in_text(comment):
         comment = r["comment_ascii"]
+    # Evidence-bearing relationships (23 Nov 2026): the analyst's optional explanation per AI-CHALLENGED relationship is
+    # passed through only when supplied, so requests without it (and engines without the field) behave exactly as before.
+    extra = {}
+    if r.get("relationship_challenge_reviews"):
+        from uc042lib.final_pack import ChallengeReview
+        extra["relationship_challenge_reviews"] = [ChallengeReview(**c) for c in r["relationship_challenge_reviews"]]
     review = ReviewRecord(review_decision_id=r["review_decision_id"], review_session_id=r["review_session_id"],
                           decision="GENERATE", reviewer=Reviewer(**r["reviewer"]), decided_at=r["decided_at"],
                           comment=comment, acknowledgement_accepted=True, snapshot_sha256=snap.sha256,
                           closing_summary_sha256=summary_sha256(summary),
                           acknowledged_summary_unavailable=bool(r.get("acknowledged_summary_unavailable")),
-                          prior_decisions=[PriorDecision(**p) for p in r.get("prior_decisions") or []])
+                          prior_decisions=[PriorDecision(**p) for p in r.get("prior_decisions") or []], **extra)
     root = Path(req["final_packs_root"])
     version, supersedes = next_version(req["pack_id"], root)
     final = assemble_final_pack(snap, summary, review, GenerationInfo(version=version, supersedes_final_pack_id=supersedes))
