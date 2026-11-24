@@ -152,6 +152,16 @@ def ai_closing_summary() -> bool:
     return os.environ.get("RINGFENCE_AI_CLOSING_SUMMARY", "off").strip().lower() in ("on", "1", "true", "yes")
 
 
+def ai_group_investigation() -> bool:
+    """Owner, 24 Nov 2026: one AI investigation per engine investigation group, run on the group's cause, and one analyst
+    decision for the whole group ("one AI call ... these are things triggered due to the duplication ... accepted, it
+    should all go"). RINGFENCE_AI_GROUP_INVESTIGATION=off restores one investigation per exception."""
+    return os.environ.get("RINGFENCE_AI_GROUP_INVESTIGATION", "on").strip().lower() not in ("off", "0", "false", "no")
+
+
+CAUSE_RE = re.compile(r"^(DUPLICATE_|UNMATCHED_|RC4-DIRECT)")
+
+
 def ai_parallel() -> int:
     """How many AI operations may run at once: RINGFENCE_AI_PARALLEL (1..64). Default 64, i.e. every exception of a case is
     investigated at the same time (owner, 24 Nov 2026: "if there are 10 exceptions, all 10 should be running"); set a
@@ -524,13 +534,47 @@ class ClosureService:
         if not cfg["available"] or not requested_by:
             self._refuse_auto_investigation(c, requested_by, excs, cfg)
             return "REFUSED"
-        auth = self._record_authorization(c, "AUTO_INVESTIGATION", "AUTHORIZED", requested_by, cfg, exceptions=excs)
+        groups = self._build_ai_groups(c) if ai_group_investigation() else []
+        covered = {m for g in groups for m in g["covers"]}
+        to_run = [e for e in excs if e not in covered]
+        c = self._bump(ref, run, ai_groups=groups)
+        auth = self._record_authorization(c, "AUTO_INVESTIGATION", "AUTHORIZED", requested_by, cfg, exceptions=to_run,
+                                          **({"group_investigations": groups} if groups else {}))
         self._audit("AI_AUTHORIZED", c, None, system=True, authorized_by=requested_by,
                     authorization_id=auth["authorization_id"], kind="AUTO_INVESTIGATION", provider=cfg["provider"],
-                    model=cfg["model"], exceptions=excs)
-        for e in excs:
+                    model=cfg["model"], exceptions=to_run,
+                    **({"group_investigations": [{k: g[k] for k in ("group_id", "lead_exception_id", "covers")}
+                                                 for g in groups]} if groups else {}))
+        for e in to_run:
             self._queue_investigation(ref, run, e, auth["authorization_id"], requested_by, None, auto=True)
         return "QUEUED"
+
+    def _build_ai_groups(self, c: dict) -> list[dict]:
+        """The engine's investigation groups (2+ exceptions) as AI groups: one investigation on the lead (the causing
+        exception - a duplicate / unmatched entry / transaction against bank - else the engine's primary exception)
+        covers the others. Recorded once on the closure record, so the grouping never shifts afterwards."""
+        pack = self._pack(c)
+        excs = {x["exception_id"]: x for x in pack["exception_register"]["exceptions"]}
+        out = []
+        for g in (pack.get("investigation_group_register") or {}).get("groups") or []:
+            members = [m.strip() for m in str(g.get("exception_ids") or "").split(";") if m.strip() in excs]
+            if len(members) < 2:
+                continue
+            causes = [m for m in members if CAUSE_RE.match(str(excs[m].get("root_cause") or ""))]
+            primary = g.get("primary_exception_id")
+            lead = causes[0] if len(causes) == 1 else (primary if primary in members else members[0])
+            out.append({"group_id": g["group_id"], "lead_exception_id": lead,
+                        "covers": [m for m in members if m != lead]})
+        return out
+
+    @staticmethod
+    def _cover(c: dict) -> dict:
+        """covered exception -> its group's lead exception (only when the closure ran in group mode)."""
+        return {m: g["lead_exception_id"] for g in c.get("ai_groups") or [] for m in g["covers"]}
+
+    @staticmethod
+    def _group_of_lead(c: dict, exc: str) -> dict | None:
+        return next((g for g in c.get("ai_groups") or [] if g["lead_exception_id"] == exc), None)
 
     def _record_authorization(self, c: dict, kind: str, status: str, user: str | None, cfg: dict, **extra) -> dict:
         rec = {"authorization_id": _new_id("AIA"), "kind": kind, "status": status, "authorized_by": user,
@@ -987,6 +1031,8 @@ class ClosureService:
         attempts = {}
         for a in reg["attempts"]:
             attempts[a["exception_id"]] = a
+        cover = self._cover(c)
+        sel_by = {x["exception_id"]: x for x in inputs["selections"]}
         for x in inputs["selections"]:
             e, row = x["exception_id"], {"exception_id": x["exception_id"], "inclusion": x["inclusion"],
                                          "investigation_id": x["investigation_id"], "decision": None}
@@ -998,12 +1044,22 @@ class ClosureService:
                     blockers.append(f"{e}: investigation {x['investigation_id']} is not eligible.")
                     row["disposition"] = "NOT_ELIGIBLE"
                 elif dec is None:
-                    blockers.append(f"AI review pending for {e}: accept or reject the AI finding.")
+                    grp = self._group_of_lead(c, e)
+                    blockers.append(f"AI review pending for {e}: accept or reject the AI finding"
+                                    + (f" (one decision for its group: {', '.join(grp['covers'])})." if grp else "."))
                     row["disposition"] = "AWAITING_DECISION"
                 else:
                     row["disposition"] = "ACCEPTED" if dec["decision"] == "ACCEPT" else "REJECTED"
             elif x["inclusion"] == "EXCLUDED_BY_ANALYST":
                 row["disposition"] = "EXCLUDED"
+            elif cover.get(e) and (sel_by.get(cover[e]) or {}).get("inclusion") == "INCLUDED" \
+                    and not self._jobs(c, "investigation", e):
+                lead_inv = sel_by[cover[e]]["investigation_id"]
+                dec = active.get(lead_inv)
+                row["covered_by_exception_id"], row["investigation_id"] = cover[e], lead_inv
+                row["decision"] = dec["decision"] if dec else None
+                row["disposition"] = ("COVERED_BY_GROUP_" + ("ACCEPTED" if dec["decision"] == "ACCEPT" else "REJECTED")
+                                      if dec else "AWAITING_GROUP_DECISION")
             else:
                 last = attempts.get(e)
                 running = any(j["state"] in ACTIVE for j in self._jobs(c, "investigation", e))
@@ -1016,7 +1072,8 @@ class ClosureService:
                 else:
                     warnings.append(f"{e} will be reported as not investigated.")
                     row["disposition"] = "NOT_INVESTIGATED"
-            row["done"] = row["disposition"] in ("ACCEPTED", "REJECTED", "EXCLUDED", "NOT_INVESTIGATED")
+            row["done"] = row["disposition"] in ("ACCEPTED", "REJECTED", "EXCLUDED", "NOT_INVESTIGATED",
+                                                 "COVERED_BY_GROUP_ACCEPTED", "COVERED_BY_GROUP_REJECTED")
             row["exception_resolution"] = "UNRESOLVED"
             checklist.append(row)
         if s and s["status"] == "GENERATING":
@@ -1478,6 +1535,7 @@ class ClosureService:
                "generated_at": res["generated_at"], "review_id": s["review_id"],
                "review_decision_id": rec["review_decision_id"], "final_content_sha256": res["final_content_sha256"],
                "source_files": self._source_files(c), "decisions": hist,
+               "group_investigations": self._group_provenance(c),
                "mapping_provenance": self._mapping_provenance(c),
                "statement": "System-generated Ringfence provenance supplement (write-once). It maps the engine's "
                             "canonical evidence files back to the customer's uploaded files, records how each source "
@@ -1500,6 +1558,24 @@ class ClosureService:
                        analyst_omitted=r.get("omitted") or [], analyst_source_pack_verified=r.get("source_pack_verified"))
         except Exception as e:                                   # recorded, never hidden
             out.update(analyst_error=f"{type(e).__name__}: {e}"[:500])
+        return out
+
+    def _group_provenance(self, c: dict) -> list[dict]:
+        """Group mode: the lead's included investigation and the exceptions it covers (those with no investigation of
+        their own). Empty when the closure did not run in group mode."""
+        if not c.get("ai_groups"):
+            return []
+        inputs = self._inputs(c, self._session(c))
+        sel_by = {x["exception_id"]: x for x in inputs["selections"]}
+        out = []
+        for g in c["ai_groups"]:
+            lead = sel_by.get(g["lead_exception_id"]) or {}
+            if lead.get("inclusion") != "INCLUDED":
+                continue
+            covers = [m for m in g["covers"] if (sel_by.get(m) or {}).get("inclusion") == "NOT_INVESTIGATED"]
+            if covers:
+                out.append({"group_id": g["group_id"], "lead_exception_id": g["lead_exception_id"],
+                            "investigation_id": lead["investigation_id"], "covers": covers})
         return out
 
     # ============================================================================================ final pack reads
@@ -1661,6 +1737,14 @@ class ClosureService:
         e = x["exception_id"]
         state, jobs = self._ai_state(c, e, reg, cfg)
         pub = self._published_for(c, reg, e)
+        lead = self._cover(c).get(e)
+        covered_by = None
+        if lead and not pub and not jobs:
+            # covered by its group's investigation: the lead's AI state, finding and decision stand for this exception
+            state, _ = self._ai_state(c, lead, reg, cfg)
+            pub = self._published_for(c, reg, lead)
+            covered_by = lead
+        grp = None if covered_by else self._group_of_lead(c, e)
         inv = pub[0]["investigation_id"] if pub else None
         dec = active.get(inv) if inv else None
         aff = x.get("affected") or ""
@@ -1673,7 +1757,10 @@ class ClosureService:
                 "analyst_decision": dec["decision"] if dec else None, "decision_revision": dec["revision"] if dec else None,
                 "decided_by": dec["decided_by"] if dec else None, "decided_at": dec["decided_at"] if dec else None,
                 # PENDING_REVIEW: a published AI finding with no analyst decision yet (never treated as accepted)
-                "review_state": "PENDING_REVIEW" if inv and not dec else ("REVIEWED" if dec else None)}
+                "review_state": "PENDING_REVIEW" if inv and not dec else ("REVIEWED" if dec else None),
+                "covered_by_exception_id": covered_by,
+                "group_covers": [m for m in (grp or {}).get("covers", [])
+                                 if not self._published_for(c, reg, m) and not self._jobs(c, "investigation", m)] or None}
 
     def exception_workspace(self, ref: str, exc: str) -> dict:
         c, _ = self._locate(ref)
@@ -1714,10 +1801,14 @@ class ClosureService:
                                            "until it is supplied in a new submission." if row["missing_evidence"] else
                                            "Review the cited records" + (" and the AI finding (accept or reject it)."
                                                                          if row["investigation_id"] else "."))}
+        src_exc = row.get("covered_by_exception_id") or exc
+        inv_block = self._investigation_block(c, src_exc, reg, cfg)
+        if inv_block is not None and row.get("covered_by_exception_id"):
+            inv_block["covered_by_exception_id"] = src_exc
         workspace = {"exception": {"engine": (engine or {}).get("exception"), "pack": pack_row,
                                    "investigation_group": (engine or {}).get("investigation_group")},
-                     "summary": row, "facts": facts, "investigation": self._investigation_block(c, exc, reg, cfg),
-                     "decision": self._decision_block(c, exc, row, reg, active), "revision": c["revision"],
+                     "summary": row, "facts": facts, "investigation": inv_block,
+                     "decision": self._decision_block(c, src_exc, row, reg, active), "revision": c["revision"],
                      "note": "Engine values are shown exactly as written by the UC-042 engine. AI content is labelled "
                              "AI-generated; an analyst decision on an AI finding never resolves the exception."}
         return workspace

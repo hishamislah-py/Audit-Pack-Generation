@@ -240,3 +240,7 @@ button.rfe-cite:focus-visible { outline: 2px solid var(--focus-ring); outline-of
 .rfst__area { font-weight: 600; }
 .rfst__note { margin: 10px 0 0; font-size: 12px; line-height: 17px; color: var(--ink-muted); }
 @media (max-width: 720px) { .rfst__lines li { grid-template-columns: 22px 1fr; } .rfst__text { grid-column: 2; } }
+
+/* Group investigation note (24 Nov 2026) */
+.rfx-cover { display: flex; gap: 8px; align-items: flex-start; margin: 2px 0 10px; padding: 8px 10px; border-radius: 6px; background: var(--success-bg); color: var(--ink); font-size: 13px; line-height: 19px; }
+.rfx-cover .rf-icon { margin-top: 2px; color: var(--success-fg); flex: none; }

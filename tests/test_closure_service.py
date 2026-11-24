@@ -297,6 +297,8 @@ def test_clean_case_not_required_summary_final_pack_verified_and_authorised_by_u
 def test_exceptions_case_investigations_decisions_preview_hold_generate_freeze_and_restart(tmp_path, monkeypatch):
     # The AI closing summary is off by the 23 Nov 2026 owner decision; this test keeps its (re-enableable) path covered.
     monkeypatch.setenv("RINGFENCE_AI_CLOSING_SUMMARY", "on")
+    # one investigation per exception (the group mode of 24 Nov 2026 is covered by test_group_investigation.py)
+    monkeypatch.setenv("RINGFENCE_AI_GROUP_INVESTIGATION", "off")
     data, customer, period = scenario_zip("scenario_2")
     ctx = ctx_for(tmp_path)
     ref = reconcile(ctx, data, customer, period)

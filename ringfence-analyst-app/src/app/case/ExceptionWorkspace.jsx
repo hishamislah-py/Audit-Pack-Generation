@@ -419,7 +419,7 @@ function story(ws, linkedWs, links, excId, ctx) {
     const all = t.match(/-?\d+\.\d{2}/g); return all ? num(all[all.length - 1]) : null; };
   const comp = labelled(cr.computed), rep = labelled(cr.reported);
   const link = links.find((l) => l.other);
-  const linked = link ? { id: link.other, why: /duplicate/.test(link.kind) ? 'the duplicate entry that causes it' : /transaction/.test(link.kind) ? 'the same transaction' : /balance|snapshot/.test(link.kind) ? 'the same client balance' : /persistence/.test(link.kind) ? 'the same difference on another day' : 'linked by the engine' } : null;
+  const linked = link ? { id: link.other, why: /duplicate/.test(link.kind) ? (CAUSE_RE.test(String((ws.summary || {}).root_cause || '')) ? 'an exception this entry causes' : 'the duplicate entry that causes it') : /transaction/.test(link.kind) ? 'the same transaction' : /balance|snapshot/.test(link.kind) ? 'the same client balance' : /persistence/.test(link.kind) ? 'the same difference on another day' : 'linked by the engine' } : null;
   const M = (v) => money(Math.abs(v), ccy);
   const S = (v) => money(v, ccy);
   const rowsById = new Map(((ctx && ctx.rows) || []).map((r) => [r.exception_id, r]));
@@ -688,7 +688,26 @@ function WhatHappened({ ws, row, cl, ai, onRetry }) {
   return <div className="rf-row" style={{ gap: 8 }}><span className="rf-help">No AI explanation yet.</span>{retry}</div>;
 }
 
-function DecisionBar({ ws, onDecide }) {
+/* One AI investigation per engine group (owner, 24 Nov 2026): the lead (the cause) carries it, the group's other
+   exceptions are covered by it, and one decision covers them all. */
+function groupScope(ws, rows) {
+  const s = (ws && ws.summary) || {};
+  if (s.group_covers && s.group_covers.length) return { lead: s.exception_id, members: [s.exception_id].concat(s.group_covers), isLead: true };
+  if (s.covered_by_exception_id) {
+    const lead = s.covered_by_exception_id;
+    return { lead, members: [lead].concat((rows || []).filter((r) => r.covered_by_exception_id === lead).map((r) => r.exception_id)), isLead: false };
+  }
+  return null;
+}
+function GroupCoverNote({ g, go, runId }) {
+  if (!g) return null;
+  const others = g.members.filter((x) => x !== g.lead);
+  return <div className="rfx-cover"><Icon name="layers" size={14} /><span>{g.isLead
+    ? <>One AI investigation for the whole group: this cause and the {others.length} exception{others.length === 1 ? '' : 's'} it triggered ({others.join(', ')}). One decision covers all {g.members.length}.</>
+    : <>Covered by the group investigation on the cause, <Button size="sm" variant="link" onClick={() => go(runId, g.lead)}>{g.lead}</Button>. One decision covers all {g.members.length} exceptions of the group.</>}</span></div>;
+}
+
+function DecisionBar({ ws, onDecide, group }) {
   const d = (ws && ws.decision) || {};
   const a = d.actions || {};
   const cur = d.current;
@@ -698,10 +717,10 @@ function DecisionBar({ ws, onDecide }) {
   const accepted = cur && cur.decision === 'ACCEPT';
   return <section className={cx('rfx-decide', cur && (accepted ? 'is-accepted' : 'is-rejected'))} aria-label="Analyst decision">
     <div className="rfx-decide__main">
-      {cur ? <div><div className="rfx-decide__q"><Icon name={accepted ? 'check' : 'x'} size={14} /> {accepted ? 'You accepted this finding' : 'You rejected this finding'}</div>
+      {cur ? <div><div className="rfx-decide__q"><Icon name={accepted ? 'check' : 'x'} size={14} /> {accepted ? 'You accepted this finding' : 'You rejected this finding'}{group ? ` for the whole group (${group.members.length} exceptions)` : ''}</div>
         <div className="rfe-small rf-secondary">{cur.decided_by} · {fmtDateTime(cur.decided_at)}</div>
         {cur.explanation && <div className="rfx-decide__note">“{cur.explanation}”</div>}</div>
-        : <div className="rfx-decide__q">{invId ? 'Do you agree with this finding?' : 'You can decide once the AI explanation is available.'}</div>}
+        : <div className="rfx-decide__q">{invId ? 'Do you agree with this finding?' : 'You can decide once the AI explanation is available.'}{invId && group ? <div className="rfe-small rf-secondary" style={{ fontWeight: 400 }}>Your decision applies to all {group.members.length} exceptions in this group: {group.members.join(', ')}.</div> : null}</div>}
       <div className="rf-row" style={{ gap: 8 }}>
         {(!cur || !accepted) && <ActBtn a={a.accept} label={cur ? 'Change to accept' : 'Accept'} variant="primary" icon="check" onClick={() => onDecide('ACCEPT', invId)} extraReason={invId ? null : 'No AI explanation to decide on.'} />}
         {(!cur || accepted) && <ActBtn a={a.reject} label={cur ? 'Change to reject' : 'Reject'} variant="danger" icon="x" onClick={() => onDecide('REJECT', invId)} extraReason={invId ? null : 'No AI explanation to decide on.'} />}
@@ -820,9 +839,10 @@ export default function ExceptionWorkspace({ c, app, run, runId, excId, go, nav 
           {st && <Story st={st} go={go} runId={runId} />}
           <section className="rfx-card" aria-label="What the AI thinks">
             <div className="rfx-label">What the AI thinks<span className="rfe-badge rfe-badge--ai"><Icon name="sparkNone" size={12} />{['AI reading', ws.investigation && ws.investigation.model, 'an interpretation, not a fact'].filter(Boolean).join(' · ')}</span></div>
+            <GroupCoverNote g={groupScope(ws, (cl && cl.exceptions) || [])} go={go} runId={runId} />
             <WhatHappened ws={ws} row={row} cl={cl} ai={ai.data} onRetry={() => { m.reset(); setDlg({ kind: 'retry' }); }} />
           </section>
-          <DecisionBar ws={ws} onDecide={(kind, inv) => { m.reset(); setWhy(''); setDlg({ kind, inv }); }} />
+          <DecisionBar ws={ws} group={groupScope(ws, (cl && cl.exceptions) || [])} onDecide={(kind, inv) => { m.reset(); setWhy(''); setDlg({ kind, inv }); }} />
         </div>
         <div className="rfx-col">
           <section className="rfx-card" aria-label="The records">
