@@ -221,13 +221,27 @@ def build_model(final, provenance=None, source_pack=None):
         return best
 
     cards, glance = [], []
+    # group investigations (24 Nov 2026): one AI investigation on a group's lead covers its other exceptions, and the
+    # analyst decides once for the group. The Ringfence provenance supplement records which exceptions it covers.
+    row_by_id = {r["exception"]["exception_id"]: r for r in exceptions}
+    covered_by, covers_of = {}, {}
+    for g in (provenance or {}).get("group_investigations") or []:
+        lead_inv = (row_by_id.get(g.get("lead_exception_id")) or {}).get("investigation") or {}
+        if lead_inv.get("investigation_id") != g.get("investigation_id") or lead_inv.get("inclusion") != "INCLUDED":
+            omitted.append(f"group investigation {g.get('investigation_id')}: not the included investigation of "
+                           f"{g.get('lead_exception_id')}; its coverage is not shown")
+            continue
+        covers_of[g["lead_exception_id"]] = list(g.get("covers") or [])
+        for x in g.get("covers") or []:
+            covered_by[x] = g
     for row in exceptions:
         ex, inv = row["exception"], row.get("investigation") or {}
         check = ex.get("category") or str(ex.get("root_cause", "")).split("|")[0]
         titles = CHECK_TITLES.get(check)
         if not titles:
-            omitted.append(f"{ex['exception_id']}: no plain-English title for check {check}; the code is shown")
-            titles = (check, f"{check}.")
+            if re.fullmatch(r"[A-Z0-9_-]+", check or ""):
+                omitted.append(f"{ex['exception_id']}: no plain-English title for check {check}; the code is shown")
+            titles = (check, f"{check}.")              # the engine's category is already plain English
         scope = str(ex.get("root_cause", "")).split("|", 1)[1] if "|" in str(ex.get("root_cause", "")) else ""
         res = [results[i] for i in ex.get("affected_result_ids") or [] if i in results]
         r0 = res[0] if res else {}
@@ -281,7 +295,19 @@ def build_model(final, provenance=None, source_pack=None):
         # ---- AI investigation and analyst decision
         ar, iid = inv.get("analyst_review") or {}, inv.get("investigation_id")
         ai_rows, ai_label = [], "Not investigated"
-        if not iid or inv.get("inclusion") != "INCLUDED":
+        g = covered_by.get(ex["exception_id"]) if not iid or inv.get("inclusion") != "INCLUDED" else None
+        if g:
+            lead = g["lead_exception_id"]
+            lar = ((row_by_id[lead].get("investigation") or {}).get("analyst_review")) or {}
+            ai_rows.append(("Investigation", f"Covered by the group investigation {g['investigation_id']} on {lead}: one AI "
+                                             "investigation and one analyst decision for the whole group (see " + lead + ")."))
+            if lar.get("decision") in ("ACCEPT", "REJECT"):
+                ai_label = "Accepted" if lar["decision"] == "ACCEPT" else "Rejected"
+                ai_rows.append(("Analyst decision", (f"TAG:{ai_label}", f"for the group, on {lead} · "
+                                                     f"{lar['reviewer']['display_name']} · {when(lar['decided_at'])} UTC")))
+            else:
+                ai_rows.append(("Analyst decision", "No analyst decision is recorded for the group investigation."))
+        elif not iid or inv.get("inclusion") != "INCLUDED":
             ai_rows.append(("Investigation", "No AI investigation was included for this exception."))
         elif ar.get("decision") == "REJECT":
             ai_label = "Rejected"
@@ -305,6 +331,9 @@ def build_model(final, provenance=None, source_pack=None):
         else:
             ai_rows.append(("Investigation", iid))
             ai_rows.append(("Analyst decision", "No analyst decision is recorded for this investigation."))
+        if covers_of.get(ex["exception_id"]):
+            ai_rows.insert(1 if ai_rows else 0, ("Covers", "This investigation and decision also cover "
+                                                 + ", ".join(covers_of[ex["exception_id"]]) + "."))
         sev = ex.get("severity") or ""
         cards.append({"exception_id": ex["exception_id"], "title": titles[0], "code": check, "severity": sev,
                       "status_tag": f"{ex.get('status', 'OPEN')} · {row.get('resolution_status', 'UNRESOLVED')}",
@@ -333,7 +362,7 @@ def build_model(final, provenance=None, source_pack=None):
 
     # ---- next steps: accepted investigations only, verbatim, de-duplicated
     accepted_ids = [r["investigation"]["investigation_id"] for r in exceptions
-                    if (r.get("investigation") or {}).get("analyst_review", {}).get("decision") == "ACCEPT"]
+                    if ((r.get("investigation") or {}).get("analyst_review") or {}).get("decision") == "ACCEPT"]
     steps, seen = [], set()
     for iid in accepted_ids:
         for s in (inv_by_id.get(iid) or {}).get("next_steps") or []:
@@ -808,7 +837,7 @@ def render_analyst_pdf(final, provenance=None, source_pack=None):
         for n_card, c in enumerate(model["cards"]):
             tg = [x for x in (c["severity"], c["status_tag"]) if x]
             tgw = sum(tag_w(x) + 4 for x in tg) + 4
-            head = Table([[Paragraph(runs([(f"{c['exception_id']} — {c['title']} ({c['code']})", True)]), S["cardh"]), tags(*tg)]],
+            head = Table([[Paragraph(runs([(f"{c['exception_id']} — {c['title']}" + (f" ({c['code']})" if c['code'] != c['title'] else ""), True)]), S["cardh"]), tags(*tg)]],
                          colWidths=[inner - tgw, tgw])
             head.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
                                       ("RIGHTPADDING", (0, 0), (-1, -1), 0)]))

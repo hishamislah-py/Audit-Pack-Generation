@@ -182,6 +182,40 @@ class Clean(unittest.TestCase):
             self.assertIn(v, t, v)
 
 
+class GroupInvestigation(unittest.TestCase):
+    """24 Nov 2026: one AI investigation on a group's lead covers the group's other exceptions (Ringfence provenance)."""
+
+    def setUp(self):
+        self.f = copy.deepcopy(SEP)
+        e1, e2 = self.f["exception_register"]
+        e1["investigation"] = {"inclusion": "NOT_INVESTIGATED", "investigation_id": None}
+        self.lead_inv = e2["investigation"]["investigation_id"]
+        self.prov = dict(copy.deepcopy(SEP_PROV), group_investigations=[
+            {"group_id": "GRP-TEST", "lead_exception_id": "EXC-CASE-02", "investigation_id": self.lead_inv,
+             "covers": ["EXC-CASE-01"]}])
+
+    def test_covered_exception_shows_the_group_decision(self):
+        pdf, model, pages = render(self.f, self.prov, SEP_PACK)
+        t = flat(pages)
+        c1 = [c for c in model["cards"] if c["exception_id"] == "EXC-CASE-01"][0]
+        rows = dict((k, v) for k, v in c1["ai_rows"])
+        self.assertIn(f"Covered by the group investigation {self.lead_inv} on EXC-CASE-02", rows["Investigation"])
+        self.assertEqual(rows["Analyst decision"][0], "TAG:Accepted")
+        c2 = [c for c in model["cards"] if c["exception_id"] == "EXC-CASE-02"][0]
+        self.assertIn("also cover EXC-CASE-01", dict(c2["ai_rows"])["Covers"])
+        g1 = [g for g in model["outcome"]["glance"] if g["exception_id"] == "EXC-CASE-01"][0]
+        self.assertEqual(g1["ai_review"], "Accepted")
+        self.assertIn("one AI investigation and one analyst decision for the whole group", t)
+        self.assertEqual(model["omitted"], [])
+
+    def test_coverage_ignored_when_not_the_leads_included_investigation(self):
+        self.prov["group_investigations"][0]["investigation_id"] = "INV-OTHER"
+        pdf, model, pages = render(self.f, self.prov, SEP_PACK)
+        c1 = [c for c in model["cards"] if c["exception_id"] == "EXC-CASE-01"][0]
+        self.assertEqual(dict(c1["ai_rows"])["Investigation"], "No AI investigation was included for this exception.")
+        self.assertTrue(any("group investigation INV-OTHER" in o for o in model["omitted"]))
+
+
 class Statement(unittest.TestCase):
     """The deterministic reconciliation statement (24 Nov 2026), from stored per-check counts only."""
     from uc042lib.final_pack.statement import build_statement as _b

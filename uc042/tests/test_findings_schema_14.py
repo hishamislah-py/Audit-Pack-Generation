@@ -88,7 +88,7 @@ class SchemaCompatibility(unittest.TestCase):
 
     def test_prompts_and_versions(self):
         self.assertEqual((config.PROMPT_VERSION, config.TOOLS_PROMPT_VERSION, config.FINDINGS_SCHEMA_VERSION),
-                         ("uc042-investigator-prompt/1.11", "uc042-investigator-prompt/2.11-tools", "uc042-investigation-findings/1.5"))
+                         ("uc042-investigator-prompt/1.12", "uc042-investigator-prompt/2.12-tools", "uc042-investigation-findings/1.5"))
         for prompt in (SYSTEM_PROMPT, TOOLS_SYSTEM_PROMPT):
             for word in ("audit_relevance", "does_not_establish", "rationale", "title"):
                 self.assertIn(word, prompt)

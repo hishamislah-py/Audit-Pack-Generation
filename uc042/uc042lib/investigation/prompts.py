@@ -141,6 +141,14 @@ Strict rules:
     difference, which triggered this exception." When the engine has NOT established why, say so ("The records do not
     show why the line differs.") and put possible reasons in hypotheses. This applies to investigation_summary only;
     confirmed findings keep the causal-wording rule above.
+  * One investigation for a whole group: when this exception is the record that starts an engine investigation group (a
+    duplicate entry, an unmatched entry or a transaction that disagrees with the bank) and related_exceptions lists the
+    other members, this investigation is the only AI reading of the group and the analyst decides once for all of them.
+    Then investigation_summary keeps the headline, says what the evidence shows about this record, and then gives ONE
+    short sentence for EVERY related exception, starting with its exception ID, saying in everyday words how it follows
+    from this record, using only what the engine's results for it show, for example "<exception ID>: the bank shows
+    £1,250.00 less than the cash book on 30 Sep 2026." Name every related exception; do not merge them. In this case the
+    80-word limit becomes 60 words plus 25 words per related exception.
   * Write amounts with the currency symbol and thousands separators: £ for GBP, € for EUR, otherwise the currency code
     (£2,868.50, €1,238.12; never -2868.50 or GBP 2868.50), and dates as "15 Sep 2026". Say "the batch totals do not add up" rather than "C11-BATCH-ARITH is FAIL"; say "missing
     from the export" rather than "NOT_FOUND". Control codes and record IDs belong in the citation fields (evidence_ids,

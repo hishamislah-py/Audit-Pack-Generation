@@ -475,7 +475,7 @@ class InvestigationPrompt(unittest.TestCase):
         from uc042lib.investigation import config
         from uc042lib.investigation.prompts import SYSTEM_PROMPT, TOOLS_SYSTEM_PROMPT
         self.assertEqual((config.PROMPT_VERSION, config.TOOLS_PROMPT_VERSION),
-                         ("uc042-investigator-prompt/1.11", "uc042-investigator-prompt/2.11-tools"))
+                         ("uc042-investigator-prompt/1.12", "uc042-investigator-prompt/2.12-tools"))
         for p in (SYSTEM_PROMPT, TOOLS_SYSTEM_PROMPT):
             flat = " ".join(p.split())
             for s in ("engine_relationships", "status CONFIRMED: an engine result",
