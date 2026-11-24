@@ -214,8 +214,14 @@ function ResultTabs({ c, r, runs, runId, route, go }) {
         id: <span className="rf-mono rf-strong">{inGroup ? <span className="rfx-indent" aria-hidden="true">{isCause ? '●' : '└'}</span> : null}{e.exception_id}</span>, sev: <EngineSeverity value={e.severity} />,
         finding: <><span className="rf-cell-main">{(/^[A-Z0-9_-]+$/.test(String(excTitle(e))) ? plainTitle(String(excTitle(e))) : excTitle(e))}</span>{e.root_cause && <span className="rf-cell-sub"><Enum>{e.root_cause}</Enum></span>}</>,
         acct: excAccount(e), period: excPeriod(e), amt: typeof e.amount === 'number' ? <Money amount={e.amount} ccy={e.currency} /> : e.amount, aff: e.affected_results,
-        ai: cl ? <span className="rf-stack rf-stack--2" style={{ gap: 2, alignItems: 'flex-start' }}><AiState state={(byId.get(e.exception_id) || {}).ai_state} />{(byId.get(e.exception_id) || {}).covered_by_exception_id ? <span className="rf-cell-sub">group investigation · {(byId.get(e.exception_id) || {}).covered_by_exception_id}</span> : (byId.get(e.exception_id) || {}).group_covers ? <span className="rf-cell-sub">covers the group</span> : null}</span> : <span className="rf-muted" title={clq.error ? clq.error.message : 'Closure not loaded'}>—</span>,
-        dec: cl ? <DecisionCell e={byId.get(e.exception_id)} /> : <span className="rf-muted">—</span> } }))(g))} />
+        ai: cl ? ((x) => x.covered_by_exception_id
+          ? <span className="rf-cell-sub">Included in {x.covered_by_exception_id}'s investigation</span>
+          : <span className="rf-stack rf-stack--2" style={{ gap: 2, alignItems: 'flex-start' }}><AiState state={x.ai_state} />{x.group_covers ? <span className="rf-cell-sub">1 AI call for {x.group_covers.length + 1} exceptions</span> : null}</span>)(byId.get(e.exception_id) || {})
+          : <span className="rf-muted" title={clq.error ? clq.error.message : 'Closure not loaded'}>—</span>,
+        dec: cl ? ((x) => x.covered_by_exception_id && !x.analyst_decision
+          ? <span className="rf-cell-sub">Decided with {x.covered_by_exception_id}</span>
+          : <span className="rf-stack rf-stack--2" style={{ gap: 2, alignItems: 'flex-start' }}><DecisionCell e={x} />{x.covered_by_exception_id ? <span className="rf-cell-sub">group decision · {x.covered_by_exception_id}</span> : x.group_covers && x.analyst_decision ? <span className="rf-cell-sub">applies to all {x.group_covers.length + 1}</span> : null}</span>)(byId.get(e.exception_id) || {})
+          : <span className="rf-muted">—</span> } }))(g))} />
       : <Empty icon="check" title="No exceptions">This run raised no exceptions.</Empty>}</Panel>}
     {tab === 'controls' && <ControlsPanel refKey={c.case_ref} runId={runId} outcomes={r.outcomes || {}} total={r.total_results} />}
     {tab === 'runs' && <Panel title={'Reconciliation runs · ' + runs.length} sub="Every run is kept, including failed runs and their errors" flush><RunsList runs={runs} runId={runId} onSelect={(rid) => go(rid)} /></Panel>}
