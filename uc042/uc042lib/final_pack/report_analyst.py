@@ -32,6 +32,7 @@ from reportlab.platypus import (BaseDocTemplate, CondPageBreak, Frame, KeepToget
                                 TableStyle)
 
 from .render_pdf import PdfGlyphError, _unicode_fonts
+from .statement import build_statement
 
 ANALYST_RENDERER_VERSION = "uc042-final-report-renderer/4.0-analyst"
 
@@ -567,10 +568,12 @@ def build_model(final, provenance=None, source_pack=None):
             ccys = {g["ccy"] for g in glance if g["ccy"]}
             para += [(", and involve the same amount, ", False), (money(amount, next(iter(ccys)) if len(ccys) == 1 else None), True)]
         para.append((".", False))
+    statement = build_statement({c["check_id"]: c.get("result_counts") or {} for c in rr.get("control_checks") or []},
+                                f"{month:%B %Y}", n_exc)
     outcome = {"status": STATUS_WORDS.get(status_code, human(status_code)).upper(), "headline": o["headline"],
                "note": "Deterministic engine case status for the checks it ran; not an independent audit conclusion.",
                "tiles": tiles, "paragraph": para, "glance": glance, "links": link_short, "steps": steps,
-               "clean": not exceptions}
+               "clean": not exceptions, "statement": statement}
     return {"renderer": ANALYST_RENDERER_VERSION, "header": header, "outcome": outcome, "cards": cards, "link_box": link_box,
             "confirmed_relationships": confirmed_lines, "recon": recon, "evidence": {"intro": intro, "rows": ev_rows},
             "signoff": {"rows": signoff, "ack": hr.get("acknowledgement_text", ""), "prov": prov_line,
@@ -660,6 +663,9 @@ def render_analyst_pdf(final, provenance=None, source_pack=None):
         "badge": ParagraphStyle("bg", fontName=B, fontSize=9.5, leading=12, textColor=WHITE, alignment=1),
         "tag": ParagraphStyle("tg", fontName=B, fontSize=7.2, leading=9, textColor=NAVY, alignment=1),
         "cardh": ParagraphStyle("ch", fontName=B, fontSize=9.2, leading=12, textColor=INK),
+        "st_h": ParagraphStyle("sth", fontName=B, fontSize=12.5, leading=16, textColor=NAVY, spaceAfter=2),
+        "st_mark": ParagraphStyle("stm", fontName=B, fontSize=10, leading=12, textColor=NAVY, alignment=1),
+        "st_markx": ParagraphStyle("stx", fontName=B, fontSize=10, leading=12, textColor=INK, alignment=1),
     }
     W = A4[0] - 36 * mm
 
@@ -751,6 +757,22 @@ def render_analyst_pdf(final, provenance=None, source_pack=None):
                    colWidths=[50 * mm, W - 50 * mm - 12])
     status.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("LEFTPADDING", (0, 0), (-1, -1), 0)]))
     story += [edged([status], bg=PANEL), Spacer(1, 6)]
+    st = oc.get("statement")
+    if st and st.get("lines"):
+        marks = {"PASS": ("✓", "st_mark"), "FAIL": ("✗", "st_markx"), "INCOMPLETE": ("!", "st_markx")}
+        rows_ = []
+        for ln in st["lines"]:
+            mk, sty = marks.get(ln["state"], ("•", "st_markx"))
+            rows_.append([Paragraph(esc(mk, B), S[sty]), Paragraph(esc(ln["area"], B), S["cellb"]),
+                          Paragraph(esc(ln["text"], R), S["cell"])])
+        inner_w = W - 22
+        lt = Table(rows_, colWidths=[8 * mm, 46 * mm, inner_w - 54 * mm])
+        lt.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LINEBELOW", (0, 0), (-1, -2), 0.5, LINE),
+                                ("TOPPADDING", (0, 0), (-1, -1), 3.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 3.5),
+                                ("LEFTPADDING", (0, 0), (-1, -1), 2), ("RIGHTPADDING", (0, 0), (-1, -1), 3)]))
+        story += [KeepTogether([edged([P("RECONCILIATION STATEMENT · SYSTEM-GENERATED FROM THE ENGINE'S RESULTS, NOT AI", "panelh"),
+                                       P(st["headline"], "st_h"), P(st["summary"], "body"), lt, Spacer(1, 4),
+                                       P(st["note"], "muted")], bg=WHITE, pad=9)]), Spacer(1, 8)]
     tw = W / 5
     tiles = Table([[[Paragraph(esc(n, B), S["tile_n"]), Paragraph(esc(t, R), S["tile_t"])] for n, t in oc["tiles"]]],
                   colWidths=[tw] * 5)

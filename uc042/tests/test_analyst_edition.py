@@ -85,9 +85,21 @@ class Golden(unittest.TestCase):
                   "renderer uc042-final-report-renderer/4.0-analyst", "processing run RUN-75214c6daeccefb8",
                   "ILLUSTRATIVE SYNTHETIC DATA · not an audit opinion or compliance certification · analyst edition of the generated report"]:
             self.assertIn(v, self.t, v)
-        self.assertEqual(len(self.pages), 5)
-        self.assertTrue(all(f"Page {i} of 5" in p for i, p in enumerate(self.pages, 1)))
+        self.assertEqual(len(self.pages), 6)  # 24 Nov 2026: the reconciliation statement box added one page
+        self.assertTrue(all(f"Page {i} of 6" in p for i, p in enumerate(self.pages, 1)))
         self.assertEqual(self.model["omitted"], [])
+
+    def test_1_reconciliation_statement_with_failures(self):
+        st = self.model["outcome"]["statement"]
+        self.assertEqual(st["state"], "FAILURES")
+        self.assertEqual(st["headline"], "Not everything checks out")
+        fails = {x["area"]: x["text"] for x in st["lines"] if x["state"] == "FAIL"}
+        self.assertEqual(sorted(fails), ["Client balances and transactions", "Settlement"])
+        self.assertIn("C11-BATCH-ARITH", fails["Settlement"])
+        for v in ["RECONCILIATION STATEMENT", "Not everything checks out", "5 of 7 areas passed in full",
+                  "settlement batch arithmetic (C11-BATCH-ARITH)", "not by AI"]:
+            self.assertIn(v, self.t, v)
+        self.assertLess(self.t.find("RECONCILIATION STATEMENT"), self.t.find("Exceptions at a glance"))
 
     def test_1_accepted_ai_conclusion_is_verbatim(self):
         summary = SEP["ai_investigations"][0]["assessment"]["summary"]
@@ -159,6 +171,42 @@ class Clean(unittest.TestCase):
         self.assertIn("2. Reconciliation results", t)
         self.assertIn("4. Review and sign-off", t)
         self.assertTrue(3 <= len(pages) <= 4, len(pages))
+        st = model["outcome"]["statement"]
+        self.assertEqual((st["state"], st["headline"]), ("ALL_PASSED", "Everything checks out"))
+        self.assertTrue(all(x["state"] == "PASS" for x in st["lines"]))
+        self.assertEqual(len(st["lines"]), 7)
+        for v in ["Everything checks out", "All 33 checks passed across 1,965 control results",
+                  "the safeguarding position for June 2026 reconciles in full",
+                  "The firm's ledger agreed with the bank on all 44 account-days.",
+                  "All 88 settlement batches agreed with their lines and with the bank."]:
+            self.assertIn(v, t, v)
+
+
+class Statement(unittest.TestCase):
+    """The deterministic reconciliation statement (24 Nov 2026), from stored per-check counts only."""
+    from uc042lib.final_pack.statement import build_statement as _b
+    build = staticmethod(_b)
+
+    def test_insufficient_evidence_only(self):
+        st = self.build({"C06-DIFFERENCE": {"PASS": 10}, "C08-DIFFERENCE": {"PASS": 9, "INSUFFICIENT_EVIDENCE": 1}},
+                        "September 2026", 1)
+        self.assertEqual(st["state"], "INCOMPLETE")
+        ext = [x for x in st["lines"] if x["key"] == "external"][0]
+        self.assertEqual(ext["state"], "INCOMPLETE")
+        self.assertIn("could not be evaluated for lack of evidence", ext["text"])
+
+    def test_unknown_check_goes_to_other(self):
+        st = self.build({"C06-DIFFERENCE": {"PASS": 4}, "ZZ-NEW": {"FAIL": 2}}, "September 2026", 1)
+        self.assertEqual([x["area"] for x in st["lines"]], ["Internal reconciliation", "Other checks"])
+        self.assertIn("2 results failed: ZZ-NEW (ZZ-NEW)", st["lines"][1]["text"])
+
+    def test_app_copy_is_identical(self):
+        app = Path(__file__).resolve().parents[2] / "app_merge" / "smartparser" / "webapp" / "statement.py"
+        if not app.is_file():
+            self.skipTest("app worktree not alongside")
+        strip = lambda s: s.split('"""', 2)[2]  # noqa: E731 - the docstrings name each other
+        eng = (Path(__file__).resolve().parents[1] / "uc042lib" / "final_pack" / "statement.py").read_text(encoding="utf-8")
+        self.assertEqual(strip(eng), strip(app.read_text(encoding="utf-8")))
 
 
 def variant(kind):
