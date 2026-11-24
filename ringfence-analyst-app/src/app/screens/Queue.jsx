@@ -8,11 +8,10 @@ import { DemoScenariosSection } from './Demo.jsx';
 
 export const STATUSES = ['IN_PROGRESS', 'WAITING', 'PENDING', 'COMPLETED'];
 const BUCKETS = [
-  ['', 'All cases', 'dot', 'neutral', 'Every status'],
+  ['', 'All open cases', 'dot', 'neutral', 'Not completed'],
   ['IN_PROGRESS', 'In progress', 'active', 'progress', 'Being processed'],
   ['WAITING', 'Not started', 'waiting', 'waiting', 'Uploaded, not started'],
-  ['PENDING', 'On hold', 'paused', 'attention', 'Paused · resume to continue'],
-  ['COMPLETED', 'Completed', 'success', 'success', 'Reconciled']
+  ['PENDING', 'On hold', 'paused', 'attention', 'Paused · resume to continue']
 ];
 export const nowOf = (store) => (store && store.svc && store.svc.now ? store.svc.now() : Date.now());
 
@@ -95,7 +94,9 @@ export default function QueueScreen({ route, app, nav: navProp, focusDemo }) {
   const store = useStoreApi();
   const nav = navProp || store.nav;
   const query = route.query || {};
-  const status = STATUSES.includes(query.status) ? query.status : '';
+  // owner, 24 Nov 2026: completed cases have their own page (#/completed); the dashboard shows open work only
+  React.useEffect(() => { if (query.status === 'COMPLETED') nav('completed'); }, [query.status]); // eslint-disable-line react-hooks/exhaustive-deps
+  const status = STATUSES.includes(query.status) && query.status !== 'COMPLETED' ? query.status : '';
   // "My cases" needs a signed-in user (the backend resolves assigned=me from the session). Without authentication
   // (--insecure-no-auth, the mock service) there is no "me", so the queue shows all cases as before.
   const st = useAppState();
@@ -111,8 +112,8 @@ export default function QueueScreen({ route, app, nav: navProp, focusDemo }) {
   const now = nowOf(store);
   const data = q.data;
   const counts = data && data.counts;
-  const total = counts ? STATUSES.reduce((a, s) => a + (counts[s] || 0), 0) : null;
-  const items = (data && data.items) || [];
+  const total = counts ? STATUSES.filter((s) => s !== 'COMPLETED').reduce((a, s) => a + (counts[s] || 0), 0) : null;
+  const items = ((data && data.items) || []).filter((c) => c.status !== 'COMPLETED');
   const needle = text.trim().toLowerCase();
   const shown = needle ? items.filter((c) => [c.case_ref, c.customer_name, c.customer_id, c.zip && c.zip.filename, c.reporting_period, fmtPeriod(c.reporting_period)].some((v) => v && String(v).toLowerCase().indexOf(needle) > -1)) : items;
 
@@ -126,7 +127,7 @@ export default function QueueScreen({ route, app, nav: navProp, focusDemo }) {
   });
   const open = counts ? (counts.WAITING || 0) + (counts.IN_PROGRESS || 0) + (counts.PENDING || 0) : null;
 
-  const completed = items.filter((c) => c.status === 'COMPLETED');
+  const completed = ((data && data.items) || []).filter((c) => c.status === 'COMPLETED');
   const withExc = completed.filter((c) => c.completed && c.completed.case_status && c.completed.case_status !== 'CLEAN').length;
   return <div className="rf-page dash">
     <div className="rf-page__head">
@@ -144,7 +145,7 @@ export default function QueueScreen({ route, app, nav: navProp, focusDemo }) {
     {data && <div className="dash-kpis">
       {[['In progress', counts.IN_PROGRESS || 0, 'IN_PROGRESS'], ['Not started', (counts.WAITING || 0) + (counts.PENDING || 0), 'WAITING'],
         ['Completed', counts.COMPLETED || 0, 'COMPLETED'], ['Completed with exceptions', withExc, 'COMPLETED']].map(([label, n, s]) =>
-        <button key={label} type="button" className="dash-kpi" onClick={() => nav(scopeQ(s, scopeParam))}><span className="dash-kpi__n">{n}</span><span className="dash-kpi__l">{label}</span></button>)}
+        <button key={label} type="button" className="dash-kpi" onClick={() => nav(s === 'COMPLETED' ? 'completed' : scopeQ(s, scopeParam))}><span className="dash-kpi__n">{n}</span><span className="dash-kpi__l">{label}</span></button>)}
     </div>}
 
     <div className="rf-buckets" role="tablist" aria-label="Queue status">
@@ -160,16 +161,17 @@ export default function QueueScreen({ route, app, nav: navProp, focusDemo }) {
     {data && <ActiveSlot data={data} nav={nav} now={now} />}
 
     {data && <section className="rf-panel">
-      <div className="rf-panel__head"><h3 className="rf-panel__title" style={{ marginRight: 12 }}>Cases</h3><div className="rf-toolbar" style={{ flex: 1 }}>
+      <div className="rf-panel__head"><h3 className="rf-panel__title" style={{ marginRight: 12 }}>Open cases</h3><div className="rf-toolbar" style={{ flex: 1 }}>
         <label className="rf-search" style={{ minWidth: 340 }}><Icon name="search" /><input ref={searchRef} type="search" value={text} onChange={(e) => setText(e.target.value)} placeholder="Case, customer, ZIP name or period" aria-label="Search the work queue" /></label>
         {text && <Button variant="quiet" size="sm" icon="x" onClick={() => setText('')}>Clear</Button>}
         <span className="rf-spacer" />
-        <span className="rf-muted" style={{ fontSize: 12 }}>{needle ? shown.length + ' of ' + items.length : items.length} case{items.length === 1 ? '' : 's'}</span>
+        <span className="rf-muted" style={{ fontSize: 12 }}>{needle ? shown.length + ' of ' + items.length : items.length} open case{items.length === 1 ? '' : 's'}</span>
+        <Button variant="quiet" size="sm" iconRight="arrowRight" onClick={() => nav('completed')}>Completed cases{counts ? ' · ' + (counts.COMPLETED || 0) : ''}</Button>
       </div></div>
       {q.error && <div style={{ padding: '0 16px 12px' }}><Notice tone="danger" compact title="Refresh failed">{q.error.message}</Notice></div>}
       {shown.length
         ? <Table columns={caseColumns({ assignment: true })} rows={rows} caption="Cases" />
-        : <Empty icon="inbox" title={needle ? 'No case matches “' + text.trim() + '”' : status ? 'No ' + (BUCKETS.find((b) => b[0] === status) || [0, ''])[1] + ' cases' : mine ? 'No cases assigned to you' : 'No cases yet'} action={needle ? <Button size="sm" onClick={() => setText('')}>Clear search</Button> : <Button variant="primary" icon="upload" onClick={() => nav('register')}>Upload a submission</Button>}>{needle ? 'Search covers case reference, customer, file name and period.' : 'Upload a customer’s evidence ZIP, or start one of the submissions waiting below.'}</Empty>}
+        : <Empty icon="inbox" title={needle ? 'No case matches “' + text.trim() + '”' : status ? 'No ' + (BUCKETS.find((b) => b[0] === status) || [0, ''])[1] + ' cases' : mine ? 'No open cases assigned to you' : 'No open cases'} action={needle ? <Button size="sm" onClick={() => setText('')}>Clear search</Button> : <Button variant="primary" icon="upload" onClick={() => nav('register')}>Upload a submission</Button>}>{needle ? 'Search covers case reference, customer, file name and period.' : 'Upload a customer’s evidence ZIP, or start one of the submissions waiting below.'}</Empty>}
     </section>}
 
     {app && app.demo_scenarios && <DemoScenariosSection nav={nav} focus={!!focusDemo} />}

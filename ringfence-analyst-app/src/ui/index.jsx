@@ -101,7 +101,7 @@ export const Bullets = ({ items }) => <ul className="rf-steps-mini">{items.map((
 /* ---------- app shell, case header, status ---------- */
 export function AppShell({ analyst, active, activeCase, onNav, menuOpen, onMenu, onSignOut, children, overlay, demo }) {
   // Demo scenarios are a section of the Work queue (no separate nav item); `demo` is accepted for compatibility.
-  const nav = [['queue', 'Dashboard', 'inbox'], ['customers', 'Customers', 'building']];
+  const nav = [['queue', 'Dashboard', 'inbox'], ['completed', 'Completed', 'check'], ['customers', 'Customers', 'building']];
   const go = (to) => (e) => { e.preventDefault(); onNav(to); };
   return <div className="rf-app">
     <header className="rf-topbar">

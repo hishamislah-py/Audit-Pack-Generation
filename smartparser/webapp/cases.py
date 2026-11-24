@@ -196,6 +196,33 @@ class CaseService:
     def refs(self) -> list[str]:
         return sorted(p.stem for p in self.root.glob("RF-*.json"))
 
+    def _deleted_refs(self) -> list[str]:
+        """Case references of deleted cases (their records sit in cases/deleted as <ref>__<time>.json)."""
+        d = self.root / "deleted"
+        return sorted({p.name.split("__", 1)[0] for p in d.glob("RF-*__*.json")}) if d.is_dir() else []
+
+    def delete(self, ref: str, confirm) -> dict:
+        """Delete a COMPLETED case from the case list (owner, 24 Nov 2026: completed cases move to their own page and can
+        be deleted). Nothing is destroyed: the case record moves to cases/deleted/<ref>__<time>.json, its evidence,
+        package, reconciliation run, closure and audit trail stay on disk, and the reference is never reused."""
+        if confirm is not True:
+            raise CaseError(400, "CONFIRMATION_REQUIRED", "deleting a case needs an explicit confirmation")
+        with self.lock:
+            c = self._refresh(self.load(ref))
+            if c["status"] != "COMPLETED":
+                raise CaseError(409, "CASE_STATE", f"{ref} is {c['status']}: only a completed case can be deleted")
+            busy = [j for j in self.ctx.jobs.values() if j.get("case_ref") == ref and j.get("state") in ("queued", "running")]
+            if busy:
+                raise CaseError(409, "CASE_BUSY", f"{ref} still has work running ({busy[0].get('kind')}); try again when it ends")
+            d = self.root / "deleted"
+            d.mkdir(parents=True, exist_ok=True)
+            target = d / f"{ref}__{now().replace(':', '').replace('-', '')}.json"
+            # audited first: a case never leaves the list without its CASE_DELETED event
+            self._audit("CASE_DELETED", c, moved_to=str(target.relative_to(self.ctx.root)),
+                        case_status=(c.get("completed") or {}).get("case_status"))
+            self._path(ref).replace(target)
+        return {"case_ref": ref, "deleted": True, "kept_at": str(target.relative_to(self.ctx.root))}
+
     def _audit(self, event_type: str, c: dict, **details) -> None:
         # Fix8 D6 (I-1): the acting identity - the signed-in user of this request (or of the request that started the
         # job), the system actor for system-detected events, else the server reviewer (no request context).
@@ -247,7 +274,10 @@ class CaseService:
             tmp.write_bytes(data)
             tmp.replace(target)
         with self.lock:
-            seq = 1 + sum(1 for r in self.refs() if r.startswith(f"RF-{reporting_period}-"))
+            # the highest number ever used + 1: a deleted case's reference is never reused (its closure / runs stay)
+            used = [int(r.rsplit("-", 1)[1]) for r in self.refs() + self._deleted_refs()
+                    if r.startswith(f"RF-{reporting_period}-") and r.rsplit("-", 1)[1].isdigit()]
+            seq = 1 + max(used, default=0)
             ref = f"RF-{reporting_period}-{seq:03d}"
             c = {"case_ref": ref, "customer_id": customer_id or f"CUST-{hashlib.sha256(customer_name.encode()).hexdigest()[:8]}",
                  "customer_name": customer_name, "reporting_period": reporting_period, "created_at": now(),

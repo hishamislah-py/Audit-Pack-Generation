@@ -281,7 +281,7 @@ def acting(ctx, user: str | None):
     return identity.acting_as(srv.reviewer_id, role=srv.role, authenticated=False)
 
 
-CASE_MUTATIONS = ("start", "defer", "resume", "retry", "evidence", "validate", "activate", "reconcile")
+CASE_MUTATIONS = ("start", "defer", "resume", "retry", "evidence", "validate", "activate", "reconcile", "delete")
 PACKAGE_MUTATIONS = ("intake", "resubmit", "validate", "activate", "reconcile")
 REVIEW_MUTATIONS = ("decision", "reject", "complete")
 
@@ -676,6 +676,8 @@ def case_route(ctx: AppContext, method: str, P: list[str], q: dict, body: dict, 
         return cs.start(ref)
     if method == "POST" and rest == ["defer"]:
         return cs.defer(ref)
+    if method == "POST" and rest == ["delete"]:
+        return cs.delete(ref, body.get("confirm"))
     if method == "POST" and rest == ["resume"]:
         return cs.resume(ref)
     if method == "POST" and rest == ["retry"]:

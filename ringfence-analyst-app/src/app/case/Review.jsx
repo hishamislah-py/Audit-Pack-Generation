@@ -81,6 +81,32 @@ function Corrections({ items, onEvidence }) {
     {items.map((x) => x.category + ' v' + x.version + ' (' + stateOf(x.version_status).label + ')' + (x.detail ? ': ' + String(x.detail).replace(/[.\s]+$/, '') : '')).join(' · ')}. Upload a corrected file as a new version.</Notice>;
 }
 
+/* Accept every outstanding suggestion at once (owner, 24 Nov 2026): when Smart Parser already suggests the field for a
+   column (a renamed or re-cased header), one click records MAP to that suggestion for each such column. Columns with no
+   suggestion, or that need a clarification, are still decided one by one; Confirm file stays a separate step. */
+function AcceptAllSuggestions({ c, rv, rows, readOnly }) {
+  const m = useMutation();
+  const ok = rows.filter((r) => r.needs_attention && !r.decided && r.suggested_field && !r.clarification_required
+    && (r.available_actions || []).includes('MAP'));
+  if (readOnly || !ok.length) return null;
+  const run = () => m.run(async (svc) => {
+    let last = null;
+    for (const r of ok) {
+      const cur = await svc.getCase(c.case_ref);          // the current revision for each decision (stale-change guard)
+      last = await svc.postDecision(c.case_ref, rv.file_version_id, { action: 'MAP', source_index: r.source_index,
+        canonical_field: undefined, expected_revision: cur.revision });
+    }
+    return last;
+  }, { inline: true, key: 'review:' + c.case_ref + ':' + rv.file_version_id,
+    success: ok.length + ' suggestion' + (ok.length === 1 ? '' : 's') + ' accepted' });
+  return <div className="rfc-acceptall">
+    <div><b>{ok.length === 1 ? '1 column has' : ok.length + ' columns have'} a suggested field.</b> Accept {ok.length === 1 ? 'it' : 'them all'} at once, or decide column by column below.
+      <div className="rf-cell-sub">{ok.map((r) => r.source_header.trim() + ' → ' + r.suggested_field).join(' · ')}</div>
+      {m.error && <div style={{ marginTop: 6 }}><Notice tone="danger" compact title="Not all recorded">{m.error}</Notice></div>}</div>
+    <Button variant="primary" icon="check" loading={m.busy} onClick={run}>{m.busy ? 'Accepting…' : 'Accept all ' + ok.length + ' suggestion' + (ok.length === 1 ? '' : 's')}</Button>
+  </div>;
+}
+
 function FileReview({ c, app, rv, lockReason, onConfirm, onReject }) {
   const rows = rv.rows || [];
   const counts = rv.counts || {};
@@ -111,6 +137,7 @@ function FileReview({ c, app, rv, lockReason, onConfirm, onReject }) {
         </>}
       </div>
     </section>
+    <AcceptAllSuggestions c={c} rv={rv} rows={rows} readOnly={readOnly || !actions.length} />
     {notCovered.length > 0 && <Notice tone="attention" compact title="Required fields not covered">{notCovered.map((n) => <Enum key={n}>{n}</Enum>)}</Notice>}
     {rv.review_kind === 'MANUAL_MAPPING' && <Notice tone="attention" compact title="Manual mapping: no usable AI proposal">{(rv.unresolved_headers || []).length ? 'Unresolved column(s): ' + rv.unresolved_headers.join(', ') + '. ' : ''}Choose the field for each (Change), ignore it, or reject the file.</Notice>}
     {rv.proposal_provider_id && <Notice tone="info" compact title="Proposal source">{String(rv.proposal_provider_id).startsWith('recorded_stub') ? 'Recorded test fixture (not a live model)' : 'Live AI · ' + rv.proposal_provider_id}{rv.proposal_id ? ' · proposal ' + rv.proposal_id : ''}. Proposals are advisory: nothing is applied without your decision, and every choice is checked against the column values.</Notice>}

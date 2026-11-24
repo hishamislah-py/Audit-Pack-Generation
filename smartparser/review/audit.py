@@ -56,6 +56,8 @@ EVENT_TYPES = Literal[
     "ACCESS_DENIED", "SUPERVISOR_OVERRIDE",
     # D7 - an unassigned case claimed by an analyst, or a case reassigned by a supervisor
     "CASE_ASSIGNED",
+    # owner, 24 Nov 2026: a completed case removed from the case list (record kept in cases/deleted)
+    "CASE_DELETED",
 ]
 GENESIS = "0" * 64
 

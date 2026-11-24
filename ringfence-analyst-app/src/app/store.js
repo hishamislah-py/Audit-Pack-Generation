@@ -14,6 +14,7 @@ export function parseRoute(hash) {
   if (!p.length || p[0] === 'queue') return { view: 'queue', query };
   if (p[0] === 'login') return { view: 'login', query };
   if (p[0] === 'register') return { view: 'register', query };
+  if (p[0] === 'completed') return { view: 'completed', query };
   if (p[0] === 'demo') return { view: 'demo', query };
   if (p[0] === 'customers') return p[1] ? { view: 'customer', id: p[1], query } : { view: 'customers', query };
   if (p[0] === 'cases' && p[1]) return { view: 'case', ref: p[1], tab: TABS.includes(p[2]) ? p[2] : 'overview', sub: p[3] || null, id: p[4] || null, query };

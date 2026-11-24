@@ -16,6 +16,7 @@ export const METHODS = [
   ['claimCase', 'POST', '/api/cases/{ref}/claim', '{ assigned_to?, expected_revision? }', 'CaseDetail (audited CASE_ASSIGNED)'],
   ['startCase', 'POST', '/api/cases/{ref}/start', '{ expected_revision? }', 'CaseDetail'],
   ['deferCase', 'POST', '/api/cases/{ref}/defer', '{ expected_revision? }', 'CaseDetail'],
+  ['deleteCase', 'POST', '/api/cases/{ref}/delete', '{ confirm: true }', '{ case_ref, deleted, kept_at }'],
   ['resumeCase', 'POST', '/api/cases/{ref}/resume', '{ expected_revision? }', 'CaseDetail'],
   ['retryCase', 'POST', '/api/cases/{ref}/retry', '{ confirm: true, expected_revision? }', 'CaseDetail'],
   ['validateCase', 'POST', '/api/cases/{ref}/validate', null, 'CaseDetail'],

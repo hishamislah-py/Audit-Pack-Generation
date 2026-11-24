@@ -54,6 +54,7 @@ export function createHttpService(config) {
     claimCase: (ref, body) => post('/api/cases/' + enc(ref) + '/claim', body || {}),
     startCase: (ref, body) => post('/api/cases/' + enc(ref) + '/start', body),
     deferCase: (ref, body) => post('/api/cases/' + enc(ref) + '/defer', body),
+    deleteCase: (ref) => post('/api/cases/' + enc(ref) + '/delete', { confirm: true }),
     resumeCase: (ref, body) => post('/api/cases/' + enc(ref) + '/resume', body),
     retryCase: (ref, body) => post('/api/cases/' + enc(ref) + '/retry', Object.assign({ confirm: true }, body)),
     validateCase: (ref) => post('/api/cases/' + enc(ref) + '/validate', {}),

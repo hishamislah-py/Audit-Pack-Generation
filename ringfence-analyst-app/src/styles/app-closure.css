@@ -244,3 +244,7 @@ button.rfe-cite:focus-visible { outline: 2px solid var(--focus-ring); outline-of
 /* Group investigation note (24 Nov 2026) */
 .rfx-cover { display: flex; gap: 8px; align-items: flex-start; margin: 2px 0 10px; padding: 8px 10px; border-radius: 6px; background: var(--success-bg); color: var(--ink); font-size: 13px; line-height: 19px; }
 .rfx-cover .rf-icon { margin-top: 2px; color: var(--success-fg); flex: none; }
+
+/* Accept all mapping suggestions (24 Nov 2026) */
+.rfc-acceptall { display: flex; gap: 16px; align-items: center; justify-content: space-between; padding: 12px 16px; border: 1px solid var(--success-line); background: var(--success-bg); border-radius: 8px; font-size: 13px; line-height: 19px; }
+.rfc-acceptall .rf-cell-sub { margin-top: 4px; font-family: var(--font-mono, monospace); font-size: 12px; }
