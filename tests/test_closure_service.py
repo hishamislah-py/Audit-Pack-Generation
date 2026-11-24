@@ -229,6 +229,9 @@ def test_clean_case_not_required_summary_final_pack_verified_and_authorised_by_u
     v = wait_closure(ctx, ref, lambda v: v["state"] != "PACK_PENDING")
     assert v["pack"]["status"] == "GENERATED" and v["exceptions"] == [] and v["state"] == "READY", v
     assert v["usage"]["calls"] == 0 and v["deterministic_summary"]["label"] == "System-generated, not AI"
+    st = v["deterministic_summary"]["statement"]                 # deterministic reconciliation statement (24 Nov 2026)
+    assert st["state"] == "ALL_PASSED" and st["headline"] == "Everything checks out", st
+    assert st["lines"] and all(x["state"] == "PASS" for x in st["lines"]) and "not by AI" in st["note"]
     run = v["recon_run_id"]
     before = tree_digest(ctx.runs / run)                       # runs/ is read-only for closure
     # no AI authorisation for a clean case

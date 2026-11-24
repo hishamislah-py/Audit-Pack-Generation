@@ -39,6 +39,7 @@ from pathlib import Path
 from ..packages.store import _retry_sharing
 from ..reconciliation.closure_runner import ClosureRunner, ClosureRunnerError
 from . import identity, results
+from .statement import build_statement
 
 CLOSURE_JOB_KINDS = ("audit_pack", "investigation", "closing_preview", "final_pack")
 ACTIVE = ("queued", "running")
@@ -1939,7 +1940,8 @@ class ClosureService:
                 "frozen": frozen,
                 "pack": {"status": pack.get("status"), "pack_id": pack.get("pack_id"), "reason": pack.get("reason")},
                 "deterministic_summary": {"label": "System-generated, not AI", "case_status": rec["result"]["case_status"],
-                                          "totals": outcomes, "exceptions_by_severity": by_sev, "text": text},
+                                          "totals": outcomes, "exceptions_by_severity": by_sev, "text": text,
+                                          "statement": self._statement(c, len(excs))},
                 "ai": {"available": cfg["available"], "provider": cfg["provider"], "model": cfg["model"],
                        "problem": cfg["problem"]},
                 "usage": self._usage(c), "exceptions": rows, "review": review,
@@ -1950,6 +1952,30 @@ class ClosureService:
                                                    "authorised_by": fp["authorised_by"],
                                                    "generated_at": fp["generated_at"]},
                 "last_generation_failure": c.get("last_generation_failure"), "actions": actions}
+
+    _STATEMENTS: dict = {}
+
+    def _statement(self, c: dict, n_exc: int) -> dict | None:
+        """Deterministic reconciliation statement (owner, 24 Nov 2026) from the run's stored control results; the same
+        builder as the analyst-edition PDF. A run never changes, so the per-check counts are cached per run."""
+        run_id = c["recon_run_id"]
+        counts = self._STATEMENTS.get(run_id)
+        if counts is None:
+            try:
+                rows = results.controls(self._run_dir(run_id))
+            except (OSError, ValueError):
+                return None
+            counts = {}
+            for r in rows:
+                cc = counts.setdefault(r.get("check_id"), {})
+                cc[r.get("outcome")] = cc.get(r.get("outcome"), 0) + 1
+            self._STATEMENTS[run_id] = counts
+        try:
+            m = re.search(r"(\d{4})-(\d{2})", str(c.get("period") or ""))      # "PER-2026-09" or "2026-09"
+            label = datetime(int(m.group(1)), int(m.group(2)), 1).strftime("%B %Y")
+        except ValueError:
+            label = "the period"
+        return build_statement(counts, label, n_exc)
 
     # ============================================================================================ recovery
     def recover(self) -> None:

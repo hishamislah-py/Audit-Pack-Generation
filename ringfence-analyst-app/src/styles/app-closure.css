@@ -218,3 +218,25 @@ button.rfe-cite:focus-visible { outline: 2px solid var(--focus-ring); outline-of
 .rfx-group__item.is-cause { font-weight: 600; }
 .rf-table tr.is-grouped td:first-child { padding-left: 28px; }
 .rfx-indent { display: inline-block; width: 16px; margin-left: -18px; color: var(--ink-muted); }
+
+
+/* Reconciliation statement (24 Nov 2026): deterministic "everything checks out" panel */
+.rfst { padding: 18px 20px; border-left: 3px solid var(--success-fg); }
+.rfst--failures { border-left-color: var(--danger-fg); }
+.rfst--incomplete { border-left-color: var(--attention-fg); }
+.rfst__head { display: flex; align-items: center; gap: 12px; justify-content: space-between; margin-bottom: 8px; }
+.rfst__kicker { display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-secondary); }
+.rfst__headline { display: flex; align-items: center; gap: 8px; font-size: 20px; line-height: 26px; font-weight: 650; color: var(--ink); }
+.rfst--all_passed .rfst__headline .rf-icon { color: var(--success-fg); }
+.rfst--failures .rfst__headline .rf-icon { color: var(--danger-fg); }
+.rfst--incomplete .rfst__headline .rf-icon { color: var(--attention-fg); }
+.rfst__summary { margin: 4px 0 12px; font-size: 14px; line-height: 21px; color: var(--ink-secondary); max-width: 980px; }
+.rfst__lines { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.rfst__lines li { display: grid; grid-template-columns: 22px minmax(150px, 230px) 1fr; gap: 10px; align-items: start; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; line-height: 19px; }
+.rfst__mark { display: inline-flex; width: 20px; height: 20px; border-radius: 50%; align-items: center; justify-content: center; margin-top: -1px; }
+.rfst__lines li.is-pass .rfst__mark { color: var(--success-fg); background: var(--success-bg); }
+.rfst__lines li.is-fail .rfst__mark { color: var(--danger-fg); background: var(--danger-bg); }
+.rfst__lines li.is-warn .rfst__mark { color: var(--attention-fg); background: var(--attention-bg); }
+.rfst__area { font-weight: 600; }
+.rfst__note { margin: 10px 0 0; font-size: 12px; line-height: 17px; color: var(--ink-muted); }
+@media (max-width: 720px) { .rfst__lines li { grid-template-columns: 22px 1fr; } .rfst__text { grid-column: 2; } }

@@ -73,8 +73,27 @@ export function DecisionCell({ e }) {
 }
 
 /* "System-generated, not AI": the backend's deterministic outcome summary. */
+/* Reconciliation statement (owner, 24 Nov 2026): what the checks found, in plain sentences, generated from the engine's
+   stored results (smartparser/webapp/statement.py, the same builder as the PDF). Never AI. */
+const ST_MARK = { PASS: ['check', 'is-pass'], FAIL: ['x', 'is-fail'], INCOMPLETE: ['alert', 'is-warn'] };
+export function ReconStatement({ st, status }) {
+  if (!st || !(st.lines || []).length) return null;
+  return <section className={'rf-panel rfst rfst--' + String(st.state || '').toLowerCase()} aria-label="Reconciliation statement">
+    <div className="rfst__head">
+      <div className="rfst__kicker">Reconciliation statement <span className="rfe-badge rfe-badge--det"><Icon name="shield" size={12} />System-generated, not AI</span></div>
+      {status && <Pill state={status} />}
+    </div>
+    <div className="rfst__headline"><Icon name={st.state === 'ALL_PASSED' ? 'check' : 'alert'} size={20} />{st.headline}</div>
+    <p className="rfst__summary">{st.summary}</p>
+    <ul className="rfst__lines">{st.lines.map((l) => { const m = ST_MARK[l.state] || ST_MARK.INCOMPLETE; return <li key={l.key} className={m[1]}>
+      <span className="rfst__mark"><Icon name={m[0]} size={14} /></span><span className="rfst__area">{l.area}</span><span className="rfst__text">{l.text}</span></li>; })}</ul>
+    <p className="rfst__note">{st.note}</p>
+  </section>;
+}
+
 export function DeterministicSummary({ s }) {
   if (!s) return null;
+  if (s.statement && (s.statement.lines || []).length) return <ReconStatement st={s.statement} status={s.case_status} />;
   const obj = (o) => (o && typeof o === 'object' ? Object.entries(o) : []);
   return <section className="rf-panel rfe-det" aria-label="Deterministic outcome summary">
     <header className="rf-panel__head"><div><h3 className="rf-panel__title">Outcome summary</h3><div className="rf-panel__sub"><span className="rfe-badge rfe-badge--det"><Icon name="shield" size={12} />{s.label || 'System-generated, not AI'}</span></div></div><span className="rf-spacer" />{s.case_status && <Pill state={s.case_status} />}</header>
