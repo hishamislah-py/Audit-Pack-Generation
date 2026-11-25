@@ -1,0 +1,1341 @@
+{
+ "2026-01": {
+  "period": "2026-01",
+  "policy_file_used": "safeguarding_reconciliation_policy_v1.1.pdf",
+  "case_status": "CLEAN",
+  "results_by_outcome": {
+   "PASS": 1795,
+   "NOT_APPLICABLE": 88
+  },
+  "non_passing": [],
+  "exceptions": [],
+  "groups": [],
+  "candidates": []
+ },
+ "2026-02": {
+  "period": "2026-02",
+  "policy_file_used": "safeguarding_reconciliation_policy_v1.1.pdf",
+  "case_status": "EVIDENCE_INCOMPLETE",
+  "results_by_outcome": {
+   "PASS": 1690,
+   "NOT_APPLICABLE": 83,
+   "INSUFFICIENT_EVIDENCE": 15
+  },
+  "non_passing": [
+   {
+    "check_id": "C14-COVER",
+    "scope": "IN-07 2026-02-16/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C14-COVER",
+    "scope": "IN-08 2026-02-16/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "DQ22-CONTINUITY",
+    "scope": "ST-SGA-EUR-01-20260217-EOD",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0216-0001",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0216-0002",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0216-0003",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0216-0004",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0216-0005",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C07-BANK-EVIDENCE",
+    "scope": "2026-02-16/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "73199.44",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-02-16/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "0.00",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "AQ-EUR-20260216",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "SB-EUR-20260216",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "FUND-TOPUP",
+    "scope": "AQ-EUR-20260216",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "6.79",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "RC4-DIRECT",
+    "scope": "TX-0216-00014",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "RC4-DIRECT",
+    "scope": "TX-0216-00020",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "evidence_status": ""
+   }
+  ],
+  "exceptions": [
+   {
+    "exception_id": "EXC-CASE-01",
+    "severity": "Critical",
+    "category": "Missing bank evidence",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+    "amount": "",
+    "first_date": "2026-02-16",
+    "last_date": "2026-02-16",
+    "affected_results": 15,
+    "evidence_status": "",
+    "investigation_group_id": ""
+   }
+  ],
+  "groups": [],
+  "candidates": []
+ },
+ "2026-03": {
+  "period": "2026-03",
+  "policy_file_used": "safeguarding_reconciliation_policy_v1.1.pdf",
+  "case_status": "EXCEPTIONS_OPEN",
+  "results_by_outcome": {
+   "PASS": 1875,
+   "NOT_APPLICABLE": 89,
+   "FAIL": 8
+  },
+  "non_passing": [
+   {
+    "check_id": "BANK-CASH-LINK",
+    "scope": "BE-GBP-0317-X01",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0317-X01",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "BANK-CASH-LINK",
+    "scope": "BE-GBP-0320-X02",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0320-X02",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-03-17/SGA-GBP-01",
+    "outcome": "FAIL",
+    "computed": "-517.30",
+    "reported": "-517.30",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-03-17|-517.30",
+    "evidence_status": "NOT_EVIDENCED"
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-03-18/SGA-GBP-01",
+    "outcome": "FAIL",
+    "computed": "-517.30",
+    "reported": "-517.30",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-03-17|-517.30",
+    "evidence_status": "NOT_EVIDENCED"
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-03-19/SGA-GBP-01",
+    "outcome": "FAIL",
+    "computed": "-517.30",
+    "reported": "-517.30",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-03-17|-517.30",
+    "evidence_status": "NOT_EVIDENCED"
+   },
+   {
+    "check_id": "C11-BANK-ENTRY",
+    "scope": "BE-GBP-0317-X01",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0317-X01",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BANK-ENTRY",
+    "scope": "BE-GBP-0320-X02",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0320-X02",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "DISC-LOG",
+    "scope": "SGA-GBP-01 from 2026-03-17",
+    "outcome": "FAIL",
+    "computed": "3 day(s) with difference",
+    "reported": "0 log entries",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-03-17|-517.30",
+    "evidence_status": ""
+   }
+  ],
+  "exceptions": [
+   {
+    "exception_id": "EXC-CASE-01",
+    "severity": "Critical",
+    "category": "Unexplained bank-ledger difference",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-03-17|-517.30",
+    "amount": "-517.30",
+    "first_date": "2026-03-17",
+    "last_date": "2026-03-19",
+    "affected_results": 4,
+    "evidence_status": "NOT_EVIDENCED",
+    "investigation_group_id": "GRP-CASE-01"
+   },
+   {
+    "exception_id": "EXC-CASE-02",
+    "severity": "High",
+    "category": "Bank entry with no counterpart",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0317-X01",
+    "amount": "-517.30",
+    "first_date": "2026-03-17",
+    "last_date": "2026-03-17",
+    "affected_results": 2,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-01"
+   },
+   {
+    "exception_id": "EXC-CASE-03",
+    "severity": "High",
+    "category": "Bank entry with no counterpart",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0320-X02",
+    "amount": "517.30",
+    "first_date": "2026-03-20",
+    "last_date": "2026-03-20",
+    "affected_results": 2,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-01"
+   }
+  ],
+  "groups": [
+   {
+    "group_id": "GRP-CASE-01",
+    "exception_ids": "EXC-CASE-01; EXC-CASE-02; EXC-CASE-03",
+    "link_types": "L1 REFERENCE; L3 LINEAGE"
+   }
+  ],
+  "candidates": []
+ },
+ "2026-04": {
+  "period": "2026-04",
+  "policy_file_used": "safeguarding_reconciliation_policy_v1.1.pdf",
+  "case_status": "CLEAN",
+  "results_by_outcome": {
+   "PASS": 1717,
+   "NOT_APPLICABLE": 84
+  },
+  "non_passing": [],
+  "exceptions": [],
+  "groups": [],
+  "candidates": []
+ },
+ "2026-05": {
+  "period": "2026-05",
+  "policy_file_used": "safeguarding_reconciliation_policy_v1.2.pdf",
+  "case_status": "EVIDENCE_INCOMPLETE",
+  "results_by_outcome": {
+   "PASS": 1604,
+   "NOT_APPLICABLE": 76,
+   "INSUFFICIENT_EVIDENCE": 15,
+   "FAIL": 8
+  },
+  "non_passing": [
+   {
+    "check_id": "C14-COVER",
+    "scope": "IN-07 2026-05-15/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C14-COVER",
+    "scope": "IN-08 2026-05-15/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "DQ22-CONTINUITY",
+    "scope": "ST-SGA-EUR-01-20260518-EOD",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0515-0001",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0515-0002",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0515-0003",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0515-0004",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0515-0005",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "BANK-CASH-LINK",
+    "scope": "BE-GBP-0518-X01",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0518-X01",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "BANK-CASH-LINK",
+    "scope": "BE-GBP-0521-X02",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0521-X02",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C07-BANK-EVIDENCE",
+    "scope": "2026-05-15/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "76326.68",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-05-15/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "0.00",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-05-18/SGA-GBP-01",
+    "outcome": "FAIL",
+    "computed": "-1093.65",
+    "reported": "-1093.65",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-05-18|-1093.65",
+    "evidence_status": "NOT_EVIDENCED"
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-05-19/SGA-GBP-01",
+    "outcome": "FAIL",
+    "computed": "-1093.65",
+    "reported": "-1093.65",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-05-18|-1093.65",
+    "evidence_status": "NOT_EVIDENCED"
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-05-20/SGA-GBP-01",
+    "outcome": "FAIL",
+    "computed": "-1093.65",
+    "reported": "-1093.65",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-05-18|-1093.65",
+    "evidence_status": "NOT_EVIDENCED"
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "AQ-EUR-20260515",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "SB-EUR-20260515",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "FUND-TOPUP",
+    "scope": "AQ-EUR-20260515",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "3.74",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "RC4-DIRECT",
+    "scope": "TX-0515-00015",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "RC4-DIRECT",
+    "scope": "TX-0515-00021",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BANK-ENTRY",
+    "scope": "BE-GBP-0518-X01",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0518-X01",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BANK-ENTRY",
+    "scope": "BE-GBP-0521-X02",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0521-X02",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "DISC-LOG",
+    "scope": "SGA-GBP-01 from 2026-05-18",
+    "outcome": "FAIL",
+    "computed": "3 day(s) with difference",
+    "reported": "0 log entries",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-05-18|-1093.65",
+    "evidence_status": ""
+   }
+  ],
+  "exceptions": [
+   {
+    "exception_id": "EXC-CASE-01",
+    "severity": "Critical",
+    "category": "Missing bank evidence",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "amount": "",
+    "first_date": "2026-05-15",
+    "last_date": "2026-05-15",
+    "affected_results": 15,
+    "evidence_status": "",
+    "investigation_group_id": ""
+   },
+   {
+    "exception_id": "EXC-CASE-02",
+    "severity": "Critical",
+    "category": "Unexplained bank-ledger difference",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-05-18|-1093.65",
+    "amount": "-1093.65",
+    "first_date": "2026-05-18",
+    "last_date": "2026-05-20",
+    "affected_results": 4,
+    "evidence_status": "NOT_EVIDENCED",
+    "investigation_group_id": "GRP-CASE-01"
+   },
+   {
+    "exception_id": "EXC-CASE-03",
+    "severity": "High",
+    "category": "Bank entry with no counterpart",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0518-X01",
+    "amount": "-1093.65",
+    "first_date": "2026-05-18",
+    "last_date": "2026-05-18",
+    "affected_results": 2,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-01"
+   },
+   {
+    "exception_id": "EXC-CASE-04",
+    "severity": "High",
+    "category": "Bank entry with no counterpart",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0521-X02",
+    "amount": "1093.65",
+    "first_date": "2026-05-21",
+    "last_date": "2026-05-21",
+    "affected_results": 2,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-01"
+   }
+  ],
+  "groups": [
+   {
+    "group_id": "GRP-CASE-01",
+    "exception_ids": "EXC-CASE-02; EXC-CASE-03; EXC-CASE-04",
+    "link_types": "L1 REFERENCE; L3 LINEAGE"
+   }
+  ],
+  "candidates": []
+ },
+ "2026-06": {
+  "period": "2026-06",
+  "policy_file_used": "safeguarding_reconciliation_policy_v1.2.pdf",
+  "case_status": "EXCEPTIONS_OPEN",
+  "results_by_outcome": {
+   "PASS": 1873,
+   "NOT_APPLICABLE": 92,
+   "FAIL": 4
+  },
+  "non_passing": [
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-GBP-0601-0005",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "CASH-BANK-LINK|LE-GBP-0601-0005",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-GBP-0610-0005",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0610-0005",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "SB-GBP-20260601",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260601",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "SB-GBP-20260610",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260610",
+    "evidence_status": ""
+   }
+  ],
+  "exceptions": [
+   {
+    "exception_id": "EXC-CASE-01",
+    "severity": "High",
+    "category": "C11-BATCH-BANK",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260601",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-01"
+   },
+   {
+    "exception_id": "EXC-CASE-02",
+    "severity": "High",
+    "category": "C11-BATCH-BANK",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260610",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-02"
+   },
+   {
+    "exception_id": "EXC-CASE-03",
+    "severity": "High",
+    "category": "CASH-BANK-LINK",
+    "root_cause": "CASH-BANK-LINK|LE-GBP-0601-0005",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-01"
+   },
+   {
+    "exception_id": "EXC-CASE-04",
+    "severity": "High",
+    "category": "Cash-book entry with no bank entry",
+    "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0610-0005",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-02"
+   }
+  ],
+  "groups": [
+   {
+    "group_id": "GRP-CASE-01",
+    "exception_ids": "EXC-CASE-01; EXC-CASE-03",
+    "link_types": "L1 REFERENCE"
+   },
+   {
+    "group_id": "GRP-CASE-02",
+    "exception_ids": "EXC-CASE-02; EXC-CASE-04",
+    "link_types": "L1 REFERENCE"
+   }
+  ],
+  "candidates": []
+ },
+ "2026-07": {
+  "period": "2026-07",
+  "policy_file_used": "safeguarding_reconciliation_policy_v1.2.pdf",
+  "case_status": "EVIDENCE_INCOMPLETE",
+  "results_by_outcome": {
+   "PASS": 1928,
+   "NOT_APPLICABLE": 95,
+   "INSUFFICIENT_EVIDENCE": 15,
+   "FAIL": 4
+  },
+  "non_passing": [
+   {
+    "check_id": "C14-COVER",
+    "scope": "IN-07 2026-07-15/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C14-COVER",
+    "scope": "IN-08 2026-07-15/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "DQ22-CONTINUITY",
+    "scope": "ST-SGA-EUR-01-20260716-EOD",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-GBP-0701-0005",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "CASH-BANK-LINK|LE-GBP-0701-0005",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-GBP-0710-0005",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0715-0001",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0715-0002",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0715-0003",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0715-0004",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0715-0005",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C07-BANK-EVIDENCE",
+    "scope": "2026-07-15/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "78586.78",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-07-15/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "0.00",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "SB-GBP-20260701",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260701",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "SB-GBP-20260710",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260710",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "AQ-EUR-20260715",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "SB-EUR-20260715",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "FUND-TOPUP",
+    "scope": "AQ-EUR-20260715",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "7.92",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "RC4-DIRECT",
+    "scope": "TX-0715-00015",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "RC4-DIRECT",
+    "scope": "TX-0715-00021",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "evidence_status": ""
+   }
+  ],
+  "exceptions": [
+   {
+    "exception_id": "EXC-CASE-01",
+    "severity": "Critical",
+    "category": "Missing bank evidence",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "amount": "",
+    "first_date": "2026-07-15",
+    "last_date": "2026-07-15",
+    "affected_results": 15,
+    "evidence_status": "",
+    "investigation_group_id": ""
+   },
+   {
+    "exception_id": "EXC-CASE-02",
+    "severity": "High",
+    "category": "C11-BATCH-BANK",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260701",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-01"
+   },
+   {
+    "exception_id": "EXC-CASE-03",
+    "severity": "High",
+    "category": "C11-BATCH-BANK",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260710",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-02"
+   },
+   {
+    "exception_id": "EXC-CASE-04",
+    "severity": "High",
+    "category": "CASH-BANK-LINK",
+    "root_cause": "CASH-BANK-LINK|LE-GBP-0701-0005",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-01"
+   },
+   {
+    "exception_id": "EXC-CASE-05",
+    "severity": "High",
+    "category": "Cash-book entry with no bank entry",
+    "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-02"
+   }
+  ],
+  "groups": [
+   {
+    "group_id": "GRP-CASE-01",
+    "exception_ids": "EXC-CASE-02; EXC-CASE-04",
+    "link_types": "L1 REFERENCE"
+   },
+   {
+    "group_id": "GRP-CASE-02",
+    "exception_ids": "EXC-CASE-03; EXC-CASE-05",
+    "link_types": "L1 REFERENCE"
+   }
+  ],
+  "candidates": []
+ },
+ "2026-08": {
+  "period": "2026-08",
+  "policy_file_used": "safeguarding_reconciliation_policy_v1.2.pdf",
+  "case_status": "EVIDENCE_INCOMPLETE",
+  "results_by_outcome": {
+   "PASS": 1718,
+   "NOT_APPLICABLE": 80,
+   "INSUFFICIENT_EVIDENCE": 15,
+   "FAIL": 12
+  },
+  "non_passing": [
+   {
+    "check_id": "C14-COVER",
+    "scope": "IN-07 2026-08-17/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C14-COVER",
+    "scope": "IN-08 2026-08-17/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "DQ22-CONTINUITY",
+    "scope": "ST-SGA-EUR-01-20260818-EOD",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-GBP-0803-0005",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "CASH-BANK-LINK|LE-GBP-0803-0005",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-GBP-0810-0005",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0810-0005",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0817-0001",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0817-0002",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0817-0003",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0817-0004",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-0817-0005",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "BANK-CASH-LINK",
+    "scope": "BE-GBP-0817-X01",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0817-X01",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "BANK-CASH-LINK",
+    "scope": "BE-GBP-0820-X02",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0820-X02",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-08-17/SGA-GBP-01",
+    "outcome": "FAIL",
+    "computed": "-276.90",
+    "reported": "-276.90",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-08-17|-276.90",
+    "evidence_status": "NOT_EVIDENCED"
+   },
+   {
+    "check_id": "C07-BANK-EVIDENCE",
+    "scope": "2026-08-17/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "79426.82",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-08-17/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "0.00",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-08-18/SGA-GBP-01",
+    "outcome": "FAIL",
+    "computed": "-276.90",
+    "reported": "-276.90",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-08-17|-276.90",
+    "evidence_status": "NOT_EVIDENCED"
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-08-19/SGA-GBP-01",
+    "outcome": "FAIL",
+    "computed": "-276.90",
+    "reported": "-276.90",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-08-17|-276.90",
+    "evidence_status": "NOT_EVIDENCED"
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "SB-GBP-20260803",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260803",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "SB-GBP-20260810",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260810",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "AQ-EUR-20260817",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "SB-EUR-20260817",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "FUND-TOPUP",
+    "scope": "AQ-EUR-20260817",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "10.01",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "RC4-DIRECT",
+    "scope": "TX-0817-00015",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "RC4-DIRECT",
+    "scope": "TX-0817-00021",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "computed": "",
+    "reported": "",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BANK-ENTRY",
+    "scope": "BE-GBP-0817-X01",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0817-X01",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "C11-BANK-ENTRY",
+    "scope": "BE-GBP-0820-X02",
+    "outcome": "FAIL",
+    "computed": "",
+    "reported": "",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0820-X02",
+    "evidence_status": ""
+   },
+   {
+    "check_id": "DISC-LOG",
+    "scope": "SGA-GBP-01 from 2026-08-17",
+    "outcome": "FAIL",
+    "computed": "3 day(s) with difference",
+    "reported": "0 log entries",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-08-17|-276.90",
+    "evidence_status": ""
+   }
+  ],
+  "exceptions": [
+   {
+    "exception_id": "EXC-CASE-01",
+    "severity": "Critical",
+    "category": "Unexplained bank-ledger difference",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-08-17|-276.90",
+    "amount": "-276.90",
+    "first_date": "2026-08-17",
+    "last_date": "2026-08-19",
+    "affected_results": 4,
+    "evidence_status": "NOT_EVIDENCED",
+    "investigation_group_id": "GRP-CASE-01"
+   },
+   {
+    "exception_id": "EXC-CASE-02",
+    "severity": "Critical",
+    "category": "Missing bank evidence",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "amount": "",
+    "first_date": "2026-08-17",
+    "last_date": "2026-08-17",
+    "affected_results": 15,
+    "evidence_status": "",
+    "investigation_group_id": ""
+   },
+   {
+    "exception_id": "EXC-CASE-03",
+    "severity": "High",
+    "category": "C11-BATCH-BANK",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260803",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-02"
+   },
+   {
+    "exception_id": "EXC-CASE-04",
+    "severity": "High",
+    "category": "C11-BATCH-BANK",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260810",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-03"
+   },
+   {
+    "exception_id": "EXC-CASE-05",
+    "severity": "High",
+    "category": "CASH-BANK-LINK",
+    "root_cause": "CASH-BANK-LINK|LE-GBP-0803-0005",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-02"
+   },
+   {
+    "exception_id": "EXC-CASE-06",
+    "severity": "High",
+    "category": "Cash-book entry with no bank entry",
+    "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0810-0005",
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "affected_results": 1,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-03"
+   },
+   {
+    "exception_id": "EXC-CASE-07",
+    "severity": "High",
+    "category": "Bank entry with no counterpart",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0817-X01",
+    "amount": "-276.90",
+    "first_date": "2026-08-17",
+    "last_date": "2026-08-17",
+    "affected_results": 2,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-01"
+   },
+   {
+    "exception_id": "EXC-CASE-08",
+    "severity": "High",
+    "category": "Bank entry with no counterpart",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0820-X02",
+    "amount": "276.90",
+    "first_date": "2026-08-20",
+    "last_date": "2026-08-20",
+    "affected_results": 2,
+    "evidence_status": "",
+    "investigation_group_id": "GRP-CASE-01"
+   }
+  ],
+  "groups": [
+   {
+    "group_id": "GRP-CASE-01",
+    "exception_ids": "EXC-CASE-01; EXC-CASE-07; EXC-CASE-08",
+    "link_types": "L1 REFERENCE; L3 LINEAGE"
+   },
+   {
+    "group_id": "GRP-CASE-02",
+    "exception_ids": "EXC-CASE-03; EXC-CASE-05",
+    "link_types": "L1 REFERENCE"
+   },
+   {
+    "group_id": "GRP-CASE-03",
+    "exception_ids": "EXC-CASE-04; EXC-CASE-06",
+    "link_types": "L1 REFERENCE"
+   }
+  ],
+  "candidates": []
+ }
+}

@@ -1,0 +1,177 @@
+{
+ "exception_id": "EXC-H202602-01",
+ "pack_id": "PACK-H202602-PER-2026-02-195df2e1f216",
+ "summary": {
+  "limits": {
+   "max_input_tokens": 150000,
+   "max_records_per_call": 25,
+   "max_rounds": 4,
+   "max_tool_calls": 8,
+   "max_total_records": 160,
+   "total_timeout": 300.0
+  },
+  "llm_calls": 3,
+  "records_final": 29,
+  "records_initial": 16,
+  "status": "COMPLETED",
+  "stop_reason": "final_answer",
+  "tool_calls_requested": 5,
+  "tool_rounds": 2,
+  "tools_deduplicated": 0,
+  "tools_executed": 5,
+  "tools_refused_budget": 0,
+  "tools_rejected_or_failed": 0,
+  "tools_used": [
+   "get_settlement_batch",
+   "get_settlement_batch",
+   "search_bank_entries",
+   "search_bank_entries",
+   "get_reconciliation_evidence"
+  ]
+ },
+ "tool_calls": [
+  {
+   "arguments": {
+    "batch_id": "AQ-EUR-20260216"
+   },
+   "call_id": "call_LDs80TezdflaSJfoeDZJgYUa",
+   "deduplicated": false,
+   "error": "",
+   "evidence_ids": [
+    "IN-12:AQ-EUR-20260216",
+    "IN-13:SL-AQ-EUR-20260216-0001",
+    "IN-13:SL-AQ-EUR-20260216-0002",
+    "IN-13:SL-AQ-EUR-20260216-0003",
+    "IN-13:SL-AQ-EUR-20260216-0004",
+    "IN-11:TX-0216-00015",
+    "IN-11:TX-0216-00016"
+   ],
+   "latency_ms": 0.0,
+   "new_evidence_ids": [
+    "IN-13:SL-AQ-EUR-20260216-0001",
+    "IN-13:SL-AQ-EUR-20260216-0002",
+    "IN-13:SL-AQ-EUR-20260216-0003",
+    "IN-13:SL-AQ-EUR-20260216-0004",
+    "IN-11:TX-0216-00015",
+    "IN-11:TX-0216-00016"
+   ],
+   "records_returned": 7,
+   "requested_at": "2026-11-04T05:20:28.578+00:00",
+   "round": 1,
+   "search_ids": [],
+   "status": "OK",
+   "tool": "get_settlement_batch",
+   "truncated": false
+  },
+  {
+   "arguments": {
+    "batch_id": "SB-EUR-20260216"
+   },
+   "call_id": "call_mufZT3xnMgVmLcVgubGCAjfo",
+   "deduplicated": false,
+   "error": "",
+   "evidence_ids": [
+    "IN-12:SB-EUR-20260216",
+    "IN-13:SL-SB-EUR-20260216-0001",
+    "IN-13:SL-SB-EUR-20260216-0002",
+    "IN-13:SL-SB-EUR-20260216-0003",
+    "IN-11:TX-0216-00017",
+    "IN-11:TX-0216-00018",
+    "IN-11:TX-0216-00019"
+   ],
+   "latency_ms": 0.0,
+   "new_evidence_ids": [
+    "IN-13:SL-SB-EUR-20260216-0001",
+    "IN-13:SL-SB-EUR-20260216-0002",
+    "IN-13:SL-SB-EUR-20260216-0003",
+    "IN-11:TX-0216-00017",
+    "IN-11:TX-0216-00018",
+    "IN-11:TX-0216-00019"
+   ],
+   "records_returned": 7,
+   "requested_at": "2026-11-04T05:20:28.578+00:00",
+   "round": 1,
+   "search_ids": [],
+   "status": "OK",
+   "tool": "get_settlement_batch",
+   "truncated": false
+  },
+  {
+   "arguments": {
+    "account_id": "SGA-EUR-01",
+    "bank_reference": "AQ-EUR-20260216",
+    "date_from": null,
+    "date_to": null
+   },
+   "call_id": "call_63faqntu35ohdpIYBzPwGrel",
+   "deduplicated": false,
+   "error": "",
+   "evidence_ids": [],
+   "latency_ms": 0.0,
+   "new_evidence_ids": [],
+   "records_returned": 0,
+   "requested_at": "2026-11-04T05:20:28.578+00:00",
+   "round": 1,
+   "search_ids": [
+    "SEARCH-04"
+   ],
+   "status": "NOT_FOUND",
+   "tool": "search_bank_entries",
+   "truncated": false
+  },
+  {
+   "arguments": {
+    "account_id": "SGA-EUR-01",
+    "bank_reference": "SB-EUR-20260216",
+    "date_from": null,
+    "date_to": null
+   },
+   "call_id": "call_2942kyjCjRpwTkakBzaR1r5h",
+   "deduplicated": false,
+   "error": "",
+   "evidence_ids": [],
+   "latency_ms": 0.0,
+   "new_evidence_ids": [],
+   "records_returned": 0,
+   "requested_at": "2026-11-04T05:20:28.578+00:00",
+   "round": 1,
+   "search_ids": [
+    "SEARCH-05"
+   ],
+   "status": "NOT_FOUND",
+   "tool": "search_bank_entries",
+   "truncated": false
+  },
+  {
+   "arguments": {
+    "account_id": "SGA-EUR-01",
+    "currency": "EUR",
+    "date": "2026-02-16"
+   },
+   "call_id": "call_560H3Xp5W88gDlHZwHzgRtWk",
+   "deduplicated": false,
+   "error": "",
+   "evidence_ids": [
+    "IN-06:ERL-SGA-EUR-01-20260216",
+    "IN-05:IRR-EMONEY-EUR-20260216"
+   ],
+   "latency_ms": 0.0,
+   "new_evidence_ids": [
+    "IN-05:IRR-EMONEY-EUR-20260216"
+   ],
+   "records_returned": 2,
+   "requested_at": "2026-11-04T05:20:33.989+00:00",
+   "round": 2,
+   "search_ids": [
+    "SEARCH-06",
+    "SEARCH-07",
+    "SEARCH-08",
+    "SEARCH-09"
+   ],
+   "status": "OK",
+   "tool": "get_reconciliation_evidence",
+   "truncated": false
+  }
+ ],
+ "tool_registry_version": "uc042-evidence-tools/1.0"
+}

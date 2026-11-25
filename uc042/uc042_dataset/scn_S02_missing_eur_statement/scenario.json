@@ -1,0 +1,9 @@
+{
+  "scenario_id": "S02",
+  "name": "Missing EUR bank evidence, 15 Sep 2026",
+  "derived_from": "set_01_clean_baseline",
+  "plan": "docs/UC042_SCENARIO_MUTATION_PLAN.md section 3",
+  "baseline": "set_01_clean_baseline",
+  "baseline_manifest_sha256": "0360b4055aa6812f063b411c7ceacdb2f4f153df73fd76c2acc7da3df565b69e",
+  "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA (decision D6): all records, timings, references and fee treatments are illustrative conventions for the UC-042 POC, not confirmed Moorwand practice."
+}

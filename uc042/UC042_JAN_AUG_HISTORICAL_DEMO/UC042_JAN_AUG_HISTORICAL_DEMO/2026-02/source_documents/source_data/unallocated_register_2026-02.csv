@@ -1,0 +1,2 @@
+receipt_id,bank_reference,receipt_date,receipt_ts,amount,currency,classification,identified_date,allocated_date,allocated_ts,client_id
+UR-202602-E01,E2E-EUR-0210-U01,2026-02-10,2026-02-10T16:20:00+00:00,560.15,EUR,UNALLOCATED,,2026-02-11,2026-02-11T09:25:00+00:00,C0102

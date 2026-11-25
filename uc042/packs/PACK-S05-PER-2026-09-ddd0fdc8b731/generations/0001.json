@@ -1,0 +1,11 @@
+{
+ "generated_at": "2026-10-30T12:14:23+00:00",
+ "status": "GENERATED",
+ "outcome": "PUBLISHED",
+ "case_dir": "uc042_dataset/scn_S05_unexplained_gbp_difference",
+ "pack_id": "PACK-S05-PER-2026-09-ddd0fdc8b731",
+ "processing_run_id": "RUN-760ba063771c82a6",
+ "pack_content_sha256": "ddd0fdc8b731801bd1ae43f502085b566501d1706fb792344cafe831a172f5d5",
+ "validation_findings": [],
+ "python": "3.12.3"
+}

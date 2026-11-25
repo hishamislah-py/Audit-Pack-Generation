@@ -1,0 +1,11 @@
+{
+ "generated_at": "2026-10-30T12:14:22+00:00",
+ "status": "GENERATED",
+ "outcome": "PUBLISHED",
+ "case_dir": "uc042_dataset/scn_SC5C_refund_double_posted",
+ "pack_id": "PACK-SC5C-PER-2026-09-eaac7e6b1444",
+ "processing_run_id": "RUN-9acc18333942a6c9",
+ "pack_content_sha256": "eaac7e6b14447bb39a2d07a2704c084c6aac3eab43167b85acf1f224ec15433e",
+ "validation_findings": [],
+ "python": "3.12.3"
+}

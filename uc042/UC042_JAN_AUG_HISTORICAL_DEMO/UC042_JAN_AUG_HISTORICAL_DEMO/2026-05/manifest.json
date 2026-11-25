@@ -1,0 +1,247 @@
+{
+ "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA — DEMONSTRATION ONLY — NOT REAL MOORWAND FINANCIAL RECORDS",
+ "period_id": "PER-2026-05",
+ "period": "2026-05",
+ "month": "May",
+ "reporting_period": {
+  "start": "2026-05-01",
+  "end": "2026-05-31",
+  "calendar_days": 31,
+  "reconciliation_days": 19,
+  "opening_point": "2026-04-30 17:00 Europe/London",
+  "closing_point": "2026-05-29 17:00 Europe/London",
+  "timestamp_offsets_used": {
+   "BST +01:00": 1644
+  }
+ },
+ "generation": {
+  "generator": "generator/generate_history.py",
+  "seed": 20260542,
+  "deterministic": true
+ },
+ "scenario_composition": [
+  "MISSING_EUR_STATEMENT",
+  "UNEXPLAINED_GBP_DIFFERENCE"
+ ],
+ "files": [
+  {
+   "file_id": "IN-01",
+   "relative_path": "source_data/recon_calendar_2026-05.csv",
+   "format": "CSV",
+   "requirement": "REQUIRED",
+   "record_count": "31",
+   "record_unit": "data_rows",
+   "sha256": "a3b371cf9f5551c30550a8c0ab62c4c163ee1a6f0df3cdf71bc1fa86d73d4bec"
+  },
+  {
+   "file_id": "IN-02",
+   "relative_path": "source_data/account_inventory.csv",
+   "format": "CSV",
+   "requirement": "REQUIRED",
+   "record_count": "4",
+   "record_unit": "data_rows",
+   "sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d"
+  },
+  {
+   "file_id": "IN-03",
+   "relative_path": "source_data/client_balance_snapshots_2026-05.csv",
+   "format": "CSV",
+   "requirement": "REQUIRED",
+   "record_count": "240",
+   "record_unit": "data_rows",
+   "sha256": "701c940aa243eac6d16db26e030987aa387b85105e3b329a0b3e7965d79ee84b"
+  },
+  {
+   "file_id": "IN-04",
+   "relative_path": "source_data/unallocated_register_2026-05.csv",
+   "format": "CSV",
+   "requirement": "REQUIRED",
+   "record_count": "1",
+   "record_unit": "data_rows",
+   "sha256": "f974d953de41734c89456216ee71a0ed1948b169ee9ee78456b3043f3c571ae9"
+  },
+  {
+   "file_id": "IN-05",
+   "relative_path": "source_data/internal_recon_records_2026-05.csv",
+   "format": "CSV",
+   "requirement": "REQUIRED",
+   "record_count": "38",
+   "record_unit": "data_rows",
+   "sha256": "05820e2f012c1c3669b7537bd6840f38732878f5c576c80661aecc6c187d8bbd"
+  },
+  {
+   "file_id": "IN-06",
+   "relative_path": "source_data/external_recon_records_2026-05.csv",
+   "format": "CSV",
+   "requirement": "REQUIRED",
+   "record_count": "38",
+   "record_unit": "data_rows",
+   "sha256": "5ae7b7fab7dd2c798b48251a453eaead66bb9ce30120e598de806736afa3b49c"
+  },
+  {
+   "file_id": "IN-07",
+   "relative_path": "source_data/bank_balance_confirmations_2026-05.csv",
+   "format": "CSV",
+   "requirement": "REQUIRED",
+   "record_count": "37",
+   "record_unit": "data_rows",
+   "sha256": "dba9a06e8430860de227ea139c8cf8dbd5aa070e73f747b240f8276c6a375469"
+  },
+  {
+   "file_id": "IN-08",
+   "relative_path": "source_data/bank_statements_eod_2026-05.csv",
+   "format": "CSV",
+   "requirement": "REQUIRED",
+   "record_count": "75",
+   "record_unit": "data_rows",
+   "sha256": "8dbd26cdae225c3c8e539c007b742c304e277ba79349ea4b0e5ee732947e3c0d"
+  },
+  {
+   "file_id": "IN-09",
+   "relative_path": "source_data/bank_statement_entries_2026-05.csv",
+   "format": "CSV",
+   "requirement": "REQUIRED",
+   "record_count": "262",
+   "record_unit": "data_rows",
+   "sha256": "891030d571e6cd84d02361d6bce14117ca035cdde40614ca8030cda42514a25c"
+  },
+  {
+   "file_id": "IN-10",
+   "relative_path": "source_data/sga_cashbook_entries_2026-05.csv",
+   "format": "CSV",
+   "requirement": "REQUIRED",
+   "record_count": "229",
+   "record_unit": "data_rows",
+   "sha256": "3bdefebb97e8a0592a3fc1d6412dcccc3a744dd94a964658ea54d62301075d78"
+  },
+  {
+   "file_id": "IN-11",
+   "relative_path": "source_data/transactions_2026-05.csv",
+   "format": "CSV",
+   "requirement": "REQUIRED",
+   "record_count": "400",
+   "record_unit": "data_rows",
+   "sha256": "83476bbc6d8395180b238fd547cbf7e2258bac8b02083180b1df9266a87eedd2"
+  },
+  {
+   "file_id": "IN-12",
+   "relative_path": "source_data/settlement_batches_2026-05.csv",
+   "format": "CSV",
+   "requirement": "REQUIRED",
+   "record_count": "76",
+   "record_unit": "data_rows",
+   "sha256": "fa48f68c7ec27530e0bb44591af32e6fc092c65d89fc4c99ab73845000bebd58"
+  },
+  {
+   "file_id": "IN-13",
+   "relative_path": "source_data/settlement_lines_2026-05.csv",
+   "format": "CSV",
+   "requirement": "REQUIRED",
+   "record_count": "363",
+   "record_unit": "data_rows",
+   "sha256": "dcc25dbeb53261ed9c71868a8597d4b54f8ac2f6d37962f1bb4b54eaca5a5a3f"
+  },
+  {
+   "file_id": "IN-14",
+   "relative_path": "source_data/discrepancy_log_2026-05.csv",
+   "format": "CSV",
+   "requirement": "REQUIRED",
+   "record_count": "0",
+   "record_unit": "data_rows",
+   "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06"
+  },
+  {
+   "file_id": "IN-15",
+   "relative_path": "supporting_documents/ack_letter_SGA-GBP-01.pdf",
+   "format": "PDF",
+   "requirement": "REQUIRED",
+   "record_count": "1",
+   "record_unit": "pages",
+   "sha256": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742"
+  },
+  {
+   "file_id": "IN-16",
+   "relative_path": "supporting_documents/ack_letter_SGA-EUR-01.pdf",
+   "format": "PDF",
+   "requirement": "REQUIRED",
+   "record_count": "1",
+   "record_unit": "pages",
+   "sha256": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4"
+  },
+  {
+   "file_id": "IN-17",
+   "relative_path": "supporting_documents/safeguarding_reconciliation_policy_v1.1.pdf",
+   "format": "PDF",
+   "requirement": "REQUIRED",
+   "record_count": "1",
+   "record_unit": "pages",
+   "sha256": "9015456f29d64c1d580d0fc956aa7c4964a224cb2a42a1c495dfb69a676d4d6a"
+  },
+  {
+   "file_id": "IN-17",
+   "relative_path": "supporting_documents/safeguarding_reconciliation_policy_v1.2.pdf",
+   "format": "PDF",
+   "requirement": "REQUIRED",
+   "record_count": "1",
+   "record_unit": "pages",
+   "sha256": "b136586f843384284da370cedfe17637338e5e9d0bbc485d79b9e82c7de5c561"
+  }
+ ],
+ "supporting_documents": [
+  {
+   "file_id": "IN-15",
+   "filename": "ack_letter_SGA-GBP-01.pdf",
+   "status": "REUSED_STANDING_DOCUMENT",
+   "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+  },
+  {
+   "file_id": "IN-16",
+   "filename": "ack_letter_SGA-EUR-01.pdf",
+   "status": "REUSED_STANDING_DOCUMENT",
+   "basis": "existing synthetic acknowledgement letter dated 2024-03-01; account open since 2024-03-01, unchanged"
+  },
+  {
+   "file_id": "IN-17",
+   "filename": "safeguarding_reconciliation_policy_v1.1.pdf",
+   "status": "ILLUSTRATIVE_SYNTHETIC_DOCUMENT",
+   "applies": "2026-05-01 to 2026-05-06",
+   "basis": "assumption A1: no pre-v1.2 policy exists in the project; watermarked illustrative v1.1 with v1.2's rules"
+  },
+  {
+   "file_id": "IN-17",
+   "filename": "safeguarding_reconciliation_policy_v1.2.pdf",
+   "status": "REUSED_STANDING_DOCUMENT",
+   "applies": "2026-05-07 to 2026-05-31",
+   "basis": "existing synthetic policy v1.2, effective 2026-05-07"
+  },
+  {
+   "file_id": "IN-18",
+   "filename": "",
+   "status": "UNAVAILABLE",
+   "basis": "no governance register for this month exists; the only register is the September 2026 document (allocation from 2026-05-07); not reused or fabricated (optional evidence)"
+  },
+  {
+   "file_id": "IN-19",
+   "filename": "",
+   "status": "UNAVAILABLE",
+   "basis": "no REP027 receipt for the 2026-04 return exists; regulatory receipts are not fabricated (optional evidence)"
+  }
+ ],
+ "engine_manifest": {
+  "path": "source_documents/manifest.csv",
+  "sha256": "3db5ec2d5e01baf9cf1e8933f4d59ea70c0cd66721c6863c0ab040f0d65abcf4"
+ },
+ "mutations": {
+  "path": "mutations.json",
+  "operations": 26,
+  "sha256": "d3ffbbc7f2da16ce3da846c1a775745213633e058a41510dfc95f9f2b47ce935"
+ },
+ "processing_status": {
+  "project_engine_run": "NOT_RUN (to be run by Claude Code with the period-configured engine)",
+  "pre_validation": "existing engine with the period patched in memory (verification/prevalidate_engine.py)",
+  "deterministic_pack": "NOT_GENERATED",
+  "ai_investigation": "NOT_RUN",
+  "ai_closing_summary": "NOT_RUN",
+  "final_audit_pack": "NOT_GENERATED"
+ }
+}

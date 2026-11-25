@@ -1,0 +1,30 @@
+{
+ "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA — DEMONSTRATION ONLY — NOT REAL MOORWAND FINANCIAL RECORDS",
+ "period_id": "PER-2026-01",
+ "scenario_types": [
+  "Clean baseline"
+ ],
+ "expected_discrepancy_types": 0,
+ "planted": [],
+ "expected_missing_records": [],
+ "expected_reconciliation_outcome": {
+  "case_status": "CLEAN",
+  "evidence_completeness": "COMPLETE",
+  "exceptions": 0,
+  "exception_root_causes": [],
+  "investigation_groups": [],
+  "all_exceptions_open": true
+ },
+ "evidence_relationships": "All planted records keep the project's reference keys: bank_reference / end_to_end_ref ↔ cash-book payment_reference; batch expected_bank_reference ↔ bank entry; settlement line txn_id ↔ transaction; refund original_txn_id.",
+ "basis_of_expectations": "Scenario design (generator mutations) confirmed by PRE-VALIDATION: the existing project engine run with the period patched in memory. Claude Code must reproduce these with the real period-configured engine.",
+ "pre_validation_observed": {
+  "case_status": "CLEAN",
+  "results_by_outcome": {
+   "PASS": 1795,
+   "NOT_APPLICABLE": 88
+  },
+  "exceptions": [],
+  "groups": [],
+  "policy_file_used": "safeguarding_reconciliation_policy_v1.1.pdf"
+ }
+}

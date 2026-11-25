@@ -1,0 +1,278 @@
+{
+ "classification_summary": {
+  "CONFLICTING_EVIDENCE": [],
+  "EVIDENCE_BACKED": [
+   "F-01",
+   "F-02",
+   "F-03"
+  ],
+  "HYPOTHESIS": [
+   "H-01"
+  ],
+  "INSUFFICIENT_EVIDENCE": [
+   "M-01"
+  ],
+  "deterministic_conflicts": [],
+  "evidence_gaps": {
+   "additional_gaps_identified_by_ai": [
+    "M-01"
+   ],
+   "engine_missing_evidence": [],
+   "searched_not_found": []
+  },
+  "not_found_searches": [],
+  "unverified_candidate_relationships": []
+ },
+ "confirmed_findings": [
+  {
+   "audit_relevance": "The duplicate reference is the reported basis of the batch-to-bank exception and prevents a unique reference-based match.",
+   "claim": "The C11 batch-to-bank control result is FAIL; the packet records the note as \u201cbatch reference on more than one bank entry.\u201d",
+   "does_not_establish": "These records do not establish which entry represents the batch or why the same reference appears on both entries.",
+   "establishes": "The control result is FAIL, and the cited records show two bank entries on SGA-GBP-01 carrying the batch's expected reference.",
+   "evidence_ids": [
+    "C11-BATCH-BANK|SB-GBP-20260601",
+    "IN-12:SB-GBP-20260601",
+    "IN-09:BE-GBP-0601-SB1",
+    "IN-09:BE-GBP-0610-SB1"
+   ],
+   "explanation": "The control result identifies batch SB-GBP-20260601 and cites two bank entries carrying its expected reference. The batch header records SGA-GBP-01 and expected bank reference SB-GBP-20260601.",
+   "finding_id": "F-01",
+   "supporting_records": [
+    "IN-12:SB-GBP-20260601",
+    "IN-09:BE-GBP-0601-SB1",
+    "IN-09:BE-GBP-0610-SB1"
+   ],
+   "title": "Batch reference occurs on two bank entries"
+  },
+  {
+   "audit_relevance": "The alignment is relevant to investigating the candidate match, while the second entry with the same reference makes that match non-unique on the available evidence.",
+   "claim": "The batch header and the two bank entries show a date-and-amount alignment for the 1 June entry, but the reference alone does not uniquely identify it as the batch payment.",
+   "does_not_establish": "The records do not independently prove that the 1 June entry is the batch settlement, or explain why the 10 June entry carries the same reference.",
+   "establishes": "The batch header reports a 2026-06-01 settlement and net amount of 3449.50; the 1 June bank entry records a debit of that amount, and the 10 June entry records a different debit with the same bank reference.",
+   "evidence_ids": [
+    "IN-12:SB-GBP-20260601",
+    "IN-09:BE-GBP-0601-SB1",
+    "IN-09:BE-GBP-0610-SB1",
+    "IN-08:ST-SGA-GBP-01-20260601-EOD",
+    "IN-08:ST-SGA-GBP-01-20260610-EOD"
+   ],
+   "explanation": "The batch header records a GBP settlement date of 2026-06-01 and reported net amount of 3449.50. The 1 June bank entry is a GBP debit for 3449.50. The other matching-reference entry is a GBP debit for 2344.78 booked on 2026-06-10, and its narrative refers to SB-GBP-20260610. Each bank entry is linked to an end-of-day statement header for its respective date.",
+   "finding_id": "F-02",
+   "supporting_records": [
+    "IN-12:SB-GBP-20260601",
+    "IN-09:BE-GBP-0601-SB1",
+    "IN-09:BE-GBP-0610-SB1",
+    "IN-08:ST-SGA-GBP-01-20260601-EOD",
+    "IN-08:ST-SGA-GBP-01-20260610-EOD"
+   ],
+   "title": "One matching entry aligns on date and amount"
+  },
+  {
+   "audit_relevance": "The related cash-book matching exception reflects the same reference ambiguity and should be considered alongside the batch exception.",
+   "claim": "The firm cash book records a 3449.50 GBP entry against the batch reference, but the related cash-book-to-bank control also reports FAIL.",
+   "does_not_establish": "The internal cash-book entry does not prove which bank entry corresponds to it or establish that money moved at the bank.",
+   "establishes": "The firm's cash book records a 3449.50 GBP entry with the batch reference, and the related control result is FAIL because that reference matches more than one bank entry.",
+   "evidence_ids": [
+    "IN-10:LE-GBP-0601-0005",
+    "CASH-BANK-LINK|LE-GBP-0601-0005",
+    "IN-09:BE-GBP-0601-SB1",
+    "IN-09:BE-GBP-0610-SB1"
+   ],
+   "explanation": "The cash-book entry is an internal firm ledger record with payment reference SB-GBP-20260601. The related control result states that the reference matches more than one bank entry. Under the packet convention, the cash-book C indicator denotes money out from the firm's asset-ledger perspective; the cash-book record alone does not prove a bank movement.",
+   "finding_id": "F-03",
+   "supporting_records": [
+    "IN-10:LE-GBP-0601-0005",
+    "IN-09:BE-GBP-0601-SB1",
+    "IN-09:BE-GBP-0610-SB1"
+   ],
+   "title": "Cash-book entry shares the ambiguous reference"
+  }
+ ],
+ "contradictory_evidence": [],
+ "evidence_ledger_sha256": "027b7107f55cf816bf5c3ab71609ae7eccd8206fa88d4a4716b2ad917271424f",
+ "evidence_packet_sha256": "a3bf822c9f72dfa3faa778d0e3f530ffd90135cf4a0001fe193256db569ab149",
+ "evidence_references": [
+  "C11-BATCH-BANK|SB-GBP-20260601",
+  "CASH-BANK-LINK|LE-GBP-0601-0005",
+  "IN-08:ST-SGA-GBP-01-20260601-EOD",
+  "IN-08:ST-SGA-GBP-01-20260610-EOD",
+  "IN-09:BE-GBP-0601-SB1",
+  "IN-09:BE-GBP-0610-SB1",
+  "IN-10:LE-GBP-0601-0005",
+  "IN-12:SB-GBP-20260601"
+ ],
+ "exception_id": "EXC-H202606-01",
+ "exception_resolution": "NOT_RESOLVED_BY_INVESTIGATION",
+ "failure_reason": "",
+ "hypotheses": [
+  {
+   "contradictory_evidence": [],
+   "hypothesis_id": "H-01",
+   "limitations": "The bank entry's narrative refers to a 10 June settlement, but the available records do not include settlement instructions or other evidence establishing the underlying payment identity or why the reference was used.",
+   "possible_explanation": "The 10 June bank entry may relate to a separate settlement while carrying a reused or otherwise non-unique reference.",
+   "rationale": "The later bank entry has the same reference as the 1 June batch but a later booking date and a narrative referring to a different settlement date.",
+   "status": "HYPOTHESIS",
+   "supporting_evidence": [
+    "IN-09:BE-GBP-0610-SB1",
+    "IN-12:SB-GBP-20260601"
+   ]
+  }
+ ],
+ "investigated_at": "2026-11-04T07:18:08+00:00",
+ "investigation_id": "INV-EXC-H202606-01-c7b353b53fb3",
+ "investigation_mode": "tools",
+ "investigation_route": "settlement_discrepancy",
+ "investigation_scope": {
+  "account_id": "",
+  "affected_result_count": 1,
+  "amount": "",
+  "candidate_relationship_ids": [],
+  "category": "C11-BATCH-BANK",
+  "check_ids": [
+   "C11-BATCH-BANK"
+  ],
+  "control_codes": [
+   "C11"
+  ],
+  "currency": "",
+  "evidence_status": "",
+  "first_date": "",
+  "group_size": 2,
+  "investigation_group_id": "GRP-H202606-01",
+  "keys": {
+   "batch_id": "SB-GBP-20260601"
+  },
+  "last_date": "",
+  "missing_evidence_item_ids": [],
+  "related_exception_ids": [
+   "EXC-H202606-03"
+  ],
+  "root_cause": "C11-BATCH-BANK|SB-GBP-20260601",
+  "root_cause_kind": "C11-BATCH-BANK",
+  "severity": "High"
+ },
+ "investigation_status": "COMPLETED",
+ "investigation_summary": "The engine reports C11-BATCH-BANK|SB-GBP-20260601 as FAIL because the batch reference appears on more than one bank entry. The records show one bank debit on the batch settlement date for the batch's reported net amount, and another debit ten days later with the same reference but a different amount and a narrative referring to a later settlement date. The available records do not uniquely establish which bank entry, if either, represents the batch.",
+ "missing_evidence": [
+  {
+   "description": "No available evidence uniquely links the batch to one of the two bank entries carrying its expected reference.",
+   "expected_source": "Scheme settlement advice or remittance detail identifying the batch and the corresponding bank transaction; alternatively, bank-originated payment detail that uniquely identifies the transaction.",
+   "impact": "Without a unique linkage, the records do not establish which bank entry, if either, represents the batch or explain the duplicate reference.",
+   "item_id": "M-01",
+   "related_ids": [
+    "IN-12:SB-GBP-20260601",
+    "IN-09:BE-GBP-0601-SB1",
+    "IN-09:BE-GBP-0610-SB1"
+   ]
+  }
+ ],
+ "model_metadata": {
+  "attempts": 4,
+  "findings_schema_version": "uc042-investigation-findings/1.4",
+  "investigation_mode": "tools",
+  "model": "gpt-6-luna",
+  "prompt_version": "uc042-investigator-prompt/2.2-tools",
+  "provider": "openai",
+  "provider_response": {
+   "responses": [
+    {
+     "request_id": "req_966e048660ce4532acdce2a1d3a8f0b9",
+     "resolved_model": "gpt-6-luna",
+     "response_id": "resp_0651cb17c576ff77016aeadc050ec087d2a3e03b69f47f4993",
+     "status": "completed"
+    },
+    {
+     "request_id": "req_20d920ac77ea4e1aa1955dd53cacd84b",
+     "resolved_model": "gpt-6-luna",
+     "response_id": "resp_0651cb17c576ff77016aeadc08c4f487d2bbe652a75ad92889",
+     "status": "completed"
+    },
+    {
+     "request_id": "req_4832e18aaefb4b83a2da8737def9c1c5",
+     "resolved_model": "gpt-6-luna",
+     "response_id": "resp_0651cb17c576ff77016aeadc0cbcd887d2bbe9032cd21803e2",
+     "status": "completed"
+    },
+    {
+     "request_id": "req_4ccb3b10d544439e97a19fbe6e5e09ed",
+     "resolved_model": "gpt-6-luna",
+     "response_id": "resp_0651cb17c576ff77016aeadc117cd487d2b6a36a2fe970e212",
+     "status": "completed"
+    }
+   ]
+  },
+  "simulated": false,
+  "tool_registry_version": "uc042-evidence-tools/1.0",
+  "usage": {
+   "cached_input_tokens": 40642,
+   "input_tokens": 55846,
+   "latency_seconds": 44.83,
+   "output_tokens": 4454,
+   "reasoning_tokens": 1951,
+   "total_tokens": 60300
+  },
+  "workflow_version": "uc042-investigation-graph/2.0-tools"
+ },
+ "open_questions": [
+  "What source settlement or remittance evidence uniquely identifies the bank transaction for batch SB-GBP-20260601?",
+  "Why does the 10 June bank entry carry the reference expected for the 1 June batch despite its different date, amount, and narrative?",
+  "Does the bank-originated transaction detail for either entry identify a settlement batch independently of the shared reference?"
+ ],
+ "original_evidence_status": "",
+ "original_exception_status": "OPEN",
+ "original_review_status": "AWAITING_HUMAN_REVIEW",
+ "overall_evidence_assessment": "PARTIALLY_SUFFICIENT",
+ "pack_content_sha256": "a07de266b3895847580478c39608c25bd883040e54d3ebdf30b0e4e3ea25415b",
+ "pack_id": "PACK-H202606-PER-2026-06-a07de266b389",
+ "recommended_next_steps": [
+  {
+   "action": "Obtain the scheme's settlement advice or remittance detail for batch SB-GBP-20260601 and compare its transaction identifiers with both bank entries.",
+   "evidence_needed": "Scheme settlement advice/remittance detail and bank-originated transaction identifiers for the 1 June and 10 June entries.",
+   "rationale": "The records show two entries carrying the expected reference, so a source document with independent identifying details is needed to determine whether either entry corresponds to the batch.",
+   "step_id": "S-01"
+  },
+  {
+   "action": "Obtain the bank's underlying transaction or payment details for the two entries and investigate the reuse of the batch reference.",
+   "evidence_needed": "Bank-originated payment details for BE-GBP-0601-SB1 and BE-GBP-0610-SB1, including any original payment reference or end-to-end identifier.",
+   "rationale": "The later entry's date, amount, and narrative differ from the batch header, but the available records do not explain why the reference is shared.",
+   "step_id": "S-02"
+  },
+  {
+   "action": "Trace the cash-book posting to its supporting payment instruction and retain the related cash-book-to-bank control evidence for review.",
+   "evidence_needed": "Supporting payment instruction and source documentation for LE-GBP-0601-0005, together with any independently verified bank linkage.",
+   "rationale": "The cash book records an internal entry with the same ambiguous reference, and the related control also reports FAIL; the internal record does not prove bank movement.",
+   "step_id": "S-03"
+  }
+ ],
+ "statement": "AI investigation findings are an aid to human review. They do not change any deterministic control outcome, do not resolve or close any exception, and are not a compliance opinion.",
+ "tool_summary": {
+  "limits": {
+   "max_input_tokens": 150000,
+   "max_records_per_call": 25,
+   "max_rounds": 4,
+   "max_tool_calls": 8,
+   "max_total_records": 160,
+   "total_timeout": 300.0
+  },
+  "llm_calls": 4,
+  "records_final": 18,
+  "records_initial": 16,
+  "status": "COMPLETED",
+  "stop_reason": "final_answer",
+  "tool_calls_requested": 5,
+  "tool_rounds": 3,
+  "tools_deduplicated": 0,
+  "tools_executed": 5,
+  "tools_refused_budget": 0,
+  "tools_rejected_or_failed": 0,
+  "tools_used": [
+   "get_settlement_batch",
+   "follow_relationship",
+   "follow_relationship",
+   "follow_relationship",
+   "follow_relationship"
+  ]
+ },
+ "validation_findings": [],
+ "validation_status": "VALID"
+}

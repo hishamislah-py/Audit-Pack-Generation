@@ -1,0 +1,1814 @@
+{
+ "months": {
+  "2026-01": {
+   "checks": {
+    "file present": {
+     "ok": 14
+    },
+    "header matches contract": {
+     "ok": 14
+    },
+    "mandatory field populated": {
+     "ok": 16205
+    },
+    "field type valid": {
+     "ok": 18588
+    },
+    "primary keys unique in month": {
+     "ok": 14
+    },
+    "no exact duplicate rows": {
+     "ok": 14
+    },
+    "date within the reporting month (or documented opening row)": {
+     "ok": 3367
+    },
+    "timestamp offset correct for Europe/London": {
+     "ok": 1827
+    },
+    "booking_ts local date = booking_date": {
+     "ok": 295
+    },
+    "value_date = booking_date": {
+     "ok": 295
+    },
+    "17:00 Europe/London point matches its date": {
+     "ok": 306
+    },
+    "calendar has every day of the month": {
+     "ok": 1
+    },
+    "calendar reconciliation days = weekdays minus bank holidays": {
+     "ok": 1
+    },
+    "calendar period_id": {
+     "ok": 1
+    },
+    "cash-book entry links to exactly one bank entry by reference": {
+     "ok": 253
+    },
+    "linked amounts equal (cash D/C opposite to bank)": {
+     "ok": 253
+    },
+    "cash posting date = bank booking date (no timing difference)": {
+     "ok": 253
+    },
+    "bank entry links to a cash-book entry by reference": {
+     "ok": 253
+    },
+    "settlement line \u2192 transaction": {
+     "ok": 317
+    },
+    "batch lines = header totals": {
+     "ok": 84
+    },
+    "gross \u2212 fees/refunds = net": {
+     "ok": 84
+    },
+    "batch \u2192 one bank entry with its reference and net amount": {
+     "ok": 84
+    },
+    "transaction \u2192 batch": {
+     "ok": 317
+    },
+    "refund \u2192 original (same client and currency, not exceeded)": {
+     "ok": 2
+    },
+    "unallocated receipt \u2192 bank entry": {
+     "ok": 1
+    },
+    "unallocated receipt allocated within the month": {
+     "ok": 1
+    },
+    "statement arithmetic (opening + entries = closing; entry count)": {
+     "ok": 84
+    },
+    "statement continuity (closing = next opening)": {
+     "ok": 80
+    },
+    "17:00 confirmation = opening + entries to 17:00": {
+     "ok": 42
+    },
+    "requirement (snapshots + open unallocated) = reported": {
+     "ok": 42
+    },
+    "item A (cash book to 17:00) = reported = requirement (internal difference 0)": {
+     "ok": 42
+    },
+    "bank \u2212 ledger = 0 and reported 0": {
+     "ok": 42
+    },
+    "currency = account currency": {
+     "ok": 802
+    },
+    "no natural-key duplicate bank entries": {
+     "ok": 1
+    }
+   },
+   "examples": {},
+   "offsets": {
+    "GMT +00:00": 1827
+   },
+   "rows": {
+    "IN-01": 31,
+    "IN-02": 4,
+    "IN-03": 264,
+    "IN-04": 1,
+    "IN-05": 42,
+    "IN-06": 42,
+    "IN-07": 42,
+    "IN-08": 84,
+    "IN-09": 295,
+    "IN-10": 255,
+    "IN-11": 444,
+    "IN-12": 84,
+    "IN-13": 401,
+    "IN-14": 0
+   },
+   "recon_days": 21,
+   "days": 31,
+   "opening": {
+    "clients": {
+     "C0001/GBP": "36125.00",
+     "C0002/GBP": "31080.40",
+     "C0003/GBP": "28955.75",
+     "C0004/GBP": "27020.10",
+     "C0005/GBP": "26819.60",
+     "C0006/GBP": "25342.15",
+     "C0007/GBP": "24403.80",
+     "C0008/GBP": "23653.20",
+     "C0101/EUR": "22140.60",
+     "C0102/EUR": "17863.00",
+     "C0103/EUR": "15974.25",
+     "C0104/EUR": "15122.15"
+    },
+    "cash": {
+     "GBP": "22340000",
+     "EUR": "7110000"
+    },
+    "bank": {
+     "SGA-GBP-01": "223400.00",
+     "SGA-EUR-01": "71100.00",
+     "OWN-GBP-01": "504136.00",
+     "OWN-EUR-01": "151082.84"
+    }
+   },
+   "closing": {
+    "clients": {
+     "C0001/GBP": "29142.06",
+     "C0002/GBP": "26789.81",
+     "C0003/GBP": "26468.61",
+     "C0004/GBP": "30085.61",
+     "C0005/GBP": "28801.78",
+     "C0006/GBP": "30936.32",
+     "C0007/GBP": "23043.04",
+     "C0008/GBP": "28449.02",
+     "C0101/EUR": "18447.33",
+     "C0102/EUR": "17688.88",
+     "C0103/EUR": "16982.92",
+     "C0104/EUR": "18565.43"
+    },
+    "cash": {
+     "GBP": "22371625",
+     "EUR": "7168456"
+    },
+    "bank": {
+     "SGA-GBP-01": "223716.25",
+     "SGA-EUR-01": "71684.56",
+     "OWN-GBP-01": "503625.79",
+     "OWN-EUR-01": "150971.25"
+    }
+   },
+   "last_recon_day": "2026-01-30",
+   "prev_end": "2025-12-31"
+  },
+  "2026-02": {
+   "checks": {
+    "file present": {
+     "ok": 14
+    },
+    "header matches contract": {
+     "ok": 14
+    },
+    "mandatory field populated": {
+     "ok": 15319
+    },
+    "field type valid": {
+     "ok": 17566
+    },
+    "primary keys unique in month": {
+     "ok": 14
+    },
+    "no exact duplicate rows": {
+     "ok": 14
+    },
+    "date within the reporting month (or documented opening row)": {
+     "ok": 3179
+    },
+    "timestamp offset correct for Europe/London": {
+     "ok": 1728
+    },
+    "booking_ts local date = booking_date": {
+     "ok": 274
+    },
+    "value_date = booking_date": {
+     "ok": 274
+    },
+    "17:00 Europe/London point matches its date": {
+     "ok": 292
+    },
+    "calendar has every day of the month": {
+     "ok": 1
+    },
+    "calendar reconciliation days = weekdays minus bank holidays": {
+     "ok": 1
+    },
+    "calendar period_id": {
+     "ok": 1
+    },
+    "cash-book entry links to exactly one bank entry by reference": {
+     "ok": 234
+    },
+    "linked amounts equal (cash D/C opposite to bank)": {
+     "ok": 234
+    },
+    "cash posting date = bank booking date (no timing difference)": {
+     "ok": 234
+    },
+    "cash-book entries whose bank entry is on the missing statement (expected)": {
+     "ok": 5
+    },
+    "bank entry links to a cash-book entry by reference": {
+     "ok": 234
+    },
+    "settlement line \u2192 transaction": {
+     "ok": 302
+    },
+    "batch lines = header totals": {
+     "ok": 80
+    },
+    "gross \u2212 fees/refunds = net": {
+     "ok": 80
+    },
+    "batch \u2192 one bank entry with its reference and net amount": {
+     "ok": 78
+    },
+    "batches whose bank entry is on the missing statement (expected)": {
+     "ok": 2
+    },
+    "transaction \u2192 batch": {
+     "ok": 302
+    },
+    "refund \u2192 original (same client and currency, not exceeded)": {
+     "ok": 2
+    },
+    "unallocated receipt \u2192 bank entry": {
+     "ok": 1
+    },
+    "unallocated receipt allocated within the month": {
+     "ok": 1
+    },
+    "statement arithmetic (opening + entries = closing; entry count)": {
+     "ok": 79
+    },
+    "statement continuity (closing = next opening)": {
+     "ok": 74
+    },
+    "statement continuity not assessable across the missing day (expected)": {
+     "ok": 1
+    },
+    "missing statement days are the planted ones": {
+     "ok": 1
+    },
+    "statement days missing by design (not zero-filled)": {
+     "ok": 1
+    },
+    "17:00 confirmation = opening + entries to 17:00": {
+     "ok": 39
+    },
+    "requirement (snapshots + open unallocated) = reported": {
+     "ok": 40
+    },
+    "item A (cash book to 17:00) = reported = requirement (internal difference 0)": {
+     "ok": 40
+    },
+    "bank \u2212 ledger = 0 and reported 0": {
+     "ok": 39
+    },
+    "external records without a confirmation (missing evidence, expected)": {
+     "ok": 1
+    },
+    "currency = account currency": {
+     "ok": 753
+    },
+    "no natural-key duplicate bank entries": {
+     "ok": 1
+    }
+   },
+   "examples": {},
+   "offsets": {
+    "GMT +00:00": 1728
+   },
+   "rows": {
+    "IN-01": 28,
+    "IN-02": 4,
+    "IN-03": 252,
+    "IN-04": 1,
+    "IN-05": 40,
+    "IN-06": 40,
+    "IN-07": 39,
+    "IN-08": 79,
+    "IN-09": 274,
+    "IN-10": 241,
+    "IN-11": 421,
+    "IN-12": 80,
+    "IN-13": 382,
+    "IN-14": 0
+   },
+   "recon_days": 20,
+   "days": 28,
+   "opening": {
+    "clients": {
+     "C0001/GBP": "29142.06",
+     "C0002/GBP": "26789.81",
+     "C0003/GBP": "26468.61",
+     "C0004/GBP": "30085.61",
+     "C0005/GBP": "28801.78",
+     "C0006/GBP": "30936.32",
+     "C0007/GBP": "23043.04",
+     "C0008/GBP": "28449.02",
+     "C0101/EUR": "18447.33",
+     "C0102/EUR": "17688.88",
+     "C0103/EUR": "16982.92",
+     "C0104/EUR": "18565.43"
+    },
+    "cash": {
+     "GBP": "22371625",
+     "EUR": "7168456"
+    },
+    "bank": {
+     "SGA-GBP-01": "223716.25",
+     "SGA-EUR-01": "71684.56",
+     "OWN-GBP-01": "503625.79",
+     "OWN-EUR-01": "150971.25"
+    }
+   },
+   "closing": {
+    "clients": {
+     "C0001/GBP": "25825.82",
+     "C0002/GBP": "29935.00",
+     "C0003/GBP": "29690.99",
+     "C0004/GBP": "31470.80",
+     "C0005/GBP": "26084.68",
+     "C0006/GBP": "28643.96",
+     "C0007/GBP": "27100.03",
+     "C0008/GBP": "27831.50",
+     "C0101/EUR": "19332.81",
+     "C0102/EUR": "18445.82",
+     "C0103/EUR": "18572.72",
+     "C0104/EUR": "18087.54"
+    },
+    "cash": {
+     "GBP": "22658278",
+     "EUR": "7443889"
+    },
+    "bank": {
+     "SGA-GBP-01": "226582.78",
+     "SGA-EUR-01": "74438.89",
+     "OWN-GBP-01": "503107.25",
+     "OWN-EUR-01": "150842.02"
+    }
+   },
+   "last_recon_day": "2026-02-27",
+   "prev_end": "2026-01-31"
+  },
+  "2026-03": {
+   "checks": {
+    "file present": {
+     "ok": 14
+    },
+    "header matches contract": {
+     "ok": 14
+    },
+    "mandatory field populated": {
+     "ok": 16955
+    },
+    "field type valid": {
+     "ok": 19447
+    },
+    "primary keys unique in month": {
+     "ok": 14
+    },
+    "no exact duplicate rows": {
+     "ok": 14
+    },
+    "date within the reporting month (or documented opening row)": {
+     "ok": 3525
+    },
+    "timestamp offset correct for Europe/London": {
+     "ok": 1912
+    },
+    "booking_ts local date = booking_date": {
+     "ok": 310
+    },
+    "value_date = booking_date": {
+     "ok": 310
+    },
+    "17:00 Europe/London point matches its date": {
+     "ok": 320
+    },
+    "calendar has every day of the month": {
+     "ok": 1
+    },
+    "calendar reconciliation days = weekdays minus bank holidays": {
+     "ok": 1
+    },
+    "calendar period_id": {
+     "ok": 1
+    },
+    "cash-book entry links to exactly one bank entry by reference": {
+     "ok": 264
+    },
+    "linked amounts equal (cash D/C opposite to bank)": {
+     "ok": 264
+    },
+    "cash posting date = bank booking date (no timing difference)": {
+     "ok": 264
+    },
+    "bank entry links to a cash-book entry by reference": {
+     "ok": 264
+    },
+    "settlement line \u2192 transaction": {
+     "ok": 332
+    },
+    "batch lines = header totals": {
+     "ok": 88
+    },
+    "gross \u2212 fees/refunds = net": {
+     "ok": 88
+    },
+    "batch \u2192 one bank entry with its reference and net amount": {
+     "ok": 88
+    },
+    "transaction \u2192 batch": {
+     "ok": 332
+    },
+    "refund \u2192 original (same client and currency, not exceeded)": {
+     "ok": 2
+    },
+    "unallocated receipt \u2192 bank entry": {
+     "ok": 1
+    },
+    "unallocated receipt allocated within the month": {
+     "ok": 1
+    },
+    "statement arithmetic (opening + entries = closing; entry count)": {
+     "ok": 88
+    },
+    "statement continuity (closing = next opening)": {
+     "ok": 84
+    },
+    "17:00 confirmation = opening + entries to 17:00": {
+     "ok": 44
+    },
+    "requirement (snapshots + open unallocated) = reported": {
+     "ok": 44
+    },
+    "item A (cash book to 17:00) = reported = requirement (internal difference 0)": {
+     "ok": 44
+    },
+    "bank \u2212 ledger = 0 and reported 0": {
+     "ok": 41
+    },
+    "planted bank-ledger difference present and reported": {
+     "ok": 3
+    },
+    "currency = account currency": {
+     "ok": 840
+    },
+    "no natural-key duplicate bank entries": {
+     "ok": 1
+    }
+   },
+   "examples": {},
+   "offsets": {
+    "GMT +00:00": 1740,
+    "BST +01:00": 172
+   },
+   "rows": {
+    "IN-01": 31,
+    "IN-02": 4,
+    "IN-03": 276,
+    "IN-04": 1,
+    "IN-05": 44,
+    "IN-06": 44,
+    "IN-07": 44,
+    "IN-08": 88,
+    "IN-09": 310,
+    "IN-10": 266,
+    "IN-11": 464,
+    "IN-12": 88,
+    "IN-13": 420,
+    "IN-14": 0
+   },
+   "recon_days": 22,
+   "days": 31,
+   "opening": {
+    "clients": {
+     "C0001/GBP": "25825.82",
+     "C0002/GBP": "29935.00",
+     "C0003/GBP": "29690.99",
+     "C0004/GBP": "31470.80",
+     "C0005/GBP": "26084.68",
+     "C0006/GBP": "28643.96",
+     "C0007/GBP": "27100.03",
+     "C0008/GBP": "27831.50",
+     "C0101/EUR": "19332.81",
+     "C0102/EUR": "18445.82",
+     "C0103/EUR": "18572.72",
+     "C0104/EUR": "18087.54"
+    },
+    "cash": {
+     "GBP": "22658278",
+     "EUR": "7443889"
+    },
+    "bank": {
+     "SGA-GBP-01": "226582.78",
+     "SGA-EUR-01": "74438.89",
+     "OWN-GBP-01": "503107.25",
+     "OWN-EUR-01": "150842.02"
+    }
+   },
+   "closing": {
+    "clients": {
+     "C0001/GBP": "27771.19",
+     "C0002/GBP": "27770.52",
+     "C0003/GBP": "30445.71",
+     "C0004/GBP": "27814.50",
+     "C0005/GBP": "29242.06",
+     "C0006/GBP": "26330.16",
+     "C0007/GBP": "32454.16",
+     "C0008/GBP": "33067.64",
+     "C0101/EUR": "18362.57",
+     "C0102/EUR": "19132.03",
+     "C0103/EUR": "17907.66",
+     "C0104/EUR": "18194.49"
+    },
+    "cash": {
+     "GBP": "23489594",
+     "EUR": "7359675"
+    },
+    "bank": {
+     "SGA-GBP-01": "234895.94",
+     "SGA-EUR-01": "73596.75",
+     "OWN-GBP-01": "502576.57",
+     "OWN-EUR-01": "150692.88"
+    }
+   },
+   "last_recon_day": "2026-03-31",
+   "prev_end": "2026-02-28"
+  },
+  "2026-04": {
+   "checks": {
+    "file present": {
+     "ok": 14
+    },
+    "header matches contract": {
+     "ok": 14
+    },
+    "mandatory field populated": {
+     "ok": 15523
+    },
+    "field type valid": {
+     "ok": 17806
+    },
+    "primary keys unique in month": {
+     "ok": 14
+    },
+    "no exact duplicate rows": {
+     "ok": 14
+    },
+    "date within the reporting month (or documented opening row)": {
+     "ok": 3224
+    },
+    "timestamp offset correct for Europe/London": {
+     "ok": 1750
+    },
+    "booking_ts local date = booking_date": {
+     "ok": 284
+    },
+    "value_date = booking_date": {
+     "ok": 284
+    },
+    "17:00 Europe/London point matches its date": {
+     "ok": 292
+    },
+    "calendar has every day of the month": {
+     "ok": 1
+    },
+    "calendar reconciliation days = weekdays minus bank holidays": {
+     "ok": 1
+    },
+    "calendar period_id": {
+     "ok": 1
+    },
+    "cash-book entry links to exactly one bank entry by reference": {
+     "ok": 244
+    },
+    "linked amounts equal (cash D/C opposite to bank)": {
+     "ok": 244
+    },
+    "cash posting date = bank booking date (no timing difference)": {
+     "ok": 244
+    },
+    "bank entry links to a cash-book entry by reference": {
+     "ok": 244
+    },
+    "settlement line \u2192 transaction": {
+     "ok": 302
+    },
+    "batch lines = header totals": {
+     "ok": 80
+    },
+    "gross \u2212 fees/refunds = net": {
+     "ok": 80
+    },
+    "batch \u2192 one bank entry with its reference and net amount": {
+     "ok": 80
+    },
+    "transaction \u2192 batch": {
+     "ok": 302
+    },
+    "refund \u2192 original (same client and currency, not exceeded)": {
+     "ok": 2
+    },
+    "unallocated receipt \u2192 bank entry": {
+     "ok": 1
+    },
+    "unallocated receipt allocated within the month": {
+     "ok": 1
+    },
+    "statement arithmetic (opening + entries = closing; entry count)": {
+     "ok": 80
+    },
+    "statement continuity (closing = next opening)": {
+     "ok": 76
+    },
+    "17:00 confirmation = opening + entries to 17:00": {
+     "ok": 40
+    },
+    "requirement (snapshots + open unallocated) = reported": {
+     "ok": 40
+    },
+    "item A (cash book to 17:00) = reported = requirement (internal difference 0)": {
+     "ok": 40
+    },
+    "bank \u2212 ledger = 0 and reported 0": {
+     "ok": 40
+    },
+    "currency = account currency": {
+     "ok": 770
+    },
+    "no natural-key duplicate bank entries": {
+     "ok": 1
+    }
+   },
+   "examples": {},
+   "offsets": {
+    "BST +01:00": 1750
+   },
+   "rows": {
+    "IN-01": 30,
+    "IN-02": 4,
+    "IN-03": 252,
+    "IN-04": 1,
+    "IN-05": 40,
+    "IN-06": 40,
+    "IN-07": 40,
+    "IN-08": 80,
+    "IN-09": 284,
+    "IN-10": 246,
+    "IN-11": 426,
+    "IN-12": 80,
+    "IN-13": 382,
+    "IN-14": 0
+   },
+   "recon_days": 20,
+   "days": 30,
+   "opening": {
+    "clients": {
+     "C0001/GBP": "27771.19",
+     "C0002/GBP": "27770.52",
+     "C0003/GBP": "30445.71",
+     "C0004/GBP": "27814.50",
+     "C0005/GBP": "29242.06",
+     "C0006/GBP": "26330.16",
+     "C0007/GBP": "32454.16",
+     "C0008/GBP": "33067.64",
+     "C0101/EUR": "18362.57",
+     "C0102/EUR": "19132.03",
+     "C0103/EUR": "17907.66",
+     "C0104/EUR": "18194.49"
+    },
+    "cash": {
+     "GBP": "23489594",
+     "EUR": "7359675"
+    },
+    "bank": {
+     "SGA-GBP-01": "234895.94",
+     "SGA-EUR-01": "73596.75",
+     "OWN-GBP-01": "502576.57",
+     "OWN-EUR-01": "150692.88"
+    }
+   },
+   "closing": {
+    "clients": {
+     "C0001/GBP": "28591.87",
+     "C0002/GBP": "28632.42",
+     "C0003/GBP": "28051.70",
+     "C0004/GBP": "26637.78",
+     "C0005/GBP": "31659.17",
+     "C0006/GBP": "29876.62",
+     "C0007/GBP": "31779.62",
+     "C0008/GBP": "28134.49",
+     "C0101/EUR": "19478.60",
+     "C0102/EUR": "20301.35",
+     "C0103/EUR": "17557.88",
+     "C0104/EUR": "19287.61"
+    },
+    "cash": {
+     "GBP": "23336367",
+     "EUR": "7662544"
+    },
+    "bank": {
+     "SGA-GBP-01": "233363.67",
+     "SGA-EUR-01": "76625.44",
+     "OWN-GBP-01": "502033.35",
+     "OWN-EUR-01": "150538.78"
+    }
+   },
+   "last_recon_day": "2026-04-30",
+   "prev_end": "2026-03-31"
+  },
+  "2026-05": {
+   "checks": {
+    "file present": {
+     "ok": 14
+    },
+    "header matches contract": {
+     "ok": 14
+    },
+    "mandatory field populated": {
+     "ok": 14595
+    },
+    "field type valid": {
+     "ok": 16736
+    },
+    "primary keys unique in month": {
+     "ok": 14
+    },
+    "no exact duplicate rows": {
+     "ok": 14
+    },
+    "date within the reporting month (or documented opening row)": {
+     "ok": 3031
+    },
+    "timestamp offset correct for Europe/London": {
+     "ok": 1644
+    },
+    "booking_ts local date = booking_date": {
+     "ok": 262
+    },
+    "value_date = booking_date": {
+     "ok": 262
+    },
+    "17:00 Europe/London point matches its date": {
+     "ok": 278
+    },
+    "calendar has every day of the month": {
+     "ok": 1
+    },
+    "calendar reconciliation days = weekdays minus bank holidays": {
+     "ok": 1
+    },
+    "calendar period_id": {
+     "ok": 1
+    },
+    "cash-book entry links to exactly one bank entry by reference": {
+     "ok": 222
+    },
+    "linked amounts equal (cash D/C opposite to bank)": {
+     "ok": 222
+    },
+    "cash posting date = bank booking date (no timing difference)": {
+     "ok": 222
+    },
+    "cash-book entries whose bank entry is on the missing statement (expected)": {
+     "ok": 5
+    },
+    "bank entry links to a cash-book entry by reference": {
+     "ok": 222
+    },
+    "settlement line \u2192 transaction": {
+     "ok": 287
+    },
+    "batch lines = header totals": {
+     "ok": 76
+    },
+    "gross \u2212 fees/refunds = net": {
+     "ok": 76
+    },
+    "batch \u2192 one bank entry with its reference and net amount": {
+     "ok": 74
+    },
+    "batches whose bank entry is on the missing statement (expected)": {
+     "ok": 2
+    },
+    "transaction \u2192 batch": {
+     "ok": 287
+    },
+    "refund \u2192 original (same client and currency, not exceeded)": {
+     "ok": 2
+    },
+    "unallocated receipt \u2192 bank entry": {
+     "ok": 1
+    },
+    "unallocated receipt allocated within the month": {
+     "ok": 1
+    },
+    "statement arithmetic (opening + entries = closing; entry count)": {
+     "ok": 75
+    },
+    "statement continuity (closing = next opening)": {
+     "ok": 70
+    },
+    "statement continuity not assessable across the missing day (expected)": {
+     "ok": 1
+    },
+    "missing statement days are the planted ones": {
+     "ok": 1
+    },
+    "statement days missing by design (not zero-filled)": {
+     "ok": 1
+    },
+    "17:00 confirmation = opening + entries to 17:00": {
+     "ok": 37
+    },
+    "requirement (snapshots + open unallocated) = reported": {
+     "ok": 38
+    },
+    "item A (cash book to 17:00) = reported = requirement (internal difference 0)": {
+     "ok": 38
+    },
+    "bank \u2212 ledger = 0 and reported 0": {
+     "ok": 34
+    },
+    "external records without a confirmation (missing evidence, expected)": {
+     "ok": 1
+    },
+    "planted bank-ledger difference present and reported": {
+     "ok": 3
+    },
+    "currency = account currency": {
+     "ok": 717
+    },
+    "no natural-key duplicate bank entries": {
+     "ok": 1
+    }
+   },
+   "examples": {},
+   "offsets": {
+    "BST +01:00": 1644
+   },
+   "rows": {
+    "IN-01": 31,
+    "IN-02": 4,
+    "IN-03": 240,
+    "IN-04": 1,
+    "IN-05": 38,
+    "IN-06": 38,
+    "IN-07": 37,
+    "IN-08": 75,
+    "IN-09": 262,
+    "IN-10": 229,
+    "IN-11": 400,
+    "IN-12": 76,
+    "IN-13": 363,
+    "IN-14": 0
+   },
+   "recon_days": 19,
+   "days": 31,
+   "opening": {
+    "clients": {
+     "C0001/GBP": "28591.87",
+     "C0002/GBP": "28632.42",
+     "C0003/GBP": "28051.70",
+     "C0004/GBP": "26637.78",
+     "C0005/GBP": "31659.17",
+     "C0006/GBP": "29876.62",
+     "C0007/GBP": "31779.62",
+     "C0008/GBP": "28134.49",
+     "C0101/EUR": "19478.60",
+     "C0102/EUR": "20301.35",
+     "C0103/EUR": "17557.88",
+     "C0104/EUR": "19287.61"
+    },
+    "cash": {
+     "GBP": "23336367",
+     "EUR": "7662544"
+    },
+    "bank": {
+     "SGA-GBP-01": "233363.67",
+     "SGA-EUR-01": "76625.44",
+     "OWN-GBP-01": "502033.35",
+     "OWN-EUR-01": "150538.78"
+    }
+   },
+   "closing": {
+    "clients": {
+     "C0001/GBP": "30037.00",
+     "C0002/GBP": "25505.03",
+     "C0003/GBP": "27868.23",
+     "C0004/GBP": "33866.37",
+     "C0005/GBP": "34530.62",
+     "C0006/GBP": "32788.89",
+     "C0007/GBP": "30927.10",
+     "C0008/GBP": "28174.42",
+     "C0101/EUR": "18629.23",
+     "C0102/EUR": "19938.40",
+     "C0103/EUR": "19599.17",
+     "C0104/EUR": "17891.01"
+    },
+    "cash": {
+     "GBP": "24369766",
+     "EUR": "7605781"
+    },
+    "bank": {
+     "SGA-GBP-01": "243697.66",
+     "SGA-EUR-01": "76057.81",
+     "OWN-GBP-01": "501584.80",
+     "OWN-EUR-01": "150410.72"
+    }
+   },
+   "last_recon_day": "2026-05-29",
+   "prev_end": "2026-04-30"
+  },
+  "2026-06": {
+   "checks": {
+    "file present": {
+     "ok": 14
+    },
+    "header matches contract": {
+     "ok": 14
+    },
+    "mandatory field populated": {
+     "ok": 16931
+    },
+    "field type valid": {
+     "ok": 19420
+    },
+    "primary keys unique in month": {
+     "ok": 14
+    },
+    "no exact duplicate rows": {
+     "ok": 14
+    },
+    "date within the reporting month (or documented opening row)": {
+     "ok": 3518
+    },
+    "timestamp offset correct for Europe/London": {
+     "ok": 1910
+    },
+    "booking_ts local date = booking_date": {
+     "ok": 308
+    },
+    "value_date = booking_date": {
+     "ok": 308
+    },
+    "17:00 Europe/London point matches its date": {
+     "ok": 320
+    },
+    "calendar has every day of the month": {
+     "ok": 1
+    },
+    "calendar reconciliation days = weekdays minus bank holidays": {
+     "ok": 1
+    },
+    "calendar period_id": {
+     "ok": 1
+    },
+    "cash-book entry links to exactly one bank entry by reference": {
+     "ok": 262
+    },
+    "linked amounts equal (cash D/C opposite to bank)": {
+     "ok": 262
+    },
+    "cash posting date = bank booking date (no timing difference)": {
+     "ok": 262
+    },
+    "planted reference mismatch present": {
+     "ok": 2
+    },
+    "bank entry links to a cash-book entry by reference": {
+     "ok": 264
+    },
+    "settlement line \u2192 transaction": {
+     "ok": 332
+    },
+    "batch lines = header totals": {
+     "ok": 88
+    },
+    "gross \u2212 fees/refunds = net": {
+     "ok": 88
+    },
+    "batch \u2192 one bank entry with its reference and net amount": {
+     "ok": 86
+    },
+    "batches affected by the planted reference mismatch (expected)": {
+     "ok": 2
+    },
+    "transaction \u2192 batch": {
+     "ok": 332
+    },
+    "refund \u2192 original (same client and currency, not exceeded)": {
+     "ok": 2
+    },
+    "unallocated receipt \u2192 bank entry": {
+     "ok": 1
+    },
+    "unallocated receipt allocated within the month": {
+     "ok": 1
+    },
+    "statement arithmetic (opening + entries = closing; entry count)": {
+     "ok": 88
+    },
+    "statement continuity (closing = next opening)": {
+     "ok": 84
+    },
+    "17:00 confirmation = opening + entries to 17:00": {
+     "ok": 44
+    },
+    "requirement (snapshots + open unallocated) = reported": {
+     "ok": 44
+    },
+    "item A (cash book to 17:00) = reported = requirement (internal difference 0)": {
+     "ok": 44
+    },
+    "bank \u2212 ledger = 0 and reported 0": {
+     "ok": 44
+    },
+    "currency = account currency": {
+     "ok": 838
+    },
+    "no natural-key duplicate bank entries": {
+     "ok": 1
+    }
+   },
+   "examples": {},
+   "offsets": {
+    "BST +01:00": 1910
+   },
+   "rows": {
+    "IN-01": 30,
+    "IN-02": 4,
+    "IN-03": 276,
+    "IN-04": 1,
+    "IN-05": 44,
+    "IN-06": 44,
+    "IN-07": 44,
+    "IN-08": 88,
+    "IN-09": 308,
+    "IN-10": 266,
+    "IN-11": 464,
+    "IN-12": 88,
+    "IN-13": 420,
+    "IN-14": 0
+   },
+   "recon_days": 22,
+   "days": 30,
+   "opening": {
+    "clients": {
+     "C0001/GBP": "30037.00",
+     "C0002/GBP": "25505.03",
+     "C0003/GBP": "27868.23",
+     "C0004/GBP": "33866.37",
+     "C0005/GBP": "34530.62",
+     "C0006/GBP": "32788.89",
+     "C0007/GBP": "30927.10",
+     "C0008/GBP": "28174.42",
+     "C0101/EUR": "18629.23",
+     "C0102/EUR": "19938.40",
+     "C0103/EUR": "19599.17",
+     "C0104/EUR": "17891.01"
+    },
+    "cash": {
+     "GBP": "24369766",
+     "EUR": "7605781"
+    },
+    "bank": {
+     "SGA-GBP-01": "243697.66",
+     "SGA-EUR-01": "76057.81",
+     "OWN-GBP-01": "501584.80",
+     "OWN-EUR-01": "150410.72"
+    }
+   },
+   "closing": {
+    "clients": {
+     "C0001/GBP": "30555.71",
+     "C0002/GBP": "30338.34",
+     "C0003/GBP": "30006.93",
+     "C0004/GBP": "29656.76",
+     "C0005/GBP": "29687.22",
+     "C0006/GBP": "31930.32",
+     "C0007/GBP": "28555.70",
+     "C0008/GBP": "30041.99",
+     "C0101/EUR": "18621.66",
+     "C0102/EUR": "20786.61",
+     "C0103/EUR": "19924.00",
+     "C0104/EUR": "19126.65"
+    },
+    "cash": {
+     "GBP": "24077297",
+     "EUR": "7845892"
+    },
+    "bank": {
+     "SGA-GBP-01": "240772.97",
+     "SGA-EUR-01": "78458.92",
+     "OWN-GBP-01": "501058.01",
+     "OWN-EUR-01": "150255.87"
+    }
+   },
+   "last_recon_day": "2026-06-30",
+   "prev_end": "2026-05-31"
+  },
+  "2026-07": {
+   "checks": {
+    "file present": {
+     "ok": 14
+    },
+    "header matches contract": {
+     "ok": 14
+    },
+    "mandatory field populated": {
+     "ok": 17469
+    },
+    "field type valid": {
+     "ok": 20032
+    },
+    "primary keys unique in month": {
+     "ok": 14
+    },
+    "no exact duplicate rows": {
+     "ok": 14
+    },
+    "date within the reporting month (or documented opening row)": {
+     "ok": 3628
+    },
+    "timestamp offset correct for Europe/London": {
+     "ok": 1971
+    },
+    "booking_ts local date = booking_date": {
+     "ok": 311
+    },
+    "value_date = booking_date": {
+     "ok": 311
+    },
+    "17:00 Europe/London point matches its date": {
+     "ok": 334
+    },
+    "calendar has every day of the month": {
+     "ok": 1
+    },
+    "calendar reconciliation days = weekdays minus bank holidays": {
+     "ok": 1
+    },
+    "calendar period_id": {
+     "ok": 1
+    },
+    "cash-book entry links to exactly one bank entry by reference": {
+     "ok": 263
+    },
+    "linked amounts equal (cash D/C opposite to bank)": {
+     "ok": 263
+    },
+    "cash posting date = bank booking date (no timing difference)": {
+     "ok": 263
+    },
+    "planted reference mismatch present": {
+     "ok": 2
+    },
+    "cash-book entries whose bank entry is on the missing statement (expected)": {
+     "ok": 5
+    },
+    "bank entry links to a cash-book entry by reference": {
+     "ok": 265
+    },
+    "settlement line \u2192 transaction": {
+     "ok": 347
+    },
+    "batch lines = header totals": {
+     "ok": 92
+    },
+    "gross \u2212 fees/refunds = net": {
+     "ok": 92
+    },
+    "batch \u2192 one bank entry with its reference and net amount": {
+     "ok": 88
+    },
+    "batches affected by the planted reference mismatch (expected)": {
+     "ok": 2
+    },
+    "batches whose bank entry is on the missing statement (expected)": {
+     "ok": 2
+    },
+    "transaction \u2192 batch": {
+     "ok": 347
+    },
+    "refund \u2192 original (same client and currency, not exceeded)": {
+     "ok": 2
+    },
+    "unallocated receipt \u2192 bank entry": {
+     "ok": 1
+    },
+    "unallocated receipt allocated within the month": {
+     "ok": 1
+    },
+    "statement arithmetic (opening + entries = closing; entry count)": {
+     "ok": 91
+    },
+    "statement continuity (closing = next opening)": {
+     "ok": 86
+    },
+    "statement continuity not assessable across the missing day (expected)": {
+     "ok": 1
+    },
+    "missing statement days are the planted ones": {
+     "ok": 1
+    },
+    "statement days missing by design (not zero-filled)": {
+     "ok": 1
+    },
+    "17:00 confirmation = opening + entries to 17:00": {
+     "ok": 45
+    },
+    "requirement (snapshots + open unallocated) = reported": {
+     "ok": 46
+    },
+    "item A (cash book to 17:00) = reported = requirement (internal difference 0)": {
+     "ok": 46
+    },
+    "bank \u2212 ledger = 0 and reported 0": {
+     "ok": 45
+    },
+    "external records without a confirmation (missing evidence, expected)": {
+     "ok": 1
+    },
+    "currency = account currency": {
+     "ok": 857
+    },
+    "no natural-key duplicate bank entries": {
+     "ok": 1
+    }
+   },
+   "examples": {},
+   "offsets": {
+    "BST +01:00": 1971
+   },
+   "rows": {
+    "IN-01": 31,
+    "IN-02": 4,
+    "IN-03": 288,
+    "IN-04": 1,
+    "IN-05": 46,
+    "IN-06": 46,
+    "IN-07": 45,
+    "IN-08": 91,
+    "IN-09": 311,
+    "IN-10": 272,
+    "IN-11": 479,
+    "IN-12": 92,
+    "IN-13": 439,
+    "IN-14": 0
+   },
+   "recon_days": 23,
+   "days": 31,
+   "opening": {
+    "clients": {
+     "C0001/GBP": "30555.71",
+     "C0002/GBP": "30338.34",
+     "C0003/GBP": "30006.93",
+     "C0004/GBP": "29656.76",
+     "C0005/GBP": "29687.22",
+     "C0006/GBP": "31930.32",
+     "C0007/GBP": "28555.70",
+     "C0008/GBP": "30041.99",
+     "C0101/EUR": "18621.66",
+     "C0102/EUR": "20786.61",
+     "C0103/EUR": "19924.00",
+     "C0104/EUR": "19126.65"
+    },
+    "cash": {
+     "GBP": "24077297",
+     "EUR": "7845892"
+    },
+    "bank": {
+     "SGA-GBP-01": "240772.97",
+     "SGA-EUR-01": "78458.92",
+     "OWN-GBP-01": "501058.01",
+     "OWN-EUR-01": "150255.87"
+    }
+   },
+   "closing": {
+    "clients": {
+     "C0001/GBP": "28669.06",
+     "C0002/GBP": "30899.64",
+     "C0003/GBP": "29765.16",
+     "C0004/GBP": "29792.01",
+     "C0005/GBP": "30720.67",
+     "C0006/GBP": "31476.26",
+     "C0007/GBP": "31824.96",
+     "C0008/GBP": "33478.13",
+     "C0101/EUR": "18098.34",
+     "C0102/EUR": "19326.78",
+     "C0103/EUR": "20901.15",
+     "C0104/EUR": "20400.01"
+    },
+    "cash": {
+     "GBP": "24662589",
+     "EUR": "7872628"
+    },
+    "bank": {
+     "SGA-GBP-01": "246625.89",
+     "SGA-EUR-01": "78726.28",
+     "OWN-GBP-01": "500508.58",
+     "OWN-EUR-01": "150115.60"
+    }
+   },
+   "last_recon_day": "2026-07-31",
+   "prev_end": "2026-06-30"
+  },
+  "2026-08": {
+   "checks": {
+    "file present": {
+     "ok": 14
+    },
+    "header matches contract": {
+     "ok": 14
+    },
+    "mandatory field populated": {
+     "ok": 15793
+    },
+    "field type valid": {
+     "ok": 18113
+    },
+    "primary keys unique in month": {
+     "ok": 14
+    },
+    "no exact duplicate rows": {
+     "ok": 14
+    },
+    "date within the reporting month (or documented opening row)": {
+     "ok": 3273
+    },
+    "timestamp offset correct for Europe/London": {
+     "ok": 1781
+    },
+    "booking_ts local date = booking_date": {
+     "ok": 293
+    },
+    "value_date = booking_date": {
+     "ok": 293
+    },
+    "17:00 Europe/London point matches its date": {
+     "ok": 292
+    },
+    "calendar has every day of the month": {
+     "ok": 1
+    },
+    "calendar reconciliation days = weekdays minus bank holidays": {
+     "ok": 1
+    },
+    "calendar period_id": {
+     "ok": 1
+    },
+    "cash-book entry links to exactly one bank entry by reference": {
+     "ok": 249
+    },
+    "linked amounts equal (cash D/C opposite to bank)": {
+     "ok": 249
+    },
+    "cash posting date = bank booking date (no timing difference)": {
+     "ok": 249
+    },
+    "planted reference mismatch present": {
+     "ok": 2
+    },
+    "cash-book entries whose bank entry is on the missing statement (expected)": {
+     "ok": 5
+    },
+    "bank entry links to a cash-book entry by reference": {
+     "ok": 251
+    },
+    "settlement line \u2192 transaction": {
+     "ok": 302
+    },
+    "batch lines = header totals": {
+     "ok": 80
+    },
+    "gross \u2212 fees/refunds = net": {
+     "ok": 80
+    },
+    "batch \u2192 one bank entry with its reference and net amount": {
+     "ok": 76
+    },
+    "batches affected by the planted reference mismatch (expected)": {
+     "ok": 2
+    },
+    "batches whose bank entry is on the missing statement (expected)": {
+     "ok": 2
+    },
+    "transaction \u2192 batch": {
+     "ok": 302
+    },
+    "refund \u2192 original (same client and currency, not exceeded)": {
+     "ok": 2
+    },
+    "unallocated receipt \u2192 bank entry": {
+     "ok": 1
+    },
+    "unallocated receipt allocated within the month": {
+     "ok": 1
+    },
+    "statement arithmetic (opening + entries = closing; entry count)": {
+     "ok": 79
+    },
+    "statement continuity (closing = next opening)": {
+     "ok": 74
+    },
+    "statement continuity not assessable across the missing day (expected)": {
+     "ok": 1
+    },
+    "missing statement days are the planted ones": {
+     "ok": 1
+    },
+    "statement days missing by design (not zero-filled)": {
+     "ok": 1
+    },
+    "17:00 confirmation = opening + entries to 17:00": {
+     "ok": 39
+    },
+    "requirement (snapshots + open unallocated) = reported": {
+     "ok": 40
+    },
+    "item A (cash book to 17:00) = reported = requirement (internal difference 0)": {
+     "ok": 40
+    },
+    "bank \u2212 ledger = 0 and reported 0": {
+     "ok": 36
+    },
+    "planted bank-ledger difference present and reported": {
+     "ok": 3
+    },
+    "external records without a confirmation (missing evidence, expected)": {
+     "ok": 1
+    },
+    "currency = account currency": {
+     "ok": 789
+    },
+    "no natural-key duplicate bank entries": {
+     "ok": 1
+    }
+   },
+   "examples": {},
+   "offsets": {
+    "BST +01:00": 1781
+   },
+   "rows": {
+    "IN-01": 31,
+    "IN-02": 4,
+    "IN-03": 252,
+    "IN-04": 1,
+    "IN-05": 40,
+    "IN-06": 40,
+    "IN-07": 39,
+    "IN-08": 79,
+    "IN-09": 293,
+    "IN-10": 258,
+    "IN-11": 438,
+    "IN-12": 80,
+    "IN-13": 382,
+    "IN-14": 0
+   },
+   "recon_days": 20,
+   "days": 31,
+   "opening": {
+    "clients": {
+     "C0001/GBP": "28669.06",
+     "C0002/GBP": "30899.64",
+     "C0003/GBP": "29765.16",
+     "C0004/GBP": "29792.01",
+     "C0005/GBP": "30720.67",
+     "C0006/GBP": "31476.26",
+     "C0007/GBP": "31824.96",
+     "C0008/GBP": "33478.13",
+     "C0101/EUR": "18098.34",
+     "C0102/EUR": "19326.78",
+     "C0103/EUR": "20901.15",
+     "C0104/EUR": "20400.01"
+    },
+    "cash": {
+     "GBP": "24662589",
+     "EUR": "7872628"
+    },
+    "bank": {
+     "SGA-GBP-01": "246625.89",
+     "SGA-EUR-01": "78726.28",
+     "OWN-GBP-01": "500508.58",
+     "OWN-EUR-01": "150115.60"
+    }
+   },
+   "closing": {
+    "clients": {
+     "C0001/GBP": "40000.00",
+     "C0002/GBP": "35000.00",
+     "C0003/GBP": "32500.00",
+     "C0004/GBP": "30000.00",
+     "C0005/GBP": "30000.00",
+     "C0006/GBP": "28500.00",
+     "C0007/GBP": "27500.00",
+     "C0008/GBP": "26500.00",
+     "C0101/EUR": "25000.00",
+     "C0102/EUR": "20000.00",
+     "C0103/EUR": "18000.00",
+     "C0104/EUR": "17000.00"
+    },
+    "cash": {
+     "GBP": "25000000",
+     "EUR": "8000000"
+    },
+    "bank": {
+     "SGA-GBP-01": "250000.00",
+     "SGA-EUR-01": "80000.00",
+     "OWN-GBP-01": "500000.00",
+     "OWN-EUR-01": "150000.00"
+    }
+   },
+   "last_recon_day": "2026-08-28",
+   "prev_end": "2026-07-31"
+  }
+ },
+ "continuity": [
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "clients_equal": true,
+   "cash_equal": {
+    "GBP": true,
+    "EUR": true
+   },
+   "bank_equal": {
+    "SGA-GBP-01": true,
+    "SGA-EUR-01": true,
+    "OWN-GBP-01": true,
+    "OWN-EUR-01": true
+   }
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "clients_equal": true,
+   "cash_equal": {
+    "GBP": true,
+    "EUR": true
+   },
+   "bank_equal": {
+    "SGA-GBP-01": true,
+    "SGA-EUR-01": true,
+    "OWN-GBP-01": true,
+    "OWN-EUR-01": true
+   }
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "clients_equal": true,
+   "cash_equal": {
+    "GBP": true,
+    "EUR": true
+   },
+   "bank_equal": {
+    "SGA-GBP-01": true,
+    "SGA-EUR-01": true,
+    "OWN-GBP-01": true,
+    "OWN-EUR-01": true
+   }
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "clients_equal": true,
+   "cash_equal": {
+    "GBP": true,
+    "EUR": true
+   },
+   "bank_equal": {
+    "SGA-GBP-01": true,
+    "SGA-EUR-01": true,
+    "OWN-GBP-01": true,
+    "OWN-EUR-01": true
+   }
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "clients_equal": true,
+   "cash_equal": {
+    "GBP": true,
+    "EUR": true
+   },
+   "bank_equal": {
+    "SGA-GBP-01": true,
+    "SGA-EUR-01": true,
+    "OWN-GBP-01": true,
+    "OWN-EUR-01": true
+   }
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "clients_equal": true,
+   "cash_equal": {
+    "GBP": true,
+    "EUR": true
+   },
+   "bank_equal": {
+    "SGA-GBP-01": true,
+    "SGA-EUR-01": true,
+    "OWN-GBP-01": true,
+    "OWN-EUR-01": true
+   }
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "clients_equal": true,
+   "cash_equal": {
+    "GBP": true,
+    "EUR": true
+   },
+   "bank_equal": {
+    "SGA-GBP-01": true,
+    "SGA-EUR-01": true,
+    "OWN-GBP-01": true,
+    "OWN-EUR-01": true
+   }
+  }
+ ],
+ "august_to_september": {
+  "clients_equal": true,
+  "cash_equal": {
+   "GBP": true,
+   "EUR": true
+  },
+  "bank_equal": {
+   "SGA-GBP-01": true,
+   "SGA-EUR-01": true,
+   "OWN-GBP-01": true,
+   "OWN-EUR-01": true
+  },
+  "august_closing": {
+   "clients": {
+    "C0001/GBP": "40000.00",
+    "C0002/GBP": "35000.00",
+    "C0003/GBP": "32500.00",
+    "C0004/GBP": "30000.00",
+    "C0005/GBP": "30000.00",
+    "C0006/GBP": "28500.00",
+    "C0007/GBP": "27500.00",
+    "C0008/GBP": "26500.00",
+    "C0101/EUR": "25000.00",
+    "C0102/EUR": "20000.00",
+    "C0103/EUR": "18000.00",
+    "C0104/EUR": "17000.00"
+   },
+   "cash": {
+    "GBP": "25000000",
+    "EUR": "8000000"
+   },
+   "bank": {
+    "SGA-GBP-01": "250000.00",
+    "SGA-EUR-01": "80000.00",
+    "OWN-GBP-01": "500000.00",
+    "OWN-EUR-01": "150000.00"
+   }
+  },
+  "september_opening": {
+   "clients": {
+    "C0001/GBP": "40000.00",
+    "C0002/GBP": "35000.00",
+    "C0003/GBP": "32500.00",
+    "C0004/GBP": "30000.00",
+    "C0005/GBP": "30000.00",
+    "C0006/GBP": "28500.00",
+    "C0007/GBP": "27500.00",
+    "C0008/GBP": "26500.00",
+    "C0101/EUR": "25000.00",
+    "C0102/EUR": "20000.00",
+    "C0103/EUR": "18000.00",
+    "C0104/EUR": "17000.00"
+   },
+   "cash": {
+    "GBP": "25000000",
+    "EUR": "8000000"
+   },
+   "bank": {
+    "SGA-GBP-01": "250000.00",
+    "SGA-EUR-01": "80000.00",
+    "OWN-GBP-01": "500000.00",
+    "OWN-EUR-01": "150000.00"
+   }
+  }
+ },
+ "cross_month_ids": {
+  "IN-01": {
+   "ids_in_more_than_one_month": 0,
+   "identical_carried_forward_opening_snapshots": 0,
+   "conflicting": []
+  },
+  "IN-02": {
+   "ids_in_more_than_one_month": 4,
+   "identical_carried_forward_opening_snapshots": 0,
+   "conflicting": [
+    "OWN-EUR-01",
+    "OWN-GBP-01",
+    "SGA-EUR-01",
+    "SGA-GBP-01"
+   ]
+  },
+  "IN-03": {
+   "ids_in_more_than_one_month": 48,
+   "identical_carried_forward_opening_snapshots": 48,
+   "conflicting": []
+  },
+  "IN-04": {
+   "ids_in_more_than_one_month": 0,
+   "identical_carried_forward_opening_snapshots": 0,
+   "conflicting": []
+  },
+  "IN-05": {
+   "ids_in_more_than_one_month": 0,
+   "identical_carried_forward_opening_snapshots": 0,
+   "conflicting": []
+  },
+  "IN-06": {
+   "ids_in_more_than_one_month": 0,
+   "identical_carried_forward_opening_snapshots": 0,
+   "conflicting": []
+  },
+  "IN-07": {
+   "ids_in_more_than_one_month": 0,
+   "identical_carried_forward_opening_snapshots": 0,
+   "conflicting": []
+  },
+  "IN-08": {
+   "ids_in_more_than_one_month": 0,
+   "identical_carried_forward_opening_snapshots": 0,
+   "conflicting": []
+  },
+  "IN-09": {
+   "ids_in_more_than_one_month": 0,
+   "identical_carried_forward_opening_snapshots": 0,
+   "conflicting": []
+  },
+  "IN-10": {
+   "ids_in_more_than_one_month": 0,
+   "identical_carried_forward_opening_snapshots": 0,
+   "conflicting": []
+  },
+  "IN-11": {
+   "ids_in_more_than_one_month": 0,
+   "identical_carried_forward_opening_snapshots": 0,
+   "conflicting": []
+  },
+  "IN-12": {
+   "ids_in_more_than_one_month": 0,
+   "identical_carried_forward_opening_snapshots": 0,
+   "conflicting": []
+  },
+  "IN-13": {
+   "ids_in_more_than_one_month": 0,
+   "identical_carried_forward_opening_snapshots": 0,
+   "conflicting": []
+  }
+ },
+ "problems": {
+  "2026-01": {},
+  "2026-02": {},
+  "2026-03": {},
+  "2026-04": {},
+  "2026-05": {},
+  "2026-06": {},
+  "2026-07": {},
+  "2026-08": {}
+ }
+}

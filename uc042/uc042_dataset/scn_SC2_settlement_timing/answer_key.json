@@ -1,0 +1,27 @@
+{
+  "scenario_id": "SC2",
+  "description": "Settlement timing difference: SB-GBP-20260915 (2,868.50) recorded 15 Sep, booked by the bank 16 Sep 08:00",
+  "non_passing_results": [
+    [
+      "C08-DIFFERENCE",
+      "2026-09-15/SGA-GBP-01",
+      "FAIL"
+    ]
+  ],
+  "exceptions": [
+    {
+      "exception_id": "EXC-SC2-01",
+      "severity": "Critical",
+      "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-09-15|2868.50",
+      "affected_results": 1
+    }
+  ],
+  "evidence_statuses": {
+    "EXC-SC2-01": "TIMING_EVIDENCED"
+  },
+  "investigation_groups": [],
+  "candidate_relationships": [],
+  "expected_outcome_basis": "scenario design; engine changes E1 (timing evidence) and E2 (investigation groups) implemented",
+  "target_outcome": "15 Sep difference +2,868.50 detected (C08 FAIL while the difference exists); evidence status TIMING_EVIDENCED via cash-book entry LE-GBP-0915-0005 and clearing entry BE-GBP-0916-T01 (same account, currency, reference SB-GBP-20260915 and amount, booked the next business day, within D1); exception stays OPEN awaiting human confirmation; batch-to-bank reports the 1-business-day lag as information.",
+  "engine_limitations": []
+}

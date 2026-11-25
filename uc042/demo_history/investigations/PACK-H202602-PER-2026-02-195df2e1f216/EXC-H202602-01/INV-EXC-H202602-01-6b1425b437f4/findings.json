@@ -1,0 +1,484 @@
+{
+ "classification_summary": {
+  "CONFLICTING_EVIDENCE": [],
+  "EVIDENCE_BACKED": [
+   "F-01",
+   "F-02",
+   "F-03",
+   "F-04",
+   "F-05",
+   "F-06",
+   "F-07"
+  ],
+  "HYPOTHESIS": [
+   "H-01"
+  ],
+  "INSUFFICIENT_EVIDENCE": [
+   "M-01"
+  ],
+  "deterministic_conflicts": [],
+  "evidence_gaps": {
+   "additional_gaps_identified_by_ai": [],
+   "engine_missing_evidence": [
+    "M-01"
+   ],
+   "searched_not_found": [
+    "M-01"
+   ]
+  },
+  "not_found_searches": [
+   "SEARCH-01",
+   "SEARCH-02",
+   "SEARCH-03",
+   "SEARCH-05",
+   "SEARCH-06",
+   "SEARCH-08",
+   "SEARCH-09",
+   "SEARCH-10",
+   "SEARCH-11",
+   "SEARCH-12"
+  ],
+  "unverified_candidate_relationships": []
+ },
+ "confirmed_findings": [
+  {
+   "audit_relevance": "These engine outcomes define the scope of the exception and show that the bank-dependent checks could not be assessed from the available evidence.",
+   "claim": "The exception is reported as OPEN and the relevant bank-evidence controls are reported as INSUFFICIENT_EVIDENCE.",
+   "does_not_establish": "These results do not establish whether money moved, the actual bank balance on that date, or why the evidence is unavailable.",
+   "establishes": "The engine reports the exception as OPEN and the cited results as INSUFFICIENT_EVIDENCE. The calendar and account inventory identify 2026-02-16 as a reconciliation day for the EUR account.",
+   "evidence_ids": [
+    "EXC-H202602-01",
+    "C14-COVER|IN-07 2026-02-16/SGA-EUR-01",
+    "C14-COVER|IN-08 2026-02-16/SGA-EUR-01",
+    "DQ22-CONTINUITY|ST-SGA-EUR-01-20260217-EOD",
+    "CASH-BANK-LINK|LE-EUR-0216-0001",
+    "CASH-BANK-LINK|LE-EUR-0216-0002",
+    "CASH-BANK-LINK|LE-EUR-0216-0003",
+    "CASH-BANK-LINK|LE-EUR-0216-0004",
+    "CASH-BANK-LINK|LE-EUR-0216-0005",
+    "C07-BANK-EVIDENCE|2026-02-16/SGA-EUR-01",
+    "C08-DIFFERENCE|2026-02-16/SGA-EUR-01",
+    "C11-BATCH-BANK|AQ-EUR-20260216",
+    "C11-BATCH-BANK|SB-EUR-20260216",
+    "FUND-TOPUP|AQ-EUR-20260216",
+    "RC4-DIRECT|TX-0216-00014",
+    "RC4-DIRECT|TX-0216-00020"
+   ],
+   "explanation": "The exception record identifies SGA-EUR-01, EUR and 2026-02-16, and reports status OPEN. The cited control results report insufficient evidence for the missing confirmation and statement, statement continuity, cash-book-to-bank checks, external reconciliation bank evidence and difference, settlement batch-to-bank checks, the top-up check, and direct transaction checks.",
+   "finding_id": "F-01",
+   "supporting_records": [
+    "IN-01:2026-02-16",
+    "IN-02:SGA-EUR-01"
+   ],
+   "title": "Bank-evidence controls are insufficient"
+  },
+  {
+   "audit_relevance": "The reported bank figure is central to the account reconciliation, but its supporting statement is missing, so the reported equality cannot validate the bank position.",
+   "claim": "The firm's external reconciliation record reports a bank balance and ledger balance of 73199.44 EUR and a reported difference of 0.00 EUR, but the engine marks the bank balance unverified and the difference not computed.",
+   "does_not_establish": "It does not establish that the bank balance was actually 73199.44 EUR, that the reported difference is verified, or why the cited statement is unavailable.",
+   "establishes": "The firm's record reports ledger_balance_reported 73199.44, bank_balance_reported 73199.44 and difference_reported 0.00 EUR for the date; the engine states that bank evidence is missing and the bank balance is unverified.",
+   "evidence_ids": [
+    "IN-06:ERL-SGA-EUR-01-20260216",
+    "C07-BANK-EVIDENCE|2026-02-16/SGA-EUR-01",
+    "C08-DIFFERENCE|2026-02-16/SGA-EUR-01"
+   ],
+   "explanation": "The external reconciliation record cites a statement ID for 2026-02-16 17:00. The engine reports that the cited statement was not provided, describes the bank balance as unverified, and says bank evidence was not provided and the difference was not computed. The reported 0.00 is therefore the firm's recorded figure, not a verified bank reconciliation result.",
+   "finding_id": "F-02",
+   "supporting_records": [
+    "IN-06:ERL-SGA-EUR-01-20260216"
+   ],
+   "title": "External reconciliation reports equal balances"
+  },
+  {
+   "audit_relevance": "This shows the firm's recorded internal safeguarding comparison but does not supply the missing independent bank evidence for the account.",
+   "claim": "The firm's internal reconciliation record reports a 17:00 EUR requirement and resource of 73199.44 each and a reported difference of 0.00.",
+   "does_not_establish": "It does not establish the actual bank balance or that any cash-book entries were executed by the bank.",
+   "establishes": "The internal record reports requirement 73199.44 EUR, resource 73199.44 EUR and difference 0.00 at the stated reconciliation point.",
+   "evidence_ids": [
+    "IN-05:IRR-EMONEY-EUR-20260216"
+   ],
+   "explanation": "The internal reconciliation record describes a comparison of the firm's requirement and resource for the EUR asset pool. It is a different reconciliation view from the external reconciliation of the account's ledger balance against its bank balance; the figures are not contradictory merely because they are comparable numerically.",
+   "finding_id": "F-03",
+   "supporting_records": [
+    "IN-05:IRR-EMONEY-EUR-20260216"
+   ],
+   "title": "Internal reconciliation reports equal requirement and resource"
+  },
+  {
+   "audit_relevance": "The adjacent statements do not provide the missing date's transaction-level or closing-balance evidence required to assess the exception.",
+   "claim": "The available statement headers are dated 2026-02-13 and 2026-02-17, and the engine reports a statement gap for 2026-02-16.",
+   "does_not_establish": "The headers do not establish what transactions occurred or what the account balance was on 2026-02-16.",
+   "establishes": "The supplied statement headers are for 2026-02-13 and 2026-02-17, and the engine reports a statement gap for 2026-02-16.",
+   "evidence_ids": [
+    "IN-08:ST-SGA-EUR-01-20260213-EOD",
+    "IN-08:ST-SGA-EUR-01-20260217-EOD",
+    "DQ22-CONTINUITY|ST-SGA-EUR-01-20260217-EOD"
+   ],
+   "explanation": "The packet contains end-of-day statement headers for 2026-02-13 and 2026-02-17. The continuity control explicitly reports that no statement for 2026-02-16 was provided.",
+   "finding_id": "F-04",
+   "supporting_records": [
+    "IN-08:ST-SGA-EUR-01-20260213-EOD",
+    "IN-08:ST-SGA-EUR-01-20260217-EOD"
+   ],
+   "title": "Available statements leave a date gap"
+  },
+  {
+   "audit_relevance": "The postings are relevant to explaining the firm's ledger activity, but their execution and bank impact cannot be verified without bank records.",
+   "claim": "The firm's cash book records five EUR entries for SGA-EUR-01 on 2026-02-16, while the cited bank-entry searches found no matching records in the supplied data.",
+   "does_not_establish": "It does not establish that any entry reached or left the bank, or why corresponding bank entries are not available.",
+   "establishes": "The firm's cash book contains the five cited entries on the specified account and date. The specified bank-entry searches returned NOT_FOUND in the supplied data.",
+   "evidence_ids": [
+    "IN-10:LE-EUR-0216-0001",
+    "IN-10:LE-EUR-0216-0002",
+    "IN-10:LE-EUR-0216-0003",
+    "IN-10:LE-EUR-0216-0004",
+    "IN-10:LE-EUR-0216-0005",
+    "CASH-BANK-LINK|LE-EUR-0216-0001",
+    "CASH-BANK-LINK|LE-EUR-0216-0002",
+    "CASH-BANK-LINK|LE-EUR-0216-0003",
+    "CASH-BANK-LINK|LE-EUR-0216-0004",
+    "CASH-BANK-LINK|LE-EUR-0216-0005",
+    "SEARCH-03",
+    "SEARCH-08",
+    "SEARCH-09",
+    "SEARCH-10",
+    "SEARCH-11",
+    "SEARCH-12"
+   ],
+   "explanation": "The cash-book records show entries described as BANK_LOAD, ACQUIRER_SETTLEMENT, OWN_FUNDS_TOPUP, SCHEME_SETTLEMENT and REDEMPTION. The engine marks the cash-book-to-bank checks insufficient because the bank statement for that day was not provided; searches for the relevant exact references returned NOT_FOUND. Cash-book entries show what the firm recorded, not that money moved at the bank.",
+   "finding_id": "F-05",
+   "supporting_records": [
+    "IN-10:LE-EUR-0216-0001",
+    "IN-10:LE-EUR-0216-0002",
+    "IN-10:LE-EUR-0216-0003",
+    "IN-10:LE-EUR-0216-0004",
+    "IN-10:LE-EUR-0216-0005"
+   ],
+   "title": "Cash-book entries lack matching bank evidence"
+  },
+  {
+   "audit_relevance": "Settlement activity is relevant context for account movements, but the bank-side evidence needed to test those records is absent.",
+   "claim": "Settlement batch and client transaction records describe activity dated 2026-02-16, but the engine reports that settlement-date bank evidence is unavailable.",
+   "does_not_establish": "These records do not establish that the batches settled into or out of the account, or that the missing bank evidence has any particular explanation.",
+   "establishes": "The batch headers, lines and referenced transactions contain the described settlement data; the engine reports both batch-to-bank checks as INSUFFICIENT_EVIDENCE.",
+   "evidence_ids": [
+    "IN-12:AQ-EUR-20260216",
+    "IN-13:SL-AQ-EUR-20260216-0001",
+    "IN-13:SL-AQ-EUR-20260216-0002",
+    "IN-13:SL-AQ-EUR-20260216-0003",
+    "IN-13:SL-AQ-EUR-20260216-0004",
+    "IN-11:TX-0216-00015",
+    "IN-11:TX-0216-00016",
+    "IN-12:SB-EUR-20260216",
+    "IN-13:SL-SB-EUR-20260216-0001",
+    "IN-13:SL-SB-EUR-20260216-0002",
+    "IN-13:SL-SB-EUR-20260216-0003",
+    "IN-11:TX-0216-00017",
+    "IN-11:TX-0216-00018",
+    "IN-11:TX-0216-00019",
+    "C11-BATCH-BANK|AQ-EUR-20260216",
+    "C11-BATCH-BANK|SB-EUR-20260216"
+   ],
+   "explanation": "The acquirer batch header reports a net amount and fees and its retrieved batch lines reference two settled client transactions and fee lines. The scheme batch header and its retrieved lines reference three settled spend transactions. The corresponding batch-to-bank control results are INSUFFICIENT_EVIDENCE because the bank statement for the settlement date was not provided. These records describe batches and client activity, not proof of bank settlement.",
+   "finding_id": "F-06",
+   "supporting_records": [
+    "IN-12:AQ-EUR-20260216",
+    "IN-13:SL-AQ-EUR-20260216-0001",
+    "IN-13:SL-AQ-EUR-20260216-0002",
+    "IN-13:SL-AQ-EUR-20260216-0003",
+    "IN-13:SL-AQ-EUR-20260216-0004",
+    "IN-11:TX-0216-00015",
+    "IN-11:TX-0216-00016",
+    "IN-12:SB-EUR-20260216",
+    "IN-13:SL-SB-EUR-20260216-0001",
+    "IN-13:SL-SB-EUR-20260216-0002",
+    "IN-13:SL-SB-EUR-20260216-0003",
+    "IN-11:TX-0216-00017",
+    "IN-11:TX-0216-00018",
+    "IN-11:TX-0216-00019"
+   ],
+   "title": "Settlement records do not supply bank confirmation"
+  },
+  {
+   "audit_relevance": "The result relates to a recorded top-up amount, but missing bank evidence prevents assessing its bank-side occurrence.",
+   "claim": "The engine reports a computed value of 6.79 for the acquirer top-up check but classifies that check as INSUFFICIENT_EVIDENCE.",
+   "does_not_establish": "It does not establish that the top-up was paid or received by the bank.",
+   "establishes": "The engine result reports computed 6.79 and outcome INSUFFICIENT_EVIDENCE, with a note that the bank statement was not provided.",
+   "evidence_ids": [
+    "FUND-TOPUP|AQ-EUR-20260216",
+    "IN-12:AQ-EUR-20260216"
+   ],
+   "explanation": "The result cites the acquirer batch and explicitly notes that the bank statement for SGA-EUR-01 on 2026-02-16 was not provided. The computed figure is not evidence that a bank transfer occurred.",
+   "finding_id": "F-07",
+   "supporting_records": [
+    "IN-12:AQ-EUR-20260216"
+   ],
+   "title": "Top-up check remains insufficiently evidenced"
+  }
+ ],
+ "contradictory_evidence": [],
+ "evidence_ledger_sha256": "42ff6356e7f3774cb7e4d2b40bc3d3fd50b933c614e31790fb5c05993573eaa5",
+ "evidence_packet_sha256": "760adfe5480557d379c65d32069e9ed463549ead6fe5d1073ef6d7ae87e6ea34",
+ "evidence_references": [
+  "C07-BANK-EVIDENCE|2026-02-16/SGA-EUR-01",
+  "C08-DIFFERENCE|2026-02-16/SGA-EUR-01",
+  "C11-BATCH-BANK|AQ-EUR-20260216",
+  "C11-BATCH-BANK|SB-EUR-20260216",
+  "C14-COVER|IN-07 2026-02-16/SGA-EUR-01",
+  "C14-COVER|IN-08 2026-02-16/SGA-EUR-01",
+  "CASH-BANK-LINK|LE-EUR-0216-0001",
+  "CASH-BANK-LINK|LE-EUR-0216-0002",
+  "CASH-BANK-LINK|LE-EUR-0216-0003",
+  "CASH-BANK-LINK|LE-EUR-0216-0004",
+  "CASH-BANK-LINK|LE-EUR-0216-0005",
+  "DQ22-CONTINUITY|ST-SGA-EUR-01-20260217-EOD",
+  "EXC-H202602-01",
+  "FUND-TOPUP|AQ-EUR-20260216",
+  "IN-01:2026-02-16",
+  "IN-02:SGA-EUR-01",
+  "IN-05:IRR-EMONEY-EUR-20260216",
+  "IN-06:ERL-SGA-EUR-01-20260216",
+  "IN-08:ST-SGA-EUR-01-20260213-EOD",
+  "IN-08:ST-SGA-EUR-01-20260217-EOD",
+  "IN-10:LE-EUR-0216-0001",
+  "IN-10:LE-EUR-0216-0002",
+  "IN-10:LE-EUR-0216-0003",
+  "IN-10:LE-EUR-0216-0004",
+  "IN-10:LE-EUR-0216-0005",
+  "IN-11:TX-0216-00015",
+  "IN-11:TX-0216-00016",
+  "IN-11:TX-0216-00017",
+  "IN-11:TX-0216-00018",
+  "IN-11:TX-0216-00019",
+  "IN-12:AQ-EUR-20260216",
+  "IN-12:SB-EUR-20260216",
+  "IN-13:SL-AQ-EUR-20260216-0001",
+  "IN-13:SL-AQ-EUR-20260216-0002",
+  "IN-13:SL-AQ-EUR-20260216-0003",
+  "IN-13:SL-AQ-EUR-20260216-0004",
+  "IN-13:SL-SB-EUR-20260216-0001",
+  "IN-13:SL-SB-EUR-20260216-0002",
+  "IN-13:SL-SB-EUR-20260216-0003",
+  "MISS-01",
+  "RC4-DIRECT|TX-0216-00014",
+  "RC4-DIRECT|TX-0216-00020",
+  "SEARCH-01",
+  "SEARCH-02",
+  "SEARCH-03",
+  "SEARCH-08",
+  "SEARCH-09",
+  "SEARCH-10",
+  "SEARCH-11",
+  "SEARCH-12"
+ ],
+ "exception_id": "EXC-H202602-01",
+ "exception_resolution": "NOT_RESOLVED_BY_INVESTIGATION",
+ "failure_reason": "",
+ "hypotheses": [
+  {
+   "contradictory_evidence": [],
+   "hypothesis_id": "H-01",
+   "limitations": "This is only a possibility based on internal postings and batch records. No supplied bank confirmation, statement or bank entry verifies that activity occurred.",
+   "possible_explanation": "Bank activity corresponding to some firm-recorded entries may have occurred, but the supporting statement and bank-entry records are absent from the supplied evidence.",
+   "rationale": "The firm recorded account postings and settlement batches for the date, while the bank-side evidence needed to verify those records is missing.",
+   "status": "HYPOTHESIS",
+   "supporting_evidence": [
+    "IN-10:LE-EUR-0216-0001",
+    "IN-10:LE-EUR-0216-0002",
+    "IN-10:LE-EUR-0216-0003",
+    "IN-10:LE-EUR-0216-0004",
+    "IN-10:LE-EUR-0216-0005",
+    "IN-12:AQ-EUR-20260216",
+    "IN-12:SB-EUR-20260216",
+    "MISS-01",
+    "SEARCH-01",
+    "SEARCH-02",
+    "SEARCH-03"
+   ]
+  }
+ ],
+ "investigated_at": "2026-11-04T05:46:02+00:00",
+ "investigation_id": "INV-EXC-H202602-01-6b1425b437f4",
+ "investigation_mode": "tools",
+ "investigation_route": "missing_bank_evidence",
+ "investigation_scope": {
+  "account_id": "SGA-EUR-01",
+  "affected_result_count": 15,
+  "amount": "",
+  "candidate_relationship_ids": [],
+  "category": "Missing bank evidence",
+  "check_ids": [
+   "C07-BANK-EVIDENCE",
+   "C08-DIFFERENCE",
+   "C11-BATCH-BANK",
+   "C14-COVER",
+   "CASH-BANK-LINK",
+   "DQ22-CONTINUITY",
+   "FUND-TOPUP",
+   "RC4-DIRECT"
+  ],
+  "control_codes": [
+   "C05/C07",
+   "C06",
+   "C07",
+   "C08",
+   "C09",
+   "C11",
+   "C14",
+   "DQ22"
+  ],
+  "currency": "EUR",
+  "evidence_status": "",
+  "first_date": "2026-02-16",
+  "group_size": 0,
+  "investigation_group_id": "",
+  "keys": {
+   "account_id": "SGA-EUR-01",
+   "date": "2026-02-16"
+  },
+  "last_date": "2026-02-16",
+  "missing_evidence_item_ids": [
+   "MISS-01"
+  ],
+  "related_exception_ids": [],
+  "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16",
+  "root_cause_kind": "MISSING_BANK_EVIDENCE",
+  "severity": "Critical"
+ },
+ "investigation_status": "COMPLETED",
+ "investigation_summary": "The exception concerns missing bank evidence for EUR safeguarding account SGA-EUR-01 on 2026-02-16. The engine reports the exception as OPEN and its affected checks as INSUFFICIENT_EVIDENCE where bank records are unavailable; those outcomes are not changed here. Firm reconciliation and cash-book records report figures and postings for that date, but the missing bank confirmation, statement and searched bank entries prevent confirmation of the bank position or whether the recorded movements occurred. No actual contradiction is established.",
+ "missing_evidence": [
+  {
+   "description": "Bank evidence for SGA-EUR-01 on 2026-02-16 is not available in the supplied data: the 17:00 bank confirmation and end-of-day statement were not found, and searches for bank entries by the date and by the cited cash-book references returned NOT_FOUND. The packet's MISS-01 states that the evidence value is not available and that 15 checks could not be assessed.",
+   "expected_source": "Example Bank plc bank balance confirmation and statement/transaction records for SGA-EUR-01 on 2026-02-16; obtain the underlying bank records or authenticated bank-provided copies.",
+   "impact": "Without this evidence the actual bank balance, statement continuity, bank-side effect of firm postings, and bank-side settlement of the cited batches cannot be verified; the relevant engine checks remain INSUFFICIENT_EVIDENCE.",
+   "item_id": "M-01",
+   "related_ids": [
+    "MISS-01",
+    "SEARCH-01",
+    "SEARCH-02",
+    "SEARCH-03",
+    "SEARCH-08",
+    "SEARCH-09",
+    "SEARCH-10",
+    "SEARCH-11",
+    "SEARCH-12",
+    "C07-BANK-EVIDENCE|2026-02-16/SGA-EUR-01",
+    "C08-DIFFERENCE|2026-02-16/SGA-EUR-01",
+    "C11-BATCH-BANK|AQ-EUR-20260216",
+    "C11-BATCH-BANK|SB-EUR-20260216",
+    "C14-COVER|IN-07 2026-02-16/SGA-EUR-01",
+    "C14-COVER|IN-08 2026-02-16/SGA-EUR-01",
+    "DQ22-CONTINUITY|ST-SGA-EUR-01-20260217-EOD",
+    "CASH-BANK-LINK|LE-EUR-0216-0001",
+    "CASH-BANK-LINK|LE-EUR-0216-0002",
+    "CASH-BANK-LINK|LE-EUR-0216-0003",
+    "CASH-BANK-LINK|LE-EUR-0216-0004",
+    "CASH-BANK-LINK|LE-EUR-0216-0005",
+    "FUND-TOPUP|AQ-EUR-20260216",
+    "RC4-DIRECT|TX-0216-00014",
+    "RC4-DIRECT|TX-0216-00020"
+   ]
+  }
+ ],
+ "model_metadata": {
+  "attempts": 2,
+  "findings_schema_version": "uc042-investigation-findings/1.4",
+  "investigation_mode": "tools",
+  "model": "gpt-6-luna",
+  "prompt_version": "uc042-investigator-prompt/2.2-tools",
+  "provider": "openai",
+  "provider_response": {
+   "responses": [
+    {
+     "request_id": "req_7431654db3c14bcc91bfc84671b1aecd",
+     "resolved_model": "gpt-6-luna",
+     "response_id": "resp_09965d2fb8d73aeb016aeac65bf26487d28e876fd7c9373622",
+     "status": "completed"
+    },
+    {
+     "request_id": "req_9883c1103b3e42f8aa70e8cb7ef14c27",
+     "resolved_model": "gpt-6-luna",
+     "response_id": "resp_09965d2fb8d73aeb016aeac66286c087d290ae3acefe35334d",
+     "status": "completed"
+    }
+   ]
+  },
+  "simulated": false,
+  "tool_registry_version": "uc042-evidence-tools/1.0",
+  "usage": {
+   "cached_input_tokens": 29908,
+   "input_tokens": 34443,
+   "latency_seconds": 63.83,
+   "output_tokens": 7260,
+   "reasoning_tokens": 1529,
+   "total_tokens": 41703
+  },
+  "workflow_version": "uc042-investigation-graph/2.0-tools"
+ },
+ "open_questions": [
+  "What was the authenticated bank balance for SGA-EUR-01 at 17:00 and at end of day on 2026-02-16?",
+  "Do bank-originated statements or transaction records support the cash-book entries and settlement batches recorded for 2026-02-16?",
+  "Why was the statement cited in the firm's external reconciliation record not available in the supplied evidence?"
+ ],
+ "original_evidence_status": "",
+ "original_exception_status": "OPEN",
+ "original_review_status": "AWAITING_HUMAN_REVIEW",
+ "overall_evidence_assessment": "INSUFFICIENT_EVIDENCE",
+ "pack_content_sha256": "195df2e1f216149c7f6fc8c78520f10e4b57293cde2e206bdb2a66921695b9e5",
+ "pack_id": "PACK-H202602-PER-2026-02-195df2e1f216",
+ "recommended_next_steps": [
+  {
+   "action": "Obtain an authenticated bank confirmation and complete statement for SGA-EUR-01 covering 2026-02-16, including the 17:00 balance and transaction details.",
+   "evidence_needed": "Bank-originated 17:00 balance confirmation, complete statement for 2026-02-16, and any statement metadata or audit trail establishing provenance.",
+   "rationale": "The date-specific confirmation and statement are missing and are necessary to verify the bank position and address the statement gap.",
+   "step_id": "S-01"
+  },
+  {
+   "action": "Obtain the bank's transaction-level records for the exact references in the cash book and settlement batch headers, then compare them with the firm's postings.",
+   "evidence_needed": "Bank transaction lines with booking date, amount, direction, reference and account identifier for the relevant entries and settlement references.",
+   "rationale": "The firm records postings and batch activity, but the searches returned no matching bank entries in the supplied data.",
+   "step_id": "S-02"
+  },
+  {
+   "action": "Obtain the evidence and working papers underlying the firm's 2026-02-16 external reconciliation.",
+   "evidence_needed": "The cited statement, reconciliation inputs, preparer support and any evidence explaining the reported bank and ledger figures.",
+   "rationale": "The external record reports a bank balance and zero difference while the cited statement is unavailable and the engine marks the bank balance unverified.",
+   "step_id": "S-03"
+  }
+ ],
+ "statement": "AI investigation findings are an aid to human review. They do not change any deterministic control outcome, do not resolve or close any exception, and are not a compliance opinion.",
+ "tool_summary": {
+  "limits": {
+   "max_input_tokens": 150000,
+   "max_records_per_call": 25,
+   "max_rounds": 4,
+   "max_tool_calls": 8,
+   "max_total_records": 160,
+   "total_timeout": 300.0
+  },
+  "llm_calls": 2,
+  "records_final": 29,
+  "records_initial": 16,
+  "status": "COMPLETED",
+  "stop_reason": "final_answer",
+  "tool_calls_requested": 8,
+  "tool_rounds": 1,
+  "tools_deduplicated": 0,
+  "tools_executed": 8,
+  "tools_refused_budget": 0,
+  "tools_rejected_or_failed": 0,
+  "tools_used": [
+   "get_settlement_batch",
+   "get_settlement_batch",
+   "get_reconciliation_evidence",
+   "search_bank_entries",
+   "search_bank_entries",
+   "search_bank_entries",
+   "search_bank_entries",
+   "search_bank_entries"
+  ]
+ },
+ "validation_findings": [],
+ "validation_status": "VALID"
+}

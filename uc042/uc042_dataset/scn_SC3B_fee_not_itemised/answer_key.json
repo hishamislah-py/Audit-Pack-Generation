@@ -1,0 +1,25 @@
+{
+  "scenario_id": "SC3B",
+  "description": "Fee not itemised: AQ-GBP-20260908 header states fees 45.50 but carries no fee lines",
+  "non_passing_results": [
+    [
+      "C11-BATCH-ARITH",
+      "AQ-GBP-20260908",
+      "FAIL"
+    ]
+  ],
+  "exceptions": [
+    {
+      "exception_id": "EXC-SC3B-01",
+      "severity": "High",
+      "root_cause": "C11-BATCH-ARITH|AQ-GBP-20260908",
+      "affected_results": 1
+    }
+  ],
+  "evidence_statuses": {},
+  "investigation_groups": [],
+  "candidate_relationships": [],
+  "expected_outcome_basis": "scenario design; engine changes E1 (timing evidence) and E2 (investigation groups) implemented",
+  "target_outcome": "Fee partially supported: header fees 45.50, bank credit 9,954.50 and own-funds top-up 45.50 agree, but no itemised fee lines.",
+  "engine_limitations": []
+}

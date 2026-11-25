@@ -1,0 +1,2 @@
+discrepancy_id,logged_ts,recon_ref,account_id,currency,amount,description,cause_category,cause_evidence_ref,funding_reference,status,resolved_ts,approver_id
+DL-0001,2026-09-15T18:05:00+01:00,ERL-SGA-GBP-01-20260915,SGA-GBP-01,GBP,2868.50,Scheme settlement SB-GBP-20260915 not debited by the bank by 17:00,TIMING,BE-GBP-0916-T01,,RESOLVED,2026-09-16T09:00:00+01:00,U-04

@@ -1,0 +1,225 @@
+{
+ "confirmed_findings": [
+  {
+   "claim": "The engine reports a GBP 2,868.50 C08 difference for 2026-09-15 with outcome FAIL and evidence status TIMING_EVIDENCED.",
+   "evidence_ids": [
+    "C08-DIFFERENCE|2026-09-15/SGA-GBP-01",
+    "EXC-SC2-01"
+   ],
+   "explanation": "The control result reports GBP 2,868.50 explained by timing and residual unexplained of GBP 0.00. It also states that human confirmation is awaited and the exception is not resolved; these are quoted as reported, not independently recalculated.",
+   "finding_id": "F-01",
+   "supporting_records": [
+    "IN-06:ERL-SGA-GBP-01-20260915",
+    "IN-07:ST-SGA-GBP-01-20260915-1700"
+   ]
+  },
+  {
+   "claim": "The 2026-09-15 reconciliation record reports a bank balance of GBP 331,179.44 and a ledger balance of GBP 328,310.94.",
+   "evidence_ids": [
+    "IN-06:ERL-SGA-GBP-01-20260915",
+    "IN-07:ST-SGA-GBP-01-20260915-1700"
+   ],
+   "explanation": "The external reconciliation record reports a difference of GBP 2,868.50, and the 17:00 bank balance confirmation reports GBP 331,179.44. These are the record values; the investigation does not recalculate the control outcome.",
+   "finding_id": "F-02",
+   "supporting_records": [
+    "IN-06:ERL-SGA-GBP-01-20260915",
+    "IN-07:ST-SGA-GBP-01-20260915-1700"
+   ]
+  },
+  {
+   "claim": "The firm's cash book records a GBP 2,868.50 scheme-settlement entry dated 2026-09-15 with reference SB-GBP-20260915.",
+   "evidence_ids": [
+    "IN-10:LE-GBP-0915-0005",
+    "IN-12:SB-GBP-20260915"
+   ],
+   "explanation": "The cash-book entry is marked C under the supplied cash-book convention. The settlement batch header records the same expected bank reference and amount, with direction FROM_FIRM. These are firm-side records and do not by themselves prove when money moved at the bank.",
+   "finding_id": "F-03",
+   "supporting_records": [
+    "IN-10:LE-GBP-0915-0005",
+    "IN-12:SB-GBP-20260915"
+   ]
+  },
+  {
+   "claim": "The bank statement records a GBP 2,868.50 debit on 2026-09-16 with bank reference SB-GBP-20260915.",
+   "evidence_ids": [
+    "IN-09:BE-GBP-0916-T01",
+    "IN-08:ST-SGA-GBP-01-20260916-EOD"
+   ],
+   "explanation": "The bank entry is dated and value-dated 2026-09-16, and is listed on the 2026-09-16 end-of-day statement. Its amount and reference correspond to the cash-book settlement entry and batch header cited above.",
+   "finding_id": "F-04",
+   "supporting_records": [
+    "IN-09:BE-GBP-0916-T01",
+    "IN-08:ST-SGA-GBP-01-20260916-EOD"
+   ]
+  },
+  {
+   "claim": "For 2026-09-16, the external reconciliation record and 17:00 bank confirmation both report GBP 334,413.00.",
+   "evidence_ids": [
+    "IN-06:ERL-SGA-GBP-01-20260916",
+    "IN-07:ST-SGA-GBP-01-20260916-1700"
+   ],
+   "explanation": "The external reconciliation record reports bank and ledger balances of GBP 334,413.00 and difference GBP 0.00; the 17:00 bank balance confirmation also reports GBP 334,413.00. This later-day record does not change the engine's status for the 2026-09-15 exception.",
+   "finding_id": "F-05",
+   "supporting_records": [
+    "IN-06:ERL-SGA-GBP-01-20260916",
+    "IN-07:ST-SGA-GBP-01-20260916-1700"
+   ]
+  }
+ ],
+ "contradictory_evidence": [
+  {
+   "description": "The firm's discrepancy log marks DL-0001 as RESOLVED, while the engine exception EXC-SC2-01 is OPEN and awaiting human review. These are differing statuses in the supplied records; they do not establish conflicting bank movements or that the engine exception has been cleared.",
+   "evidence_ids": [
+    "IN-14:DL-0001",
+    "EXC-SC2-01"
+   ],
+   "item_id": "C-01"
+  }
+ ],
+ "evidence_packet_sha256": "f0393c923d8ea2610d02e432e190120e26d6c4d96f3885151f91bfd5520b23d6",
+ "evidence_references": [
+  "C08-DIFFERENCE|2026-09-15/SGA-GBP-01",
+  "EXC-SC2-01",
+  "IN-06:ERL-SGA-GBP-01-20260915",
+  "IN-06:ERL-SGA-GBP-01-20260916",
+  "IN-07:ST-SGA-GBP-01-20260915-1700",
+  "IN-07:ST-SGA-GBP-01-20260916-1700",
+  "IN-08:ST-SGA-GBP-01-20260916-EOD",
+  "IN-09:BE-GBP-0916-T01",
+  "IN-10:LE-GBP-0915-0005",
+  "IN-12:SB-GBP-20260915",
+  "IN-14:DL-0001"
+ ],
+ "exception_id": "EXC-SC2-01",
+ "exception_resolution": "NOT_RESOLVED_BY_INVESTIGATION",
+ "failure_reason": "",
+ "hypotheses": [
+  {
+   "contradictory_evidence": [],
+   "hypothesis_id": "H-01",
+   "limitations": "The records show the firm's entry and a later bank debit with the same reference, but the packet does not include the payment instruction, dispatch evidence, bank processing details, or applicable settlement timetable. The reason for the date difference is not established.",
+   "possible_explanation": "The scheme settlement recorded in the firm's books on 15 September may have been processed or booked by the bank on 16 September.",
+   "status": "HYPOTHESIS",
+   "supporting_evidence": [
+    "IN-10:LE-GBP-0915-0005",
+    "IN-12:SB-GBP-20260915",
+    "IN-09:BE-GBP-0916-T01"
+   ]
+  }
+ ],
+ "investigated_at": "2026-11-02T11:26:35+00:00",
+ "investigation_id": "INV-EXC-SC2-01-eb2021ac50e9",
+ "investigation_route": "bank_ledger_mismatch",
+ "investigation_scope": {
+  "account_id": "SGA-GBP-01",
+  "affected_result_count": 1,
+  "amount": "2868.50",
+  "candidate_relationship_ids": [],
+  "category": "Bank-ledger difference (explained by timing evidence, awaiting human confirmation)",
+  "check_ids": [
+   "C08-DIFFERENCE"
+  ],
+  "control_codes": [
+   "C08"
+  ],
+  "currency": "GBP",
+  "evidence_status": "TIMING_EVIDENCED",
+  "first_date": "2026-09-15",
+  "group_size": 0,
+  "investigation_group_id": "",
+  "keys": {
+   "account_id": "SGA-GBP-01",
+   "date": "2026-09-15"
+  },
+  "last_date": "2026-09-15",
+  "missing_evidence_item_ids": [],
+  "related_exception_ids": [],
+  "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-09-15|2868.50",
+  "root_cause_kind": "BANK_LEDGER_DIFFERENCE",
+  "severity": "Critical"
+ },
+ "investigation_status": "COMPLETED",
+ "investigation_summary": "For EXC-SC2-01, the engine reports a GBP 2,868.50 C08 bank-ledger difference for 2026-09-15, with outcome FAIL and evidence status TIMING_EVIDENCED; the result remains awaiting human confirmation and is not resolved. The cash book records a scheme settlement for that amount on 15 September, and the bank statement records a debit with the same reference on 16 September. This supports the reported timing explanation, but the firm's discrepancy-log status and the engine's exception status differ, and underlying settlement instruction and client-allocation evidence are not available in the packet.",
+ "missing_evidence": [
+  {
+   "description": "No payment instruction, dispatch record, or bank processing confirmation for the settlement is supplied. The cash-book entry and settlement batch header are internal records, while the bank statement shows the later debit.",
+   "expected_source": "Firm payment or treasury system and the settlement scheme or bank processing records.",
+   "impact": "Without this evidence, the investigation cannot establish when the payment was instructed or transmitted, or why the bank entry appears on the following date.",
+   "item_id": "M-01",
+   "related_ids": [
+    "IN-10:LE-GBP-0915-0005",
+    "IN-12:SB-GBP-20260915",
+    "IN-09:BE-GBP-0916-T01"
+   ]
+  },
+  {
+   "description": "Client transaction, balance, or allocation records relevant to this settlement are not available in the supplied packet.",
+   "expected_source": "Client-money ledger and transaction or settlement-allocation records for the relevant account and dates.",
+   "impact": "The bank-ledger timing evidence does not establish the settlement's client-level allocation or whether any client balances were affected.",
+   "item_id": "M-02",
+   "related_ids": [
+    "IN-10:LE-GBP-0915-0005",
+    "IN-12:SB-GBP-20260915",
+    "C08-DIFFERENCE|2026-09-15/SGA-GBP-01"
+   ]
+  }
+ ],
+ "model_metadata": {
+  "attempts": 1,
+  "findings_schema_version": "uc042-investigation-findings/1.1",
+  "model": "gpt-6-luna",
+  "prompt_version": "uc042-investigator-prompt/1.0",
+  "provider": "openai",
+  "provider_response": {
+   "request_id": "req_5dd47458be5040578a7ff5ecec93c162",
+   "resolved_model": "gpt-6-luna",
+   "response_id": "resp_07453dfd491bda9d016ae8733d6df087d2a552a194cd6e449a",
+   "status": "completed"
+  },
+  "simulated": false,
+  "usage": {
+   "cached_input_tokens": 0,
+   "input_tokens": 14451,
+   "latency_seconds": 48.03,
+   "output_tokens": 4222,
+   "reasoning_tokens": 1792,
+   "total_tokens": 18673
+  },
+  "workflow_version": "uc042-investigation-graph/1.1"
+ },
+ "open_questions": [
+  "When was the settlement payment instructed and transmitted, and what evidence supports those timestamps?",
+  "What bank or scheme processing information explains the 16 September booking date for the entry referenced to the 15 September settlement?",
+  "What client-level transactions or balances, if any, were allocated to this settlement?",
+  "What review or confirmation remains outstanding between the firm's discrepancy-log status and the engine exception's open status?"
+ ],
+ "original_evidence_status": "TIMING_EVIDENCED",
+ "original_exception_status": "OPEN",
+ "original_review_status": "AWAITING_HUMAN_REVIEW",
+ "overall_evidence_assessment": "PARTIALLY_SUFFICIENT",
+ "pack_content_sha256": "aaca8a8b7194f34b3122dfc2a3727d5c54e72593f4b23c306851889cc4fc2b2d",
+ "pack_id": "PACK-SC2-PER-2026-09-aaca8a8b7194",
+ "recommended_next_steps": [
+  {
+   "action": "Obtain the settlement payment instruction, dispatch confirmation, and any bank or scheme processing records for reference SB-GBP-20260915.",
+   "evidence_needed": "Dated payment instruction, transmission or acceptance evidence, and bank or scheme processing timestamps tied to SB-GBP-20260915.",
+   "rationale": "These records could establish the instruction and transmission timeline and clarify the date difference shown by the cash book and bank statement.",
+   "step_id": "S-01"
+  },
+  {
+   "action": "Obtain client transaction, balance, and settlement-allocation records covering 15 and 16 September 2026.",
+   "evidence_needed": "Relevant client-money ledger entries, transaction-level settlement allocation, and reconciliation support for the affected dates.",
+   "rationale": "The packet contains account-level bank and cash-book records but no client-level evidence to assess the settlement allocation or any client-balance effects.",
+   "step_id": "S-02"
+  },
+  {
+   "action": "Ask the human reviewer to examine the basis for the firm's discrepancy-log status alongside the still-open engine exception.",
+   "evidence_needed": "Supporting review or action records for DL-0001 and the human-review documentation associated with EXC-SC2-01.",
+   "rationale": "The supplied records show different statuses; further review is needed to determine what the firm's status represents and what confirmation remains outstanding, without changing the exception status here.",
+   "step_id": "S-03"
+  }
+ ],
+ "statement": "AI investigation findings are an aid to human review. They do not change any deterministic control outcome, do not resolve or close any exception, and are not a compliance opinion.",
+ "validation_findings": [],
+ "validation_status": "VALID"
+}

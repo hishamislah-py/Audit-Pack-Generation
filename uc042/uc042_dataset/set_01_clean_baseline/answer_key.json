@@ -1,0 +1,9 @@
+{
+  "scenario_id": "S01",
+  "description": "Clean baseline: no FAIL or INSUFFICIENT_EVIDENCE results and no exceptions",
+  "non_passing_results": [],
+  "exceptions": [],
+  "evidence_statuses": {},
+  "investigation_groups": [],
+  "candidate_relationships": []
+}

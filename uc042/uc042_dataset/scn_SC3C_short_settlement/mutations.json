@@ -1,0 +1,767 @@
+[
+  {
+    "op": "set_field",
+    "file_id": "IN-09",
+    "key": "BE-GBP-0908-AQ1",
+    "field": "amount",
+    "old": "9954.50",
+    "new": "9950.00",
+    "why": "acquirer credited 4.50 less than its reported net"
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260908-EOD",
+    "field": "closing_balance_amount",
+    "old": "297830.35",
+    "new": "297825.85",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260908-1700",
+    "field": "balance_amount",
+    "old": "297830.35",
+    "new": "297825.85",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260908",
+    "field": "bank_balance_reported",
+    "old": "297830.35",
+    "new": "297825.85",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260908",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260909-EOD",
+    "field": "opening_balance_amount",
+    "old": "297830.35",
+    "new": "297825.85",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260909-EOD",
+    "field": "closing_balance_amount",
+    "old": "303696.81",
+    "new": "303692.31",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260909-1700",
+    "field": "balance_amount",
+    "old": "303696.81",
+    "new": "303692.31",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260909",
+    "field": "bank_balance_reported",
+    "old": "303696.81",
+    "new": "303692.31",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260909",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260910-EOD",
+    "field": "opening_balance_amount",
+    "old": "303696.81",
+    "new": "303692.31",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260910-EOD",
+    "field": "closing_balance_amount",
+    "old": "307169.12",
+    "new": "307164.62",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260910-1700",
+    "field": "balance_amount",
+    "old": "307169.12",
+    "new": "307164.62",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260910",
+    "field": "bank_balance_reported",
+    "old": "307169.12",
+    "new": "307164.62",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260910",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260911-EOD",
+    "field": "opening_balance_amount",
+    "old": "307169.12",
+    "new": "307164.62",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260911-EOD",
+    "field": "closing_balance_amount",
+    "old": "313081.31",
+    "new": "313076.81",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260911-1700",
+    "field": "balance_amount",
+    "old": "313081.31",
+    "new": "313076.81",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260911",
+    "field": "bank_balance_reported",
+    "old": "313081.31",
+    "new": "313076.81",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260911",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260914-EOD",
+    "field": "opening_balance_amount",
+    "old": "313081.31",
+    "new": "313076.81",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260914-EOD",
+    "field": "closing_balance_amount",
+    "old": "322733.29",
+    "new": "322728.79",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260914-1700",
+    "field": "balance_amount",
+    "old": "322733.29",
+    "new": "322728.79",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260914",
+    "field": "bank_balance_reported",
+    "old": "322733.29",
+    "new": "322728.79",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260914",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260915-EOD",
+    "field": "opening_balance_amount",
+    "old": "322733.29",
+    "new": "322728.79",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260915-EOD",
+    "field": "closing_balance_amount",
+    "old": "328310.94",
+    "new": "328306.44",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260915-1700",
+    "field": "balance_amount",
+    "old": "328310.94",
+    "new": "328306.44",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260915",
+    "field": "bank_balance_reported",
+    "old": "328310.94",
+    "new": "328306.44",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260915",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260916-EOD",
+    "field": "opening_balance_amount",
+    "old": "328310.94",
+    "new": "328306.44",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260916-EOD",
+    "field": "closing_balance_amount",
+    "old": "334413.00",
+    "new": "334408.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260916-1700",
+    "field": "balance_amount",
+    "old": "334413.00",
+    "new": "334408.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260916",
+    "field": "bank_balance_reported",
+    "old": "334413.00",
+    "new": "334408.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260916",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260917-EOD",
+    "field": "opening_balance_amount",
+    "old": "334413.00",
+    "new": "334408.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260917-EOD",
+    "field": "closing_balance_amount",
+    "old": "341484.46",
+    "new": "341479.96",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260917-1700",
+    "field": "balance_amount",
+    "old": "341484.46",
+    "new": "341479.96",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260917",
+    "field": "bank_balance_reported",
+    "old": "341484.46",
+    "new": "341479.96",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260917",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260918-EOD",
+    "field": "opening_balance_amount",
+    "old": "341484.46",
+    "new": "341479.96",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260918-EOD",
+    "field": "closing_balance_amount",
+    "old": "346075.68",
+    "new": "346071.18",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260918-1700",
+    "field": "balance_amount",
+    "old": "346075.68",
+    "new": "346071.18",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260918",
+    "field": "bank_balance_reported",
+    "old": "346075.68",
+    "new": "346071.18",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260918",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260921-EOD",
+    "field": "opening_balance_amount",
+    "old": "346075.68",
+    "new": "346071.18",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260921-EOD",
+    "field": "closing_balance_amount",
+    "old": "351541.68",
+    "new": "351537.18",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260921-1700",
+    "field": "balance_amount",
+    "old": "351541.68",
+    "new": "351537.18",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260921",
+    "field": "bank_balance_reported",
+    "old": "351541.68",
+    "new": "351537.18",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260921",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260922-EOD",
+    "field": "opening_balance_amount",
+    "old": "351541.68",
+    "new": "351537.18",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260922-EOD",
+    "field": "closing_balance_amount",
+    "old": "355960.22",
+    "new": "355955.72",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260922-1700",
+    "field": "balance_amount",
+    "old": "355960.22",
+    "new": "355955.72",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260922",
+    "field": "bank_balance_reported",
+    "old": "355960.22",
+    "new": "355955.72",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260922",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260923-EOD",
+    "field": "opening_balance_amount",
+    "old": "355960.22",
+    "new": "355955.72",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260923-EOD",
+    "field": "closing_balance_amount",
+    "old": "363313.17",
+    "new": "363308.67",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260923-1700",
+    "field": "balance_amount",
+    "old": "363313.17",
+    "new": "363308.67",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260923",
+    "field": "bank_balance_reported",
+    "old": "363313.17",
+    "new": "363308.67",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260923",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260924-EOD",
+    "field": "opening_balance_amount",
+    "old": "363313.17",
+    "new": "363308.67",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260924-EOD",
+    "field": "closing_balance_amount",
+    "old": "370603.29",
+    "new": "370598.79",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260924-1700",
+    "field": "balance_amount",
+    "old": "370603.29",
+    "new": "370598.79",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260924",
+    "field": "bank_balance_reported",
+    "old": "370603.29",
+    "new": "370598.79",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260924",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260925-EOD",
+    "field": "opening_balance_amount",
+    "old": "370603.29",
+    "new": "370598.79",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260925-EOD",
+    "field": "closing_balance_amount",
+    "old": "375461.46",
+    "new": "375456.96",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260925-1700",
+    "field": "balance_amount",
+    "old": "375461.46",
+    "new": "375456.96",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260925",
+    "field": "bank_balance_reported",
+    "old": "375461.46",
+    "new": "375456.96",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260925",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260928-EOD",
+    "field": "opening_balance_amount",
+    "old": "375461.46",
+    "new": "375456.96",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260928-EOD",
+    "field": "closing_balance_amount",
+    "old": "378706.65",
+    "new": "378702.15",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260928-1700",
+    "field": "balance_amount",
+    "old": "378706.65",
+    "new": "378702.15",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260928",
+    "field": "bank_balance_reported",
+    "old": "378706.65",
+    "new": "378702.15",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260928",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260929-EOD",
+    "field": "opening_balance_amount",
+    "old": "378706.65",
+    "new": "378702.15",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260929-EOD",
+    "field": "closing_balance_amount",
+    "old": "388744.47",
+    "new": "388739.97",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260929-1700",
+    "field": "balance_amount",
+    "old": "388744.47",
+    "new": "388739.97",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260929",
+    "field": "bank_balance_reported",
+    "old": "388744.47",
+    "new": "388739.97",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260929",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260930-EOD",
+    "field": "opening_balance_amount",
+    "old": "388744.47",
+    "new": "388739.97",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-08",
+    "key": "ST-SGA-GBP-01-20260930-EOD",
+    "field": "closing_balance_amount",
+    "old": "395844.86",
+    "new": "395840.36",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-07",
+    "key": "ST-SGA-GBP-01-20260930-1700",
+    "field": "balance_amount",
+    "old": "395844.86",
+    "new": "395840.36",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260930",
+    "field": "bank_balance_reported",
+    "old": "395844.86",
+    "new": "395840.36",
+    "why": ""
+  },
+  {
+    "op": "set_field",
+    "file_id": "IN-06",
+    "key": "ERL-SGA-GBP-01-20260930",
+    "field": "difference_reported",
+    "old": "0.00",
+    "new": "-4.50",
+    "why": ""
+  }
+]

@@ -1,0 +1,11 @@
+{
+ "generated_at": "2026-11-03T12:05:25+00:00",
+ "status": "GENERATED",
+ "outcome": "ALREADY_GENERATED_IDENTICAL",
+ "case_dir": "C:\\Users\\artlptp263user\\Downloads\\UC042_CLAUDE_CODE_HANDOFF\\uc042\\demo_history\\datasets\\2026-08",
+ "pack_id": "PACK-H202608-PER-2026-08-22a356a95098",
+ "processing_run_id": "RUN-3007353c36a63fca",
+ "pack_content_sha256": "22a356a950989fac860341abfd1ade0f5f846129268f91f6b3acac26b291fc25",
+ "validation_findings": [],
+ "python": "3.11.0"
+}

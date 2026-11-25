@@ -1,0 +1,195 @@
+[
+ {
+  "op": "add_record",
+  "file_id": "IN-09",
+  "record": {
+   "bank_entry_id": "BE-GBP-0317-X01",
+   "statement_id": "ST-SGA-GBP-01-20260317-EOD",
+   "account_id": "SGA-GBP-01",
+   "booking_date": "2026-03-17",
+   "booking_ts": "2026-03-17T15:20:00+00:00",
+   "value_date": "2026-03-17",
+   "amount": "517.30",
+   "dc_indicator": "D",
+   "currency": "GBP",
+   "bank_reference": "SETTLE 0263",
+   "end_to_end_ref": "",
+   "counterparty_name": "",
+   "narrative_text": "SETTLE 0263"
+  },
+  "why": "bank debit with no internal counterpart (unexplained)"
+ },
+ {
+  "op": "add_record",
+  "file_id": "IN-09",
+  "record": {
+   "bank_entry_id": "BE-GBP-0320-X02",
+   "statement_id": "ST-SGA-GBP-01-20260320-EOD",
+   "account_id": "SGA-GBP-01",
+   "booking_date": "2026-03-20",
+   "booking_ts": "2026-03-20T10:05:00+00:00",
+   "value_date": "2026-03-20",
+   "amount": "517.30",
+   "dc_indicator": "C",
+   "currency": "GBP",
+   "bank_reference": "SETTLE 0263",
+   "end_to_end_ref": "",
+   "counterparty_name": "",
+   "narrative_text": "RETURN SETTLE 0263"
+  },
+  "why": "bank return of the same amount before month end (keeps month-end continuity)"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-08",
+  "key": "ST-SGA-GBP-01-20260317-EOD",
+  "field": "closing_balance_amount",
+  "old": "231117.23",
+  "new": "230599.93",
+  "why": "bank balance lower"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-07",
+  "key": "ST-SGA-GBP-01-20260317-1700",
+  "field": "balance_amount",
+  "old": "231117.23",
+  "new": "230599.93",
+  "why": "bank balance lower at 17:00"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-06",
+  "key": "ERL-SGA-GBP-01-20260317",
+  "field": "bank_balance_reported",
+  "old": "231117.23",
+  "new": "230599.93",
+  "why": "firm reports the bank balance"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-06",
+  "key": "ERL-SGA-GBP-01-20260317",
+  "field": "difference_reported",
+  "old": "0.00",
+  "new": "-517.30",
+  "why": "firm reports the difference"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-08",
+  "key": "ST-SGA-GBP-01-20260318-EOD",
+  "field": "opening_balance_amount",
+  "old": "231117.23",
+  "new": "230599.93",
+  "why": "bank balance lower"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-08",
+  "key": "ST-SGA-GBP-01-20260318-EOD",
+  "field": "closing_balance_amount",
+  "old": "231495.10",
+  "new": "230977.80",
+  "why": "bank balance lower"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-07",
+  "key": "ST-SGA-GBP-01-20260318-1700",
+  "field": "balance_amount",
+  "old": "231495.10",
+  "new": "230977.80",
+  "why": "bank balance lower at 17:00"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-06",
+  "key": "ERL-SGA-GBP-01-20260318",
+  "field": "bank_balance_reported",
+  "old": "231495.10",
+  "new": "230977.80",
+  "why": "firm reports the bank balance"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-06",
+  "key": "ERL-SGA-GBP-01-20260318",
+  "field": "difference_reported",
+  "old": "0.00",
+  "new": "-517.30",
+  "why": "firm reports the difference"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-08",
+  "key": "ST-SGA-GBP-01-20260319-EOD",
+  "field": "opening_balance_amount",
+  "old": "231495.10",
+  "new": "230977.80",
+  "why": "bank balance lower"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-08",
+  "key": "ST-SGA-GBP-01-20260319-EOD",
+  "field": "closing_balance_amount",
+  "old": "231872.97",
+  "new": "231355.67",
+  "why": "bank balance lower"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-07",
+  "key": "ST-SGA-GBP-01-20260319-1700",
+  "field": "balance_amount",
+  "old": "231872.97",
+  "new": "231355.67",
+  "why": "bank balance lower at 17:00"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-06",
+  "key": "ERL-SGA-GBP-01-20260319",
+  "field": "bank_balance_reported",
+  "old": "231872.97",
+  "new": "231355.67",
+  "why": "firm reports the bank balance"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-06",
+  "key": "ERL-SGA-GBP-01-20260319",
+  "field": "difference_reported",
+  "old": "0.00",
+  "new": "-517.30",
+  "why": "firm reports the difference"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-08",
+  "key": "ST-SGA-GBP-01-20260317-EOD",
+  "field": "entry_count",
+  "old": "7",
+  "new": "8",
+  "why": "debit added"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-08",
+  "key": "ST-SGA-GBP-01-20260320-EOD",
+  "field": "opening_balance_amount",
+  "old": "231872.97",
+  "new": "231355.67",
+  "why": "bank balance lower overnight"
+ },
+ {
+  "op": "set_field",
+  "file_id": "IN-08",
+  "key": "ST-SGA-GBP-01-20260320-EOD",
+  "field": "entry_count",
+  "old": "7",
+  "new": "8",
+  "why": "return added"
+ }
+]

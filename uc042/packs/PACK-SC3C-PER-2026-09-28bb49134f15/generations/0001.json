@@ -1,0 +1,11 @@
+{
+ "generated_at": "2026-10-30T12:14:20+00:00",
+ "status": "GENERATED",
+ "outcome": "PUBLISHED",
+ "case_dir": "uc042_dataset/scn_SC3C_short_settlement",
+ "pack_id": "PACK-SC3C-PER-2026-09-28bb49134f15",
+ "processing_run_id": "RUN-84442010689e195c",
+ "pack_content_sha256": "28bb49134f15a093d65c8f903133263dd1b2b4c8d832b725122fb55b35f9e4e3",
+ "validation_findings": [],
+ "python": "3.12.3"
+}

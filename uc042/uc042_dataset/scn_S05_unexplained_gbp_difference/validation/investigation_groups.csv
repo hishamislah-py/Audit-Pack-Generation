@@ -1,0 +1,2 @@
+group_id,exception_ids,primary_exception_id,size,link_types,links,status,review_status,cause,correlation_version
+GRP-S05-01,EXC-S05-01; EXC-S05-02,EXC-S05-01,2,L3 LINEAGE,"EXC-S05-01—EXC-S05-02 L3 LINEAGE: bank entry BE-GBP-0917-X01 is inside the 2026-09-17 17:00 balance of SGA-GBP-01, where the difference begins [IN-09:bank_statement_entries_2026-09.csv#L152, IN-07:bank_balance_confirmations_2026-09.csv#L26]",OPEN,AWAITING_HUMAN_REVIEW,,deterministic-v1

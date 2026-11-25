@@ -1,0 +1,345 @@
+{
+ "classification_summary": {
+  "CONFLICTING_EVIDENCE": [
+   "C-01"
+  ],
+  "EVIDENCE_BACKED": [
+   "F-01",
+   "F-02",
+   "F-03",
+   "F-04"
+  ],
+  "HYPOTHESIS": [
+   "H-01",
+   "H-02"
+  ],
+  "INSUFFICIENT_EVIDENCE": [
+   "M-01",
+   "M-02"
+  ],
+  "deterministic_conflicts": [
+   "CONF-01"
+  ],
+  "evidence_gaps": {
+   "additional_gaps_identified_by_ai": [],
+   "engine_missing_evidence": [],
+   "searched_not_found": [
+    "M-01",
+    "M-02"
+   ]
+  },
+  "not_found_searches": [
+   "SEARCH-01",
+   "SEARCH-05"
+  ],
+  "unverified_candidate_relationships": [
+   "CAND-SC5A-01"
+  ]
+ },
+ "confirmed_findings": [
+  {
+   "claim": "The engine reports the C11 batch arithmetic control for SB-GBP-20260915 as FAIL, with computed and reported values of -2868.50.",
+   "evidence_ids": [
+    "C11-BATCH-ARITH|SB-GBP-20260915",
+    "IN-12:SB-GBP-20260915",
+    "IN-13:SL-SB-GBP-20260915-0003"
+   ],
+   "explanation": "The control result is authoritative as reported. Its note identifies settlement line SL-SB-GBP-20260915-0003 as not matching transaction TX-0915-00009; this finding does not recalculate or reinterpret the control outcome.",
+   "finding_id": "F-01",
+   "supporting_records": [
+    "IN-12:SB-GBP-20260915",
+    "IN-13:SL-SB-GBP-20260915-0003"
+   ]
+  },
+  {
+   "claim": "The batch header reports GBP 2,868.50 gross, net and expected from the firm, and its six listed transaction lines belong to that batch.",
+   "evidence_ids": [
+    "IN-12:SB-GBP-20260915",
+    "IN-13:SL-SB-GBP-20260915-0001",
+    "IN-13:SL-SB-GBP-20260915-0002",
+    "IN-13:SL-SB-GBP-20260915-0003",
+    "IN-13:SL-SB-GBP-20260915-0004",
+    "IN-13:SL-SB-GBP-20260915-0005",
+    "IN-13:SL-SB-GBP-20260915-0006",
+    "IN-11:TX-0915-00007",
+    "IN-11:TX-0915-00008",
+    "IN-11:TX-0915-00010",
+    "IN-11:TX-0915-00011",
+    "IN-11:TX-0915-00012",
+    "SEARCH-01"
+   ],
+   "explanation": "Five of the six lines have corresponding transaction records in the packet with matching transaction IDs and amounts. Line 0003 references TX-0915-00009, for which the packet's transaction search returned NOT_FOUND; its correspondence cannot be checked.",
+   "finding_id": "F-02",
+   "supporting_records": [
+    "IN-12:SB-GBP-20260915",
+    "IN-13:SL-SB-GBP-20260915-0001",
+    "IN-13:SL-SB-GBP-20260915-0002",
+    "IN-13:SL-SB-GBP-20260915-0003",
+    "IN-13:SL-SB-GBP-20260915-0004",
+    "IN-13:SL-SB-GBP-20260915-0005",
+    "IN-13:SL-SB-GBP-20260915-0006",
+    "IN-11:TX-0915-00007",
+    "IN-11:TX-0915-00008",
+    "IN-11:TX-0915-00010",
+    "IN-11:TX-0915-00011",
+    "IN-11:TX-0915-00012"
+   ]
+  },
+  {
+   "claim": "The bank statement entry and safeguarding cash-book entry both show GBP 2,868.50 under reference SB-GBP-20260915 on 2026-09-15.",
+   "evidence_ids": [
+    "IN-09:BE-GBP-0915-SB1",
+    "IN-10:LE-GBP-0915-0005"
+   ],
+   "explanation": "The bank record has direction D and the firm's cash-book record has direction C. The cash-book entry establishes what the firm recorded; it does not independently prove a bank movement.",
+   "finding_id": "F-03",
+   "supporting_records": [
+    "IN-09:BE-GBP-0915-SB1",
+    "IN-10:LE-GBP-0915-0005"
+   ]
+  },
+  {
+   "claim": "The related C0002 GBP balance roll-forward control is separately reported as FAIL, with computed 48257.08 and reported 47813.53.",
+   "evidence_ids": [
+    "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+    "IN-03:CBS-20260914-C0002-GBP",
+    "IN-03:CBS-20260915-C0002-GBP",
+    "IN-11:TX-0915-00006",
+    "IN-11:TX-0915-00010",
+    "IN-11:TX-0915-00011"
+   ],
+   "explanation": "The packet identifies this as EXC-SC5A-02. The 17:00 snapshots show 48492.79 on 2026-09-14 and 47813.53 on 2026-09-15; this separate result does not establish a link to the missing batch transaction.",
+   "finding_id": "F-04",
+   "supporting_records": [
+    "IN-03:CBS-20260914-C0002-GBP",
+    "IN-03:CBS-20260915-C0002-GBP",
+    "IN-11:TX-0915-00006",
+    "IN-11:TX-0915-00010",
+    "IN-11:TX-0915-00011"
+   ]
+  }
+ ],
+ "contradictory_evidence": [
+  {
+   "description": "The separate C0002 roll-forward control reports computed 48257.08 while the firm's reported value is 47813.53, which is also the 2026-09-15 snapshot balance. This is a reported control-to-record difference for EXC-SC5A-02, not proof that the missing settlement transaction belongs to C0002.",
+   "evidence_ids": [
+    "CONF-01",
+    "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+    "IN-03:CBS-20260915-C0002-GBP"
+   ],
+   "item_id": "C-01"
+  }
+ ],
+ "evidence_ledger_sha256": "e1f636381c953e4bd3a7b9a98bc8e888a0228a8134d9b6e92183ab2263e614bd",
+ "evidence_packet_sha256": "a31fade3ef2c9ce64727c34bcdc2985713e6fa4031d0e0c0f84ca9e2b629a64b",
+ "evidence_references": [
+  "C11-BATCH-ARITH|SB-GBP-20260915",
+  "CAND-SC5A-01",
+  "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+  "CONF-01",
+  "IN-03:CBS-20260914-C0002-GBP",
+  "IN-03:CBS-20260915-C0002-GBP",
+  "IN-09:BE-GBP-0915-SB1",
+  "IN-10:LE-GBP-0915-0005",
+  "IN-11:TX-0915-00006",
+  "IN-11:TX-0915-00007",
+  "IN-11:TX-0915-00008",
+  "IN-11:TX-0915-00010",
+  "IN-11:TX-0915-00011",
+  "IN-11:TX-0915-00012",
+  "IN-12:SB-GBP-20260915",
+  "IN-13:SL-SB-GBP-20260915-0001",
+  "IN-13:SL-SB-GBP-20260915-0002",
+  "IN-13:SL-SB-GBP-20260915-0003",
+  "IN-13:SL-SB-GBP-20260915-0004",
+  "IN-13:SL-SB-GBP-20260915-0005",
+  "IN-13:SL-SB-GBP-20260915-0006",
+  "SEARCH-01",
+  "SEARCH-05"
+ ],
+ "exception_id": "EXC-SC5A-01",
+ "exception_resolution": "NOT_RESOLVED_BY_INVESTIGATION",
+ "failure_reason": "",
+ "hypotheses": [
+  {
+   "contradictory_evidence": [],
+   "hypothesis_id": "H-01",
+   "limitations": "The transaction record was not found in the supplied data. The evidence does not establish whether the export is incomplete or the settlement line is inaccurate, and does not establish a cause for the control failure.",
+   "possible_explanation": "The missing transaction record may reflect an incomplete transaction export, or the settlement line may contain an incorrect transaction reference; either possibility could explain why the line cannot be validated against a transaction record.",
+   "status": "HYPOTHESIS",
+   "supporting_evidence": [
+    "IN-13:SL-SB-GBP-20260915-0003",
+    "SEARCH-01",
+    "C11-BATCH-ARITH|SB-GBP-20260915"
+   ]
+  },
+  {
+   "contradictory_evidence": [
+    "SEARCH-01"
+   ],
+   "hypothesis_id": "H-02",
+   "limitations": "The candidate is explicitly UNVERIFIED and NOT EVIDENCE-BACKED. No record links TX-0915-00009 to client C0002; the coincident amount and date do not establish a relationship.",
+   "possible_explanation": "The missing transaction could be related to the separate C0002 roll-forward exception, as suggested by the packet's explicitly unverified date-and-amount candidate.",
+   "status": "HYPOTHESIS",
+   "supporting_evidence": [
+    "CAND-SC5A-01",
+    "IN-13:SL-SB-GBP-20260915-0003",
+    "CBAL-ROLLFWD|GBP/C0002 2026-09-15"
+   ]
+  }
+ ],
+ "investigated_at": "2026-11-02T11:58:29+00:00",
+ "investigation_id": "INV-EXC-SC5A-01-fae6067d9d23",
+ "investigation_mode": "tools",
+ "investigation_route": "unverified_relationship",
+ "investigation_scope": {
+  "account_id": "",
+  "affected_result_count": 1,
+  "amount": "",
+  "candidate_relationship_ids": [
+   "CAND-SC5A-01"
+  ],
+  "category": "C11-BATCH-ARITH",
+  "check_ids": [
+   "C11-BATCH-ARITH"
+  ],
+  "control_codes": [
+   "C11"
+  ],
+  "currency": "",
+  "evidence_status": "",
+  "first_date": "",
+  "group_size": 0,
+  "investigation_group_id": "",
+  "keys": {
+   "batch_id": "SB-GBP-20260915"
+  },
+  "last_date": "",
+  "missing_evidence_item_ids": [],
+  "related_exception_ids": [
+   "EXC-SC5A-02"
+  ],
+  "root_cause": "C11-BATCH-ARITH|SB-GBP-20260915",
+  "root_cause_kind": "C11-BATCH-ARITH",
+  "severity": "High"
+ },
+ "investigation_status": "COMPLETED",
+ "investigation_summary": "The engine reports EXC-SC5A-01 as a FAIL for batch SB-GBP-20260915, with computed and reported values both shown as -2868.50 and a note that settlement line 0003 does not match transaction TX-0915-00009. The batch, bank entry and cash-book records are available, but the referenced transaction is not found, so the line cannot be validated against its transaction record. A related C0002 balance roll-forward exception is also reported; the packet does not establish that it is linked to the missing transaction.",
+ "missing_evidence": [
+  {
+   "description": "Transaction TX-0915-00009, referenced by settlement line SL-SB-GBP-20260915-0003, was not found in the supplied transaction data.",
+   "expected_source": "IN-11 client transaction export, including the record for TX-0915-00009 and any supporting transaction details.",
+   "impact": "Without the transaction record, the settlement line cannot be checked against its referenced transaction or client.",
+   "item_id": "M-01",
+   "related_ids": [
+    "SEARCH-01",
+    "IN-13:SL-SB-GBP-20260915-0003"
+   ]
+  },
+  {
+   "description": "Posting-level client ledger records for C0002 were not found in the supplied data.",
+   "expected_source": "Client ledger postings for C0002, covering the relevant GBP balance roll-forward period.",
+   "impact": "The snapshot and transaction records do not provide posting-level support for the related roll-forward exception or verify the proposed relationship to the missing batch transaction.",
+   "item_id": "M-02",
+   "related_ids": [
+    "SEARCH-05",
+    "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+    "CAND-SC5A-01"
+   ]
+  }
+ ],
+ "model_metadata": {
+  "attempts": 2,
+  "findings_schema_version": "uc042-investigation-findings/1.2",
+  "investigation_mode": "tools",
+  "model": "gpt-6-luna",
+  "prompt_version": "uc042-investigator-prompt/2.0-tools",
+  "provider": "openai",
+  "provider_response": {
+   "responses": [
+    {
+     "request_id": "req_dc411ff300e14fef905b042b45e78b43",
+     "resolved_model": "gpt-6-luna",
+     "response_id": "resp_0acd5996dffc0ded016ae87ab307f887d2bf9db62c19896847",
+     "status": "completed"
+    },
+    {
+     "request_id": "req_8761d750965944f5985da8de783cf071",
+     "resolved_model": "gpt-6-luna",
+     "response_id": "resp_0acd5996dffc0ded016ae87ab7a68c87d2a451f57a2a7eeb51",
+     "status": "completed"
+    }
+   ]
+  },
+  "simulated": false,
+  "tool_registry_version": "uc042-evidence-tools/1.0",
+  "usage": {
+   "cached_input_tokens": 17627,
+   "input_tokens": 29184,
+   "latency_seconds": 51.53,
+   "output_tokens": 5094,
+   "reasoning_tokens": 2480,
+   "total_tokens": 34278
+  },
+  "workflow_version": "uc042-investigation-graph/2.0-tools"
+ },
+ "open_questions": [
+  "Can the transaction export or other source record for TX-0915-00009 be obtained, and does it support the amount and reference on settlement line 0003?",
+  "Does the source settlement file or scheme documentation confirm the six lines and the batch header details?",
+  "Are posting-level client ledger records available to assess EXC-SC5A-02 independently of the unverified candidate relationship?",
+  "What evidence supports the batch entry in the bank statement beyond the supplied bank entry record, if further confirmation is required?"
+ ],
+ "original_evidence_status": "",
+ "original_exception_status": "OPEN",
+ "original_review_status": "AWAITING_HUMAN_REVIEW",
+ "overall_evidence_assessment": "PARTIALLY_SUFFICIENT",
+ "pack_content_sha256": "ae391170b93a4a6db21e8b4c21c685f55e56024a153ebc997164d76140faabee",
+ "pack_id": "PACK-SC5A-PER-2026-09-ae391170b93a",
+ "recommended_next_steps": [
+  {
+   "action": "Obtain and inspect the source transaction record for TX-0915-00009 and compare its transaction ID, amount, currency, client, status and settlement-batch reference with line 0003.",
+   "evidence_needed": "IN-11 transaction source record for TX-0915-00009, or a documented explanation from the source system if it is absent.",
+   "rationale": "This addresses the material missing record identified by the engine and determines whether that line can be validated against the referenced transaction.",
+   "step_id": "S-01"
+  },
+  {
+   "action": "Obtain the scheme settlement detail or source batch file for SB-GBP-20260915 and compare its lines and header with the firm's batch records.",
+   "evidence_needed": "Original scheme settlement detail or equivalent source file, including transaction-level identifiers and amounts.",
+   "rationale": "The available records show the batch header and lines, but the missing transaction prevents validation of one line and the engine control remains FAIL.",
+   "step_id": "S-02"
+  },
+  {
+   "action": "Obtain posting-level C0002 GBP client ledger records for the roll-forward period and assess EXC-SC5A-02 separately.",
+   "evidence_needed": "Client ledger postings and supporting source transaction records for C0002 covering the relevant 17:00 balance interval.",
+   "rationale": "This would provide evidence for the related balance exception without relying on the unverified date-and-amount candidate relationship.",
+   "step_id": "S-03"
+  }
+ ],
+ "statement": "AI investigation findings are an aid to human review. They do not change any deterministic control outcome, do not resolve or close any exception, and are not a compliance opinion.",
+ "tool_summary": {
+  "limits": {
+   "max_input_tokens": 150000,
+   "max_records_per_call": 25,
+   "max_rounds": 4,
+   "max_tool_calls": 8,
+   "max_total_records": 160,
+   "total_timeout": 300.0
+  },
+  "llm_calls": 2,
+  "records_final": 20,
+  "records_initial": 20,
+  "status": "COMPLETED",
+  "stop_reason": "final_answer",
+  "tool_calls_requested": 1,
+  "tool_rounds": 1,
+  "tools_deduplicated": 0,
+  "tools_executed": 1,
+  "tools_refused_budget": 0,
+  "tools_rejected_or_failed": 0,
+  "tools_used": [
+   "get_settlement_batch"
+  ]
+ },
+ "validation_findings": [],
+ "validation_status": "VALID"
+}

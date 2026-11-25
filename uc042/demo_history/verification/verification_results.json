@@ -1,0 +1,2699 @@
+{
+ "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA — DEMONSTRATION ONLY — NOT REAL MOORWAND FINANCIAL RECORDS",
+ "package_integrity": [],
+ "months": {
+  "2026-01": {
+   "schema": [],
+   "id_dates": [],
+   "keys": [],
+   "duplicate_bank_references": {},
+   "relationships": {},
+   "arithmetic": {},
+   "dates": [],
+   "timestamp_offsets": {
+    "+0000": 1827
+   },
+   "rows": {
+    "IN-01": 31,
+    "IN-02": 4,
+    "IN-03": 264,
+    "IN-04": 1,
+    "IN-05": 42,
+    "IN-06": 42,
+    "IN-07": 42,
+    "IN-08": 84,
+    "IN-09": 295,
+    "IN-10": 255,
+    "IN-11": 444,
+    "IN-12": 84,
+    "IN-13": 401,
+    "IN-14": 0
+   }
+  },
+  "2026-02": {
+   "schema": [],
+   "id_dates": [],
+   "keys": [],
+   "duplicate_bank_references": {},
+   "relationships": {
+    "EXTERNAL_RECORD_WITHOUT_CONFIRMATION": [
+     "ERL-SGA-EUR-01-20260216 -> ST-SGA-EUR-01-20260216-1700"
+    ],
+    "CASHBOOK_WITHOUT_BANK_ENTRY": [
+     "LE-EUR-0216-0001",
+     "LE-EUR-0216-0002",
+     "LE-EUR-0216-0003",
+     "LE-EUR-0216-0004",
+     "LE-EUR-0216-0005"
+    ],
+    "BATCH_WITHOUT_BANK_ENTRY": [
+     "AQ-EUR-20260216",
+     "SB-EUR-20260216"
+    ],
+    "BANK_TRANSACTION_WITHOUT_BANK_ENTRY": [
+     "TX-0216-00014",
+     "TX-0216-00020"
+    ]
+   },
+   "arithmetic": {
+    "STATEMENT_CHAIN_BREAK": [
+     "ST-SGA-EUR-01-20260213-EOD -> ST-SGA-EUR-01-20260217-EOD"
+    ]
+   },
+   "dates": [],
+   "timestamp_offsets": {
+    "+0000": 1728
+   },
+   "rows": {
+    "IN-01": 28,
+    "IN-02": 4,
+    "IN-03": 252,
+    "IN-04": 1,
+    "IN-05": 40,
+    "IN-06": 40,
+    "IN-07": 39,
+    "IN-08": 79,
+    "IN-09": 274,
+    "IN-10": 241,
+    "IN-11": 421,
+    "IN-12": 80,
+    "IN-13": 382,
+    "IN-14": 0
+   }
+  },
+  "2026-03": {
+   "schema": [],
+   "id_dates": [],
+   "keys": [],
+   "duplicate_bank_references": {
+    "SGA-GBP-01 SETTLE 0263": [
+     "BE-GBP-0317-X01",
+     "BE-GBP-0320-X02"
+    ]
+   },
+   "relationships": {
+    "SGA_BANK_ENTRY_WITHOUT_CASHBOOK": [
+     "BE-GBP-0317-X01",
+     "BE-GBP-0320-X02"
+    ]
+   },
+   "arithmetic": {},
+   "dates": [],
+   "timestamp_offsets": {
+    "+0000": 1740,
+    "+0100": 172
+   },
+   "rows": {
+    "IN-01": 31,
+    "IN-02": 4,
+    "IN-03": 276,
+    "IN-04": 1,
+    "IN-05": 44,
+    "IN-06": 44,
+    "IN-07": 44,
+    "IN-08": 88,
+    "IN-09": 310,
+    "IN-10": 266,
+    "IN-11": 464,
+    "IN-12": 88,
+    "IN-13": 420,
+    "IN-14": 0
+   }
+  },
+  "2026-04": {
+   "schema": [],
+   "id_dates": [],
+   "keys": [],
+   "duplicate_bank_references": {},
+   "relationships": {},
+   "arithmetic": {},
+   "dates": [],
+   "timestamp_offsets": {
+    "+0100": 1750
+   },
+   "rows": {
+    "IN-01": 30,
+    "IN-02": 4,
+    "IN-03": 252,
+    "IN-04": 1,
+    "IN-05": 40,
+    "IN-06": 40,
+    "IN-07": 40,
+    "IN-08": 80,
+    "IN-09": 284,
+    "IN-10": 246,
+    "IN-11": 426,
+    "IN-12": 80,
+    "IN-13": 382,
+    "IN-14": 0
+   }
+  },
+  "2026-05": {
+   "schema": [],
+   "id_dates": [],
+   "keys": [],
+   "duplicate_bank_references": {
+    "SGA-GBP-01 SETTLE 0391": [
+     "BE-GBP-0518-X01",
+     "BE-GBP-0521-X02"
+    ]
+   },
+   "relationships": {
+    "EXTERNAL_RECORD_WITHOUT_CONFIRMATION": [
+     "ERL-SGA-EUR-01-20260515 -> ST-SGA-EUR-01-20260515-1700"
+    ],
+    "CASHBOOK_WITHOUT_BANK_ENTRY": [
+     "LE-EUR-0515-0001",
+     "LE-EUR-0515-0002",
+     "LE-EUR-0515-0003",
+     "LE-EUR-0515-0004",
+     "LE-EUR-0515-0005"
+    ],
+    "SGA_BANK_ENTRY_WITHOUT_CASHBOOK": [
+     "BE-GBP-0518-X01",
+     "BE-GBP-0521-X02"
+    ],
+    "BATCH_WITHOUT_BANK_ENTRY": [
+     "AQ-EUR-20260515",
+     "SB-EUR-20260515"
+    ],
+    "BANK_TRANSACTION_WITHOUT_BANK_ENTRY": [
+     "TX-0515-00015",
+     "TX-0515-00021"
+    ]
+   },
+   "arithmetic": {
+    "STATEMENT_CHAIN_BREAK": [
+     "ST-SGA-EUR-01-20260514-EOD -> ST-SGA-EUR-01-20260518-EOD"
+    ]
+   },
+   "dates": [],
+   "timestamp_offsets": {
+    "+0100": 1644
+   },
+   "rows": {
+    "IN-01": 31,
+    "IN-02": 4,
+    "IN-03": 240,
+    "IN-04": 1,
+    "IN-05": 38,
+    "IN-06": 38,
+    "IN-07": 37,
+    "IN-08": 75,
+    "IN-09": 262,
+    "IN-10": 229,
+    "IN-11": 400,
+    "IN-12": 76,
+    "IN-13": 363,
+    "IN-14": 0
+   }
+  },
+  "2026-06": {
+   "schema": [],
+   "id_dates": [],
+   "keys": [],
+   "duplicate_bank_references": {
+    "SGA-GBP-01 SB-GBP-20260601": [
+     "BE-GBP-0601-SB1",
+     "BE-GBP-0610-SB1"
+    ]
+   },
+   "relationships": {
+    "CASHBOOK_REFERENCE_AMBIGUOUS": [
+     "LE-GBP-0601-0005: ['BE-GBP-0601-SB1', 'BE-GBP-0610-SB1']"
+    ],
+    "CASHBOOK_WITHOUT_BANK_ENTRY": [
+     "LE-GBP-0610-0005"
+    ],
+    "SGA_BANK_ENTRY_WITHOUT_CASHBOOK": [
+     "BE-GBP-0601-SB1",
+     "BE-GBP-0610-SB1"
+    ],
+    "BATCH_WITH_SEVERAL_BANK_ENTRIES": [
+     "SB-GBP-20260601: ['BE-GBP-0601-SB1', 'BE-GBP-0610-SB1']"
+    ],
+    "BATCH_WITHOUT_BANK_ENTRY": [
+     "SB-GBP-20260610"
+    ]
+   },
+   "arithmetic": {},
+   "dates": [],
+   "timestamp_offsets": {
+    "+0100": 1910
+   },
+   "rows": {
+    "IN-01": 30,
+    "IN-02": 4,
+    "IN-03": 276,
+    "IN-04": 1,
+    "IN-05": 44,
+    "IN-06": 44,
+    "IN-07": 44,
+    "IN-08": 88,
+    "IN-09": 308,
+    "IN-10": 266,
+    "IN-11": 464,
+    "IN-12": 88,
+    "IN-13": 420,
+    "IN-14": 0
+   }
+  },
+  "2026-07": {
+   "schema": [],
+   "id_dates": [],
+   "keys": [],
+   "duplicate_bank_references": {
+    "SGA-GBP-01 SB-GBP-20260701": [
+     "BE-GBP-0701-SB1",
+     "BE-GBP-0710-SB1"
+    ]
+   },
+   "relationships": {
+    "EXTERNAL_RECORD_WITHOUT_CONFIRMATION": [
+     "ERL-SGA-EUR-01-20260715 -> ST-SGA-EUR-01-20260715-1700"
+    ],
+    "CASHBOOK_REFERENCE_AMBIGUOUS": [
+     "LE-GBP-0701-0005: ['BE-GBP-0701-SB1', 'BE-GBP-0710-SB1']"
+    ],
+    "CASHBOOK_WITHOUT_BANK_ENTRY": [
+     "LE-GBP-0710-0005",
+     "LE-EUR-0715-0001",
+     "LE-EUR-0715-0002",
+     "LE-EUR-0715-0003",
+     "LE-EUR-0715-0004",
+     "LE-EUR-0715-0005"
+    ],
+    "SGA_BANK_ENTRY_WITHOUT_CASHBOOK": [
+     "BE-GBP-0701-SB1",
+     "BE-GBP-0710-SB1"
+    ],
+    "BATCH_WITH_SEVERAL_BANK_ENTRIES": [
+     "SB-GBP-20260701: ['BE-GBP-0701-SB1', 'BE-GBP-0710-SB1']"
+    ],
+    "BATCH_WITHOUT_BANK_ENTRY": [
+     "SB-GBP-20260710",
+     "AQ-EUR-20260715",
+     "SB-EUR-20260715"
+    ],
+    "BANK_TRANSACTION_WITHOUT_BANK_ENTRY": [
+     "TX-0715-00015",
+     "TX-0715-00021"
+    ]
+   },
+   "arithmetic": {
+    "STATEMENT_CHAIN_BREAK": [
+     "ST-SGA-EUR-01-20260714-EOD -> ST-SGA-EUR-01-20260716-EOD"
+    ]
+   },
+   "dates": [],
+   "timestamp_offsets": {
+    "+0100": 1971
+   },
+   "rows": {
+    "IN-01": 31,
+    "IN-02": 4,
+    "IN-03": 288,
+    "IN-04": 1,
+    "IN-05": 46,
+    "IN-06": 46,
+    "IN-07": 45,
+    "IN-08": 91,
+    "IN-09": 311,
+    "IN-10": 272,
+    "IN-11": 479,
+    "IN-12": 92,
+    "IN-13": 439,
+    "IN-14": 0
+   }
+  },
+  "2026-08": {
+   "schema": [],
+   "id_dates": [],
+   "keys": [],
+   "duplicate_bank_references": {
+    "SGA-GBP-01 SB-GBP-20260803": [
+     "BE-GBP-0803-SB1",
+     "BE-GBP-0810-SB1"
+    ],
+    "SGA-GBP-01 SETTLE 0528": [
+     "BE-GBP-0817-X01",
+     "BE-GBP-0820-X02"
+    ]
+   },
+   "relationships": {
+    "EXTERNAL_RECORD_WITHOUT_CONFIRMATION": [
+     "ERL-SGA-EUR-01-20260817 -> ST-SGA-EUR-01-20260817-1700"
+    ],
+    "CASHBOOK_REFERENCE_AMBIGUOUS": [
+     "LE-GBP-0803-0005: ['BE-GBP-0803-SB1', 'BE-GBP-0810-SB1']"
+    ],
+    "CASHBOOK_WITHOUT_BANK_ENTRY": [
+     "LE-GBP-0810-0005",
+     "LE-EUR-0817-0001",
+     "LE-EUR-0817-0002",
+     "LE-EUR-0817-0003",
+     "LE-EUR-0817-0004",
+     "LE-EUR-0817-0005"
+    ],
+    "SGA_BANK_ENTRY_WITHOUT_CASHBOOK": [
+     "BE-GBP-0803-SB1",
+     "BE-GBP-0810-SB1",
+     "BE-GBP-0817-X01",
+     "BE-GBP-0820-X02"
+    ],
+    "BATCH_WITH_SEVERAL_BANK_ENTRIES": [
+     "SB-GBP-20260803: ['BE-GBP-0803-SB1', 'BE-GBP-0810-SB1']"
+    ],
+    "BATCH_WITHOUT_BANK_ENTRY": [
+     "SB-GBP-20260810",
+     "AQ-EUR-20260817",
+     "SB-EUR-20260817"
+    ],
+    "BANK_TRANSACTION_WITHOUT_BANK_ENTRY": [
+     "TX-0817-00015",
+     "TX-0817-00021"
+    ]
+   },
+   "arithmetic": {
+    "STATEMENT_CHAIN_BREAK": [
+     "ST-SGA-EUR-01-20260814-EOD -> ST-SGA-EUR-01-20260818-EOD"
+    ]
+   },
+   "dates": [],
+   "timestamp_offsets": {
+    "+0100": 1781
+   },
+   "rows": {
+    "IN-01": 31,
+    "IN-02": 4,
+    "IN-03": 252,
+    "IN-04": 1,
+    "IN-05": 40,
+    "IN-06": 40,
+    "IN-07": 39,
+    "IN-08": 79,
+    "IN-09": 293,
+    "IN-10": 258,
+    "IN-11": 438,
+    "IN-12": 80,
+    "IN-13": 382,
+    "IN-14": 0
+   }
+  }
+ },
+ "continuity": [
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "BANK",
+   "record_key": "OWN-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "150971.25",
+   "current_opening": "150971.25",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-EUR-01-20260130-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-EUR-01-20260202-EOD opening"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "BANK",
+   "record_key": "OWN-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "503625.79",
+   "current_opening": "503625.79",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-GBP-01-20260130-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-GBP-01-20260202-EOD opening"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "BANK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "71684.56",
+   "current_opening": "71684.56",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-EUR-01-20260130-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-EUR-01-20260202-EOD opening"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "BANK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "223716.25",
+   "current_opening": "223716.25",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-GBP-01-20260130-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-GBP-01-20260202-EOD opening"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "71684.56",
+   "current_opening": "71684.56",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 109 entries to 2026-01-31T17:00:00+00:00",
+   "current_evidence": "IN-10:LE-EUR-0131-0000"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "223716.25",
+   "current_opening": "223716.25",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 146 entries to 2026-01-31T17:00:00+00:00",
+   "current_evidence": "IN-10:LE-GBP-0131-0000"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "CLIENT",
+   "record_key": "C0001/GBP",
+   "currency": "GBP",
+   "previous_closing": "29142.06",
+   "current_opening": "29142.06",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260130-C0001-GBP",
+   "current_evidence": "IN-03:CBS-20260131-C0001-GBP"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "CLIENT",
+   "record_key": "C0002/GBP",
+   "currency": "GBP",
+   "previous_closing": "26789.81",
+   "current_opening": "26789.81",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260130-C0002-GBP",
+   "current_evidence": "IN-03:CBS-20260131-C0002-GBP"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "CLIENT",
+   "record_key": "C0003/GBP",
+   "currency": "GBP",
+   "previous_closing": "26468.61",
+   "current_opening": "26468.61",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260130-C0003-GBP",
+   "current_evidence": "IN-03:CBS-20260131-C0003-GBP"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "CLIENT",
+   "record_key": "C0004/GBP",
+   "currency": "GBP",
+   "previous_closing": "30085.61",
+   "current_opening": "30085.61",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260130-C0004-GBP",
+   "current_evidence": "IN-03:CBS-20260131-C0004-GBP"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "CLIENT",
+   "record_key": "C0005/GBP",
+   "currency": "GBP",
+   "previous_closing": "28801.78",
+   "current_opening": "28801.78",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260130-C0005-GBP",
+   "current_evidence": "IN-03:CBS-20260131-C0005-GBP"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "CLIENT",
+   "record_key": "C0006/GBP",
+   "currency": "GBP",
+   "previous_closing": "30936.32",
+   "current_opening": "30936.32",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260130-C0006-GBP",
+   "current_evidence": "IN-03:CBS-20260131-C0006-GBP"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "CLIENT",
+   "record_key": "C0007/GBP",
+   "currency": "GBP",
+   "previous_closing": "23043.04",
+   "current_opening": "23043.04",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260130-C0007-GBP",
+   "current_evidence": "IN-03:CBS-20260131-C0007-GBP"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "CLIENT",
+   "record_key": "C0008/GBP",
+   "currency": "GBP",
+   "previous_closing": "28449.02",
+   "current_opening": "28449.02",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260130-C0008-GBP",
+   "current_evidence": "IN-03:CBS-20260131-C0008-GBP"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "CLIENT",
+   "record_key": "C0101/EUR",
+   "currency": "EUR",
+   "previous_closing": "18447.33",
+   "current_opening": "18447.33",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260130-C0101-EUR",
+   "current_evidence": "IN-03:CBS-20260131-C0101-EUR"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "CLIENT",
+   "record_key": "C0102/EUR",
+   "currency": "EUR",
+   "previous_closing": "17688.88",
+   "current_opening": "17688.88",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260130-C0102-EUR",
+   "current_evidence": "IN-03:CBS-20260131-C0102-EUR"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "CLIENT",
+   "record_key": "C0103/EUR",
+   "currency": "EUR",
+   "previous_closing": "16982.92",
+   "current_opening": "16982.92",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260130-C0103-EUR",
+   "current_evidence": "IN-03:CBS-20260131-C0103-EUR"
+  },
+  {
+   "from": "2026-01",
+   "to": "2026-02",
+   "view": "CLIENT",
+   "record_key": "C0104/EUR",
+   "currency": "EUR",
+   "previous_closing": "18565.43",
+   "current_opening": "18565.43",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260130-C0104-EUR",
+   "current_evidence": "IN-03:CBS-20260131-C0104-EUR"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "BANK",
+   "record_key": "OWN-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "150842.02",
+   "current_opening": "150842.02",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-EUR-01-20260227-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-EUR-01-20260302-EOD opening"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "BANK",
+   "record_key": "OWN-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "503107.25",
+   "current_opening": "503107.25",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-GBP-01-20260227-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-GBP-01-20260302-EOD opening"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "BANK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "74438.89",
+   "current_opening": "74438.89",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-EUR-01-20260227-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-EUR-01-20260302-EOD opening"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "BANK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "226582.78",
+   "current_opening": "226582.78",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-GBP-01-20260227-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-GBP-01-20260302-EOD opening"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "74438.89",
+   "current_opening": "74438.89",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 104 entries to 2026-02-28T17:00:00+00:00",
+   "current_evidence": "IN-10:LE-EUR-0228-0000"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "226582.78",
+   "current_opening": "226582.78",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 137 entries to 2026-02-28T17:00:00+00:00",
+   "current_evidence": "IN-10:LE-GBP-0228-0000"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "CLIENT",
+   "record_key": "C0001/GBP",
+   "currency": "GBP",
+   "previous_closing": "25825.82",
+   "current_opening": "25825.82",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260227-C0001-GBP",
+   "current_evidence": "IN-03:CBS-20260228-C0001-GBP"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "CLIENT",
+   "record_key": "C0002/GBP",
+   "currency": "GBP",
+   "previous_closing": "29935.00",
+   "current_opening": "29935.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260227-C0002-GBP",
+   "current_evidence": "IN-03:CBS-20260228-C0002-GBP"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "CLIENT",
+   "record_key": "C0003/GBP",
+   "currency": "GBP",
+   "previous_closing": "29690.99",
+   "current_opening": "29690.99",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260227-C0003-GBP",
+   "current_evidence": "IN-03:CBS-20260228-C0003-GBP"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "CLIENT",
+   "record_key": "C0004/GBP",
+   "currency": "GBP",
+   "previous_closing": "31470.80",
+   "current_opening": "31470.80",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260227-C0004-GBP",
+   "current_evidence": "IN-03:CBS-20260228-C0004-GBP"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "CLIENT",
+   "record_key": "C0005/GBP",
+   "currency": "GBP",
+   "previous_closing": "26084.68",
+   "current_opening": "26084.68",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260227-C0005-GBP",
+   "current_evidence": "IN-03:CBS-20260228-C0005-GBP"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "CLIENT",
+   "record_key": "C0006/GBP",
+   "currency": "GBP",
+   "previous_closing": "28643.96",
+   "current_opening": "28643.96",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260227-C0006-GBP",
+   "current_evidence": "IN-03:CBS-20260228-C0006-GBP"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "CLIENT",
+   "record_key": "C0007/GBP",
+   "currency": "GBP",
+   "previous_closing": "27100.03",
+   "current_opening": "27100.03",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260227-C0007-GBP",
+   "current_evidence": "IN-03:CBS-20260228-C0007-GBP"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "CLIENT",
+   "record_key": "C0008/GBP",
+   "currency": "GBP",
+   "previous_closing": "27831.50",
+   "current_opening": "27831.50",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260227-C0008-GBP",
+   "current_evidence": "IN-03:CBS-20260228-C0008-GBP"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "CLIENT",
+   "record_key": "C0101/EUR",
+   "currency": "EUR",
+   "previous_closing": "19332.81",
+   "current_opening": "19332.81",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260227-C0101-EUR",
+   "current_evidence": "IN-03:CBS-20260228-C0101-EUR"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "CLIENT",
+   "record_key": "C0102/EUR",
+   "currency": "EUR",
+   "previous_closing": "18445.82",
+   "current_opening": "18445.82",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260227-C0102-EUR",
+   "current_evidence": "IN-03:CBS-20260228-C0102-EUR"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "CLIENT",
+   "record_key": "C0103/EUR",
+   "currency": "EUR",
+   "previous_closing": "18572.72",
+   "current_opening": "18572.72",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260227-C0103-EUR",
+   "current_evidence": "IN-03:CBS-20260228-C0103-EUR"
+  },
+  {
+   "from": "2026-02",
+   "to": "2026-03",
+   "view": "CLIENT",
+   "record_key": "C0104/EUR",
+   "currency": "EUR",
+   "previous_closing": "18087.54",
+   "current_opening": "18087.54",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260227-C0104-EUR",
+   "current_evidence": "IN-03:CBS-20260228-C0104-EUR"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "BANK",
+   "record_key": "OWN-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "150692.88",
+   "current_opening": "150692.88",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-EUR-01-20260331-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-EUR-01-20260401-EOD opening"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "BANK",
+   "record_key": "OWN-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "502576.57",
+   "current_opening": "502576.57",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-GBP-01-20260331-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-GBP-01-20260401-EOD opening"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "BANK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "73596.75",
+   "current_opening": "73596.75",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-EUR-01-20260331-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-EUR-01-20260401-EOD opening"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "BANK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "234895.94",
+   "current_opening": "234895.94",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-GBP-01-20260331-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-GBP-01-20260401-EOD opening"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "73596.75",
+   "current_opening": "73596.75",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 117 entries to 2026-03-31T17:00:00+01:00",
+   "current_evidence": "IN-10:LE-EUR-0331-0000"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "234895.94",
+   "current_opening": "234895.94",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 149 entries to 2026-03-31T17:00:00+01:00",
+   "current_evidence": "IN-10:LE-GBP-0331-0000"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "CLIENT",
+   "record_key": "C0001/GBP",
+   "currency": "GBP",
+   "previous_closing": "27771.19",
+   "current_opening": "27771.19",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260331-C0001-GBP",
+   "current_evidence": "IN-03:CBS-20260331-C0001-GBP"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "CLIENT",
+   "record_key": "C0002/GBP",
+   "currency": "GBP",
+   "previous_closing": "27770.52",
+   "current_opening": "27770.52",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260331-C0002-GBP",
+   "current_evidence": "IN-03:CBS-20260331-C0002-GBP"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "CLIENT",
+   "record_key": "C0003/GBP",
+   "currency": "GBP",
+   "previous_closing": "30445.71",
+   "current_opening": "30445.71",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260331-C0003-GBP",
+   "current_evidence": "IN-03:CBS-20260331-C0003-GBP"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "CLIENT",
+   "record_key": "C0004/GBP",
+   "currency": "GBP",
+   "previous_closing": "27814.50",
+   "current_opening": "27814.50",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260331-C0004-GBP",
+   "current_evidence": "IN-03:CBS-20260331-C0004-GBP"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "CLIENT",
+   "record_key": "C0005/GBP",
+   "currency": "GBP",
+   "previous_closing": "29242.06",
+   "current_opening": "29242.06",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260331-C0005-GBP",
+   "current_evidence": "IN-03:CBS-20260331-C0005-GBP"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "CLIENT",
+   "record_key": "C0006/GBP",
+   "currency": "GBP",
+   "previous_closing": "26330.16",
+   "current_opening": "26330.16",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260331-C0006-GBP",
+   "current_evidence": "IN-03:CBS-20260331-C0006-GBP"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "CLIENT",
+   "record_key": "C0007/GBP",
+   "currency": "GBP",
+   "previous_closing": "32454.16",
+   "current_opening": "32454.16",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260331-C0007-GBP",
+   "current_evidence": "IN-03:CBS-20260331-C0007-GBP"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "CLIENT",
+   "record_key": "C0008/GBP",
+   "currency": "GBP",
+   "previous_closing": "33067.64",
+   "current_opening": "33067.64",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260331-C0008-GBP",
+   "current_evidence": "IN-03:CBS-20260331-C0008-GBP"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "CLIENT",
+   "record_key": "C0101/EUR",
+   "currency": "EUR",
+   "previous_closing": "18362.57",
+   "current_opening": "18362.57",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260331-C0101-EUR",
+   "current_evidence": "IN-03:CBS-20260331-C0101-EUR"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "CLIENT",
+   "record_key": "C0102/EUR",
+   "currency": "EUR",
+   "previous_closing": "19132.03",
+   "current_opening": "19132.03",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260331-C0102-EUR",
+   "current_evidence": "IN-03:CBS-20260331-C0102-EUR"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "CLIENT",
+   "record_key": "C0103/EUR",
+   "currency": "EUR",
+   "previous_closing": "17907.66",
+   "current_opening": "17907.66",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260331-C0103-EUR",
+   "current_evidence": "IN-03:CBS-20260331-C0103-EUR"
+  },
+  {
+   "from": "2026-03",
+   "to": "2026-04",
+   "view": "CLIENT",
+   "record_key": "C0104/EUR",
+   "currency": "EUR",
+   "previous_closing": "18194.49",
+   "current_opening": "18194.49",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260331-C0104-EUR",
+   "current_evidence": "IN-03:CBS-20260331-C0104-EUR"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "BANK",
+   "record_key": "OWN-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "150538.78",
+   "current_opening": "150538.78",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-EUR-01-20260430-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-EUR-01-20260501-EOD opening"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "BANK",
+   "record_key": "OWN-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "502033.35",
+   "current_opening": "502033.35",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-GBP-01-20260430-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-GBP-01-20260501-EOD opening"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "BANK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "76625.44",
+   "current_opening": "76625.44",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-EUR-01-20260430-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-EUR-01-20260501-EOD opening"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "BANK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "233363.67",
+   "current_opening": "233363.67",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-GBP-01-20260430-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-GBP-01-20260501-EOD opening"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "76625.44",
+   "current_opening": "76625.44",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 109 entries to 2026-04-30T17:00:00+01:00",
+   "current_evidence": "IN-10:LE-EUR-0430-0000"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "233363.67",
+   "current_opening": "233363.67",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 137 entries to 2026-04-30T17:00:00+01:00",
+   "current_evidence": "IN-10:LE-GBP-0430-0000"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "CLIENT",
+   "record_key": "C0001/GBP",
+   "currency": "GBP",
+   "previous_closing": "28591.87",
+   "current_opening": "28591.87",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260430-C0001-GBP",
+   "current_evidence": "IN-03:CBS-20260430-C0001-GBP"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "CLIENT",
+   "record_key": "C0002/GBP",
+   "currency": "GBP",
+   "previous_closing": "28632.42",
+   "current_opening": "28632.42",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260430-C0002-GBP",
+   "current_evidence": "IN-03:CBS-20260430-C0002-GBP"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "CLIENT",
+   "record_key": "C0003/GBP",
+   "currency": "GBP",
+   "previous_closing": "28051.70",
+   "current_opening": "28051.70",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260430-C0003-GBP",
+   "current_evidence": "IN-03:CBS-20260430-C0003-GBP"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "CLIENT",
+   "record_key": "C0004/GBP",
+   "currency": "GBP",
+   "previous_closing": "26637.78",
+   "current_opening": "26637.78",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260430-C0004-GBP",
+   "current_evidence": "IN-03:CBS-20260430-C0004-GBP"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "CLIENT",
+   "record_key": "C0005/GBP",
+   "currency": "GBP",
+   "previous_closing": "31659.17",
+   "current_opening": "31659.17",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260430-C0005-GBP",
+   "current_evidence": "IN-03:CBS-20260430-C0005-GBP"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "CLIENT",
+   "record_key": "C0006/GBP",
+   "currency": "GBP",
+   "previous_closing": "29876.62",
+   "current_opening": "29876.62",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260430-C0006-GBP",
+   "current_evidence": "IN-03:CBS-20260430-C0006-GBP"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "CLIENT",
+   "record_key": "C0007/GBP",
+   "currency": "GBP",
+   "previous_closing": "31779.62",
+   "current_opening": "31779.62",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260430-C0007-GBP",
+   "current_evidence": "IN-03:CBS-20260430-C0007-GBP"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "CLIENT",
+   "record_key": "C0008/GBP",
+   "currency": "GBP",
+   "previous_closing": "28134.49",
+   "current_opening": "28134.49",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260430-C0008-GBP",
+   "current_evidence": "IN-03:CBS-20260430-C0008-GBP"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "CLIENT",
+   "record_key": "C0101/EUR",
+   "currency": "EUR",
+   "previous_closing": "19478.60",
+   "current_opening": "19478.60",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260430-C0101-EUR",
+   "current_evidence": "IN-03:CBS-20260430-C0101-EUR"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "CLIENT",
+   "record_key": "C0102/EUR",
+   "currency": "EUR",
+   "previous_closing": "20301.35",
+   "current_opening": "20301.35",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260430-C0102-EUR",
+   "current_evidence": "IN-03:CBS-20260430-C0102-EUR"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "CLIENT",
+   "record_key": "C0103/EUR",
+   "currency": "EUR",
+   "previous_closing": "17557.88",
+   "current_opening": "17557.88",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260430-C0103-EUR",
+   "current_evidence": "IN-03:CBS-20260430-C0103-EUR"
+  },
+  {
+   "from": "2026-04",
+   "to": "2026-05",
+   "view": "CLIENT",
+   "record_key": "C0104/EUR",
+   "currency": "EUR",
+   "previous_closing": "19287.61",
+   "current_opening": "19287.61",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260430-C0104-EUR",
+   "current_evidence": "IN-03:CBS-20260430-C0104-EUR"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "BANK",
+   "record_key": "OWN-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "150410.72",
+   "current_opening": "150410.72",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-EUR-01-20260529-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-EUR-01-20260601-EOD opening"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "BANK",
+   "record_key": "OWN-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "501584.80",
+   "current_opening": "501584.80",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-GBP-01-20260529-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-GBP-01-20260601-EOD opening"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "BANK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "76057.81",
+   "current_opening": "76057.81",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-EUR-01-20260529-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-EUR-01-20260601-EOD opening"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "BANK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "243697.66",
+   "current_opening": "243697.66",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-GBP-01-20260529-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-GBP-01-20260601-EOD opening"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "76057.81",
+   "current_opening": "76057.81",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 102 entries to 2026-05-31T17:00:00+01:00",
+   "current_evidence": "IN-10:LE-EUR-0531-0000"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "243697.66",
+   "current_opening": "243697.66",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 127 entries to 2026-05-31T17:00:00+01:00",
+   "current_evidence": "IN-10:LE-GBP-0531-0000"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "CLIENT",
+   "record_key": "C0001/GBP",
+   "currency": "GBP",
+   "previous_closing": "30037.00",
+   "current_opening": "30037.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260529-C0001-GBP",
+   "current_evidence": "IN-03:CBS-20260531-C0001-GBP"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "CLIENT",
+   "record_key": "C0002/GBP",
+   "currency": "GBP",
+   "previous_closing": "25505.03",
+   "current_opening": "25505.03",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260529-C0002-GBP",
+   "current_evidence": "IN-03:CBS-20260531-C0002-GBP"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "CLIENT",
+   "record_key": "C0003/GBP",
+   "currency": "GBP",
+   "previous_closing": "27868.23",
+   "current_opening": "27868.23",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260529-C0003-GBP",
+   "current_evidence": "IN-03:CBS-20260531-C0003-GBP"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "CLIENT",
+   "record_key": "C0004/GBP",
+   "currency": "GBP",
+   "previous_closing": "33866.37",
+   "current_opening": "33866.37",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260529-C0004-GBP",
+   "current_evidence": "IN-03:CBS-20260531-C0004-GBP"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "CLIENT",
+   "record_key": "C0005/GBP",
+   "currency": "GBP",
+   "previous_closing": "34530.62",
+   "current_opening": "34530.62",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260529-C0005-GBP",
+   "current_evidence": "IN-03:CBS-20260531-C0005-GBP"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "CLIENT",
+   "record_key": "C0006/GBP",
+   "currency": "GBP",
+   "previous_closing": "32788.89",
+   "current_opening": "32788.89",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260529-C0006-GBP",
+   "current_evidence": "IN-03:CBS-20260531-C0006-GBP"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "CLIENT",
+   "record_key": "C0007/GBP",
+   "currency": "GBP",
+   "previous_closing": "30927.10",
+   "current_opening": "30927.10",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260529-C0007-GBP",
+   "current_evidence": "IN-03:CBS-20260531-C0007-GBP"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "CLIENT",
+   "record_key": "C0008/GBP",
+   "currency": "GBP",
+   "previous_closing": "28174.42",
+   "current_opening": "28174.42",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260529-C0008-GBP",
+   "current_evidence": "IN-03:CBS-20260531-C0008-GBP"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "CLIENT",
+   "record_key": "C0101/EUR",
+   "currency": "EUR",
+   "previous_closing": "18629.23",
+   "current_opening": "18629.23",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260529-C0101-EUR",
+   "current_evidence": "IN-03:CBS-20260531-C0101-EUR"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "CLIENT",
+   "record_key": "C0102/EUR",
+   "currency": "EUR",
+   "previous_closing": "19938.40",
+   "current_opening": "19938.40",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260529-C0102-EUR",
+   "current_evidence": "IN-03:CBS-20260531-C0102-EUR"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "CLIENT",
+   "record_key": "C0103/EUR",
+   "currency": "EUR",
+   "previous_closing": "19599.17",
+   "current_opening": "19599.17",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260529-C0103-EUR",
+   "current_evidence": "IN-03:CBS-20260531-C0103-EUR"
+  },
+  {
+   "from": "2026-05",
+   "to": "2026-06",
+   "view": "CLIENT",
+   "record_key": "C0104/EUR",
+   "currency": "EUR",
+   "previous_closing": "17891.01",
+   "current_opening": "17891.01",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260529-C0104-EUR",
+   "current_evidence": "IN-03:CBS-20260531-C0104-EUR"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "BANK",
+   "record_key": "OWN-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "150255.87",
+   "current_opening": "150255.87",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-EUR-01-20260630-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-EUR-01-20260701-EOD opening"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "BANK",
+   "record_key": "OWN-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "501058.01",
+   "current_opening": "501058.01",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-GBP-01-20260630-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-GBP-01-20260701-EOD opening"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "BANK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "78458.92",
+   "current_opening": "78458.92",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-EUR-01-20260630-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-EUR-01-20260701-EOD opening"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "BANK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "240772.97",
+   "current_opening": "240772.97",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-GBP-01-20260630-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-GBP-01-20260701-EOD opening"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "78458.92",
+   "current_opening": "78458.92",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 118 entries to 2026-06-30T17:00:00+01:00",
+   "current_evidence": "IN-10:LE-EUR-0630-0000"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "240772.97",
+   "current_opening": "240772.97",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 148 entries to 2026-06-30T17:00:00+01:00",
+   "current_evidence": "IN-10:LE-GBP-0630-0000"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "CLIENT",
+   "record_key": "C0001/GBP",
+   "currency": "GBP",
+   "previous_closing": "30555.71",
+   "current_opening": "30555.71",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260630-C0001-GBP",
+   "current_evidence": "IN-03:CBS-20260630-C0001-GBP"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "CLIENT",
+   "record_key": "C0002/GBP",
+   "currency": "GBP",
+   "previous_closing": "30338.34",
+   "current_opening": "30338.34",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260630-C0002-GBP",
+   "current_evidence": "IN-03:CBS-20260630-C0002-GBP"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "CLIENT",
+   "record_key": "C0003/GBP",
+   "currency": "GBP",
+   "previous_closing": "30006.93",
+   "current_opening": "30006.93",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260630-C0003-GBP",
+   "current_evidence": "IN-03:CBS-20260630-C0003-GBP"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "CLIENT",
+   "record_key": "C0004/GBP",
+   "currency": "GBP",
+   "previous_closing": "29656.76",
+   "current_opening": "29656.76",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260630-C0004-GBP",
+   "current_evidence": "IN-03:CBS-20260630-C0004-GBP"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "CLIENT",
+   "record_key": "C0005/GBP",
+   "currency": "GBP",
+   "previous_closing": "29687.22",
+   "current_opening": "29687.22",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260630-C0005-GBP",
+   "current_evidence": "IN-03:CBS-20260630-C0005-GBP"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "CLIENT",
+   "record_key": "C0006/GBP",
+   "currency": "GBP",
+   "previous_closing": "31930.32",
+   "current_opening": "31930.32",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260630-C0006-GBP",
+   "current_evidence": "IN-03:CBS-20260630-C0006-GBP"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "CLIENT",
+   "record_key": "C0007/GBP",
+   "currency": "GBP",
+   "previous_closing": "28555.70",
+   "current_opening": "28555.70",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260630-C0007-GBP",
+   "current_evidence": "IN-03:CBS-20260630-C0007-GBP"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "CLIENT",
+   "record_key": "C0008/GBP",
+   "currency": "GBP",
+   "previous_closing": "30041.99",
+   "current_opening": "30041.99",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260630-C0008-GBP",
+   "current_evidence": "IN-03:CBS-20260630-C0008-GBP"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "CLIENT",
+   "record_key": "C0101/EUR",
+   "currency": "EUR",
+   "previous_closing": "18621.66",
+   "current_opening": "18621.66",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260630-C0101-EUR",
+   "current_evidence": "IN-03:CBS-20260630-C0101-EUR"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "CLIENT",
+   "record_key": "C0102/EUR",
+   "currency": "EUR",
+   "previous_closing": "20786.61",
+   "current_opening": "20786.61",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260630-C0102-EUR",
+   "current_evidence": "IN-03:CBS-20260630-C0102-EUR"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "CLIENT",
+   "record_key": "C0103/EUR",
+   "currency": "EUR",
+   "previous_closing": "19924.00",
+   "current_opening": "19924.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260630-C0103-EUR",
+   "current_evidence": "IN-03:CBS-20260630-C0103-EUR"
+  },
+  {
+   "from": "2026-06",
+   "to": "2026-07",
+   "view": "CLIENT",
+   "record_key": "C0104/EUR",
+   "currency": "EUR",
+   "previous_closing": "19126.65",
+   "current_opening": "19126.65",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260630-C0104-EUR",
+   "current_evidence": "IN-03:CBS-20260630-C0104-EUR"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "BANK",
+   "record_key": "OWN-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "150115.60",
+   "current_opening": "150115.60",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-EUR-01-20260731-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-EUR-01-20260803-EOD opening"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "BANK",
+   "record_key": "OWN-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "500508.58",
+   "current_opening": "500508.58",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-GBP-01-20260731-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-GBP-01-20260803-EOD opening"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "BANK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "78726.28",
+   "current_opening": "78726.28",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-EUR-01-20260731-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-EUR-01-20260803-EOD opening"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "BANK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "246625.89",
+   "current_opening": "246625.89",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-GBP-01-20260731-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-GBP-01-20260803-EOD opening"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "78726.28",
+   "current_opening": "78726.28",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 120 entries to 2026-07-31T17:00:00+01:00",
+   "current_evidence": "IN-10:LE-EUR-0731-0000"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "246625.89",
+   "current_opening": "246625.89",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 152 entries to 2026-07-31T17:00:00+01:00",
+   "current_evidence": "IN-10:LE-GBP-0731-0000"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "CLIENT",
+   "record_key": "C0001/GBP",
+   "currency": "GBP",
+   "previous_closing": "28669.06",
+   "current_opening": "28669.06",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260731-C0001-GBP",
+   "current_evidence": "IN-03:CBS-20260731-C0001-GBP"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "CLIENT",
+   "record_key": "C0002/GBP",
+   "currency": "GBP",
+   "previous_closing": "30899.64",
+   "current_opening": "30899.64",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260731-C0002-GBP",
+   "current_evidence": "IN-03:CBS-20260731-C0002-GBP"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "CLIENT",
+   "record_key": "C0003/GBP",
+   "currency": "GBP",
+   "previous_closing": "29765.16",
+   "current_opening": "29765.16",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260731-C0003-GBP",
+   "current_evidence": "IN-03:CBS-20260731-C0003-GBP"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "CLIENT",
+   "record_key": "C0004/GBP",
+   "currency": "GBP",
+   "previous_closing": "29792.01",
+   "current_opening": "29792.01",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260731-C0004-GBP",
+   "current_evidence": "IN-03:CBS-20260731-C0004-GBP"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "CLIENT",
+   "record_key": "C0005/GBP",
+   "currency": "GBP",
+   "previous_closing": "30720.67",
+   "current_opening": "30720.67",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260731-C0005-GBP",
+   "current_evidence": "IN-03:CBS-20260731-C0005-GBP"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "CLIENT",
+   "record_key": "C0006/GBP",
+   "currency": "GBP",
+   "previous_closing": "31476.26",
+   "current_opening": "31476.26",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260731-C0006-GBP",
+   "current_evidence": "IN-03:CBS-20260731-C0006-GBP"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "CLIENT",
+   "record_key": "C0007/GBP",
+   "currency": "GBP",
+   "previous_closing": "31824.96",
+   "current_opening": "31824.96",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260731-C0007-GBP",
+   "current_evidence": "IN-03:CBS-20260731-C0007-GBP"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "CLIENT",
+   "record_key": "C0008/GBP",
+   "currency": "GBP",
+   "previous_closing": "33478.13",
+   "current_opening": "33478.13",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260731-C0008-GBP",
+   "current_evidence": "IN-03:CBS-20260731-C0008-GBP"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "CLIENT",
+   "record_key": "C0101/EUR",
+   "currency": "EUR",
+   "previous_closing": "18098.34",
+   "current_opening": "18098.34",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260731-C0101-EUR",
+   "current_evidence": "IN-03:CBS-20260731-C0101-EUR"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "CLIENT",
+   "record_key": "C0102/EUR",
+   "currency": "EUR",
+   "previous_closing": "19326.78",
+   "current_opening": "19326.78",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260731-C0102-EUR",
+   "current_evidence": "IN-03:CBS-20260731-C0102-EUR"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "CLIENT",
+   "record_key": "C0103/EUR",
+   "currency": "EUR",
+   "previous_closing": "20901.15",
+   "current_opening": "20901.15",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260731-C0103-EUR",
+   "current_evidence": "IN-03:CBS-20260731-C0103-EUR"
+  },
+  {
+   "from": "2026-07",
+   "to": "2026-08",
+   "view": "CLIENT",
+   "record_key": "C0104/EUR",
+   "currency": "EUR",
+   "previous_closing": "20400.01",
+   "current_opening": "20400.01",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260731-C0104-EUR",
+   "current_evidence": "IN-03:CBS-20260731-C0104-EUR"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "BANK",
+   "record_key": "OWN-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "150000.00",
+   "current_opening": "150000.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-EUR-01-20260828-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-EUR-01-20260901-EOD opening"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "BANK",
+   "record_key": "OWN-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "500000.00",
+   "current_opening": "500000.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-OWN-GBP-01-20260828-EOD closing",
+   "current_evidence": "IN-08:ST-OWN-GBP-01-20260901-EOD opening"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "BANK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "80000.00",
+   "current_opening": "80000.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-EUR-01-20260828-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-EUR-01-20260901-EOD opening"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "BANK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "250000.00",
+   "current_opening": "250000.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-08:ST-SGA-GBP-01-20260828-EOD closing",
+   "current_evidence": "IN-08:ST-SGA-GBP-01-20260901-EOD opening"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-EUR-01",
+   "currency": "EUR",
+   "previous_closing": "80000.00",
+   "current_opening": "80000.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 111 entries to 2026-08-31T17:00:00+01:00",
+   "current_evidence": "IN-10:LE-EUR-0831-0000"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "CASH_BOOK",
+   "record_key": "SGA-GBP-01",
+   "currency": "GBP",
+   "previous_closing": "250000.00",
+   "current_opening": "250000.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-10: 147 entries to 2026-08-31T17:00:00+01:00",
+   "current_evidence": "IN-10:LE-GBP-0831-0000"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "CLIENT",
+   "record_key": "C0001/GBP",
+   "currency": "GBP",
+   "previous_closing": "40000.00",
+   "current_opening": "40000.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260828-C0001-GBP",
+   "current_evidence": "IN-03:CBS-20260831-C0001-GBP"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "CLIENT",
+   "record_key": "C0002/GBP",
+   "currency": "GBP",
+   "previous_closing": "35000.00",
+   "current_opening": "35000.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260828-C0002-GBP",
+   "current_evidence": "IN-03:CBS-20260831-C0002-GBP"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "CLIENT",
+   "record_key": "C0003/GBP",
+   "currency": "GBP",
+   "previous_closing": "32500.00",
+   "current_opening": "32500.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260828-C0003-GBP",
+   "current_evidence": "IN-03:CBS-20260831-C0003-GBP"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "CLIENT",
+   "record_key": "C0004/GBP",
+   "currency": "GBP",
+   "previous_closing": "30000.00",
+   "current_opening": "30000.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260828-C0004-GBP",
+   "current_evidence": "IN-03:CBS-20260831-C0004-GBP"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "CLIENT",
+   "record_key": "C0005/GBP",
+   "currency": "GBP",
+   "previous_closing": "30000.00",
+   "current_opening": "30000.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260828-C0005-GBP",
+   "current_evidence": "IN-03:CBS-20260831-C0005-GBP"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "CLIENT",
+   "record_key": "C0006/GBP",
+   "currency": "GBP",
+   "previous_closing": "28500.00",
+   "current_opening": "28500.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260828-C0006-GBP",
+   "current_evidence": "IN-03:CBS-20260831-C0006-GBP"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "CLIENT",
+   "record_key": "C0007/GBP",
+   "currency": "GBP",
+   "previous_closing": "27500.00",
+   "current_opening": "27500.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260828-C0007-GBP",
+   "current_evidence": "IN-03:CBS-20260831-C0007-GBP"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "CLIENT",
+   "record_key": "C0008/GBP",
+   "currency": "GBP",
+   "previous_closing": "26500.00",
+   "current_opening": "26500.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260828-C0008-GBP",
+   "current_evidence": "IN-03:CBS-20260831-C0008-GBP"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "CLIENT",
+   "record_key": "C0101/EUR",
+   "currency": "EUR",
+   "previous_closing": "25000.00",
+   "current_opening": "25000.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260828-C0101-EUR",
+   "current_evidence": "IN-03:CBS-20260831-C0101-EUR"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "CLIENT",
+   "record_key": "C0102/EUR",
+   "currency": "EUR",
+   "previous_closing": "20000.00",
+   "current_opening": "20000.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260828-C0102-EUR",
+   "current_evidence": "IN-03:CBS-20260831-C0102-EUR"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "CLIENT",
+   "record_key": "C0103/EUR",
+   "currency": "EUR",
+   "previous_closing": "18000.00",
+   "current_opening": "18000.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260828-C0103-EUR",
+   "current_evidence": "IN-03:CBS-20260831-C0103-EUR"
+  },
+  {
+   "from": "2026-08",
+   "to": "2026-09",
+   "view": "CLIENT",
+   "record_key": "C0104/EUR",
+   "currency": "EUR",
+   "previous_closing": "17000.00",
+   "current_opening": "17000.00",
+   "difference": "0.00",
+   "status": "MATCH",
+   "previous_evidence": "IN-03:CBS-20260828-C0104-EUR",
+   "current_evidence": "IN-03:CBS-20260831-C0104-EUR"
+  }
+ ],
+ "january_opening": {
+  "BANK OWN-EUR-01": [
+   "151082.84",
+   "EUR",
+   "IN-08:ST-OWN-EUR-01-20260102-EOD opening"
+  ],
+  "BANK OWN-GBP-01": [
+   "504136.00",
+   "GBP",
+   "IN-08:ST-OWN-GBP-01-20260102-EOD opening"
+  ],
+  "BANK SGA-EUR-01": [
+   "71100.00",
+   "EUR",
+   "IN-08:ST-SGA-EUR-01-20260102-EOD opening"
+  ],
+  "BANK SGA-GBP-01": [
+   "223400.00",
+   "GBP",
+   "IN-08:ST-SGA-GBP-01-20260102-EOD opening"
+  ],
+  "CASH_BOOK SGA-EUR-01": [
+   "71100.00",
+   "EUR",
+   "IN-10:LE-EUR-1231-0000"
+  ],
+  "CASH_BOOK SGA-GBP-01": [
+   "223400.00",
+   "GBP",
+   "IN-10:LE-GBP-1231-0000"
+  ],
+  "CLIENT C0001/GBP": [
+   "36125.00",
+   "GBP",
+   "IN-03:CBS-20251231-C0001-GBP"
+  ],
+  "CLIENT C0002/GBP": [
+   "31080.40",
+   "GBP",
+   "IN-03:CBS-20251231-C0002-GBP"
+  ],
+  "CLIENT C0003/GBP": [
+   "28955.75",
+   "GBP",
+   "IN-03:CBS-20251231-C0003-GBP"
+  ],
+  "CLIENT C0004/GBP": [
+   "27020.10",
+   "GBP",
+   "IN-03:CBS-20251231-C0004-GBP"
+  ],
+  "CLIENT C0005/GBP": [
+   "26819.60",
+   "GBP",
+   "IN-03:CBS-20251231-C0005-GBP"
+  ],
+  "CLIENT C0006/GBP": [
+   "25342.15",
+   "GBP",
+   "IN-03:CBS-20251231-C0006-GBP"
+  ],
+  "CLIENT C0007/GBP": [
+   "24403.80",
+   "GBP",
+   "IN-03:CBS-20251231-C0007-GBP"
+  ],
+  "CLIENT C0008/GBP": [
+   "23653.20",
+   "GBP",
+   "IN-03:CBS-20251231-C0008-GBP"
+  ],
+  "CLIENT C0101/EUR": [
+   "22140.60",
+   "EUR",
+   "IN-03:CBS-20251231-C0101-EUR"
+  ],
+  "CLIENT C0102/EUR": [
+   "17863.00",
+   "EUR",
+   "IN-03:CBS-20251231-C0102-EUR"
+  ],
+  "CLIENT C0103/EUR": [
+   "15974.25",
+   "EUR",
+   "IN-03:CBS-20251231-C0103-EUR"
+  ],
+  "CLIENT C0104/EUR": [
+   "15122.15",
+   "EUR",
+   "IN-03:CBS-20251231-C0104-EUR"
+  ]
+ },
+ "expected_vs_actual": [
+  {
+   "month": "2026-01",
+   "scenario_types": [
+    "Clean baseline"
+   ],
+   "expected_exceptions": 0,
+   "actual_exceptions": 0,
+   "difference": 0,
+   "expected_case_status": "CLEAN",
+   "actual_case_status": "CLEAN",
+   "expected_root_causes": [],
+   "actual_root_causes": [],
+   "root_causes_match": true,
+   "groups_match": true,
+   "engine_results_by_outcome": {
+    "NOT_APPLICABLE": 88,
+    "PASS": 1795
+   },
+   "pre_validation_results_by_outcome": {
+    "PASS": 1795,
+    "NOT_APPLICABLE": 88
+   },
+   "pack_results_by_outcome": {
+    "NOT_APPLICABLE": 88,
+    "PASS": 1795
+   },
+   "result": "MATCH"
+  },
+  {
+   "month": "2026-02",
+   "scenario_types": [
+    "Missing EUR bank statement"
+   ],
+   "expected_exceptions": 1,
+   "actual_exceptions": 1,
+   "difference": 0,
+   "expected_case_status": "EVIDENCE_INCOMPLETE",
+   "actual_case_status": "EVIDENCE_INCOMPLETE",
+   "expected_root_causes": [
+    "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16"
+   ],
+   "actual_root_causes": [
+    "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-02-16"
+   ],
+   "root_causes_match": true,
+   "groups_match": true,
+   "engine_results_by_outcome": {
+    "INSUFFICIENT_EVIDENCE": 15,
+    "NOT_APPLICABLE": 83,
+    "PASS": 1690
+   },
+   "pre_validation_results_by_outcome": {
+    "PASS": 1690,
+    "NOT_APPLICABLE": 83,
+    "INSUFFICIENT_EVIDENCE": 15
+   },
+   "pack_results_by_outcome": {
+    "INSUFFICIENT_EVIDENCE": 15,
+    "NOT_APPLICABLE": 83,
+    "PASS": 1690
+   },
+   "result": "MATCH"
+  },
+  {
+   "month": "2026-03",
+   "scenario_types": [
+    "Unexplained GBP discrepancy"
+   ],
+   "expected_exceptions": 3,
+   "actual_exceptions": 3,
+   "difference": 0,
+   "expected_case_status": "EXCEPTIONS_OPEN",
+   "actual_case_status": "EXCEPTIONS_OPEN",
+   "expected_root_causes": [
+    "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-03-17|-517.30",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0317-X01",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0320-X02"
+   ],
+   "actual_root_causes": [
+    "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-03-17|-517.30",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0317-X01",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0320-X02"
+   ],
+   "root_causes_match": true,
+   "groups_match": true,
+   "engine_results_by_outcome": {
+    "FAIL": 8,
+    "NOT_APPLICABLE": 89,
+    "PASS": 1875
+   },
+   "pre_validation_results_by_outcome": {
+    "PASS": 1875,
+    "NOT_APPLICABLE": 89,
+    "FAIL": 8
+   },
+   "pack_results_by_outcome": {
+    "FAIL": 8,
+    "NOT_APPLICABLE": 89,
+    "PASS": 1875
+   },
+   "result": "MATCH"
+  },
+  {
+   "month": "2026-04",
+   "scenario_types": [
+    "Clean baseline"
+   ],
+   "expected_exceptions": 0,
+   "actual_exceptions": 0,
+   "difference": 0,
+   "expected_case_status": "CLEAN",
+   "actual_case_status": "CLEAN",
+   "expected_root_causes": [],
+   "actual_root_causes": [],
+   "root_causes_match": true,
+   "groups_match": true,
+   "engine_results_by_outcome": {
+    "NOT_APPLICABLE": 84,
+    "PASS": 1717
+   },
+   "pre_validation_results_by_outcome": {
+    "PASS": 1717,
+    "NOT_APPLICABLE": 84
+   },
+   "pack_results_by_outcome": {
+    "NOT_APPLICABLE": 84,
+    "PASS": 1717
+   },
+   "result": "MATCH"
+  },
+  {
+   "month": "2026-05",
+   "scenario_types": [
+    "Missing EUR bank statement",
+    "Unexplained GBP discrepancy"
+   ],
+   "expected_exceptions": 4,
+   "actual_exceptions": 4,
+   "difference": 0,
+   "expected_case_status": "EVIDENCE_INCOMPLETE",
+   "actual_case_status": "EVIDENCE_INCOMPLETE",
+   "expected_root_causes": [
+    "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-05-18|-1093.65",
+    "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0518-X01",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0521-X02"
+   ],
+   "actual_root_causes": [
+    "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-05-18|-1093.65",
+    "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-05-15",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0518-X01",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0521-X02"
+   ],
+   "root_causes_match": true,
+   "groups_match": true,
+   "engine_results_by_outcome": {
+    "FAIL": 8,
+    "INSUFFICIENT_EVIDENCE": 15,
+    "NOT_APPLICABLE": 76,
+    "PASS": 1604
+   },
+   "pre_validation_results_by_outcome": {
+    "PASS": 1604,
+    "NOT_APPLICABLE": 76,
+    "INSUFFICIENT_EVIDENCE": 15,
+    "FAIL": 8
+   },
+   "pack_results_by_outcome": {
+    "FAIL": 8,
+    "INSUFFICIENT_EVIDENCE": 15,
+    "NOT_APPLICABLE": 76,
+    "PASS": 1604
+   },
+   "result": "MATCH"
+  },
+  {
+   "month": "2026-06",
+   "scenario_types": [
+    "Inconsistent settlement reference"
+   ],
+   "expected_exceptions": 4,
+   "actual_exceptions": 4,
+   "difference": 0,
+   "expected_case_status": "EXCEPTIONS_OPEN",
+   "actual_case_status": "EXCEPTIONS_OPEN",
+   "expected_root_causes": [
+    "C11-BATCH-BANK|SB-GBP-20260601",
+    "C11-BATCH-BANK|SB-GBP-20260610",
+    "CASH-BANK-LINK|LE-GBP-0601-0005",
+    "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0610-0005"
+   ],
+   "actual_root_causes": [
+    "C11-BATCH-BANK|SB-GBP-20260601",
+    "C11-BATCH-BANK|SB-GBP-20260610",
+    "CASH-BANK-LINK|LE-GBP-0601-0005",
+    "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0610-0005"
+   ],
+   "root_causes_match": true,
+   "groups_match": true,
+   "engine_results_by_outcome": {
+    "FAIL": 4,
+    "NOT_APPLICABLE": 92,
+    "PASS": 1873
+   },
+   "pre_validation_results_by_outcome": {
+    "PASS": 1873,
+    "NOT_APPLICABLE": 92,
+    "FAIL": 4
+   },
+   "pack_results_by_outcome": {
+    "FAIL": 4,
+    "NOT_APPLICABLE": 92,
+    "PASS": 1873
+   },
+   "result": "MATCH"
+  },
+  {
+   "month": "2026-07",
+   "scenario_types": [
+    "Missing EUR bank statement",
+    "Inconsistent settlement reference"
+   ],
+   "expected_exceptions": 5,
+   "actual_exceptions": 5,
+   "difference": 0,
+   "expected_case_status": "EVIDENCE_INCOMPLETE",
+   "actual_case_status": "EVIDENCE_INCOMPLETE",
+   "expected_root_causes": [
+    "C11-BATCH-BANK|SB-GBP-20260701",
+    "C11-BATCH-BANK|SB-GBP-20260710",
+    "CASH-BANK-LINK|LE-GBP-0701-0005",
+    "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005"
+   ],
+   "actual_root_causes": [
+    "C11-BATCH-BANK|SB-GBP-20260701",
+    "C11-BATCH-BANK|SB-GBP-20260710",
+    "CASH-BANK-LINK|LE-GBP-0701-0005",
+    "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-07-15",
+    "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005"
+   ],
+   "root_causes_match": true,
+   "groups_match": true,
+   "engine_results_by_outcome": {
+    "FAIL": 4,
+    "INSUFFICIENT_EVIDENCE": 15,
+    "NOT_APPLICABLE": 95,
+    "PASS": 1928
+   },
+   "pre_validation_results_by_outcome": {
+    "PASS": 1928,
+    "NOT_APPLICABLE": 95,
+    "INSUFFICIENT_EVIDENCE": 15,
+    "FAIL": 4
+   },
+   "pack_results_by_outcome": {
+    "FAIL": 4,
+    "INSUFFICIENT_EVIDENCE": 15,
+    "NOT_APPLICABLE": 95,
+    "PASS": 1928
+   },
+   "result": "MATCH"
+  },
+  {
+   "month": "2026-08",
+   "scenario_types": [
+    "Missing EUR bank statement",
+    "Unexplained GBP discrepancy",
+    "Inconsistent settlement reference"
+   ],
+   "expected_exceptions": 8,
+   "actual_exceptions": 8,
+   "difference": 0,
+   "expected_case_status": "EVIDENCE_INCOMPLETE",
+   "actual_case_status": "EVIDENCE_INCOMPLETE",
+   "expected_root_causes": [
+    "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-08-17|-276.90",
+    "C11-BATCH-BANK|SB-GBP-20260803",
+    "C11-BATCH-BANK|SB-GBP-20260810",
+    "CASH-BANK-LINK|LE-GBP-0803-0005",
+    "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0817-X01",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0820-X02",
+    "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0810-0005"
+   ],
+   "actual_root_causes": [
+    "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-08-17|-276.90",
+    "C11-BATCH-BANK|SB-GBP-20260803",
+    "C11-BATCH-BANK|SB-GBP-20260810",
+    "CASH-BANK-LINK|LE-GBP-0803-0005",
+    "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-08-17",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0817-X01",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0820-X02",
+    "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0810-0005"
+   ],
+   "root_causes_match": true,
+   "groups_match": true,
+   "engine_results_by_outcome": {
+    "FAIL": 12,
+    "INSUFFICIENT_EVIDENCE": 15,
+    "NOT_APPLICABLE": 80,
+    "PASS": 1718
+   },
+   "pre_validation_results_by_outcome": {
+    "PASS": 1718,
+    "NOT_APPLICABLE": 80,
+    "INSUFFICIENT_EVIDENCE": 15,
+    "FAIL": 12
+   },
+   "pack_results_by_outcome": {
+    "FAIL": 12,
+    "INSUFFICIENT_EVIDENCE": 15,
+    "NOT_APPLICABLE": 80,
+    "PASS": 1718
+   },
+   "result": "MATCH"
+  }
+ ],
+ "packs": {
+  "PACK-H202601-PER-2026-01-bc596db0bfe6": [],
+  "PACK-H202602-PER-2026-02-195df2e1f216": [],
+  "PACK-H202603-PER-2026-03-d1d37aea9c2b": [],
+  "PACK-H202604-PER-2026-04-a854c4a2bcfd": [],
+  "PACK-H202605-PER-2026-05-051d209cccc4": [],
+  "PACK-H202606-PER-2026-06-a07de266b389": [],
+  "PACK-H202607-PER-2026-07-5d8714f8c422": [],
+  "PACK-H202608-PER-2026-08-22a356a95098": []
+ }
+}

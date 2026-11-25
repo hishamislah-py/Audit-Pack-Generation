@@ -1,0 +1,64 @@
+{
+ "exception_id": "EXC-SC5A-01",
+ "pack_id": "PACK-SC5A-PER-2026-09-ae391170b93a",
+ "summary": {
+  "limits": {
+   "max_input_tokens": 150000,
+   "max_records_per_call": 25,
+   "max_rounds": 4,
+   "max_tool_calls": 8,
+   "max_total_records": 160,
+   "total_timeout": 300.0
+  },
+  "llm_calls": 2,
+  "records_final": 20,
+  "records_initial": 20,
+  "status": "COMPLETED",
+  "stop_reason": "final_answer",
+  "tool_calls_requested": 1,
+  "tool_rounds": 1,
+  "tools_deduplicated": 0,
+  "tools_executed": 1,
+  "tools_refused_budget": 0,
+  "tools_rejected_or_failed": 0,
+  "tools_used": [
+   "get_settlement_batch"
+  ]
+ },
+ "tool_calls": [
+  {
+   "arguments": {
+    "batch_id": "SB-GBP-20260915"
+   },
+   "call_id": "call_cRBBRQlLU3aMm3FIJrZGu08A",
+   "deduplicated": false,
+   "error": "",
+   "evidence_ids": [
+    "IN-12:SB-GBP-20260915",
+    "IN-13:SL-SB-GBP-20260915-0001",
+    "IN-13:SL-SB-GBP-20260915-0002",
+    "IN-13:SL-SB-GBP-20260915-0003",
+    "IN-13:SL-SB-GBP-20260915-0004",
+    "IN-13:SL-SB-GBP-20260915-0005",
+    "IN-13:SL-SB-GBP-20260915-0006",
+    "IN-11:TX-0915-00007",
+    "IN-11:TX-0915-00008",
+    "IN-11:TX-0915-00010",
+    "IN-11:TX-0915-00011",
+    "IN-11:TX-0915-00012"
+   ],
+   "latency_ms": 0.0,
+   "new_evidence_ids": [],
+   "records_returned": 12,
+   "requested_at": "2026-11-02T11:57:43.413+00:00",
+   "round": 1,
+   "search_ids": [
+    "SEARCH-01"
+   ],
+   "status": "OK",
+   "tool": "get_settlement_batch",
+   "truncated": false
+  }
+ ],
+ "tool_registry_version": "uc042-evidence-tools/1.0"
+}
