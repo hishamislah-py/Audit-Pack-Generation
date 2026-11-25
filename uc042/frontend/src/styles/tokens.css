@@ -1,0 +1,93 @@
+/* Design tokens: Variation A, "Enterprise Audit Platform". The ONLY place visual values are defined; components.css
+   builds every class from these variables. Re-theming means editing this file (and, for layout, components.css). */
+:root {
+  /* brand and primary */
+  --navy-900: #0b2545;            /* sidebar, headings, primary buttons */
+  --navy-800: #13315c;            /* hover on navy */
+  --navy-700: #2e4a72;            /* borders on navy */
+  --navy-300: #a9b8cc;            /* secondary text on navy */
+  --navy-200: #c9d4e2;
+  --blue-600: #1f4e8c;            /* links, citations, AI assessment */
+  --blue-100: #e7eef8;
+
+  /* neutrals */
+  --color-workspace: #f4f6f9;
+  --color-panel: #ffffff;
+  --color-panel-muted: #f7f8fa;
+  --color-panel-hover: #f4f7fb;
+  --color-selected: #eef2f7;
+  --color-border: #d9dee5;
+  --color-border-soft: #e8ebf0;
+  --color-text: #1b2430;
+  --color-text-body: #3a4554;
+  --color-text-muted: #5b6675;
+  --color-text-faint: #8792a2;
+  --color-text-inverse: #ffffff;
+
+  /* status */
+  --status-ok: #1e6b45;      --status-ok-bg: #e8f3ec;      --status-ok-border: #a9d3b9;
+  --status-warn: #8a5a00;    --status-warn-bg: #fbf1dd;    --status-warn-border: #ebcf94;
+  --status-bad: #a3261b;     --status-bad-bg: #fbeae8;     --status-bad-border: #e5b4ae;
+  --status-info: #1f4e8c;    --status-info-bg: #e7eef8;    --status-info-border: #b9cbe6;
+  --status-neutral: #5b6675; --status-neutral-bg: #f1f3f6; --status-neutral-border: #d9dee5;
+  --status-mock: #6b4fa0;    --status-mock-bg: #f1edf8;    --status-mock-border: #cfc2e6;
+  --highlight-evidence: #fff4cc;
+
+  /* AI content classes (same semantics as the final-pack report) */
+  --class-observation: var(--status-ok);
+  --class-assessment: var(--blue-600);
+  --class-hypothesis: var(--status-warn);
+  --class-hypothesis-bg: #fdf6e7;
+  --class-gap: #6b4fa0;
+  --class-conflict: var(--status-bad);
+  --class-unverified: var(--status-neutral);
+  --class-next: var(--navy-900);
+
+  /* typography */
+  --font-serif: "Source Serif 4", Georgia, serif;
+  --font-sans: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Source Code Pro", ui-monospace, Consolas, monospace;
+  --text-xs: 11px;
+  --text-sm: 12.5px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 22px;
+  --text-xxl: 28px;
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --leading: 1.5;
+  --tracking-label: 0.06em;
+
+  /* spacing (4 px grid) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* shape and depth: square, restrained */
+  --radius: 0;
+  --radius-pill: 999px;
+  --shadow-panel: none;
+  --shadow-document: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-overlay: 0 12px 40px rgba(0, 0, 0, 0.25);
+  --overlay-scrim: rgba(11, 37, 69, 0.45);
+
+  /* tables */
+  --table-head-bg: var(--color-panel-muted);
+  --table-head-text: var(--color-text-muted);
+  --table-row-border: var(--color-border-soft);
+  --table-cell-y: 10px;
+  --table-cell-x: 12px;
+
+  /* layout */
+  --sidebar-width: 248px;
+  --sidebar-width-compact: 72px;
+  --topbar-height: 56px;
+  --content-max: 1680px;
+  --panel-gap: var(--space-5);
+}

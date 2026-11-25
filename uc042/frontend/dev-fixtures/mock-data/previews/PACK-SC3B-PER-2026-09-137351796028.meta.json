@@ -1,0 +1,52 @@
+{
+ "preview": {
+  "preview_id": "PV-686a0e89196aa63a10bde8d3",
+  "selections_version": 1,
+  "snapshot_sha256": "7707f4b66a197d5e7e0fa0adcdd440e055f780c887a92294802ddfef9d078ff0",
+  "inputs_fingerprint": "1038972edb5c17a971a295fcb5ae98038523ad5df7511f097346df75577d91a2",
+  "preview_final_pack_id": "PREVIEW-SC3B-PER-2026-09-7707f4b66a19",
+  "preview_content_sha256": "dbfd41ce8f49164de5694bdee757eb08efb12d734380e3cfda5f0fbf91ac2231",
+  "closing_summary": {
+   "created_at": "2026-11-03T09:08:18+00:00",
+   "failure": {
+    "detail": "[unsupported_provider] provider 'offline-simulated' does not support structured closing summaries (use UC042_LLM_PROVIDER=openai)",
+    "kind": "unsupported_provider"
+   },
+   "model": null,
+   "provider": null,
+   "sha256": "69407c34b75c553e4938a702435d84c23402406f5478bc328cd54bca0bc8f93b",
+   "status": "UNAVAILABLE",
+   "unavailable_reason": "closing summary generation failed (unsupported_provider)"
+  },
+  "created_at": "2026-11-03T09:08:19+00:00"
+ },
+ "selections": [
+  {
+   "exception_id": "EXC-SC3B-01",
+   "inclusion": "NOT_INVESTIGATED",
+   "investigation_id": null,
+   "reason": ""
+  }
+ ],
+ "readiness": {
+  "ready": true,
+  "blockers": [],
+  "warnings": [
+   {
+    "code": "NOT_INVESTIGATED",
+    "detail": "EXC-SC3B-01 will be reported as not investigated"
+   },
+   {
+    "code": "CLOSING_SUMMARY_UNAVAILABLE",
+    "detail": "the AI closing summary could not be generated: closing summary generation failed (unsupported_provider). GENERATE requires acknowledging this."
+   }
+  ],
+  "info": [
+   {
+    "code": "UNRESOLVED_EXCEPTIONS",
+    "detail": "1 exception(s) are unresolved and will appear as UNRESOLVED"
+   }
+  ]
+ },
+ "acknowledgement_text": "Generating this pack does not resolve any exception, confirm any hypothesis or establish compliance. Unresolved exceptions will appear as UNRESOLVED."
+}

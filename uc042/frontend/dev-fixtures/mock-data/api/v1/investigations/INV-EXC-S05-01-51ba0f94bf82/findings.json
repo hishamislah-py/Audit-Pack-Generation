@@ -1,0 +1,311 @@
+{
+ "classification_summary": {
+  "CONFLICTING_EVIDENCE": [
+   "C-01"
+  ],
+  "EVIDENCE_BACKED": [
+   "F-01",
+   "F-02",
+   "F-03"
+  ],
+  "HYPOTHESIS": [
+   "H-01"
+  ],
+  "INSUFFICIENT_EVIDENCE": [
+   "M-01",
+   "M-02"
+  ],
+  "deterministic_conflicts": [],
+  "evidence_gaps": {
+   "additional_gaps_identified_by_ai": [],
+   "engine_missing_evidence": [],
+   "searched_not_found": [
+    "M-01",
+    "M-02"
+   ]
+  },
+  "not_found_searches": [
+   "SEARCH-01",
+   "SEARCH-02",
+   "SEARCH-03"
+  ],
+  "unverified_candidate_relationships": []
+ },
+ "confirmed_findings": [
+  {
+   "claim": "The engine reports a -812.40 GBP difference for each of ten dates, with each C08 result marked FAIL and evidence status NOT_EVIDENCED.",
+   "evidence_ids": [
+    "C08-DIFFERENCE|2026-09-17/SGA-GBP-01",
+    "C08-DIFFERENCE|2026-09-18/SGA-GBP-01",
+    "C08-DIFFERENCE|2026-09-21/SGA-GBP-01",
+    "C08-DIFFERENCE|2026-09-22/SGA-GBP-01",
+    "C08-DIFFERENCE|2026-09-23/SGA-GBP-01",
+    "C08-DIFFERENCE|2026-09-24/SGA-GBP-01",
+    "C08-DIFFERENCE|2026-09-25/SGA-GBP-01",
+    "C08-DIFFERENCE|2026-09-28/SGA-GBP-01",
+    "C08-DIFFERENCE|2026-09-29/SGA-GBP-01",
+    "C08-DIFFERENCE|2026-09-30/SGA-GBP-01",
+    "DISC-LOG|SGA-GBP-01 from 2026-09-17"
+   ],
+   "explanation": "The reported difference is -812.40 on each listed reconciliation date from 2026-09-17 through 2026-09-30. The C08 results report explained_by_timing of 0.00 and residual_unexplained of -812.40. The separate discrepancy-log control reports FAIL and 0 log entries.",
+   "finding_id": "F-01",
+   "supporting_records": [
+    "IN-06:ERL-SGA-GBP-01-20260917",
+    "IN-07:ST-SGA-GBP-01-20260917-1700"
+   ]
+  },
+  {
+   "claim": "The 2026-09-17 bank statement records an 812.40 GBP debit with reference “SETTLE 0417”; no matching cash-book entry was found.",
+   "evidence_ids": [
+    "IN-09:BE-GBP-0917-X01",
+    "BANK-CASH-LINK|BE-GBP-0917-X01",
+    "SEARCH-03",
+    "IN-10:LE-GBP-0917-0001",
+    "IN-10:LE-GBP-0917-0002",
+    "IN-10:LE-GBP-0917-0003",
+    "IN-10:LE-GBP-0917-0004",
+    "IN-10:LE-GBP-0917-0005"
+   ],
+   "explanation": "The bank entry is dated 2026-09-17, is a debit, and has no counterparty name. The bank-cash control reports FAIL for a bank entry with no cash-book counterpart. An exact-reference cash-book search also returned NOT_FOUND. The cash book records five other entries for that date, but none has this reference.",
+   "finding_id": "F-02",
+   "supporting_records": [
+    "IN-09:BE-GBP-0917-X01",
+    "IN-10:LE-GBP-0917-0001",
+    "IN-10:LE-GBP-0917-0002",
+    "IN-10:LE-GBP-0917-0003",
+    "IN-10:LE-GBP-0917-0004",
+    "IN-10:LE-GBP-0917-0005"
+   ]
+  },
+  {
+   "claim": "The 2026-09-17 internal reconciliation reports requirement and resource of 341484.46 GBP and a reported difference of 0.00 GBP.",
+   "evidence_ids": [
+    "IN-05:IRR-EMONEY-GBP-20260917",
+    "IN-06:ERL-SGA-GBP-01-20260917",
+    "IN-07:ST-SGA-GBP-01-20260917-1700"
+   ],
+   "explanation": "The internal reconciliation is a firm record. It reports equality between requirement and resource at the 17:00 reconciliation point; the external reconciliation record separately reports ledger balance 341484.46 GBP and bank balance 340672.06 GBP.",
+   "finding_id": "F-03",
+   "supporting_records": [
+    "IN-05:IRR-EMONEY-GBP-20260917",
+    "IN-06:ERL-SGA-GBP-01-20260917",
+    "IN-07:ST-SGA-GBP-01-20260917-1700"
+   ]
+  }
+ ],
+ "contradictory_evidence": [
+  {
+   "description": "The internal reconciliation reports equal requirement and resource and a 0.00 GBP difference, while the external reconciliation records a 341484.46 GBP ledger balance against a 340672.06 GBP bank balance and reports -812.40 GBP. These are differing reconciliation outcomes for the same date; the records do not explain the difference between them.",
+   "evidence_ids": [
+    "IN-05:IRR-EMONEY-GBP-20260917",
+    "IN-06:ERL-SGA-GBP-01-20260917",
+    "IN-07:ST-SGA-GBP-01-20260917-1700",
+    "C08-DIFFERENCE|2026-09-17/SGA-GBP-01"
+   ],
+   "item_id": "C-01"
+  }
+ ],
+ "evidence_ledger_sha256": "c00ad1bb48f8de25c3b0b2dd710bee35d1ea2ce2cf62b40c42be0ca3e88ac258",
+ "evidence_packet_sha256": "6d051344cdb9cfbd03b7ca1189daaef223f0edcb50d806929456906eb005ac85",
+ "evidence_references": [
+  "BANK-CASH-LINK|BE-GBP-0917-X01",
+  "C08-DIFFERENCE|2026-09-17/SGA-GBP-01",
+  "C08-DIFFERENCE|2026-09-18/SGA-GBP-01",
+  "C08-DIFFERENCE|2026-09-21/SGA-GBP-01",
+  "C08-DIFFERENCE|2026-09-22/SGA-GBP-01",
+  "C08-DIFFERENCE|2026-09-23/SGA-GBP-01",
+  "C08-DIFFERENCE|2026-09-24/SGA-GBP-01",
+  "C08-DIFFERENCE|2026-09-25/SGA-GBP-01",
+  "C08-DIFFERENCE|2026-09-28/SGA-GBP-01",
+  "C08-DIFFERENCE|2026-09-29/SGA-GBP-01",
+  "C08-DIFFERENCE|2026-09-30/SGA-GBP-01",
+  "C11-BANK-ENTRY|BE-GBP-0917-X01",
+  "DISC-LOG|SGA-GBP-01 from 2026-09-17",
+  "IN-05:IRR-EMONEY-GBP-20260917",
+  "IN-06:ERL-SGA-GBP-01-20260917",
+  "IN-07:ST-SGA-GBP-01-20260917-1700",
+  "IN-09:BE-GBP-0917-X01",
+  "IN-10:LE-GBP-0917-0001",
+  "IN-10:LE-GBP-0917-0002",
+  "IN-10:LE-GBP-0917-0003",
+  "IN-10:LE-GBP-0917-0004",
+  "IN-10:LE-GBP-0917-0005",
+  "SEARCH-01",
+  "SEARCH-02",
+  "SEARCH-03"
+ ],
+ "exception_id": "EXC-S05-01",
+ "exception_resolution": "NOT_RESOLVED_BY_INVESTIGATION",
+ "failure_reason": "",
+ "hypotheses": [
+  {
+   "contradictory_evidence": [],
+   "hypothesis_id": "H-01",
+   "limitations": "The equality of the amounts and their timing do not establish a relationship. The packet contains no verified link from this bank entry to the reconciliation difference, and the difference is reported on later dates as well. The bank entry's origin and accounting treatment are not established.",
+   "possible_explanation": "The 812.40 GBP debit recorded as “SETTLE 0417” may be related to the bank-ledger difference first reported on 2026-09-17.",
+   "status": "HYPOTHESIS",
+   "supporting_evidence": [
+    "IN-09:BE-GBP-0917-X01",
+    "C08-DIFFERENCE|2026-09-17/SGA-GBP-01"
+   ]
+  }
+ ],
+ "investigated_at": "2026-11-02T11:59:21+00:00",
+ "investigation_id": "INV-EXC-S05-01-51ba0f94bf82",
+ "investigation_mode": "tools",
+ "investigation_route": "bank_ledger_mismatch",
+ "investigation_scope": {
+  "account_id": "SGA-GBP-01",
+  "affected_result_count": 11,
+  "amount": "-812.40",
+  "candidate_relationship_ids": [],
+  "category": "Unexplained bank-ledger difference",
+  "check_ids": [
+   "C08-DIFFERENCE",
+   "DISC-LOG"
+  ],
+  "control_codes": [
+   "C06/C08",
+   "C08"
+  ],
+  "currency": "GBP",
+  "evidence_status": "NOT_EVIDENCED",
+  "first_date": "2026-09-17",
+  "group_size": 2,
+  "investigation_group_id": "GRP-S05-01",
+  "keys": {
+   "account_id": "SGA-GBP-01",
+   "date": "2026-09-17"
+  },
+  "last_date": "2026-09-30",
+  "missing_evidence_item_ids": [],
+  "related_exception_ids": [
+   "EXC-S05-02"
+  ],
+  "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-09-17|-812.40",
+  "root_cause_kind": "BANK_LEDGER_DIFFERENCE",
+  "severity": "Critical"
+ },
+ "investigation_status": "COMPLETED",
+ "investigation_summary": "The packet and retrieved records establish a reported GBP 812.40 bank-ledger difference on each of ten reconciliation dates from 2026-09-17 through 2026-09-30. A GBP 812.40 bank debit with reference “SETTLE 0417” appears on the first date, but no corresponding cash-book entry or record carrying that reference was found. The matching amount and timing are suggestive, not proof that the debit explains the continuing difference; its origin and accounting treatment remain unestablished.",
+ "missing_evidence": [
+  {
+   "description": "No discrepancy-log entries referencing the in-scope external reconciliation records were found; the engine reports 0 log entries.",
+   "expected_source": "IN-14 discrepancy log and records of the firm's investigation of the reconciliation differences.",
+   "impact": "The packet does not establish whether an investigation was documented elsewhere or what actions, if any, were taken.",
+   "item_id": "M-01",
+   "related_ids": [
+    "SEARCH-01",
+    "DISC-LOG|SGA-GBP-01 from 2026-09-17"
+   ]
+  },
+  {
+   "description": "No cash-book entry with payment reference “SETTLE 0417” was found, and the packet does not provide a bank-origin record explaining the debit or a verified link to a transaction, settlement, or other firm record.",
+   "expected_source": "Safeguarding cash book and relevant bank transaction details, payment advice, or other source documentation identifying the debit and its business purpose.",
+   "impact": "The debit's purpose, accounting treatment, and relationship, if any, to the reported reconciliation difference cannot be established.",
+   "item_id": "M-02",
+   "related_ids": [
+    "SEARCH-02",
+    "SEARCH-03",
+    "IN-09:BE-GBP-0917-X01",
+    "C11-BANK-ENTRY|BE-GBP-0917-X01",
+    "BANK-CASH-LINK|BE-GBP-0917-X01"
+   ]
+  }
+ ],
+ "model_metadata": {
+  "attempts": 2,
+  "findings_schema_version": "uc042-investigation-findings/1.2",
+  "investigation_mode": "tools",
+  "model": "gpt-6-luna",
+  "prompt_version": "uc042-investigator-prompt/2.0-tools",
+  "provider": "openai",
+  "provider_response": {
+   "responses": [
+    {
+     "request_id": "req_2d8cf31c19e14b228178c2d8e12ce9d5",
+     "resolved_model": "gpt-6-luna",
+     "response_id": "resp_0412abd1656731a7016ae87ae8925487d29ec2f467689e66b1",
+     "status": "completed"
+    },
+    {
+     "request_id": "req_204b82c594a54309bd55447a7b0d1108",
+     "resolved_model": "gpt-6-luna",
+     "response_id": "resp_0412abd1656731a7016ae87aeca4e887d284d520ab378e3121",
+     "status": "completed"
+    }
+   ]
+  },
+  "simulated": false,
+  "tool_registry_version": "uc042-evidence-tools/1.0",
+  "usage": {
+   "cached_input_tokens": 29783,
+   "input_tokens": 53802,
+   "latency_seconds": 50.23,
+   "output_tokens": 4985,
+   "reasoning_tokens": 2065,
+   "total_tokens": 58787
+  },
+  "workflow_version": "uc042-investigation-graph/2.0-tools"
+ },
+ "open_questions": [
+  "What was the purpose and beneficiary of the “SETTLE 0417” debit, and can the bank provide transaction details or supporting payment documentation?",
+  "Was the debit recorded in another firm ledger or under a different reference, and if so, what verified record links it to this bank entry?",
+  "Why does the internal reconciliation report no difference while the external reconciliation records a bank-ledger difference?",
+  "What investigation or corrective accounting actions, if any, were taken for the repeated difference?"
+ ],
+ "original_evidence_status": "NOT_EVIDENCED",
+ "original_exception_status": "OPEN",
+ "original_review_status": "AWAITING_HUMAN_REVIEW",
+ "overall_evidence_assessment": "INSUFFICIENT_EVIDENCE",
+ "pack_content_sha256": "ddd0fdc8b731801bd1ae43f502085b566501d1706fb792344cafe831a172f5d5",
+ "pack_id": "PACK-S05-PER-2026-09-ddd0fdc8b731",
+ "recommended_next_steps": [
+  {
+   "action": "Obtain bank-provided transaction details and supporting payment documentation for the 2026-09-17 debit “SETTLE 0417,” then verify the payee, purpose, and any firm authorization against source records.",
+   "evidence_needed": "Bank transaction advice or equivalent bank-origin detail, payment instruction or authorization, and any source record that identifies the transaction.",
+   "rationale": "The statement entry has no counterparty name and no cash-book counterpart was found; its origin is not established.",
+   "step_id": "S-01"
+  },
+  {
+   "action": "Obtain the firm's investigation records and reconcile the reported bank, cash-book, internal-reconciliation, and external-reconciliation figures for the affected dates.",
+   "evidence_needed": "Discrepancy investigation documentation, complete relevant ledger and reconciliation extracts, and source documentation supporting any adjustments or timing items.",
+   "rationale": "The engine reports no discrepancy-log entries, and the internal and external reconciliation records report different outcomes for the first affected date.",
+   "step_id": "S-02"
+  },
+  {
+   "action": "Trace the bank debit through relevant settlement, transaction, and payment records using independently verified identifiers rather than relying on the matching amount alone.",
+   "evidence_needed": "Settlement or payment records linked to the bank entry by a verified reference or other source-supported identifier.",
+   "rationale": "The amount match is not evidence of a verified relationship, and the reference search found no other matching records in the searched sources.",
+   "step_id": "S-03"
+  }
+ ],
+ "statement": "AI investigation findings are an aid to human review. They do not change any deterministic control outcome, do not resolve or close any exception, and are not a compliance opinion.",
+ "tool_summary": {
+  "limits": {
+   "max_input_tokens": 150000,
+   "max_records_per_call": 25,
+   "max_rounds": 4,
+   "max_tool_calls": 8,
+   "max_total_records": 160,
+   "total_timeout": 300.0
+  },
+  "llm_calls": 2,
+  "records_final": 48,
+  "records_initial": 47,
+  "status": "COMPLETED",
+  "stop_reason": "final_answer",
+  "tool_calls_requested": 2,
+  "tool_rounds": 1,
+  "tools_deduplicated": 0,
+  "tools_executed": 2,
+  "tools_refused_budget": 0,
+  "tools_rejected_or_failed": 0,
+  "tools_used": [
+   "get_cashbook_entries",
+   "get_reconciliation_evidence"
+  ]
+ },
+ "validation_findings": [],
+ "validation_status": "VALID"
+}

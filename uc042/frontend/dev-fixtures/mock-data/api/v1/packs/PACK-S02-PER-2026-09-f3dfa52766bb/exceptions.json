@@ -1,0 +1,59 @@
+[
+ {
+  "exception_id": "EXC-S02-01",
+  "category": "Missing bank evidence",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "SGA-EUR-01",
+  "currency": "EUR",
+  "amount": "",
+  "first_date": "2026-09-15",
+  "last_date": "2026-09-15",
+  "control_codes": [
+   "C05/C07",
+   "C06",
+   "C07",
+   "C08",
+   "C09",
+   "C11",
+   "C14",
+   "DQ22"
+  ],
+  "investigation_group_id": "",
+  "affected_result_ids": [
+   "C14-COVER|IN-07 2026-09-15/SGA-EUR-01",
+   "C14-COVER|IN-08 2026-09-15/SGA-EUR-01",
+   "DQ22-CONTINUITY|ST-SGA-EUR-01-20260916-EOD",
+   "CASH-BANK-LINK|LE-EUR-0915-0001",
+   "CASH-BANK-LINK|LE-EUR-0915-0002",
+   "CASH-BANK-LINK|LE-EUR-0915-0003",
+   "CASH-BANK-LINK|LE-EUR-0915-0004",
+   "C07-BANK-EVIDENCE|2026-09-15/SGA-EUR-01",
+   "C08-DIFFERENCE|2026-09-15/SGA-EUR-01",
+   "C11-BATCH-BANK|AQ-EUR-20260915",
+   "C11-BATCH-BANK|SB-EUR-20260915",
+   "FUND-TOPUP|AQ-EUR-20260915",
+   "RC4-DIRECT|TX-0915-00013"
+  ],
+  "evidence_ids": [
+   "IN-01:2026-09-15",
+   "IN-02:SGA-EUR-01",
+   "IN-08:ST-SGA-EUR-01-20260914-EOD",
+   "IN-08:ST-SGA-EUR-01-20260916-EOD",
+   "IN-10:LE-EUR-0915-0001",
+   "IN-10:LE-EUR-0915-0002",
+   "IN-10:LE-EUR-0915-0003",
+   "IN-10:LE-EUR-0915-0004",
+   "IN-06:ERL-SGA-EUR-01-20260915",
+   "IN-12:AQ-EUR-20260915",
+   "IN-12:SB-EUR-20260915",
+   "IN-11:TX-0915-00013"
+  ],
+  "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-09-15",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ }
+]

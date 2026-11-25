@@ -1,0 +1,80 @@
+{
+ "exception": {
+  "exception_id": "EXC-S05-02",
+  "category": "Bank entry with no counterpart",
+  "cause_category": "",
+  "severity": "High",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "SGA-GBP-01",
+  "currency": "GBP",
+  "amount": "-812.40",
+  "first_date": "2026-09-17",
+  "last_date": "2026-09-17",
+  "control_codes": [
+   "C05/C07",
+   "C11"
+  ],
+  "investigation_group_id": "GRP-S05-01",
+  "affected_result_ids": [
+   "BANK-CASH-LINK|BE-GBP-0917-X01",
+   "C11-BANK-ENTRY|BE-GBP-0917-X01"
+  ],
+  "evidence_ids": [
+   "IN-09:BE-GBP-0917-X01"
+  ],
+  "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0917-X01",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ "affected_results": [
+  {
+   "computed": "",
+   "evidence_ids": [
+    "IN-09:BE-GBP-0917-X01"
+   ],
+   "evidence_refs": "IN-09:bank_statement_entries_2026-09.csv#L152",
+   "evidence_status": "",
+   "exception_id": "EXC-S05-02",
+   "investigation_group_id": "GRP-S05-01",
+   "note": "bank entry has no cash-book counterpart",
+   "outcome": "FAIL",
+   "reported": "",
+   "result_id": "BANK-CASH-LINK|BE-GBP-0917-X01",
+   "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0917-X01",
+   "scope": "BE-GBP-0917-X01",
+   "structured": {},
+   "check_id": "BANK-CASH-LINK",
+   "control_code": "C05/C07",
+   "control_name": "Resource / External existence and statement agreement"
+  },
+  {
+   "computed": "",
+   "evidence_ids": [
+    "IN-09:BE-GBP-0917-X01"
+   ],
+   "evidence_refs": "IN-09:bank_statement_entries_2026-09.csv#L152",
+   "evidence_status": "",
+   "exception_id": "EXC-S05-02",
+   "investigation_group_id": "GRP-S05-01",
+   "note": "bank entry with no batch, transaction, top-up or register counterpart",
+   "outcome": "FAIL",
+   "reported": "",
+   "result_id": "C11-BANK-ENTRY|BE-GBP-0917-X01",
+   "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0917-X01",
+   "scope": "BE-GBP-0917-X01",
+   "structured": {},
+   "check_id": "C11-BANK-ENTRY",
+   "control_code": "C11",
+   "control_name": "Settlement"
+  }
+ ],
+ "investigations": {
+  "published": [],
+  "not_published": [],
+  "active_jobs": [],
+  "pack_id": "PACK-S05-PER-2026-09-ddd0fdc8b731",
+  "exception_id": "EXC-S05-02"
+ }
+}

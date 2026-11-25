@@ -1,0 +1,94 @@
+[
+ {
+  "exception_id": "EXC-SC5D-01",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-30",
+  "last_date": "2026-09-30",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5D-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-30/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260930"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-30/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5D-02",
+  "category": "CBAL-ROLLFWD",
+  "cause_category": "",
+  "severity": "High",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "",
+  "last_date": "",
+  "control_codes": [
+   "C04"
+  ],
+  "investigation_group_id": "GRP-SC5D-01",
+  "affected_result_ids": [
+   "CBAL-ROLLFWD|GBP/C0003 2026-09-30"
+  ],
+  "evidence_ids": [
+   "IN-03:CBS-20260929-C0003-GBP",
+   "IN-03:CBS-20260930-C0003-GBP",
+   "IN-11:TX-0930-00005",
+   "IN-11:TX-0930-00010"
+  ],
+  "root_cause": "CBAL-ROLLFWD|GBP/C0003 2026-09-30",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5D-03",
+  "category": "C04-REQUIREMENT",
+  "cause_category": "",
+  "severity": "High",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-30",
+  "last_date": "2026-09-30",
+  "control_codes": [
+   "C04"
+  ],
+  "investigation_group_id": "GRP-SC5D-01",
+  "affected_result_ids": [
+   "C04-REQUIREMENT|2026-09-30/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260930",
+   "IN-03:CBS-20260930-C0001-GBP",
+   "IN-03:CBS-20260930-C0002-GBP",
+   "IN-03:CBS-20260930-C0003-GBP",
+   "IN-03:CBS-20260930-C0004-GBP",
+   "IN-03:CBS-20260930-C0005-GBP",
+   "IN-03:CBS-20260930-C0006-GBP",
+   "IN-03:CBS-20260930-C0007-GBP",
+   "IN-03:CBS-20260930-C0008-GBP"
+  ],
+  "root_cause": "C04-REQUIREMENT|2026-09-30/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ }
+]

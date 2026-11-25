@@ -1,0 +1,221 @@
+{
+ "summary": {
+  "pack_id": "PACK-SC5A-PER-2026-09-ae391170b93a",
+  "pack_content_sha256": "ae391170b93a4a6db21e8b4c21c685f55e56024a153ebc997164d76140faabee",
+  "period_id": "PER-2026-09",
+  "reporting_period": {
+   "end": "2026-09-30",
+   "period_id": "PER-2026-09",
+   "start": "2026-09-01"
+  },
+  "scenario_id": "SC5A",
+  "engine_case_status": "EXCEPTIONS_OPEN",
+  "evidence_completeness": "COMPLETE",
+  "exceptions": {
+   "by_severity": {
+    "High": 2
+   },
+   "open": 2,
+   "total": 2
+  },
+  "control_summary": "FAILURES_PRESENT",
+  "outcomes": {
+   "FAIL": 2,
+   "NOT_APPLICABLE": 88,
+   "PASS": 1796
+  },
+  "missing_evidence_items": 0,
+  "pack_review_status": "NOT_REVIEWED"
+ },
+ "metadata": {
+  "accounts": [
+   {
+    "account_class": "OWN_FUNDS",
+    "account_id": "OWN-EUR-01",
+    "account_number_masked": "****1206",
+    "currency": "EUR",
+    "designation_name": "",
+    "evidence_id": "IN-02:OWN-EUR-01"
+   },
+   {
+    "account_class": "OWN_FUNDS",
+    "account_id": "OWN-GBP-01",
+    "account_number_masked": "****1190",
+    "currency": "GBP",
+    "designation_name": "",
+    "evidence_id": "IN-02:OWN-GBP-01"
+   },
+   {
+    "account_class": "RELEVANT_FUNDS_BANK",
+    "account_id": "SGA-EUR-01",
+    "account_number_masked": "****8823",
+    "currency": "EUR",
+    "designation_name": "Synthetic EMI Ltd Safeguarding Account (EUR)",
+    "evidence_id": "IN-02:SGA-EUR-01"
+   },
+   {
+    "account_class": "RELEVANT_FUNDS_BANK",
+    "account_id": "SGA-GBP-01",
+    "account_number_masked": "****4471",
+    "currency": "GBP",
+    "designation_name": "Synthetic EMI Ltd Safeguarding Account (GBP)",
+    "evidence_id": "IN-02:SGA-GBP-01"
+   }
+  ],
+  "asset_pool_id": "POOL-EMONEY",
+  "currency_scope": [
+   "EUR",
+   "GBP"
+  ],
+  "entity": {
+   "entity_id": "SYN-EMI-001",
+   "notice": "Illustrative synthetic entity identifier for the UC-042 POC (decision D2); not a confirmed Moorwand production identifier."
+  },
+  "generation_status": "GENERATED",
+  "pack_id": "PACK-SC5A-PER-2026-09-ae391170b93a",
+  "pack_schema_version": "uc042-pack/0.1",
+  "processing_run_id": "RUN-9a2ac69c8b729bb9",
+  "reconciliation_days": [
+   "2026-09-01",
+   "2026-09-02",
+   "2026-09-03",
+   "2026-09-04",
+   "2026-09-07",
+   "2026-09-08",
+   "2026-09-09",
+   "2026-09-10",
+   "2026-09-11",
+   "2026-09-14",
+   "2026-09-15",
+   "2026-09-16",
+   "2026-09-17",
+   "2026-09-18",
+   "2026-09-21",
+   "2026-09-22",
+   "2026-09-23",
+   "2026-09-24",
+   "2026-09-25",
+   "2026-09-28",
+   "2026-09-29",
+   "2026-09-30"
+  ],
+  "reporting_period": {
+   "end": "2026-09-30",
+   "period_id": "PER-2026-09",
+   "start": "2026-09-01"
+  },
+  "source_dataset": {
+   "baseline": "set_01_clean_baseline",
+   "baseline_manifest_sha256": "0360b4055aa6812f063b411c7ceacdb2f4f153df73fd76c2acc7da3df565b69e",
+   "dataset": "scn_SC5A_missing_transaction",
+   "scenario_id": "SC5A",
+   "scenario_name": "Transaction missing (TX-0915-00009, 443.55)"
+  },
+  "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA (decision D6): all records, timings, references and fee treatments are illustrative conventions for the UC-042 POC, not confirmed Moorwand practice."
+ },
+ "executive_summary": {
+  "candidate_relationships": 1,
+  "control_outcomes": {
+   "applicable_controls": [
+    "C01",
+    "C03",
+    "C04",
+    "C05",
+    "C05/C07",
+    "C06",
+    "C06/C08",
+    "C07",
+    "C08",
+    "C09",
+    "C10",
+    "C11",
+    "C12",
+    "C13",
+    "C14",
+    "C16",
+    "DQ",
+    "DQ22",
+    "DQ23"
+   ],
+   "by_outcome": {
+    "FAIL": 2,
+    "NOT_APPLICABLE": 88,
+    "PASS": 1796
+   },
+   "check_types": 33,
+   "check_types_with_results": 32,
+   "checks_all_passed_or_not_applicable": [
+    "V01-SCHEMA",
+    "V01-PDF",
+    "C03-POLICY",
+    "C03-POINT",
+    "C01-COVER",
+    "C14-COVER",
+    "C07-COVER",
+    "DQ23-STATEMENT",
+    "DQ22-CONTINUITY",
+    "BC-VS-EOD",
+    "CASH-BANK-LINK",
+    "C04-REQUIREMENT",
+    "C05-RESOURCE",
+    "C06-DIFFERENCE",
+    "C07-BANK-EVIDENCE",
+    "RC2-LEDGER",
+    "C08-DIFFERENCE",
+    "C11-BATCH-BANK",
+    "C11-TXN-LINE",
+    "FUND-TOPUP",
+    "RC4-DIRECT",
+    "C09-ALLOCATION",
+    "C11-BANK-ENTRY",
+    "C12-REFUND",
+    "CBAL-NONNEG",
+    "C13-CURRENCY",
+    "C10-DESIGNATION",
+    "C16-GOVERNANCE",
+    "C16-RETURN",
+    "DISC-LOG"
+   ],
+   "checks_no_findings": [
+    "BANK-CASH-LINK"
+   ],
+   "checks_not_fully_assessed": [],
+   "checks_with_failures": [
+    "C11-BATCH-ARITH",
+    "CBAL-ROLLFWD"
+   ],
+   "summary": "FAILURES_PRESENT",
+   "total_results": 1886
+  },
+  "engine_case_status": "EXCEPTIONS_OPEN",
+  "evidence_completeness": "COMPLETE",
+  "exception_review": "AWAITING_HUMAN_REVIEW",
+  "exceptions": {
+   "by_severity": {
+    "High": 2
+   },
+   "open": 2,
+   "total": 2
+  },
+  "generation_status": "GENERATED",
+  "investigation_groups": 0,
+  "missing_evidence_items": 0,
+  "pack_review_status": "NOT_REVIEWED"
+ },
+ "statements": {
+  "entity_notice": "Illustrative synthetic entity identifier for the UC-042 POC (decision D2); not a confirmed Moorwand production identifier.",
+  "limitations": [
+   "Resource items B-D are taken as reported (0.00); no independent source exists.",
+   "The D+1 comparison is not performed (synthetic convention).",
+   "PDF key details are parsed from a fixed synthetic layout; no human confirmation of extracted fields.",
+   "Results show the internal consistency of illustrative synthetic data, not operational truth or compliance.",
+   "Monthly totals are not included: the engine does not calculate them and the pack performs no financial calculation (D4)."
+  ],
+  "not_a_compliance_opinion": "This pack presents deterministic checks of synthetic evidence. It is not a compliance opinion, does not establish operational correctness, and does not establish the cause of any exception.",
+  "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA (decision D6): all records, timings, references and fee treatments are illustrative conventions for the UC-042 POC, not confirmed Moorwand practice."
+ },
+ "verification": {
+  "verified": true,
+  "pack_content_sha256": "ae391170b93a4a6db21e8b4c21c685f55e56024a153ebc997164d76140faabee"
+ }
+}

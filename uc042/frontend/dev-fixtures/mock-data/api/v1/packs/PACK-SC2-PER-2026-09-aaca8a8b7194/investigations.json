@@ -1,0 +1,62 @@
+[
+ {
+  "pack_id": "PACK-SC2-PER-2026-09-aaca8a8b7194",
+  "exception_id": "EXC-SC2-01",
+  "published": [
+   {
+    "investigation_id": "INV-EXC-SC2-01-389ba1328c3c",
+    "investigation_mode": "tools",
+    "investigated_at": "2026-11-02T11:56:33+00:00",
+    "validation_status": "VALID",
+    "simulated": false,
+    "provider": "openai",
+    "model": "gpt-6-luna",
+    "findings_schema_version": "uc042-investigation-findings/1.2",
+    "overall_evidence_assessment": "PARTIALLY_SUFFICIENT",
+    "eligible": false,
+    "library_eligible": false,
+    "ineligible_reasons": [
+     "fails current validation rules (uc042-investigation-findings/1.4): C-01: a contradiction must name exactly two different compared evidence IDs"
+    ],
+    "registry": {
+     "seq": 5,
+     "record_type": "LEGACY_BASELINE_IMPORT",
+     "recorded_at": "2026-11-03T09:07:59+00:00",
+     "findings_sha256": "5c5df6f28cef6044d4965440c17d36138868496518ef5d3b77f28f8d379c97ee",
+     "evidence_packet_sha256": "f0393c923d8ea2610d02e432e190120e26d6c4d96f3885151f91bfd5520b23d6",
+     "findings_schema_version": "uc042-investigation-findings/1.2",
+     "prompt_version": "uc042-investigator-prompt/2.0-tools",
+     "note": "Integrity baseline established at import time. It does not prove the contents of the artefact at its original publication time, which predates this registry."
+    }
+   },
+   {
+    "investigation_id": "INV-EXC-SC2-01-eb2021ac50e9",
+    "investigation_mode": "fixed",
+    "investigated_at": "2026-11-02T11:26:35+00:00",
+    "validation_status": "VALID",
+    "simulated": false,
+    "provider": "openai",
+    "model": "gpt-6-luna",
+    "findings_schema_version": "uc042-investigation-findings/1.1",
+    "overall_evidence_assessment": "PARTIALLY_SUFFICIENT",
+    "eligible": false,
+    "library_eligible": false,
+    "ineligible_reasons": [
+     "fails current validation rules (uc042-investigation-findings/1.4): C-01: a contradiction must name exactly two different compared evidence IDs"
+    ],
+    "registry": {
+     "seq": 6,
+     "record_type": "LEGACY_BASELINE_IMPORT",
+     "recorded_at": "2026-11-03T09:07:59+00:00",
+     "findings_sha256": "a265b9bd490927be413c65d6f6b1b71bdab3d40d3a0265231f95c8377adee072",
+     "evidence_packet_sha256": "f0393c923d8ea2610d02e432e190120e26d6c4d96f3885151f91bfd5520b23d6",
+     "findings_schema_version": "uc042-investigation-findings/1.1",
+     "prompt_version": "uc042-investigator-prompt/1.0",
+     "note": "Integrity baseline established at import time. It does not prove the contents of the artefact at its original publication time, which predates this registry."
+    }
+   }
+  ],
+  "not_published": [],
+  "active_jobs": []
+ }
+]

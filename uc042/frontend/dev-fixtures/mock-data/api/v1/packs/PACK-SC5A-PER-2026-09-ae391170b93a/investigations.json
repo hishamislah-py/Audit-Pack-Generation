@@ -1,0 +1,43 @@
+[
+ {
+  "pack_id": "PACK-SC5A-PER-2026-09-ae391170b93a",
+  "exception_id": "EXC-SC5A-01",
+  "published": [
+   {
+    "investigation_id": "INV-EXC-SC5A-01-fae6067d9d23",
+    "investigation_mode": "tools",
+    "investigated_at": "2026-11-02T11:58:29+00:00",
+    "validation_status": "VALID",
+    "simulated": false,
+    "provider": "openai",
+    "model": "gpt-6-luna",
+    "findings_schema_version": "uc042-investigation-findings/1.2",
+    "overall_evidence_assessment": "PARTIALLY_SUFFICIENT",
+    "eligible": false,
+    "library_eligible": false,
+    "ineligible_reasons": [
+     "fails current validation rules (uc042-investigation-findings/1.4): C-01: a contradiction must name exactly two different compared evidence IDs"
+    ],
+    "registry": {
+     "seq": 7,
+     "record_type": "LEGACY_BASELINE_IMPORT",
+     "recorded_at": "2026-11-03T09:07:59+00:00",
+     "findings_sha256": "9e73f7cd7c394dbababb3cadfd9f660075618c94d022cfc16e6ce9126432c2ee",
+     "evidence_packet_sha256": "a31fade3ef2c9ce64727c34bcdc2985713e6fa4031d0e0c0f84ca9e2b629a64b",
+     "findings_schema_version": "uc042-investigation-findings/1.2",
+     "prompt_version": "uc042-investigator-prompt/2.0-tools",
+     "note": "Integrity baseline established at import time. It does not prove the contents of the artefact at its original publication time, which predates this registry."
+    }
+   }
+  ],
+  "not_published": [],
+  "active_jobs": []
+ },
+ {
+  "pack_id": "PACK-SC5A-PER-2026-09-ae391170b93a",
+  "exception_id": "EXC-SC5A-02",
+  "published": [],
+  "not_published": [],
+  "active_jobs": []
+ }
+]

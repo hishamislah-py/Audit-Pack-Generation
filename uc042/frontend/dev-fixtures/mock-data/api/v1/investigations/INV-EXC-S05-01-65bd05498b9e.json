@@ -1,0 +1,93 @@
+{
+ "investigation_id": "INV-EXC-S05-01-65bd05498b9e",
+ "pack_id": "PACK-S05-PER-2026-09-ddd0fdc8b731",
+ "exception_id": "EXC-S05-01",
+ "investigation_mode": "tools",
+ "investigated_at": "2026-11-03T05:41:22+00:00",
+ "investigation_status": "COMPLETED",
+ "validation_status": "VALID",
+ "overall_evidence_assessment": "INSUFFICIENT_EVIDENCE",
+ "investigation_summary": "The engine reports a GBP -812.40 bank-ledger difference for SGA-GBP-01 on each of 10 reconciliation dates from 2026-09-17 through 2026-09-30: each C08 result is FAIL, with timing items of 0.00 and residual unexplained difference of -812.40. The engine also reports a FAIL for zero discrepancy-log entries. A GBP 812.40 debit with reference “SETTLE 0417” appears on the 2026-09-17 statement and is reported by the engine as having no cash-book or other specified counterpart. The available evidence does not establish whether that debit is related to the recurring difference or what it represents. The internal reconciliation is a different measure and reports requirement and resource equal with a 0.00 difference; this does not contradict the external bank-ledger reconciliation or explain it.",
+ "exception_resolution": "NOT_RESOLVED_BY_INVESTIGATION",
+ "model": {
+  "provider": "openai",
+  "model": "gpt-6-luna",
+  "prompt_version": "uc042-investigator-prompt/2.2-tools",
+  "findings_schema_version": "uc042-investigation-findings/1.4",
+  "workflow_version": "uc042-investigation-graph/2.0-tools",
+  "simulated": false
+ },
+ "tool_summary": {
+  "limits": {
+   "max_input_tokens": 150000,
+   "max_records_per_call": 25,
+   "max_rounds": 4,
+   "max_tool_calls": 8,
+   "max_total_records": 160,
+   "total_timeout": 300.0
+  },
+  "llm_calls": 2,
+  "records_final": 48,
+  "records_initial": 47,
+  "status": "COMPLETED",
+  "stop_reason": "final_answer",
+  "tool_calls_requested": 3,
+  "tool_rounds": 1,
+  "tools_deduplicated": 0,
+  "tools_executed": 3,
+  "tools_refused_budget": 0,
+  "tools_rejected_or_failed": 0,
+  "tools_used": [
+   "get_cashbook_entries",
+   "get_reconciliation_evidence",
+   "follow_relationship"
+  ]
+ },
+ "classification_summary": {
+  "CONFLICTING_EVIDENCE": [],
+  "EVIDENCE_BACKED": [
+   "F-01",
+   "F-02",
+   "F-03",
+   "F-04",
+   "F-05"
+  ],
+  "HYPOTHESIS": [
+   "H-01"
+  ],
+  "INSUFFICIENT_EVIDENCE": [
+   "M-01",
+   "M-02",
+   "M-03"
+  ],
+  "deterministic_conflicts": [],
+  "evidence_gaps": {
+   "additional_gaps_identified_by_ai": [],
+   "engine_missing_evidence": [],
+   "searched_not_found": [
+    "M-01",
+    "M-02",
+    "M-03"
+   ]
+  },
+  "not_found_searches": [
+   "SEARCH-01",
+   "SEARCH-02",
+   "SEARCH-03"
+  ],
+  "unverified_candidate_relationships": []
+ },
+ "findings_sha256": "d29b075cad5a59295d95c089d8e612c03f563a4a41baff7285fa04503d9bc6d0",
+ "eligible": true,
+ "ineligible_reasons": [],
+ "registry": {
+  "seq": 4,
+  "record_type": "LEGACY_BASELINE_IMPORT",
+  "recorded_at": "2026-11-03T09:07:59+00:00",
+  "findings_sha256": "d29b075cad5a59295d95c089d8e612c03f563a4a41baff7285fa04503d9bc6d0",
+  "evidence_packet_sha256": "6d051344cdb9cfbd03b7ca1189daaef223f0edcb50d806929456906eb005ac85",
+  "findings_schema_version": "uc042-investigation-findings/1.4",
+  "prompt_version": "uc042-investigator-prompt/2.2-tools",
+  "note": "Integrity baseline established at import time. It does not prove the contents of the artefact at its original publication time, which predates this registry."
+ }
+}

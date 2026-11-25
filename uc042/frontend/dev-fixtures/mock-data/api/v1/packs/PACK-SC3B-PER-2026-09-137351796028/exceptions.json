@@ -1,0 +1,33 @@
+[
+ {
+  "exception_id": "EXC-SC3B-01",
+  "category": "C11-BATCH-ARITH",
+  "cause_category": "",
+  "severity": "High",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "",
+  "last_date": "",
+  "control_codes": [
+   "C11"
+  ],
+  "investigation_group_id": "",
+  "affected_result_ids": [
+   "C11-BATCH-ARITH|AQ-GBP-20260908"
+  ],
+  "evidence_ids": [
+   "IN-12:AQ-GBP-20260908",
+   "IN-13:SL-AQ-GBP-20260908-0001",
+   "IN-13:SL-AQ-GBP-20260908-0002",
+   "IN-13:SL-AQ-GBP-20260908-0003",
+   "IN-13:SL-AQ-GBP-20260908-0004"
+  ],
+  "root_cause": "C11-BATCH-ARITH|AQ-GBP-20260908",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ }
+]

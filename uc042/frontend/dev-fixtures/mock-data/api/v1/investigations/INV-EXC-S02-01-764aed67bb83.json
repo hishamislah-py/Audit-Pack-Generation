@@ -1,0 +1,104 @@
+{
+ "investigation_id": "INV-EXC-S02-01-764aed67bb83",
+ "pack_id": "PACK-S02-PER-2026-09-f3dfa52766bb",
+ "exception_id": "EXC-S02-01",
+ "investigation_mode": "tools",
+ "investigated_at": "2026-11-02T12:01:50+00:00",
+ "investigation_status": "COMPLETED",
+ "validation_status": "VALID",
+ "overall_evidence_assessment": "INSUFFICIENT_EVIDENCE",
+ "investigation_summary": "EXC-S02-01 concerns missing bank evidence for EUR safeguarding account SGA-EUR-01 on 2026-09-15. The packet and subsequent exact-reference searches do not provide that day's 17:00 bank confirmation, end-of-day statement, or bank entries. The firm's internal reconciliation and cash-book records, and its reported external reconciliation balance, describe what the firm recorded; they do not establish the bank's actual balance or the movement of funds. The relevant engine results remain INSUFFICIENT_EVIDENCE, and the available evidence does not establish what happened at the bank on the exception date.",
+ "exception_resolution": "NOT_RESOLVED_BY_INVESTIGATION",
+ "model": {
+  "provider": "openai",
+  "model": "gpt-6-luna",
+  "prompt_version": "uc042-investigator-prompt/2.0-tools",
+  "findings_schema_version": "uc042-investigation-findings/1.2",
+  "workflow_version": "uc042-investigation-graph/2.0-tools",
+  "simulated": false
+ },
+ "tool_summary": {
+  "limits": {
+   "max_input_tokens": 150000,
+   "max_records_per_call": 25,
+   "max_rounds": 4,
+   "max_tool_calls": 8,
+   "max_total_records": 160,
+   "total_timeout": 300.0
+  },
+  "llm_calls": 3,
+  "records_final": 27,
+  "records_initial": 14,
+  "status": "COMPLETED",
+  "stop_reason": "final_answer",
+  "tool_calls_requested": 7,
+  "tool_rounds": 2,
+  "tools_deduplicated": 0,
+  "tools_executed": 7,
+  "tools_refused_budget": 0,
+  "tools_rejected_or_failed": 0,
+  "tools_used": [
+   "get_reconciliation_evidence",
+   "get_settlement_batch",
+   "get_settlement_batch",
+   "search_bank_entries",
+   "search_bank_entries",
+   "search_bank_entries",
+   "search_bank_entries"
+  ]
+ },
+ "classification_summary": {
+  "CONFLICTING_EVIDENCE": [],
+  "EVIDENCE_BACKED": [
+   "F-01",
+   "F-02",
+   "F-03",
+   "F-04",
+   "F-05",
+   "F-06",
+   "F-07"
+  ],
+  "HYPOTHESIS": [],
+  "INSUFFICIENT_EVIDENCE": [
+   "M-01",
+   "M-02",
+   "M-03"
+  ],
+  "deterministic_conflicts": [],
+  "evidence_gaps": {
+   "additional_gaps_identified_by_ai": [],
+   "engine_missing_evidence": [
+    "M-01"
+   ],
+   "searched_not_found": [
+    "M-02",
+    "M-03"
+   ]
+  },
+  "not_found_searches": [
+   "SEARCH-01",
+   "SEARCH-02",
+   "SEARCH-03",
+   "SEARCH-05",
+   "SEARCH-06",
+   "SEARCH-08",
+   "SEARCH-09",
+   "SEARCH-10",
+   "SEARCH-11"
+  ],
+  "unverified_candidate_relationships": []
+ },
+ "findings_sha256": "1b656bb47ad7a9a69b489e893c91b99f56ae6ade91c422df228092174b86dbe2",
+ "eligible": true,
+ "ineligible_reasons": [],
+ "registry": {
+  "seq": 1,
+  "record_type": "LEGACY_BASELINE_IMPORT",
+  "recorded_at": "2026-11-03T09:07:59+00:00",
+  "findings_sha256": "1b656bb47ad7a9a69b489e893c91b99f56ae6ade91c422df228092174b86dbe2",
+  "evidence_packet_sha256": "21be458e37e5d72e298dd0a26638a507382a4068934a77a1935f26c452bcdf0c",
+  "findings_schema_version": "uc042-investigation-findings/1.2",
+  "prompt_version": "uc042-investigator-prompt/2.0-tools",
+  "note": "Integrity baseline established at import time. It does not prove the contents of the artefact at its original publication time, which predates this registry."
+ }
+}

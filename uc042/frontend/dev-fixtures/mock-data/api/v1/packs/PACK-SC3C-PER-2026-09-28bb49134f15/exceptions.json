@@ -1,0 +1,137 @@
+[
+ {
+  "exception_id": "EXC-SC3C-01",
+  "category": "Unexplained bank-ledger difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "NOT_EVIDENCED",
+  "account_id": "SGA-GBP-01",
+  "currency": "GBP",
+  "amount": "-4.50",
+  "first_date": "2026-09-08",
+  "last_date": "2026-09-30",
+  "control_codes": [
+   "C06/C08",
+   "C08"
+  ],
+  "investigation_group_id": "GRP-SC3C-01",
+  "affected_result_ids": [
+   "C08-DIFFERENCE|2026-09-08/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-09/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-10/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-11/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-14/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-15/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-16/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-17/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-18/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-21/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-22/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-23/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-24/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-25/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-28/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-29/SGA-GBP-01",
+   "C08-DIFFERENCE|2026-09-30/SGA-GBP-01",
+   "DISC-LOG|SGA-GBP-01 from 2026-09-08"
+  ],
+  "evidence_ids": [
+   "IN-06:ERL-SGA-GBP-01-20260908",
+   "IN-07:ST-SGA-GBP-01-20260908-1700",
+   "IN-06:ERL-SGA-GBP-01-20260909",
+   "IN-07:ST-SGA-GBP-01-20260909-1700",
+   "IN-06:ERL-SGA-GBP-01-20260910",
+   "IN-07:ST-SGA-GBP-01-20260910-1700",
+   "IN-06:ERL-SGA-GBP-01-20260911",
+   "IN-07:ST-SGA-GBP-01-20260911-1700",
+   "IN-06:ERL-SGA-GBP-01-20260914",
+   "IN-07:ST-SGA-GBP-01-20260914-1700",
+   "IN-06:ERL-SGA-GBP-01-20260915",
+   "IN-07:ST-SGA-GBP-01-20260915-1700",
+   "IN-06:ERL-SGA-GBP-01-20260916",
+   "IN-07:ST-SGA-GBP-01-20260916-1700",
+   "IN-06:ERL-SGA-GBP-01-20260917",
+   "IN-07:ST-SGA-GBP-01-20260917-1700",
+   "IN-06:ERL-SGA-GBP-01-20260918",
+   "IN-07:ST-SGA-GBP-01-20260918-1700",
+   "IN-06:ERL-SGA-GBP-01-20260921",
+   "IN-07:ST-SGA-GBP-01-20260921-1700",
+   "IN-06:ERL-SGA-GBP-01-20260922",
+   "IN-07:ST-SGA-GBP-01-20260922-1700",
+   "IN-06:ERL-SGA-GBP-01-20260923",
+   "IN-07:ST-SGA-GBP-01-20260923-1700",
+   "IN-06:ERL-SGA-GBP-01-20260924",
+   "IN-07:ST-SGA-GBP-01-20260924-1700",
+   "IN-06:ERL-SGA-GBP-01-20260925",
+   "IN-07:ST-SGA-GBP-01-20260925-1700",
+   "IN-06:ERL-SGA-GBP-01-20260928",
+   "IN-07:ST-SGA-GBP-01-20260928-1700",
+   "IN-06:ERL-SGA-GBP-01-20260929",
+   "IN-07:ST-SGA-GBP-01-20260929-1700",
+   "IN-06:ERL-SGA-GBP-01-20260930",
+   "IN-07:ST-SGA-GBP-01-20260930-1700",
+   "IN-14"
+  ],
+  "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-09-08|-4.50",
+  "flags": "OWN_FUNDS_REQUIRED (CASS 15.8.57R: ledger shows a greater need than the bank holds); NO_INVESTIGATION_LOGGED",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC3C-02",
+  "category": "C11-BATCH-BANK",
+  "cause_category": "",
+  "severity": "High",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "",
+  "last_date": "",
+  "control_codes": [
+   "C11"
+  ],
+  "investigation_group_id": "GRP-SC3C-01",
+  "affected_result_ids": [
+   "C11-BATCH-BANK|AQ-GBP-20260908"
+  ],
+  "evidence_ids": [
+   "IN-12:AQ-GBP-20260908",
+   "IN-09:BE-GBP-0908-AQ1"
+  ],
+  "root_cause": "C11-BATCH-BANK|AQ-GBP-20260908",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC3C-03",
+  "category": "CASH-BANK-LINK",
+  "cause_category": "",
+  "severity": "High",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "",
+  "last_date": "",
+  "control_codes": [
+   "C05/C07"
+  ],
+  "investigation_group_id": "GRP-SC3C-01",
+  "affected_result_ids": [
+   "CASH-BANK-LINK|LE-GBP-0908-0003"
+  ],
+  "evidence_ids": [
+   "IN-10:LE-GBP-0908-0003",
+   "IN-09:BE-GBP-0908-AQ1"
+  ],
+  "root_cause": "CASH-BANK-LINK|LE-GBP-0908-0003",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ }
+]

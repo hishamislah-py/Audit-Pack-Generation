@@ -1,0 +1,32 @@
+[
+ {
+  "exception_id": "EXC-SC2-01",
+  "category": "Bank-ledger difference (explained by timing evidence, awaiting human confirmation)",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "TIMING_EVIDENCED",
+  "account_id": "SGA-GBP-01",
+  "currency": "GBP",
+  "amount": "2868.50",
+  "first_date": "2026-09-15",
+  "last_date": "2026-09-15",
+  "control_codes": [
+   "C08"
+  ],
+  "investigation_group_id": "",
+  "affected_result_ids": [
+   "C08-DIFFERENCE|2026-09-15/SGA-GBP-01"
+  ],
+  "evidence_ids": [
+   "IN-06:ERL-SGA-GBP-01-20260915",
+   "IN-07:ST-SGA-GBP-01-20260915-1700",
+   "IN-10:LE-GBP-0915-0005",
+   "IN-09:BE-GBP-0916-T01"
+  ],
+  "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-09-15|2868.50",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ }
+]

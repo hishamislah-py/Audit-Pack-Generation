@@ -1,0 +1,37 @@
+{
+ "investigation_id": "INV-EXC-SC2-01-eb2021ac50e9",
+ "pack_id": "PACK-SC2-PER-2026-09-aaca8a8b7194",
+ "exception_id": "EXC-SC2-01",
+ "investigation_mode": "fixed",
+ "investigated_at": "2026-11-02T11:26:35+00:00",
+ "investigation_status": "COMPLETED",
+ "validation_status": "VALID",
+ "overall_evidence_assessment": "PARTIALLY_SUFFICIENT",
+ "investigation_summary": "For EXC-SC2-01, the engine reports a GBP 2,868.50 C08 bank-ledger difference for 2026-09-15, with outcome FAIL and evidence status TIMING_EVIDENCED; the result remains awaiting human confirmation and is not resolved. The cash book records a scheme settlement for that amount on 15 September, and the bank statement records a debit with the same reference on 16 September. This supports the reported timing explanation, but the firm's discrepancy-log status and the engine's exception status differ, and underlying settlement instruction and client-allocation evidence are not available in the packet.",
+ "exception_resolution": "NOT_RESOLVED_BY_INVESTIGATION",
+ "model": {
+  "provider": "openai",
+  "model": "gpt-6-luna",
+  "prompt_version": "uc042-investigator-prompt/1.0",
+  "findings_schema_version": "uc042-investigation-findings/1.1",
+  "workflow_version": "uc042-investigation-graph/1.1",
+  "simulated": false
+ },
+ "tool_summary": null,
+ "classification_summary": null,
+ "findings_sha256": "a265b9bd490927be413c65d6f6b1b71bdab3d40d3a0265231f95c8377adee072",
+ "eligible": false,
+ "ineligible_reasons": [
+  "fails current validation rules (uc042-investigation-findings/1.4): C-01: a contradiction must name exactly two different compared evidence IDs"
+ ],
+ "registry": {
+  "seq": 6,
+  "record_type": "LEGACY_BASELINE_IMPORT",
+  "recorded_at": "2026-11-03T09:07:59+00:00",
+  "findings_sha256": "a265b9bd490927be413c65d6f6b1b71bdab3d40d3a0265231f95c8377adee072",
+  "evidence_packet_sha256": "f0393c923d8ea2610d02e432e190120e26d6c4d96f3885151f91bfd5520b23d6",
+  "findings_schema_version": "uc042-investigation-findings/1.1",
+  "prompt_version": "uc042-investigator-prompt/1.0",
+  "note": "Integrity baseline established at import time. It does not prove the contents of the artefact at its original publication time, which predates this registry."
+ }
+}

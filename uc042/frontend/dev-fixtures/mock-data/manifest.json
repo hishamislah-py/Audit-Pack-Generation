@@ -1,0 +1,41 @@
+{
+ "captured_at": "2026-11-03T09:08:51+00:00",
+ "source": "Real UC-042 FastAPI responses (September 2026 synthetic scenario packs), captured read-only with the offline provider.",
+ "packs": [
+  "PACK-S01-PER-2026-09-577b06a1d894",
+  "PACK-S02-PER-2026-09-f3dfa52766bb",
+  "PACK-S05-PER-2026-09-ddd0fdc8b731",
+  "PACK-SC2-PER-2026-09-aaca8a8b7194",
+  "PACK-SC3B-PER-2026-09-137351796028",
+  "PACK-SC3C-PER-2026-09-28bb49134f15",
+  "PACK-SC5A-PER-2026-09-ae391170b93a",
+  "PACK-SC5C-PER-2026-09-eaac7e6b1444",
+  "PACK-SC5D-PER-2026-09-2c5a7ae2e160"
+ ],
+ "investigations": [
+  "INV-EXC-S02-01-764aed67bb83",
+  "INV-EXC-S05-01-2b3defdae13f",
+  "INV-EXC-S05-01-51ba0f94bf82",
+  "INV-EXC-S05-01-65bd05498b9e",
+  "INV-EXC-SC2-01-389ba1328c3c",
+  "INV-EXC-SC2-01-eb2021ac50e9",
+  "INV-EXC-SC5A-01-fae6067d9d23"
+ ],
+ "previews": [
+  "PACK-S01-PER-2026-09-577b06a1d894",
+  "PACK-S02-PER-2026-09-f3dfa52766bb",
+  "PACK-S05-PER-2026-09-ddd0fdc8b731",
+  "PACK-SC2-PER-2026-09-aaca8a8b7194",
+  "PACK-SC3B-PER-2026-09-137351796028",
+  "PACK-SC3C-PER-2026-09-28bb49134f15",
+  "PACK-SC5A-PER-2026-09-ae391170b93a",
+  "PACK-SC5C-PER-2026-09-eaac7e6b1444",
+  "PACK-SC5D-PER-2026-09-2c5a7ae2e160"
+ ],
+ "live_closing_summary_preview": "PACK-S05-PER-2026-09-ddd0fdc8b731",
+ "notes": [
+  "Nine packs are nine TEST SCENARIOS for September 2026, not nine months.",
+  "Previews other than the live one carry an UNAVAILABLE closing summary (offline provider).",
+  "Investigation eligibility reflects a legacy baseline import into a temporary registry."
+ ]
+}

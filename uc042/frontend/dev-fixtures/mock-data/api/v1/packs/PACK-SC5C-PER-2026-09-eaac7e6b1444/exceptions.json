@@ -1,0 +1,465 @@
+[
+ {
+  "exception_id": "EXC-SC5C-01",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-09",
+  "last_date": "2026-09-09",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-09/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260909"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-09/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-02",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-10",
+  "last_date": "2026-09-10",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-10/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260910"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-10/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-03",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-11",
+  "last_date": "2026-09-11",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-11/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260911"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-11/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-04",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-14",
+  "last_date": "2026-09-14",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-14/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260914"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-14/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-05",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-15",
+  "last_date": "2026-09-15",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-15/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260915"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-15/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-06",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-16",
+  "last_date": "2026-09-16",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-16/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260916"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-16/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-07",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-17",
+  "last_date": "2026-09-17",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-17/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260917"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-17/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-08",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-18",
+  "last_date": "2026-09-18",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-18/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260918"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-18/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-09",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-21",
+  "last_date": "2026-09-21",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-21/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260921"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-21/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-10",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-22",
+  "last_date": "2026-09-22",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-22/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260922"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-22/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-11",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-23",
+  "last_date": "2026-09-23",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-23/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260923"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-23/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-12",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-24",
+  "last_date": "2026-09-24",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-24/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260924"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-24/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-13",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-25",
+  "last_date": "2026-09-25",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-25/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260925"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-25/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-14",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-28",
+  "last_date": "2026-09-28",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-28/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260928"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-28/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-15",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-29",
+  "last_date": "2026-09-29",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-29/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260929"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-29/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-16",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-30",
+  "last_date": "2026-09-30",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-30/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260930"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-30/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5C-17",
+  "category": "CBAL-ROLLFWD",
+  "cause_category": "",
+  "severity": "High",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "",
+  "last_date": "",
+  "control_codes": [
+   "C04"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "CBAL-ROLLFWD|GBP/C0002 2026-09-09"
+  ],
+  "evidence_ids": [
+   "IN-03:CBS-20260908-C0002-GBP",
+   "IN-03:CBS-20260909-C0002-GBP",
+   "IN-11:TX-0909-00001",
+   "IN-11:TX-0909-00012",
+   "IN-11:TX-0909-0R001"
+  ],
+  "root_cause": "CBAL-ROLLFWD|GBP/C0002 2026-09-09",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ }
+]

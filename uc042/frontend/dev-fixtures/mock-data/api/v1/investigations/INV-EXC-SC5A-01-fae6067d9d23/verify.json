@@ -1,0 +1,11 @@
+{
+ "investigation_id": "INV-EXC-SC5A-01-fae6067d9d23",
+ "artefact_verified": true,
+ "artefact_problems": [],
+ "registry_verified": true,
+ "registry_problems": [],
+ "eligible": false,
+ "ineligible_reasons": [
+  "fails current validation rules (uc042-investigation-findings/1.4): C-01: a contradiction must name exactly two different compared evidence IDs"
+ ]
+}

@@ -1,0 +1,66 @@
+{
+ "exception": {
+  "exception_id": "EXC-SC5C-17",
+  "category": "CBAL-ROLLFWD",
+  "cause_category": "",
+  "severity": "High",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "",
+  "last_date": "",
+  "control_codes": [
+   "C04"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "CBAL-ROLLFWD|GBP/C0002 2026-09-09"
+  ],
+  "evidence_ids": [
+   "IN-03:CBS-20260908-C0002-GBP",
+   "IN-03:CBS-20260909-C0002-GBP",
+   "IN-11:TX-0909-00001",
+   "IN-11:TX-0909-00012",
+   "IN-11:TX-0909-0R001"
+  ],
+  "root_cause": "CBAL-ROLLFWD|GBP/C0002 2026-09-09",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ "affected_results": [
+  {
+   "computed": "43719.60",
+   "evidence_ids": [
+    "IN-03:CBS-20260908-C0002-GBP",
+    "IN-03:CBS-20260909-C0002-GBP",
+    "IN-11:TX-0909-00001",
+    "IN-11:TX-0909-00012",
+    "IN-11:TX-0909-0R001"
+   ],
+   "evidence_refs": "IN-03:client_balance_snapshots_2026-09.csv#L75; IN-03:client_balance_snapshots_2026-09.csv#L87; IN-11:transactions_2026-09.csv#L122; IN-11:transactions_2026-09.csv#L130; IN-11:transactions_2026-09.csv#L134",
+   "evidence_status": "",
+   "exception_id": "EXC-SC5C-17",
+   "investigation_group_id": "GRP-SC5C-01",
+   "note": "previous balance + 3 transaction(s)",
+   "outcome": "FAIL",
+   "reported": "43779.60",
+   "result_id": "CBAL-ROLLFWD|GBP/C0002 2026-09-09",
+   "root_cause": "CBAL-ROLLFWD|GBP/C0002 2026-09-09",
+   "scope": "GBP/C0002 2026-09-09",
+   "structured": {},
+   "check_id": "CBAL-ROLLFWD",
+   "control_code": "C04",
+   "control_name": "Requirement"
+  }
+ ],
+ "investigations": {
+  "published": [],
+  "not_published": [],
+  "active_jobs": [],
+  "pack_id": "PACK-SC5C-PER-2026-09-eaac7e6b1444",
+  "exception_id": "EXC-SC5C-17"
+ }
+}

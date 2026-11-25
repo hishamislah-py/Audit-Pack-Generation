@@ -1,0 +1,96 @@
+{
+ "investigation_id": "INV-EXC-SC5A-01-fae6067d9d23",
+ "pack_id": "PACK-SC5A-PER-2026-09-ae391170b93a",
+ "exception_id": "EXC-SC5A-01",
+ "investigation_mode": "tools",
+ "investigated_at": "2026-11-02T11:58:29+00:00",
+ "investigation_status": "COMPLETED",
+ "validation_status": "VALID",
+ "overall_evidence_assessment": "PARTIALLY_SUFFICIENT",
+ "investigation_summary": "The engine reports EXC-SC5A-01 as a FAIL for batch SB-GBP-20260915, with computed and reported values both shown as -2868.50 and a note that settlement line 0003 does not match transaction TX-0915-00009. The batch, bank entry and cash-book records are available, but the referenced transaction is not found, so the line cannot be validated against its transaction record. A related C0002 balance roll-forward exception is also reported; the packet does not establish that it is linked to the missing transaction.",
+ "exception_resolution": "NOT_RESOLVED_BY_INVESTIGATION",
+ "model": {
+  "provider": "openai",
+  "model": "gpt-6-luna",
+  "prompt_version": "uc042-investigator-prompt/2.0-tools",
+  "findings_schema_version": "uc042-investigation-findings/1.2",
+  "workflow_version": "uc042-investigation-graph/2.0-tools",
+  "simulated": false
+ },
+ "tool_summary": {
+  "limits": {
+   "max_input_tokens": 150000,
+   "max_records_per_call": 25,
+   "max_rounds": 4,
+   "max_tool_calls": 8,
+   "max_total_records": 160,
+   "total_timeout": 300.0
+  },
+  "llm_calls": 2,
+  "records_final": 20,
+  "records_initial": 20,
+  "status": "COMPLETED",
+  "stop_reason": "final_answer",
+  "tool_calls_requested": 1,
+  "tool_rounds": 1,
+  "tools_deduplicated": 0,
+  "tools_executed": 1,
+  "tools_refused_budget": 0,
+  "tools_rejected_or_failed": 0,
+  "tools_used": [
+   "get_settlement_batch"
+  ]
+ },
+ "classification_summary": {
+  "CONFLICTING_EVIDENCE": [
+   "C-01"
+  ],
+  "EVIDENCE_BACKED": [
+   "F-01",
+   "F-02",
+   "F-03",
+   "F-04"
+  ],
+  "HYPOTHESIS": [
+   "H-01",
+   "H-02"
+  ],
+  "INSUFFICIENT_EVIDENCE": [
+   "M-01",
+   "M-02"
+  ],
+  "deterministic_conflicts": [
+   "CONF-01"
+  ],
+  "evidence_gaps": {
+   "additional_gaps_identified_by_ai": [],
+   "engine_missing_evidence": [],
+   "searched_not_found": [
+    "M-01",
+    "M-02"
+   ]
+  },
+  "not_found_searches": [
+   "SEARCH-01",
+   "SEARCH-05"
+  ],
+  "unverified_candidate_relationships": [
+   "CAND-SC5A-01"
+  ]
+ },
+ "findings_sha256": "9e73f7cd7c394dbababb3cadfd9f660075618c94d022cfc16e6ce9126432c2ee",
+ "eligible": false,
+ "ineligible_reasons": [
+  "fails current validation rules (uc042-investigation-findings/1.4): C-01: a contradiction must name exactly two different compared evidence IDs"
+ ],
+ "registry": {
+  "seq": 7,
+  "record_type": "LEGACY_BASELINE_IMPORT",
+  "recorded_at": "2026-11-03T09:07:59+00:00",
+  "findings_sha256": "9e73f7cd7c394dbababb3cadfd9f660075618c94d022cfc16e6ce9126432c2ee",
+  "evidence_packet_sha256": "a31fade3ef2c9ce64727c34bcdc2985713e6fa4031d0e0c0f84ca9e2b629a64b",
+  "findings_schema_version": "uc042-investigation-findings/1.2",
+  "prompt_version": "uc042-investigator-prompt/2.0-tools",
+  "note": "Integrity baseline established at import time. It does not prove the contents of the artefact at its original publication time, which predates this registry."
+ }
+}

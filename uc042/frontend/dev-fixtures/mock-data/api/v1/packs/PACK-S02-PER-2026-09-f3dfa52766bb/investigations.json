@@ -1,0 +1,41 @@
+[
+ {
+  "pack_id": "PACK-S02-PER-2026-09-f3dfa52766bb",
+  "exception_id": "EXC-S02-01",
+  "published": [
+   {
+    "investigation_id": "INV-EXC-S02-01-764aed67bb83",
+    "investigation_mode": "tools",
+    "investigated_at": "2026-11-02T12:01:50+00:00",
+    "validation_status": "VALID",
+    "simulated": false,
+    "provider": "openai",
+    "model": "gpt-6-luna",
+    "findings_schema_version": "uc042-investigation-findings/1.2",
+    "overall_evidence_assessment": "INSUFFICIENT_EVIDENCE",
+    "eligible": true,
+    "library_eligible": true,
+    "ineligible_reasons": [],
+    "registry": {
+     "seq": 1,
+     "record_type": "LEGACY_BASELINE_IMPORT",
+     "recorded_at": "2026-11-03T09:07:59+00:00",
+     "findings_sha256": "1b656bb47ad7a9a69b489e893c91b99f56ae6ade91c422df228092174b86dbe2",
+     "evidence_packet_sha256": "21be458e37e5d72e298dd0a26638a507382a4068934a77a1935f26c452bcdf0c",
+     "findings_schema_version": "uc042-investigation-findings/1.2",
+     "prompt_version": "uc042-investigator-prompt/2.0-tools",
+     "note": "Integrity baseline established at import time. It does not prove the contents of the artefact at its original publication time, which predates this registry."
+    }
+   }
+  ],
+  "not_published": [
+   {
+    "record": "2026-11-02T115736+0000-10c4a727.json",
+    "investigation_status": "COMPLETED",
+    "validation_status": "REJECTED",
+    "failure_reason": ""
+   }
+  ],
+  "active_jobs": []
+ }
+]

@@ -1,0 +1,66 @@
+[
+ {
+  "exception_id": "EXC-SC5A-01",
+  "category": "C11-BATCH-ARITH",
+  "cause_category": "",
+  "severity": "High",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "",
+  "last_date": "",
+  "control_codes": [
+   "C11"
+  ],
+  "investigation_group_id": "",
+  "affected_result_ids": [
+   "C11-BATCH-ARITH|SB-GBP-20260915"
+  ],
+  "evidence_ids": [
+   "IN-12:SB-GBP-20260915",
+   "IN-13:SL-SB-GBP-20260915-0001",
+   "IN-13:SL-SB-GBP-20260915-0002",
+   "IN-13:SL-SB-GBP-20260915-0003",
+   "IN-13:SL-SB-GBP-20260915-0004",
+   "IN-13:SL-SB-GBP-20260915-0005",
+   "IN-13:SL-SB-GBP-20260915-0006"
+  ],
+  "root_cause": "C11-BATCH-ARITH|SB-GBP-20260915",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ {
+  "exception_id": "EXC-SC5A-02",
+  "category": "CBAL-ROLLFWD",
+  "cause_category": "",
+  "severity": "High",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "",
+  "last_date": "",
+  "control_codes": [
+   "C04"
+  ],
+  "investigation_group_id": "",
+  "affected_result_ids": [
+   "CBAL-ROLLFWD|GBP/C0002 2026-09-15"
+  ],
+  "evidence_ids": [
+   "IN-03:CBS-20260914-C0002-GBP",
+   "IN-03:CBS-20260915-C0002-GBP",
+   "IN-11:TX-0915-00006",
+   "IN-11:TX-0915-00010",
+   "IN-11:TX-0915-00011"
+  ],
+  "root_cause": "CBAL-ROLLFWD|GBP/C0002 2026-09-15",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ }
+]

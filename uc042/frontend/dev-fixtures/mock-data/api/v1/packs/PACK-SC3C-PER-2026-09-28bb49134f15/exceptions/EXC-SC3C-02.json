@@ -1,0 +1,67 @@
+{
+ "exception": {
+  "exception_id": "EXC-SC3C-02",
+  "category": "C11-BATCH-BANK",
+  "cause_category": "",
+  "severity": "High",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "",
+  "last_date": "",
+  "control_codes": [
+   "C11"
+  ],
+  "investigation_group_id": "GRP-SC3C-01",
+  "affected_result_ids": [
+   "C11-BATCH-BANK|AQ-GBP-20260908"
+  ],
+  "evidence_ids": [
+   "IN-12:AQ-GBP-20260908",
+   "IN-09:BE-GBP-0908-AQ1"
+  ],
+  "root_cause": "C11-BATCH-BANK|AQ-GBP-20260908",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ "affected_results": [
+  {
+   "computed": "9954.50",
+   "evidence_ids": [
+    "IN-12:AQ-GBP-20260908",
+    "IN-09:BE-GBP-0908-AQ1"
+   ],
+   "evidence_refs": "IN-12:settlement_batches_2026-09.csv#L22; IN-09:bank_statement_entries_2026-09.csv#L63",
+   "evidence_status": "",
+   "exception_id": "EXC-SC3C-02",
+   "investigation_group_id": "GRP-SC3C-01",
+   "note": "matched by reference, then amount compared",
+   "outcome": "FAIL",
+   "reported": "9950.00",
+   "result_id": "C11-BATCH-BANK|AQ-GBP-20260908",
+   "root_cause": "C11-BATCH-BANK|AQ-GBP-20260908",
+   "scope": "AQ-GBP-20260908",
+   "structured": {
+    "bank_entry_id": "BE-GBP-0908-AQ1",
+    "booking_date": "2026-09-08",
+    "booking_lag_business_days": 0,
+    "settlement_date": "2026-09-08",
+    "timing_status": "INFORMATIONAL",
+    "within_one_business_day_allowance": true
+   },
+   "check_id": "C11-BATCH-BANK",
+   "control_code": "C11",
+   "control_name": "Settlement"
+  }
+ ],
+ "investigations": {
+  "published": [],
+  "not_published": [],
+  "active_jobs": [],
+  "pack_id": "PACK-SC3C-PER-2026-09-28bb49134f15",
+  "exception_id": "EXC-SC3C-02"
+ }
+}

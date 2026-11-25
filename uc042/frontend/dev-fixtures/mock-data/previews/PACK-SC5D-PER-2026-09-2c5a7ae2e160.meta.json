@@ -1,0 +1,72 @@
+{
+ "preview": {
+  "preview_id": "PV-227b6ceb41ba1cd9dd9576ea",
+  "selections_version": 1,
+  "snapshot_sha256": "db7dd06ab492269b13769214766133cd4146cee72cc9e22409d2db6e347f6723",
+  "inputs_fingerprint": "4c4861e57de5db32dd6c5991c165ad54798729c6026138bc9b39f7315e58b3d1",
+  "preview_final_pack_id": "PREVIEW-SC5D-PER-2026-09-db7dd06ab492",
+  "preview_content_sha256": "6ffb632978e0bddb719db8e49350c5a29755fb46aea51985095a2864f498bf8c",
+  "closing_summary": {
+   "created_at": "2026-11-03T09:08:46+00:00",
+   "failure": {
+    "detail": "[unsupported_provider] provider 'offline-simulated' does not support structured closing summaries (use UC042_LLM_PROVIDER=openai)",
+    "kind": "unsupported_provider"
+   },
+   "model": null,
+   "provider": null,
+   "sha256": "c51193b75f352ec378135e7778b97b2e925c7aacdf4cc7b644cf85a8ffa95349",
+   "status": "UNAVAILABLE",
+   "unavailable_reason": "closing summary generation failed (unsupported_provider)"
+  },
+  "created_at": "2026-11-03T09:08:46+00:00"
+ },
+ "selections": [
+  {
+   "exception_id": "EXC-SC5D-01",
+   "inclusion": "NOT_INVESTIGATED",
+   "investigation_id": null,
+   "reason": ""
+  },
+  {
+   "exception_id": "EXC-SC5D-02",
+   "inclusion": "NOT_INVESTIGATED",
+   "investigation_id": null,
+   "reason": ""
+  },
+  {
+   "exception_id": "EXC-SC5D-03",
+   "inclusion": "NOT_INVESTIGATED",
+   "investigation_id": null,
+   "reason": ""
+  }
+ ],
+ "readiness": {
+  "ready": true,
+  "blockers": [],
+  "warnings": [
+   {
+    "code": "NOT_INVESTIGATED",
+    "detail": "EXC-SC5D-01 will be reported as not investigated"
+   },
+   {
+    "code": "NOT_INVESTIGATED",
+    "detail": "EXC-SC5D-02 will be reported as not investigated"
+   },
+   {
+    "code": "NOT_INVESTIGATED",
+    "detail": "EXC-SC5D-03 will be reported as not investigated"
+   },
+   {
+    "code": "CLOSING_SUMMARY_UNAVAILABLE",
+    "detail": "the AI closing summary could not be generated: closing summary generation failed (unsupported_provider). GENERATE requires acknowledging this."
+   }
+  ],
+  "info": [
+   {
+    "code": "UNRESOLVED_EXCEPTIONS",
+    "detail": "3 exception(s) are unresolved and will appear as UNRESOLVED"
+   }
+  ]
+ },
+ "acknowledgement_text": "Generating this pack does not resolve any exception, confirm any hypothesis or establish compliance. Unresolved exceptions will appear as UNRESOLVED."
+}

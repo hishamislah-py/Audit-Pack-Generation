@@ -1,0 +1,66 @@
+{
+ "exception": {
+  "exception_id": "EXC-SC3B-01",
+  "category": "C11-BATCH-ARITH",
+  "cause_category": "",
+  "severity": "High",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "",
+  "last_date": "",
+  "control_codes": [
+   "C11"
+  ],
+  "investigation_group_id": "",
+  "affected_result_ids": [
+   "C11-BATCH-ARITH|AQ-GBP-20260908"
+  ],
+  "evidence_ids": [
+   "IN-12:AQ-GBP-20260908",
+   "IN-13:SL-AQ-GBP-20260908-0001",
+   "IN-13:SL-AQ-GBP-20260908-0002",
+   "IN-13:SL-AQ-GBP-20260908-0003",
+   "IN-13:SL-AQ-GBP-20260908-0004"
+  ],
+  "root_cause": "C11-BATCH-ARITH|AQ-GBP-20260908",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ "affected_results": [
+  {
+   "computed": "10000.00",
+   "evidence_ids": [
+    "IN-12:AQ-GBP-20260908",
+    "IN-13:SL-AQ-GBP-20260908-0001",
+    "IN-13:SL-AQ-GBP-20260908-0002",
+    "IN-13:SL-AQ-GBP-20260908-0003",
+    "IN-13:SL-AQ-GBP-20260908-0004"
+   ],
+   "evidence_refs": "IN-12:settlement_batches_2026-09.csv#L22; IN-13:settlement_lines_2026-09.csv#L97-L100",
+   "evidence_status": "",
+   "exception_id": "EXC-SC3B-01",
+   "investigation_group_id": "",
+   "note": "FEE lines 0.00 != fees 45.50; signed lines 10000.00 != signed net 9954.50",
+   "outcome": "FAIL",
+   "reported": "9954.50",
+   "result_id": "C11-BATCH-ARITH|AQ-GBP-20260908",
+   "root_cause": "C11-BATCH-ARITH|AQ-GBP-20260908",
+   "scope": "AQ-GBP-20260908",
+   "structured": {},
+   "check_id": "C11-BATCH-ARITH",
+   "control_code": "C11",
+   "control_name": "Settlement"
+  }
+ ],
+ "investigations": {
+  "published": [],
+  "not_published": [],
+  "active_jobs": [],
+  "pack_id": "PACK-SC3B-PER-2026-09-137351796028",
+  "exception_id": "EXC-SC3B-01"
+ }
+}

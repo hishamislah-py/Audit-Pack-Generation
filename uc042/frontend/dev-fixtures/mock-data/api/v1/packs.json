@@ -1,0 +1,300 @@
+[
+ {
+  "pack_id": "PACK-S01-PER-2026-09-577b06a1d894",
+  "verified": true,
+  "summary": {
+   "pack_id": "PACK-S01-PER-2026-09-577b06a1d894",
+   "pack_content_sha256": "577b06a1d8944cbb8bc5fd0c5aace5cb891f707daa3e72ead35d85e3dee81612",
+   "period_id": "PER-2026-09",
+   "reporting_period": {
+    "end": "2026-09-30",
+    "period_id": "PER-2026-09",
+    "start": "2026-09-01"
+   },
+   "scenario_id": "S01",
+   "engine_case_status": "CLEAN",
+   "evidence_completeness": "COMPLETE",
+   "exceptions": {
+    "by_severity": {},
+    "open": 0,
+    "total": 0
+   },
+   "control_summary": "ALL_PASSED_OR_NOT_APPLICABLE",
+   "outcomes": {
+    "NOT_APPLICABLE": 88,
+    "PASS": 1798
+   },
+   "missing_evidence_items": 0,
+   "pack_review_status": "NOT_REVIEWED"
+  },
+  "problem": null
+ },
+ {
+  "pack_id": "PACK-S02-PER-2026-09-f3dfa52766bb",
+  "verified": true,
+  "summary": {
+   "pack_id": "PACK-S02-PER-2026-09-f3dfa52766bb",
+   "pack_content_sha256": "f3dfa52766bb260916a148f2826a46cfecc26474143e192beb61984d5b20e63d",
+   "period_id": "PER-2026-09",
+   "reporting_period": {
+    "end": "2026-09-30",
+    "period_id": "PER-2026-09",
+    "start": "2026-09-01"
+   },
+   "scenario_id": "S02",
+   "engine_case_status": "EVIDENCE_INCOMPLETE",
+   "evidence_completeness": "INCOMPLETE",
+   "exceptions": {
+    "by_severity": {
+     "Critical": 1
+    },
+    "open": 1,
+    "total": 1
+   },
+   "control_summary": "NOT_FULLY_ASSESSED",
+   "outcomes": {
+    "INSUFFICIENT_EVIDENCE": 13,
+    "NOT_APPLICABLE": 87,
+    "PASS": 1783
+   },
+   "missing_evidence_items": 1,
+   "pack_review_status": "NOT_REVIEWED"
+  },
+  "problem": null
+ },
+ {
+  "pack_id": "PACK-S05-PER-2026-09-ddd0fdc8b731",
+  "verified": true,
+  "summary": {
+   "pack_id": "PACK-S05-PER-2026-09-ddd0fdc8b731",
+   "pack_content_sha256": "ddd0fdc8b731801bd1ae43f502085b566501d1706fb792344cafe831a172f5d5",
+   "period_id": "PER-2026-09",
+   "reporting_period": {
+    "end": "2026-09-30",
+    "period_id": "PER-2026-09",
+    "start": "2026-09-01"
+   },
+   "scenario_id": "S05",
+   "engine_case_status": "EXCEPTIONS_OPEN",
+   "evidence_completeness": "COMPLETE",
+   "exceptions": {
+    "by_severity": {
+     "Critical": 1,
+     "High": 1
+    },
+    "open": 2,
+    "total": 2
+   },
+   "control_summary": "FAILURES_PRESENT",
+   "outcomes": {
+    "FAIL": 13,
+    "NOT_APPLICABLE": 78,
+    "PASS": 1796
+   },
+   "missing_evidence_items": 0,
+   "pack_review_status": "NOT_REVIEWED"
+  },
+  "problem": null
+ },
+ {
+  "pack_id": "PACK-SC2-PER-2026-09-aaca8a8b7194",
+  "verified": true,
+  "summary": {
+   "pack_id": "PACK-SC2-PER-2026-09-aaca8a8b7194",
+   "pack_content_sha256": "aaca8a8b7194f34b3122dfc2a3727d5c54e72593f4b23c306851889cc4fc2b2d",
+   "period_id": "PER-2026-09",
+   "reporting_period": {
+    "end": "2026-09-30",
+    "period_id": "PER-2026-09",
+    "start": "2026-09-01"
+   },
+   "scenario_id": "SC2",
+   "engine_case_status": "EXCEPTIONS_OPEN",
+   "evidence_completeness": "COMPLETE",
+   "exceptions": {
+    "by_severity": {
+     "Critical": 1
+    },
+    "open": 1,
+    "total": 1
+   },
+   "control_summary": "FAILURES_PRESENT",
+   "outcomes": {
+    "FAIL": 1,
+    "NOT_APPLICABLE": 87,
+    "PASS": 1798
+   },
+   "missing_evidence_items": 0,
+   "pack_review_status": "NOT_REVIEWED"
+  },
+  "problem": null
+ },
+ {
+  "pack_id": "PACK-SC3B-PER-2026-09-137351796028",
+  "verified": true,
+  "summary": {
+   "pack_id": "PACK-SC3B-PER-2026-09-137351796028",
+   "pack_content_sha256": "1373517960281cc87048f66b98f9dffdaae55ca239b7a4a303f716d4a998f678",
+   "period_id": "PER-2026-09",
+   "reporting_period": {
+    "end": "2026-09-30",
+    "period_id": "PER-2026-09",
+    "start": "2026-09-01"
+   },
+   "scenario_id": "SC3B",
+   "engine_case_status": "EXCEPTIONS_OPEN",
+   "evidence_completeness": "COMPLETE",
+   "exceptions": {
+    "by_severity": {
+     "High": 1
+    },
+    "open": 1,
+    "total": 1
+   },
+   "control_summary": "FAILURES_PRESENT",
+   "outcomes": {
+    "FAIL": 1,
+    "NOT_APPLICABLE": 88,
+    "PASS": 1797
+   },
+   "missing_evidence_items": 0,
+   "pack_review_status": "NOT_REVIEWED"
+  },
+  "problem": null
+ },
+ {
+  "pack_id": "PACK-SC3C-PER-2026-09-28bb49134f15",
+  "verified": true,
+  "summary": {
+   "pack_id": "PACK-SC3C-PER-2026-09-28bb49134f15",
+   "pack_content_sha256": "28bb49134f15a093d65c8f903133263dd1b2b4c8d832b725122fb55b35f9e4e3",
+   "period_id": "PER-2026-09",
+   "reporting_period": {
+    "end": "2026-09-30",
+    "period_id": "PER-2026-09",
+    "start": "2026-09-01"
+   },
+   "scenario_id": "SC3C",
+   "engine_case_status": "EXCEPTIONS_OPEN",
+   "evidence_completeness": "COMPLETE",
+   "exceptions": {
+    "by_severity": {
+     "Critical": 1,
+     "High": 2
+    },
+    "open": 3,
+    "total": 3
+   },
+   "control_summary": "FAILURES_PRESENT",
+   "outcomes": {
+    "FAIL": 20,
+    "NOT_APPLICABLE": 71,
+    "PASS": 1795
+   },
+   "missing_evidence_items": 0,
+   "pack_review_status": "NOT_REVIEWED"
+  },
+  "problem": null
+ },
+ {
+  "pack_id": "PACK-SC5A-PER-2026-09-ae391170b93a",
+  "verified": true,
+  "summary": {
+   "pack_id": "PACK-SC5A-PER-2026-09-ae391170b93a",
+   "pack_content_sha256": "ae391170b93a4a6db21e8b4c21c685f55e56024a153ebc997164d76140faabee",
+   "period_id": "PER-2026-09",
+   "reporting_period": {
+    "end": "2026-09-30",
+    "period_id": "PER-2026-09",
+    "start": "2026-09-01"
+   },
+   "scenario_id": "SC5A",
+   "engine_case_status": "EXCEPTIONS_OPEN",
+   "evidence_completeness": "COMPLETE",
+   "exceptions": {
+    "by_severity": {
+     "High": 2
+    },
+    "open": 2,
+    "total": 2
+   },
+   "control_summary": "FAILURES_PRESENT",
+   "outcomes": {
+    "FAIL": 2,
+    "NOT_APPLICABLE": 88,
+    "PASS": 1796
+   },
+   "missing_evidence_items": 0,
+   "pack_review_status": "NOT_REVIEWED"
+  },
+  "problem": null
+ },
+ {
+  "pack_id": "PACK-SC5C-PER-2026-09-eaac7e6b1444",
+  "verified": true,
+  "summary": {
+   "pack_id": "PACK-SC5C-PER-2026-09-eaac7e6b1444",
+   "pack_content_sha256": "eaac7e6b14447bb39a2d07a2704c084c6aac3eab43167b85acf1f224ec15433e",
+   "period_id": "PER-2026-09",
+   "reporting_period": {
+    "end": "2026-09-30",
+    "period_id": "PER-2026-09",
+    "start": "2026-09-01"
+   },
+   "scenario_id": "SC5C",
+   "engine_case_status": "EXCEPTIONS_OPEN",
+   "evidence_completeness": "COMPLETE",
+   "exceptions": {
+    "by_severity": {
+     "Critical": 16,
+     "High": 1
+    },
+    "open": 17,
+    "total": 17
+   },
+   "control_summary": "FAILURES_PRESENT",
+   "outcomes": {
+    "FAIL": 17,
+    "NOT_APPLICABLE": 72,
+    "PASS": 1797
+   },
+   "missing_evidence_items": 0,
+   "pack_review_status": "NOT_REVIEWED"
+  },
+  "problem": null
+ },
+ {
+  "pack_id": "PACK-SC5D-PER-2026-09-2c5a7ae2e160",
+  "verified": true,
+  "summary": {
+   "pack_id": "PACK-SC5D-PER-2026-09-2c5a7ae2e160",
+   "pack_content_sha256": "2c5a7ae2e16091ce080a9830dd6781be1cfcf424c1646a09a0bf552eef7fa627",
+   "period_id": "PER-2026-09",
+   "reporting_period": {
+    "end": "2026-09-30",
+    "period_id": "PER-2026-09",
+    "start": "2026-09-01"
+   },
+   "scenario_id": "SC5D",
+   "engine_case_status": "EXCEPTIONS_OPEN",
+   "evidence_completeness": "COMPLETE",
+   "exceptions": {
+    "by_severity": {
+     "Critical": 1,
+     "High": 2
+    },
+    "open": 3,
+    "total": 3
+   },
+   "control_summary": "FAILURES_PRESENT",
+   "outcomes": {
+    "FAIL": 3,
+    "NOT_APPLICABLE": 87,
+    "PASS": 1796
+   },
+   "missing_evidence_items": 0,
+   "pack_review_status": "NOT_REVIEWED"
+  },
+  "problem": null
+ }
+]

@@ -1,0 +1,55 @@
+{
+ "preview": {
+  "preview_id": "PV-06cf470b8e8c4c88e4d1cb38",
+  "selections_version": 1,
+  "snapshot_sha256": "9cbb9d03ba7f3b16300d13f9836aeb10894652e68c93cea5f0c2a5f1296ab9ec",
+  "inputs_fingerprint": "922aa7dc2cc5c74958d4fd9213b67e8be118c3bdddc94c7e15e3e7524b9b85e3",
+  "preview_final_pack_id": "PREVIEW-S05-PER-2026-09-9cbb9d03ba7f",
+  "preview_content_sha256": "d078d8c7fba0128157d3330ed9b15b52d243c5f7afe7199ac167f39a581a6d02",
+  "closing_summary": {
+   "status": "GENERATED",
+   "sha256": "",
+   "unavailable_reason": "",
+   "failure": null,
+   "model": "gpt-6-luna",
+   "provider": "openai",
+   "created_at": "2026-11-03T05:41:54+00:00"
+  },
+  "created_at": "2026-11-03T05:41:54+00:00"
+ },
+ "selections": [
+  {
+   "exception_id": "EXC-S05-01",
+   "inclusion": "INCLUDED",
+   "investigation_id": "INV-EXC-S05-01-65bd05498b9e",
+   "reason": ""
+  },
+  {
+   "exception_id": "EXC-S05-02",
+   "inclusion": "NOT_INVESTIGATED",
+   "investigation_id": null,
+   "reason": ""
+  }
+ ],
+ "readiness": {
+  "ready": true,
+  "blockers": [],
+  "warnings": [
+   {
+    "code": "NOT_INVESTIGATED",
+    "detail": "EXC-S05-02 will be reported as not investigated"
+   },
+   {
+    "code": "CLOSING_SUMMARY_UNAVAILABLE",
+    "detail": "the AI closing summary could not be generated: closing summary generation failed (unsupported_provider). GENERATE requires acknowledging this."
+   }
+  ],
+  "info": [
+   {
+    "code": "UNRESOLVED_EXCEPTIONS",
+    "detail": "2 exception(s) are unresolved and will appear as UNRESOLVED"
+   }
+  ]
+ },
+ "acknowledgement_text": "Generating this pack does not resolve any exception, confirm any hypothesis or establish compliance. Unresolved exceptions will appear as UNRESOLVED."
+}

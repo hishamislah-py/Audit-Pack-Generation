@@ -1,0 +1,130 @@
+{
+ "exception": {
+  "exception_id": "EXC-SC2-01",
+  "category": "Bank-ledger difference (explained by timing evidence, awaiting human confirmation)",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "TIMING_EVIDENCED",
+  "account_id": "SGA-GBP-01",
+  "currency": "GBP",
+  "amount": "2868.50",
+  "first_date": "2026-09-15",
+  "last_date": "2026-09-15",
+  "control_codes": [
+   "C08"
+  ],
+  "investigation_group_id": "",
+  "affected_result_ids": [
+   "C08-DIFFERENCE|2026-09-15/SGA-GBP-01"
+  ],
+  "evidence_ids": [
+   "IN-06:ERL-SGA-GBP-01-20260915",
+   "IN-07:ST-SGA-GBP-01-20260915-1700",
+   "IN-10:LE-GBP-0915-0005",
+   "IN-09:BE-GBP-0916-T01"
+  ],
+  "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-09-15|2868.50",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ "affected_results": [
+  {
+   "computed": "2868.50",
+   "evidence_ids": [
+    "IN-06:ERL-SGA-GBP-01-20260915",
+    "IN-07:ST-SGA-GBP-01-20260915-1700",
+    "IN-10:LE-GBP-0915-0005",
+    "IN-09:BE-GBP-0916-T01"
+   ],
+   "evidence_refs": "IN-06:external_recon_records_2026-09.csv#L22; IN-07:bank_balance_confirmations_2026-09.csv#L22; IN-10:sga_cashbook_entries_2026-09.csv#L109; IN-09:bank_statement_entries_2026-09.csv#L133",
+   "evidence_status": "TIMING_EVIDENCED",
+   "exception_id": "EXC-SC2-01",
+   "investigation_group_id": "",
+   "note": "bank-ledger difference; difference explained by timing: LE-GBP-0915-0005 / BE-GBP-0916-T01 (ref SB-GBP-20260915, 2868.50, cleared 2026-09-16); cleared within one business day (D1); awaiting human confirmation; not resolved",
+   "outcome": "FAIL",
+   "reported": "2868.50",
+   "result_id": "C08-DIFFERENCE|2026-09-15/SGA-GBP-01",
+   "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-09-15|2868.50",
+   "scope": "2026-09-15/SGA-GBP-01",
+   "structured": {
+    "explained_by_timing": "2868.50",
+    "residual_unexplained": "0.00",
+    "timing_items": [
+     {
+      "bank_entry_id": "BE-GBP-0916-T01",
+      "cleared_or_expected": "2026-09-16",
+      "effect_on_difference": "2868.50",
+      "item_status": "IN_WINDOW",
+      "ledger_entry_id": "LE-GBP-0915-0005",
+      "reference": "SB-GBP-20260915"
+     }
+    ]
+   },
+   "check_id": "C08-DIFFERENCE",
+   "control_code": "C08",
+   "control_name": "External difference handling"
+  }
+ ],
+ "investigations": {
+  "published": [
+   {
+    "investigation_id": "INV-EXC-SC2-01-389ba1328c3c",
+    "investigation_mode": "tools",
+    "investigated_at": "2026-11-02T11:56:33+00:00",
+    "validation_status": "VALID",
+    "simulated": false,
+    "provider": "openai",
+    "model": "gpt-6-luna",
+    "findings_schema_version": "uc042-investigation-findings/1.2",
+    "overall_evidence_assessment": "PARTIALLY_SUFFICIENT",
+    "eligible": false,
+    "ineligible_reasons": [
+     "fails current validation rules (uc042-investigation-findings/1.4): C-01: a contradiction must name exactly two different compared evidence IDs"
+    ],
+    "library_eligible": false,
+    "registry": {
+     "seq": 5,
+     "record_type": "LEGACY_BASELINE_IMPORT",
+     "recorded_at": "2026-11-03T09:07:59+00:00",
+     "findings_sha256": "5c5df6f28cef6044d4965440c17d36138868496518ef5d3b77f28f8d379c97ee",
+     "evidence_packet_sha256": "f0393c923d8ea2610d02e432e190120e26d6c4d96f3885151f91bfd5520b23d6",
+     "findings_schema_version": "uc042-investigation-findings/1.2",
+     "prompt_version": "uc042-investigator-prompt/2.0-tools",
+     "note": "Integrity baseline established at import time. It does not prove the contents of the artefact at its original publication time, which predates this registry."
+    }
+   },
+   {
+    "investigation_id": "INV-EXC-SC2-01-eb2021ac50e9",
+    "investigation_mode": "fixed",
+    "investigated_at": "2026-11-02T11:26:35+00:00",
+    "validation_status": "VALID",
+    "simulated": false,
+    "provider": "openai",
+    "model": "gpt-6-luna",
+    "findings_schema_version": "uc042-investigation-findings/1.1",
+    "overall_evidence_assessment": "PARTIALLY_SUFFICIENT",
+    "eligible": false,
+    "ineligible_reasons": [
+     "fails current validation rules (uc042-investigation-findings/1.4): C-01: a contradiction must name exactly two different compared evidence IDs"
+    ],
+    "library_eligible": false,
+    "registry": {
+     "seq": 6,
+     "record_type": "LEGACY_BASELINE_IMPORT",
+     "recorded_at": "2026-11-03T09:07:59+00:00",
+     "findings_sha256": "a265b9bd490927be413c65d6f6b1b71bdab3d40d3a0265231f95c8377adee072",
+     "evidence_packet_sha256": "f0393c923d8ea2610d02e432e190120e26d6c4d96f3885151f91bfd5520b23d6",
+     "findings_schema_version": "uc042-investigation-findings/1.1",
+     "prompt_version": "uc042-investigator-prompt/1.0",
+     "note": "Integrity baseline established at import time. It does not prove the contents of the artefact at its original publication time, which predates this registry."
+    }
+   }
+  ],
+  "not_published": [],
+  "active_jobs": [],
+  "pack_id": "PACK-SC2-PER-2026-09-aaca8a8b7194",
+  "exception_id": "EXC-SC2-01"
+ }
+}

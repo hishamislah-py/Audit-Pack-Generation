@@ -1,0 +1,9 @@
+{
+ "status": "ok",
+ "storage": true,
+ "registry": true,
+ "provider_configured": true,
+ "analyst_id": "mock-analyst",
+ "single_process": true,
+ "version": "uc042-backend/0.3-local"
+}

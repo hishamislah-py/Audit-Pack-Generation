@@ -1,0 +1,74 @@
+{
+ "exception": {
+  "exception_id": "EXC-SC5D-03",
+  "category": "C04-REQUIREMENT",
+  "cause_category": "",
+  "severity": "High",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-30",
+  "last_date": "2026-09-30",
+  "control_codes": [
+   "C04"
+  ],
+  "investigation_group_id": "GRP-SC5D-01",
+  "affected_result_ids": [
+   "C04-REQUIREMENT|2026-09-30/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260930",
+   "IN-03:CBS-20260930-C0001-GBP",
+   "IN-03:CBS-20260930-C0002-GBP",
+   "IN-03:CBS-20260930-C0003-GBP",
+   "IN-03:CBS-20260930-C0004-GBP",
+   "IN-03:CBS-20260930-C0005-GBP",
+   "IN-03:CBS-20260930-C0006-GBP",
+   "IN-03:CBS-20260930-C0007-GBP",
+   "IN-03:CBS-20260930-C0008-GBP"
+  ],
+  "root_cause": "C04-REQUIREMENT|2026-09-30/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ "affected_results": [
+  {
+   "computed": "395594.86",
+   "evidence_ids": [
+    "IN-05:IRR-EMONEY-GBP-20260930",
+    "IN-03:CBS-20260930-C0001-GBP",
+    "IN-03:CBS-20260930-C0002-GBP",
+    "IN-03:CBS-20260930-C0003-GBP",
+    "IN-03:CBS-20260930-C0004-GBP",
+    "IN-03:CBS-20260930-C0005-GBP",
+    "IN-03:CBS-20260930-C0006-GBP",
+    "IN-03:CBS-20260930-C0007-GBP",
+    "IN-03:CBS-20260930-C0008-GBP"
+   ],
+   "evidence_refs": "IN-05:internal_recon_records_2026-09.csv#L44; IN-03:client_balance_snapshots_2026-09.csv#L266-L273",
+   "evidence_status": "",
+   "exception_id": "EXC-SC5D-03",
+   "investigation_group_id": "GRP-SC5D-01",
+   "note": "sum of 8 non-negative client balances + 0 open unallocated receipt(s)",
+   "outcome": "FAIL",
+   "reported": "395844.86",
+   "result_id": "C04-REQUIREMENT|2026-09-30/GBP",
+   "root_cause": "C04-REQUIREMENT|2026-09-30/GBP",
+   "scope": "2026-09-30/GBP",
+   "structured": {},
+   "check_id": "C04-REQUIREMENT",
+   "control_code": "C04",
+   "control_name": "Requirement"
+  }
+ ],
+ "investigations": {
+  "published": [],
+  "not_published": [],
+  "active_jobs": [],
+  "pack_id": "PACK-SC5D-PER-2026-09-2c5a7ae2e160",
+  "exception_id": "EXC-SC5D-03"
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "exception": {
+  "exception_id": "EXC-SC5C-01",
+  "category": "Internal reconciliation difference",
+  "cause_category": "",
+  "severity": "Critical",
+  "status": "OPEN",
+  "review_status": "AWAITING_HUMAN_REVIEW",
+  "evidence_status": "",
+  "account_id": "",
+  "currency": "",
+  "amount": "",
+  "first_date": "2026-09-09",
+  "last_date": "2026-09-09",
+  "control_codes": [
+   "C06"
+  ],
+  "investigation_group_id": "GRP-SC5C-01",
+  "affected_result_ids": [
+   "C06-DIFFERENCE|2026-09-09/GBP"
+  ],
+  "evidence_ids": [
+   "IN-05:IRR-EMONEY-GBP-20260909"
+  ],
+  "root_cause": "INTERNAL_DIFFERENCE|2026-09-09/GBP",
+  "flags": "",
+  "resolution_status": "UNRESOLVED"
+ },
+ "affected_results": [
+  {
+   "computed": "-60.00",
+   "evidence_ids": [
+    "IN-05:IRR-EMONEY-GBP-20260909"
+   ],
+   "evidence_refs": "IN-05:internal_recon_records_2026-09.csv#L14",
+   "evidence_status": "",
+   "exception_id": "EXC-SC5C-01",
+   "investigation_group_id": "GRP-SC5C-01",
+   "note": "difference requires same-day resolution (CASS 15.8.50R)",
+   "outcome": "FAIL",
+   "reported": "-60.00",
+   "result_id": "C06-DIFFERENCE|2026-09-09/GBP",
+   "root_cause": "INTERNAL_DIFFERENCE|2026-09-09/GBP",
+   "scope": "2026-09-09/GBP",
+   "structured": {},
+   "check_id": "C06-DIFFERENCE",
+   "control_code": "C06",
+   "control_name": "Internal difference handling"
+  }
+ ],
+ "investigations": {
+  "published": [],
+  "not_published": [],
+  "active_jobs": [],
+  "pack_id": "PACK-SC5C-PER-2026-09-eaac7e6b1444",
+  "exception_id": "EXC-SC5C-01"
+ }
+}
