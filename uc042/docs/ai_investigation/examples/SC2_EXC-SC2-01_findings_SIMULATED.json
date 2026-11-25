@@ -1,0 +1,110 @@
+{
+ "confirmed_findings": [
+  {
+   "claim": "Engine control result C08-DIFFERENCE|2026-09-15/SGA-GBP-01 is FAIL (computed 2868.50, reported 2868.50).",
+   "evidence_ids": [
+    "C08-DIFFERENCE|2026-09-15/SGA-GBP-01",
+    "IN-06:ERL-SGA-GBP-01-20260915",
+    "IN-07:ST-SGA-GBP-01-20260915-1700",
+    "IN-10:LE-GBP-0915-0005",
+    "IN-09:BE-GBP-0916-T01"
+   ],
+   "explanation": "Quoted from the deterministic engine output; not recalculated.",
+   "finding_id": "F-01",
+   "supporting_records": [
+    "IN-06:ERL-SGA-GBP-01-20260915",
+    "IN-07:ST-SGA-GBP-01-20260915-1700",
+    "IN-10:LE-GBP-0915-0005",
+    "IN-09:BE-GBP-0916-T01"
+   ]
+  }
+ ],
+ "contradictory_evidence": [
+  {
+   "description": "Discrepancy log DL-0001 is marked RESOLVED by the firm; the engine exception EXC-SC2-01 remains OPEN pending human review.",
+   "evidence_ids": [
+    "IN-14:DL-0001",
+    "EXC-SC2-01"
+   ],
+   "item_id": "C-01"
+  }
+ ],
+ "evidence_packet_sha256": "f0393c923d8ea2610d02e432e190120e26d6c4d96f3885151f91bfd5520b23d6",
+ "evidence_references": [
+  "C08-DIFFERENCE|2026-09-15/SGA-GBP-01",
+  "EXC-SC2-01",
+  "IN-06:ERL-SGA-GBP-01-20260915",
+  "IN-07:ST-SGA-GBP-01-20260915-1700",
+  "IN-09:BE-GBP-0916-T01",
+  "IN-10:LE-GBP-0915-0005",
+  "IN-14:DL-0001"
+ ],
+ "exception_id": "EXC-SC2-01",
+ "exception_resolution": "NOT_RESOLVED_BY_INVESTIGATION",
+ "failure_reason": "",
+ "hypotheses": [],
+ "investigated_at": "2026-11-02T10:17:22+00:00",
+ "investigation_id": "INV-EXC-SC2-01-ed6b41d918dd",
+ "investigation_route": "bank_ledger_mismatch",
+ "investigation_scope": {
+  "account_id": "SGA-GBP-01",
+  "affected_result_count": 1,
+  "amount": "2868.50",
+  "candidate_relationship_ids": [],
+  "category": "Bank-ledger difference (explained by timing evidence, awaiting human confirmation)",
+  "check_ids": [
+   "C08-DIFFERENCE"
+  ],
+  "control_codes": [
+   "C08"
+  ],
+  "currency": "GBP",
+  "evidence_status": "TIMING_EVIDENCED",
+  "first_date": "2026-09-15",
+  "group_size": 0,
+  "investigation_group_id": "",
+  "keys": {
+   "account_id": "SGA-GBP-01",
+   "date": "2026-09-15"
+  },
+  "last_date": "2026-09-15",
+  "missing_evidence_item_ids": [],
+  "related_exception_ids": [],
+  "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-09-15|2868.50",
+  "root_cause_kind": "BANK_LEDGER_DIFFERENCE",
+  "severity": "Critical"
+ },
+ "investigation_status": "COMPLETED",
+ "investigation_summary": "SIMULATED OFFLINE OUTPUT (not AI analysis) for EXC-SC2-01: 1 engine facts quoted, 0 missing items, 0 hypotheses.",
+ "missing_evidence": [],
+ "model_metadata": {
+  "attempts": 1,
+  "findings_schema_version": "uc042-investigation-findings/1.0",
+  "model": "deterministic-stub-v1",
+  "prompt_version": "uc042-investigator-prompt/1.0",
+  "provider": "offline-simulated",
+  "simulated": true,
+  "usage": {},
+  "workflow_version": "uc042-investigation-graph/1.0"
+ },
+ "open_questions": [
+  "What evidence explains the difference?"
+ ],
+ "original_evidence_status": "TIMING_EVIDENCED",
+ "original_exception_status": "OPEN",
+ "original_review_status": "AWAITING_HUMAN_REVIEW",
+ "overall_evidence_assessment": "CONFLICTING_EVIDENCE",
+ "pack_content_sha256": "aaca8a8b7194f34b3122dfc2a3727d5c54e72593f4b23c306851889cc4fc2b2d",
+ "pack_id": "PACK-SC2-PER-2026-09-aaca8a8b7194",
+ "recommended_next_steps": [
+  {
+   "action": "Human reviewer to examine the cited records.",
+   "evidence_needed": "As listed under missing evidence.",
+   "rationale": "Simulated output; no analysis performed.",
+   "step_id": "S-01"
+  }
+ ],
+ "statement": "AI investigation findings are an aid to human review. They do not change any deterministic control outcome, do not resolve or close any exception, and are not a compliance opinion.",
+ "validation_findings": [],
+ "validation_status": "VALID"
+}

@@ -1,0 +1,78 @@
+{
+ "J6_start_B_retry": [
+  202,
+  "JOB-f66967e3450d59879cf31edb",
+  "JOB-6732bf269bb93f11d5d4e0f2",
+  "16:09:44"
+ ],
+ "J7_B_result": [
+  "COMPLETED",
+  65,
+  "",
+  {
+   "registered": true,
+   "registry_seq": 1,
+   "tool_summary": {
+    "limits": {
+     "max_rounds": 4,
+     "total_timeout": 300.0,
+     "max_tool_calls": 8,
+     "max_input_tokens": 150000,
+     "max_total_records": 160,
+     "max_records_per_call": 25
+    },
+    "status": "COMPLETED",
+    "llm_calls": 3,
+    "tools_used": [
+     "get_settlement_batch",
+     "get_settlement_batch",
+     "get_reconciliation_evidence",
+     "search_bank_entries",
+     "search_bank_entries",
+     "search_bank_entries",
+     "search_bank_entries",
+     "search_bank_entries"
+    ],
+    "stop_reason": "final_answer",
+    "tool_rounds": 2,
+    "records_final": 29,
+    "tools_executed": 8,
+    "records_initial": 16,
+    "tools_deduplicated": 0,
+    "tool_calls_requested": 8,
+    "tools_refused_budget": 0,
+    "tools_rejected_or_failed": 0
+   },
+   "persist_outcome": "PUBLISHED",
+   "investigation_id": "INV-EXC-H202602-01-15412698307d",
+   "validation_status": "VALID",
+   "investigation_status": "COMPLETED",
+   "registry_record_type": "NEW_PUBLICATION"
+  }
+ ],
+ "J8_published": [
+  [
+   "INV-EXC-H202602-01-15412698307d",
+   true,
+   "INSUFFICIENT_EVIDENCE",
+   []
+  ],
+  [
+   "INV-EXC-H202602-01-6b1425b437f4",
+   false,
+   "INSUFFICIENT_EVIDENCE",
+   [
+    "publication registry: not in the investigation publication registry (unregistered artefact)"
+   ]
+  ],
+  [
+   "INV-EXC-H202602-01-a3fd3fd2e9ed",
+   false,
+   "INSUFFICIENT_EVIDENCE",
+   [
+    "publication registry: not in the investigation publication registry (unregistered artefact)"
+   ]
+  ]
+ ],
+ "J8_not_published": 0
+}
