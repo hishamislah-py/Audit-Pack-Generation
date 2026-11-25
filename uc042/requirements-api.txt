@@ -1,0 +1,13 @@
+# Backend (uc042app): FastAPI + ASGI server, PostgreSQL persistence (Phase 4). Python 3.11, verified 3 Nov 2026.
+fastapi==0.162.0           # brings starlette 1.10.0, annotated-doc 0.0.5
+uvicorn==0.54.0            # brings click 8.5.0, h11 0.16.0
+python-multipart==0.0.33   # multipart file upload (POST /api/v1/periods/{id}/uploads)
+# Database. All three are pure Python: no compiled extension, no libpq, no system install. On machines whose
+# Application Control blocks unsigned DLLs, install SQLAlchemy from its pure-Python wheel (see
+# docs/audit_pack/11_PHASE4_MONTHLY_DOCUMENTS.md, section 2):
+#   pip download sqlalchemy==2.1.6 --only-binary=:all: --platform any --python-version 3.11 --implementation py --no-deps -d wheels
+#   pip install --force-reinstall --no-deps wheels\sqlalchemy-2.1.6-py3-none-any.whl
+SQLAlchemy==2.1.6
+alembic==1.20.1            # brings Mako 1.4.3
+pg8000==1.31.6             # brings scramp 1.5.0, asn1crypto 1.5.1 (driver URL: postgresql+pg8000://)
+-r requirements-ai.txt     # the backend calls the investigation and final-pack libraries directly
