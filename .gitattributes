@@ -1,0 +1,6 @@
+
+# Openship deploy files run on Linux: always LF
+Dockerfile text eol=lf
+.dockerignore text eol=lf
+docker-compose.openship.yml text eol=lf
+deploy/** text eol=lf
