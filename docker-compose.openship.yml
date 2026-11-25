@@ -1,0 +1,40 @@
+# Openship deploy: app (nginx :80 + FastAPI) and PostgreSQL 17 for the monthly archive/upload features.
+services:
+  app:
+    build: .
+    ports:
+      - "80"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      UC042_LLM_PROVIDER: ${UC042_LLM_PROVIDER:-openai}
+      UC042_LLM_MODEL: ${UC042_LLM_MODEL:-gpt-6-luna}
+      UC042_LLM_TIMEOUT_SECONDS: ${UC042_LLM_TIMEOUT_SECONDS:-120}
+      UC042_LLM_MAX_TOKENS: ${UC042_LLM_MAX_TOKENS:-8000}
+      UC042_OPENAI_REASONING_EFFORT: ${UC042_OPENAI_REASONING_EFFORT:-medium}
+      UC042_CORS_ORIGINS: ${UC042_CORS_ORIGINS:-https://audit-pack-generation.ops.ai.arttechgroup.com:7777}
+      UC042_DATABASE_URL: postgresql+pg8000://uc042:${UC042_DB_PASSWORD}@db:5432/uc042
+      UC042_APP_STATE_DIR: /data/app_state
+      UC042_DOCUMENT_STORE: /data/document_store
+    volumes:
+      - uc042-data:/data
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+  db:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_USER: uc042
+      POSTGRES_PASSWORD: ${UC042_DB_PASSWORD}
+      POSTGRES_DB: uc042
+    volumes:
+      - uc042-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U uc042 -d uc042"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+volumes:
+  uc042-data:
+  uc042-pg:

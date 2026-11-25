@@ -1,0 +1,10 @@
+.git
+.env
+**/.env
+**/node_modules
+**/dist
+**/__pycache__
+**/.pytest_cache
+**/.venv
+uc042/app_state
+uc042/document_store
