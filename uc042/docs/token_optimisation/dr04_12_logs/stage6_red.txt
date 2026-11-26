@@ -1,0 +1,76 @@
+test_closely_spaced_attempts_each_keep_their_own_record (tests.test_stage6_dr10_history.ExactMatching.test_closely_spaced_attempts_each_keep_their_own_record) ... ERROR
+test_existing_validation_status_is_kept (tests.test_stage6_dr10_history.ExactMatching.test_existing_validation_status_is_kept) ... ok
+test_identified_job_never_absorbs_a_different_record_by_time (tests.test_stage6_dr10_history.ExactMatching.test_identified_job_never_absorbs_a_different_record_by_time) ... FAIL
+test_validation_status_assigned_when_none (tests.test_stage6_dr10_history.ExactMatching.test_validation_status_assigned_when_none) ... FAIL
+test_independent_record_with_no_job_at_all (tests.test_stage6_dr10_history.LegacyTimeFallback.test_independent_record_with_no_job_at_all) ... ok
+test_one_job_event_absorbs_at_most_one_record (tests.test_stage6_dr10_history.LegacyTimeFallback.test_one_job_event_absorbs_at_most_one_record) ... ERROR
+test_records_outside_the_window_and_without_jobs_stay_separate (tests.test_stage6_dr10_history.LegacyTimeFallback.test_records_outside_the_window_and_without_jobs_stay_separate) ... ok
+test_two_legacy_jobs_two_records (tests.test_stage6_dr10_history.LegacyTimeFallback.test_two_legacy_jobs_two_records) ... ERROR
+test_failed_job_names_its_record_and_history_merges_it_exactly (tests.test_stage6_dr10_history.ThroughTheRealJob.test_failed_job_names_its_record_and_history_merges_it_exactly) ... ERROR
+
+======================================================================
+ERROR: test_closely_spaced_attempts_each_keep_their_own_record (tests.test_stage6_dr10_history.ExactMatching.test_closely_spaced_attempts_each_keep_their_own_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage6_dr10_history.py", line 80, in test_closely_spaced_attempts_each_keep_their_own_record
+    self.assertEqual(got["JOB-1"]["not_published_record"], r1["record"])
+                     ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'not_published_record'
+
+======================================================================
+ERROR: test_one_job_event_absorbs_at_most_one_record (tests.test_stage6_dr10_history.LegacyTimeFallback.test_one_job_event_absorbs_at_most_one_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage6_dr10_history.py", line 105, in test_one_job_event_absorbs_at_most_one_record
+    self.assertEqual(failed(ev)[0]["details"]["not_published_record"], near["record"])  # the nearest one
+                     ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'not_published_record'
+
+======================================================================
+ERROR: test_two_legacy_jobs_two_records (tests.test_stage6_dr10_history.LegacyTimeFallback.test_two_legacy_jobs_two_records)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage6_dr10_history.py", line 113, in test_two_legacy_jobs_two_records
+    got = {e["details"]["job_id"]: e["details"]["not_published_record"] for e in failed(ev)}
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage6_dr10_history.py", line 113, in <dictcomp>
+    got = {e["details"]["job_id"]: e["details"]["not_published_record"] for e in failed(ev)}
+                                   ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'not_published_record'
+
+======================================================================
+ERROR: test_failed_job_names_its_record_and_history_merges_it_exactly (tests.test_stage6_dr10_history.ThroughTheRealJob.test_failed_job_names_its_record_and_history_merges_it_exactly)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage6_dr10_history.py", line 133, in test_failed_job_names_its_record_and_history_merges_it_exactly
+    name = job_["result"]["not_published_record"]
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'not_published_record'
+
+======================================================================
+FAIL: test_identified_job_never_absorbs_a_different_record_by_time (tests.test_stage6_dr10_history.ExactMatching.test_identified_job_never_absorbs_a_different_record_by_time)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage6_dr10_history.py", line 87, in test_identified_job_never_absorbs_a_different_record_by_time
+    self.assertEqual([e["details"]["failure_reason"] for e in unmerged(ev)], ["record cccc3333"])
+AssertionError: Lists differ: [] != ['record cccc3333']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'record cccc3333'
+
+- []
++ ['record cccc3333']
+
+======================================================================
+FAIL: test_validation_status_assigned_when_none (tests.test_stage6_dr10_history.ExactMatching.test_validation_status_assigned_when_none)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage6_dr10_history.py", line 92, in test_validation_status_assigned_when_none
+    self.assertEqual(failed(ev)[0]["details"]["validation_status"], "REJECTED")
+AssertionError: None != 'REJECTED'
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.091s
+
+FAILED (failures=2, errors=4)

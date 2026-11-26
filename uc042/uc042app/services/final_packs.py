@@ -57,24 +57,38 @@ class FinalPackService:
         found = [m for m in self._published() if m["generation_record"]["source_pack_id"] in members]
         return sorted(found, key=lambda m: m["generation_record"]["version"])
 
-    def next_version(self, pack_id):
-        """(version, supersedes_final_pack_id) of the next final pack over the pack's lineage."""
-        existing = self.lineage_final_packs(pack_id)
+    def submission_of(self, manifest):
+        """The ZIP submission a published final pack belongs to (its application record), or None (legacy)."""
+        return (self.records.get(manifest["generation_record"]["review_decision_id"]) or {}).get("submission_id") or None
+
+    def scoped_final_packs(self, pack_id, submission_id=None):
+        """Published final packs of the pack's lineage in ONE scope: a submission's own (submission_id) or the legacy
+        period-level ones (None). Identical submissions share the content-addressed pack but never a version sequence."""
+        return [m for m in self.lineage_final_packs(pack_id) if self.submission_of(m) == submission_id]
+
+    def next_version(self, pack_id, submission_id=None):
+        """(version, supersedes_final_pack_id) of the next final pack: over the pack's legacy lineage, or within one
+        submission. Passed to the protected library as its expected version (its contract is unchanged)."""
+        existing = self.scoped_final_packs(pack_id, submission_id)
         if not existing:
             return 1, None
         return existing[-1]["generation_record"]["version"] + 1, existing[-1]["final_pack_id"]
 
     # ---------------------------------------------------------------- generation (called by the review service under the pack lock)
-    def generate(self, snapshot, summary, review):
+    def generate(self, snapshot, summary, review, trace=None):
         """Record GENERATING, assemble, publish and verify. Returns the GENERATED record; on any failure the record is
-        GENERATION_FAILED and the exception propagates (nothing partial is published: the library stages and renames)."""
+        GENERATION_FAILED and the exception propagates (nothing partial is published: the library stages and renames).
+
+        trace: the originating ZIP submission ({submission_id, run_id, batch_id}) when the review is a submission's review;
+        kept on the application's final-pack record (the protected final-pack library and its artefacts are unchanged)."""
         pack_id = snapshot.pack_id
         root = self.root_for(pack_id)
-        version, supersedes = self.next_version(pack_id)
+        version, supersedes = self.next_version(pack_id, (trace or {}).get("submission_id"))
         record = self.records.create({"review_decision_id": review.review_decision_id, "review_id": review.review_session_id,
                                       "pack_id": pack_id, "status": "GENERATING", "version": version,
                                       "supersedes_final_pack_id": supersedes, "created_at": now_iso(), "created_by": review.reviewer.user_id,
-                                      "final_pack_id": None, "final_content_sha256": None, "error_summary": ""})
+                                      "final_pack_id": None, "final_content_sha256": None, "error_summary": "",
+                                      **{k: (trace or {}).get(k) for k in ("submission_id", "run_id", "batch_id") if (trace or {}).get(k)}})
         try:
             final = assemble_final_pack(snapshot, summary, review, GenerationInfo(version=version, supersedes_final_pack_id=supersedes))
             path = publish_final_pack(final, root, expected=(version, supersedes))
@@ -122,9 +136,11 @@ class FinalPackService:
         out = []
         for m in (self.lineage_final_packs(pack_id) if lineage and pack_id else self._published(pack_id)):
             g = m["generation_record"]
+            rec = self.records.get(g["review_decision_id"]) or {}  # the application record: submission traceability
             out.append({"final_pack_id": m["final_pack_id"], "pack_id": g["source_pack_id"], "version": g["version"],
                         "supersedes_final_pack_id": g["supersedes_final_pack_id"], "generated_at": g["generated_at"],
-                        "review_decision_id": g["review_decision_id"], "final_content_sha256": m["final_content_sha256"]})
+                        "review_decision_id": g["review_decision_id"], "final_content_sha256": m["final_content_sha256"],
+                        "submission_id": rec.get("submission_id"), "run_id": rec.get("run_id"), "batch_id": rec.get("batch_id")})
         return out
 
     def _dir(self, final_pack_id):

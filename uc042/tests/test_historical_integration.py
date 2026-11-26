@@ -17,6 +17,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
+from tests.rule_history import PUBLISHED_RULES
+
 from tests.api_support import ROOT
 from tests.final_pack_support import OFFLINE, sha_tree
 from tests.test_api_monthly import MonthlyCase, S05_PACK, SC2_PACK, scenario_files
@@ -197,7 +199,8 @@ class Intake(Tmp):
             p = PeriodConfig.from_id(f"PER-{token}")
             _, case = self.prep(p, month_files(token), token)
             version = selected_policy(case)
-            status, built, _, _, _ = build(case, PeriodConfig(p.year, p.month, version))
+            # compared with a stored pack: built under the rules that pack was published with (explicit, nothing patched)
+            status, built, _, _, _ = build(case, PeriodConfig(p.year, p.month, version), rules=PUBLISHED_RULES)
             self.assertEqual(status, "GENERATED", token)
             stored = pack(token)
             self.assertEqual(roots_of(built), roots_of(stored), token)

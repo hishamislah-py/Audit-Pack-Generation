@@ -1,0 +1,14 @@
+.........E.....
+======================================================================
+ERROR: test_submission_scoping_is_enforced (tests.test_zip_submissions.SubmissionReview.test_submission_scoping_is_enforced)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_submissions.py", line 467, in test_submission_scoping_is_enforced
+    self.assertEqual((r.status_code, r.json()["code"]), (409, "REVIEW_OTHER_SUBMISSION"))
+                                     ~~~~~~~~^^^^^^^^
+KeyError: 'code'
+
+----------------------------------------------------------------------
+Ran 15 tests in 121.060s
+
+FAILED (errors=1)

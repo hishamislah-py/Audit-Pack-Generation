@@ -1,0 +1,110 @@
+{
+ "investigations_examined": 51,
+ "deterministic_supported": 51,
+ "attempts": {
+  "published": 22,
+  "completed_not_published": 7,
+  "failed": 22,
+  "other": 0,
+  "completed_investigations": 29
+ },
+ "excluded": [
+  {
+   "store": "copy",
+   "status": "published",
+   "pack_id": "PACK-SC2-PER-2026-09-aaca8a8b7194",
+   "exception_id": "EXC-SC2-01",
+   "investigation_id": "INV-EXC-SC2-01-eb2021ac50e9",
+   "investigation_mode": null,
+   "reason": "fixed mode: no model-directed tool fetches to compare",
+   "record": "findings.json"
+  },
+  {
+   "store": "clone-e",
+   "status": "published",
+   "pack_id": "PACK-SC2-PER-2026-09-aaca8a8b7194",
+   "exception_id": "EXC-SC2-01",
+   "investigation_id": "INV-EXC-SC2-01-eb2021ac50e9",
+   "investigation_mode": null,
+   "reason": "fixed mode: no model-directed tool fetches to compare",
+   "record": "findings.json"
+  }
+ ],
+ "unsupported_routes": [],
+ "errors": [],
+ "missed": [],
+ "not_found_missed": [],
+ "not_found_matching": "strict: complete normalised query and deterministic result NOT_FOUND; plus the approved settlement_line_to_transaction equivalence (reported separately)",
+ "not_found_covered_exact": 95,
+ "not_found_semantic_matches": [
+  {
+   "search_id": "SEARCH-08",
+   "query": {
+    "evidence_id": "IN-13:SL-SB-GBP-20260915-0003",
+    "relationship": "settlement_line_to_transaction",
+    "value": "TX-0915-00009"
+   },
+   "description": "settlement_line_to_transaction from IN-13:SL-SB-GBP-20260915-0003 (txn_id=TX-0915-00009)",
+   "matched_by": "approved semantic equivalence",
+   "equivalent_query": {
+    "file": "IN-11",
+    "txn_id": "TX-0915-00009"
+   },
+   "store": "clone-e",
+   "status": "completed_not_published",
+   "pack_id": "PACK-CASE-PER-2026-09-109a585702ae",
+   "exception_id": "EXC-CASE-01"
+  }
+ ],
+ "miss_items_preserved_all": true,
+ "candidates_unchanged_all": true,
+ "any_at_record_budget": [],
+ "pruning_entries": 0,
+ "retrieval_rule_versions": [
+  "uc042-det-retrieval/1.3"
+ ],
+ "compared": 51,
+ "cited_model_fetched_records": 162,
+ "covered": 162,
+ "distinct_per_exception": {
+  "targets": 77,
+  "covered": 77
+ },
+ "not_found_searches_cited": 96,
+ "not_found_covered": 96,
+ "by_status": {
+  "published": {
+   "compared": 22,
+   "cited_model_fetched_records": 107,
+   "covered": 107,
+   "distinct_per_exception": {
+    "targets": 68,
+    "covered": 68
+   },
+   "not_found_searches_cited": 68,
+   "not_found_covered": 68
+  },
+  "completed_not_published": {
+   "compared": 7,
+   "cited_model_fetched_records": 55,
+   "covered": 55,
+   "distinct_per_exception": {
+    "targets": 42,
+    "covered": 42
+   },
+   "not_found_searches_cited": 28,
+   "not_found_covered": 28
+  },
+  "failed": {
+   "compared": 22,
+   "cited_model_fetched_records": 0,
+   "covered": 0,
+   "distinct_per_exception": {
+    "targets": 0,
+    "covered": 0
+   },
+   "not_found_searches_cited": 0,
+   "not_found_covered": 0
+  }
+ }
+}

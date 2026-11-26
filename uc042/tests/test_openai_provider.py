@@ -161,7 +161,7 @@ class ResponsesRequest(OpenAITestCase):
         kw = self.calls(inv)[0].kwargs
         self.assertIs(kw["text_format"], LLMInvestigationOutput)
         self.assertEqual((kw["model"], kw["max_output_tokens"], kw["store"], kw["reasoning"]),
-                         (inv.model, inv.max_tokens, False, {"effort": "medium"}))
+                         (inv.model, inv.investigation_max_tokens, False, {"effort": "medium"}))  # investigations: own budget (P1A)
         self.assertIn("financial discrepancy investigator", kw["instructions"])
         self.assertEqual([m["role"] for m in kw["input"]], ["user"])
         self.assertIn(self.packet["packet_sha256"], kw["input"][0]["content"])
@@ -179,8 +179,13 @@ class ResponsesRequest(OpenAITestCase):
         u = meta["usage"]
         self.assertEqual((u["input_tokens"], u["output_tokens"], u["reasoning_tokens"], u["total_tokens"]), (15000, 2100, 900, 17100))
         self.assertIn("latency_seconds", u)
-        self.assertEqual(meta["provider_response"], {"response_id": "resp_test_001", "resolved_model": "gpt-6-luna-2026-10-01",
-                                                     "status": "completed", "request_id": "req_test_001"})
+        pr = meta["provider_response"]
+        self.assertEqual({k: pr[k] for k in ("response_id", "resolved_model", "status", "request_id")},
+                         {"response_id": "resp_test_001", "resolved_model": "gpt-6-luna-2026-10-01",
+                          "status": "completed", "request_id": "req_test_001"})
+        # phase 3: one per-request record with that request's own usage (no prompt content)
+        self.assertEqual(len(pr["responses"]), 1)
+        self.assertEqual((pr["responses"][0]["turn"], pr["responses"][0]["usage"]["input_tokens"]), (1, 15000))
         self.assertEqual(meta["attempts"], 1)
 
 

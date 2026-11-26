@@ -1,0 +1,11 @@
+{
+ "generated_at": "2026-11-18T04:53:31+00:00",
+ "status": "GENERATED",
+ "outcome": "PUBLISHED",
+ "case_dir": "cases/SET-ece6eb8e300801f7",
+ "pack_id": "PACK-CASE-PER-2026-09-36987c6261a5",
+ "processing_run_id": "RUN-cfdbd45c738d6fe1",
+ "pack_content_sha256": "36987c6261a5d1eef295c7b8f1ca6129eea83f707af91dec1be87b4d40a28421",
+ "validation_findings": [],
+ "uc042app_processing_run": "RUN-f3d63ac1f276f17f1676bac4"
+}

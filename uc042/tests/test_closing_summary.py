@@ -89,6 +89,16 @@ class OutputValidation(SummaryCase):
                                  "the missing transaction was not found in the supplied data.")
         self.assertEqual(self.errors(edit), [])
 
+    def test_prompt_states_the_negation_scope_the_validation_applies(self):
+        """12 Nov 2026 live run: gpt-6-luna wrote a limitation negating a long list ("... opinion or certification") and the
+        validation (unchanged: a negation covers about 40 characters) refused the summary. The prompt now says so."""
+        from uc042lib.final_pack.summary import SUMMARY_INSTRUCTIONS, _asserts, COMPLIANCE_PATTERNS
+        self.assertIn("negate each term in its own short clause", SUMMARY_INSTRUCTIONS)
+        long_list = "No compliance conclusion, assurance opinion or certification is given."
+        split = "This is not an audit opinion. It does not certify compliance."
+        self.assertTrue(any(_asserts(p, long_list) for p in COMPLIANCE_PATTERNS))  # still refused: validation not weakened
+        self.assertFalse(any(_asserts(p, s) for s in split.split(". ") for p in COMPLIANCE_PATTERNS))
+
     def test_clean_pack_rules(self):
         snap = build_review_snapshot(PACK["S01"], [], investigations_root=self.inv_root)
         inp = closing_summary_input(snap)
@@ -99,8 +109,11 @@ class OutputValidation(SummaryCase):
     def test_structured_output_schema(self):
         from openai.lib._pydantic import to_strict_json_schema
         schema = to_strict_json_schema(ClosingSummaryOutput)
+        # summary schema 1.2 (Session 1, 23 Nov 2026): group_assessments is part of the structured output (1.4 adds only the
+        # nullable common_cause_status inside each assessment; the withdrawn 1.3 draft's AI dispositions are gone)
         self.assertEqual(set(schema["required"]), {"overall_position", "summary_text", "key_observations", "unresolved_items",
-                                                   "unverified_hypotheses", "evidence_gaps", "suggested_next_steps", "limitations"})
+                                                   "unverified_hypotheses", "evidence_gaps", "suggested_next_steps", "limitations",
+                                                   "group_assessments"})
         self.assertIn("not an audit opinion", SUMMARY_INSTRUCTIONS)
 
 
@@ -111,7 +124,7 @@ class GenerationAndFailures(SummaryCase):
         self.assertEqual((s.status, s.output, s.snapshot_sha256, s.source_fingerprint),
                          ("GENERATED", out, self.snap.sha256, summary_fingerprint(self.input)))
         self.assertEqual((s.model_metadata["provider"], s.model_metadata["model"], s.model_metadata["simulated"]), ("openai", "gpt-6-luna", False))
-        self.assertEqual(s.model_metadata["prompt_version"], "uc042-closing-summary-prompt/1.0")
+        self.assertEqual(s.model_metadata["prompt_version"], "uc042-closing-summary-prompt/1.8")   # 1.8: evidence-bearing relationships, simplified
         kw = inv._client.responses.with_raw_response.parse.call_args.kwargs
         self.assertIs(kw["text_format"], ClosingSummaryOutput)
         self.assertEqual((kw["store"], kw["instructions"]), (False, SUMMARY_INSTRUCTIONS))

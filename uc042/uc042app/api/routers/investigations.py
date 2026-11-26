@@ -4,24 +4,63 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Query
 
 from ... import ids
-from ...errors import NotFound
+from ...errors import InvalidInput, NotFound
+from ...services.monthly import SUBMISSION_ID_RE
 from ..deps import services
-from ..schemas import (AiAuthorization, AiConfiguration, ExceptionInvestigations, InvestigationDetail, InvestigationVerification, Job,
-                       StartInvestigationRequest)
+from ..schemas import (SubmissionRetryRequest, AiAuthorization, AiConfiguration, AnalystReview, AnalystReviewRequest, AutoInvestigationRequest, ExceptionInvestigations,
+                       ExceptionReviewHistory, InvestigationDetail, InvestigationVerification, Job, StartInvestigationRequest)
 
 router = APIRouter(prefix="/api/v1", tags=["investigations"])
 
 
-@router.get("/packs/{pack_id}/investigations", response_model=list[ExceptionInvestigations],
-            summary="Investigations of every exception in a pack, with eligibility")
-def pack_investigations(pack_id: str, svc=Depends(services)):
-    return svc.investigations.for_pack(pack_id)
+SUBMISSION_SCOPE = Query(None, max_length=40, description="Optional ZIP submission (SUB-...): only that submission's own "
+                         "investigations, attempts and jobs, with that submission's analyst decisions")
+SCOPED_RESPONSES = {404: {"description": "submission not found"}, 409: {"description": "SUBMISSION_PACK_MISMATCH"},
+                    422: {"description": "INVALID_ID"}}
+
+
+@router.get("/packs/{pack_id}/investigations", response_model=list[ExceptionInvestigations], responses=SCOPED_RESPONSES,
+            summary="Investigations of every exception in a pack, with eligibility (optionally of one ZIP submission)")
+def pack_investigations(pack_id: str, submission_id: Optional[str] = SUBMISSION_SCOPE, svc=Depends(services)):
+    return svc.investigations.for_pack(pack_id, submission_id=submission_id)
+
+
+@router.post("/submissions/{submission_id}/investigations/retry", status_code=202, response_model=dict,
+             responses={404: {"description": "submission not found"}, 409: {"description": "NOTHING_TO_RETRY, SUBMISSION_NOT_AUDITED"},
+                        422: {"description": "AUTHORIZATION_REQUIRED, UNKNOWN_EXCEPTION, INVALID_ID"}},
+             summary="Retry, within its own ZIP submission, every exception whose investigation failed, was interrupted or was "
+                     "never queued: a new recorded authorisation, fresh jobs in the submission's execution context")
+def retry_submission_investigations(submission_id: str, body: SubmissionRetryRequest, svc=Depends(services)):
+    if not SUBMISSION_ID_RE.match(submission_id):
+        raise InvalidInput("invalid submission id", code="INVALID_ID")
+    confirmation = body.authorization.model_dump() if body.authorization else None
+    return svc.auto_investigations.retry_submission(submission_id, confirmation, body.exception_ids)
+
+
+@router.get("/packs/{pack_id}/auto-investigations", response_model=dict, responses=SCOPED_RESPONSES,
+            summary="Investigation processing status of every exception in a pack (queued, in progress, findings ready, "
+                    "failed with reason, accepted / rejected by the analyst, not investigated) and its automatic authorisations. "
+                    "With submission_id: the state in that ZIP submission only")
+def auto_investigation_status(pack_id: str, submission_id: Optional[str] = SUBMISSION_SCOPE, svc=Depends(services)):
+    return svc.auto_investigations.pack_status(pack_id, submission_id=submission_id)
+
+
+@router.post("/packs/{pack_id}/auto-investigations", status_code=202, response_model=dict,
+             responses={422: {"description": "AUTHORIZATION_REQUIRED"}, 409: {"description": "AI_CONFIGURATION_CHANGED"},
+                        503: {"description": "PROVIDER_NOT_CONFIGURED"}},
+             summary="Authorise once and queue AI investigations of every applicable exception of the pack (or, with retry, of "
+                     "the exceptions whose latest attempt failed). Every exception gets a recorded outcome")
+def start_auto_investigations(pack_id: str, body: AutoInvestigationRequest, svc=Depends(services)):
+    confirmation = body.authorization.model_dump() if body.authorization else None
+    return svc.auto_investigations.start_for_pack(pack_id, confirmation, retry=body.retry)
 
 
 @router.get("/packs/{pack_id}/exceptions/{exception_id}/investigations", response_model=ExceptionInvestigations,
-            summary="Published investigations (with eligibility), failed attempts and active jobs for one exception")
-def exception_investigations(pack_id: str, exception_id: str, svc=Depends(services)):
-    return svc.investigations.for_exception(pack_id, exception_id)
+            responses=SCOPED_RESPONSES,
+            summary="Published investigations (with eligibility), failed attempts and active jobs for one exception "
+                    "(optionally of one ZIP submission)")
+def exception_investigations(pack_id: str, exception_id: str, submission_id: Optional[str] = SUBMISSION_SCOPE, svc=Depends(services)):
+    return svc.investigations.for_exception(pack_id, exception_id, submission_id=submission_id)
 
 
 @router.post("/packs/{pack_id}/exceptions/{exception_id}/investigations", status_code=202, response_model=Job,
@@ -70,9 +109,12 @@ def get_job(job_id: str, svc=Depends(services)):
 
 
 @router.get("/investigations/{investigation_id}", response_model=InvestigationDetail,
-            summary="Investigation summary, model metadata, eligibility and registry entry")
-def get_investigation(investigation_id: str, svc=Depends(services)):
-    return svc.investigations.detail(investigation_id)
+            responses={404: {"description": "investigation or submission not found"},
+                       422: {"description": "INVALID_ID, INVESTIGATION_NOT_IN_SUBMISSION"}},
+            summary="Investigation summary, model metadata, eligibility and registry entry. With submission_id: the analyst "
+                    "decision of that ZIP submission")
+def get_investigation(investigation_id: str, submission_id: Optional[str] = SUBMISSION_SCOPE, svc=Depends(services)):
+    return svc.investigations.detail(investigation_id, submission_id=submission_id)
 
 
 @router.get("/investigations/{investigation_id}/findings", response_model=dict, summary="The findings exactly as stored")
@@ -97,3 +139,32 @@ def get_tool_calls(investigation_id: str, svc=Depends(services)):
             summary="verify_published plus publication-registry verification (read-only)")
 def verify_investigation(investigation_id: str, svc=Depends(services)):
     return svc.investigations.verify(investigation_id)
+
+
+# ---------------------------------------------------------------- analyst review of AI investigations
+@router.post("/investigations/{investigation_id}/analyst-review", response_model=AnalystReview, status_code=201,
+             responses={409: {"description": "REVIEW_DECISION_CONFLICT, ARTEFACT_UNVERIFIED, PACK_BUSY, DECISION_LOCKED_FINAL_PACK_GENERATED"},
+                        422: {"description": "REJECTION_REASON_REQUIRED, COMMENT_NOT_ALLOWED, REASON_NOT_ALLOWED, REVISION_REQUIRED"}},
+             summary="Record the analyst's ACCEPT or REJECT decision on a published investigation (append-only; REJECT needs a "
+                     "reason, kept exactly as written). Never changes the investigation or the exception's status.")
+def record_analyst_review(investigation_id: str, body: AnalystReviewRequest, svc=Depends(services)):
+    return svc.investigation_reviews.record(investigation_id, body.decision, body.comment, body.rejection_reason,
+                                            body.expected_revision, submission_id=body.submission_id)
+
+
+@router.get("/investigations/{investigation_id}/analyst-reviews", response_model=list[AnalystReview],
+            summary="Every analyst decision on the investigation, oldest first (the latest is active)")
+def analyst_reviews(investigation_id: str, submission_id: Optional[str] = Query(None, max_length=40), svc=Depends(services)):
+    if submission_id is not None:  # validated like every other submission_id input: format (422), then existence (404)
+        if not SUBMISSION_ID_RE.match(submission_id):
+            raise InvalidInput("invalid submission id", code="INVALID_ID")
+        if svc.submission_investigations(submission_id) is None:
+            raise NotFound("submission not found")
+    return svc.investigation_reviews.history(investigation_id, submission_id)
+
+
+@router.get("/packs/{pack_id}/exceptions/{exception_id}/review-history", response_model=ExceptionReviewHistory,
+            summary="The exception's read-only review history: AI investigation requests, completions and failures, published "
+                    "investigations and the analyst's decisions, in time order (application data; not in the final pack)")
+def exception_review_history(pack_id: str, exception_id: str, svc=Depends(services)):
+    return svc.investigation_reviews.exception_history(pack_id, exception_id)

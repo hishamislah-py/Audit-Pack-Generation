@@ -1,0 +1,90 @@
+test_candidate_in_a_confirmed_finding_is_still_refused (tests.test_phase1_reliability.CandidateCitationClasses.test_candidate_in_a_confirmed_finding_is_still_refused)
+The 16 Nov SC5A refusal reproduced: a correct roll-forward finding that also lists CAND-SC5A-01 in evidence_ids. ... ok
+test_model_sees_candidates_as_hypotheses_only (tests.test_phase1_reliability.CandidateCitationClasses.test_model_sees_candidates_as_hypotheses_only) ... ok
+test_sc5a_valid_when_the_candidate_is_only_a_hypothesis (tests.test_phase1_reliability.CandidateCitationClasses.test_sc5a_valid_when_the_candidate_is_only_a_hypothesis) ... ok
+test_candidate_as_one_side_of_a_top_level_contradiction_is_still_refused (tests.test_stage7_dr12_prompt.ValidationUnchanged.test_candidate_as_one_side_of_a_top_level_contradiction_is_still_refused) ... ok
+test_candidate_in_a_hypothesis_contradictory_evidence_is_valid (tests.test_stage7_dr12_prompt.ValidationUnchanged.test_candidate_in_a_hypothesis_contradictory_evidence_is_valid) ... ok
+test_validator_byte_identical_to_clone_e (tests.test_stage7_dr12_prompt.ValidationUnchanged.test_validator_byte_identical_to_clone_e) ... ok
+test_prompt_versions_bumped (tests.test_stage7_dr12_prompt.Versions.test_prompt_versions_bumped) ... ok
+test_amounts_column_described_as_in_the_view (tests.test_stage7_dr12_prompt.Wording.test_amounts_column_described_as_in_the_view) ... ok
+test_both_contradictory_evidence_meanings_are_named (tests.test_stage7_dr12_prompt.Wording.test_both_contradictory_evidence_meanings_are_named) ... ok
+test_new_field_rules (tests.test_findings_schema_14.SchemaCompatibility.test_new_field_rules) ... ok
+test_prompts_and_versions (tests.test_findings_schema_14.SchemaCompatibility.test_prompts_and_versions) ... ok
+test_prompts_name_every_causal_phrase_the_validation_refuses (tests.test_findings_schema_14.SchemaCompatibility.test_prompts_name_every_causal_phrase_the_validation_refuses)
+The model is told every phrase validation refuses (12 Nov 2026: a live investigation was refused for 'due to', ... ok
+test_schema_13_findings_still_load_and_round_trip_without_fabrication (tests.test_findings_schema_14.SchemaCompatibility.test_schema_13_findings_still_load_and_round_trip_without_fabrication) ... ok
+test_schema_14_fields_load_and_are_preserved_through_persistence (tests.test_findings_schema_14.SchemaCompatibility.test_schema_14_fields_load_and_are_preserved_through_persistence) ... ok
+test_strict_schema_requires_the_new_fields_from_the_model (tests.test_findings_schema_14.SchemaCompatibility.test_strict_schema_requires_the_new_fields_from_the_model) ... ok
+test_missing_scope_or_missing_evidence_is_not_proof_of_contradiction (tests.test_review_hardening.ContradictionClassification.test_missing_scope_or_missing_evidence_is_not_proof_of_contradiction) ... ok
+test_rejected_contradiction_is_not_published_through_the_graph (tests.test_review_hardening.ContradictionClassification.test_rejected_contradiction_is_not_published_through_the_graph) ... ok
+test_s05_internal_vs_external_views_are_not_a_contradiction (tests.test_review_hardening.ContradictionClassification.test_s05_internal_vs_external_views_are_not_a_contradiction) ... ok
+test_same_measure_and_scope_may_be_a_contradiction (tests.test_review_hardening.ContradictionClassification.test_same_measure_and_scope_may_be_a_contradiction) ... ok
+test_the_original_live_s05_contradiction_shape_is_rejected (tests.test_review_hardening.ContradictionClassification.test_the_original_live_s05_contradiction_shape_is_rejected) ... ok
+test_unexplained_difference_stays_unexplained (tests.test_review_hardening.ContradictionClassification.test_unexplained_difference_stays_unexplained) ... ok
+test_view_mapping_and_prompt_rules (tests.test_review_hardening.ContradictionClassification.test_view_mapping_and_prompt_rules) ... ok
+test_a_new_result_never_touches_existing_artefacts (tests.test_review_hardening.WriteOnceIntegrity.test_a_new_result_never_touches_existing_artefacts) ... ok
+test_attempted_overwrite_is_refused_and_leaves_bytes_unchanged (tests.test_review_hardening.WriteOnceIntegrity.test_attempted_overwrite_is_refused_and_leaves_bytes_unchanged) ... ok
+test_earlier_schema_artefact_remains_verifiable (tests.test_review_hardening.WriteOnceIntegrity.test_earlier_schema_artefact_remains_verifiable) ... ok
+test_legacy_crlf_artefact_is_never_rewritten_by_an_identical_rerun (tests.test_review_hardening.WriteOnceIntegrity.test_legacy_crlf_artefact_is_never_rewritten_by_an_identical_rerun) ... ok
+test_not_published_records_are_preserved (tests.test_review_hardening.WriteOnceIntegrity.test_not_published_records_are_preserved) ... ok
+test_candidate_in_a_confirmed_finding_is_still_refused (tests.test_phase1_reliability.CandidateCitationClasses.test_candidate_in_a_confirmed_finding_is_still_refused)
+The 16 Nov SC5A refusal reproduced: a correct roll-forward finding that also lists CAND-SC5A-01 in evidence_ids. ... ok
+test_model_sees_candidates_as_hypotheses_only (tests.test_phase1_reliability.CandidateCitationClasses.test_model_sees_candidates_as_hypotheses_only) ... ok
+test_sc5a_valid_when_the_candidate_is_only_a_hypothesis (tests.test_phase1_reliability.CandidateCitationClasses.test_sc5a_valid_when_the_candidate_is_only_a_hypothesis) ... ok
+test_guidance_present_and_every_existing_rule_kept (tests.test_phase1_reliability.ConciseOutputGuidance.test_guidance_present_and_every_existing_rule_kept) ... ok
+test_required_explanatory_fields_are_still_required (tests.test_phase1_reliability.ConciseOutputGuidance.test_required_explanatory_fields_are_still_required) ... ok
+test_closing_summary_keeps_its_budget (tests.test_phase1_reliability.OutputBudget.test_closing_summary_keeps_its_budget) ... ok
+test_defaults_are_separate (tests.test_phase1_reliability.OutputBudget.test_defaults_are_separate) ... ok
+test_environment_sets_each_budget_independently (tests.test_phase1_reliability.OutputBudget.test_environment_sets_each_budget_independently) ... ok
+test_tool_turns_and_fixed_requests_use_the_investigation_budget (tests.test_phase1_reliability.OutputBudget.test_tool_turns_and_fixed_requests_use_the_investigation_budget) ... ok
+test_final_turn_cut_at_the_output_budget_is_failed_and_unpublished (tests.test_phase1_reliability.TruncationNeverPublishes.test_final_turn_cut_at_the_output_budget_is_failed_and_unpublished) ... ok
+test_fixed_mode_truncation_is_failed_and_unpublished (tests.test_phase1_reliability.TruncationNeverPublishes.test_fixed_mode_truncation_is_failed_and_unpublished) ... ok
+test_candidate_ids_hypothesis_only (tests.test_phase4_model_view.CandidatesHypothesesOnly.test_candidate_ids_hypothesis_only) ... ok
+test_view_rows_match_the_source_csv_files (tests.test_phase4_model_view.IndependentCitationCheck.test_view_rows_match_the_source_csv_files) ... ok
+test_model_view_deterministic (tests.test_phase4_model_view.Lossless.test_model_view_deterministic) ... ok
+test_model_view_lossless (tests.test_phase4_model_view.Lossless.test_model_view_lossless) ... ok
+test_stored_packet_unchanged (tests.test_phase4_model_view.Lossless.test_stored_packet_unchanged) ... ok
+test_prompt_rules_preserved (tests.test_phase4_model_view.Requests.test_prompt_rules_preserved) ... ok
+test_schema_not_duplicated_and_text_format_unchanged (tests.test_phase4_model_view.Requests.test_schema_not_duplicated_and_text_format_unchanged) ... ok
+test_view_version_and_hash_recorded_and_reproducible (tests.test_phase4_model_view.Requests.test_view_version_and_hash_recorded_and_reproducible) ... ok
+test_bank_cashbook_and_relationships_with_provenance (tests.test_tool_calling.Execution.test_bank_cashbook_and_relationships_with_provenance) ... ok
+test_customer_transactions_snapshots_and_refund_link (tests.test_tool_calling.Execution.test_customer_transactions_snapshots_and_refund_link) ... ok
+test_forbidden_files_never_opened_by_tools (tests.test_tool_calling.Execution.test_forbidden_files_never_opened_by_tools) ... ok
+test_ledger_update_citations_conflicts_and_hash (tests.test_tool_calling.Execution.test_ledger_update_citations_conflicts_and_hash) ... ok
+test_per_call_and_total_record_limits (tests.test_tool_calling.Execution.test_per_call_and_total_record_limits) ... ok
+test_reconciliation_evidence_and_missing_bank_evidence (tests.test_tool_calling.Execution.test_reconciliation_evidence_and_missing_bank_evidence) ... ok
+test_settlement_batch_lines_transactions_and_missing_transaction (tests.test_tool_calling.Execution.test_settlement_batch_lines_transactions_and_missing_transaction) ... ok
+test_classification_summary_distinguishes_gap_types (tests.test_tool_calling.LedgerValidation.test_classification_summary_distinguishes_gap_types) ... ok
+test_nonexistence_rule_accepts_negated_statements (tests.test_tool_calling.LedgerValidation.test_nonexistence_rule_accepts_negated_statements) ... ok
+test_rule_violations_are_rejected_and_not_published (tests.test_tool_calling.LedgerValidation.test_rule_violations_are_rejected_and_not_published) ... ok
+test_tool_returned_citation_is_valid_only_with_the_ledger (tests.test_tool_calling.LedgerValidation.test_tool_returned_citation_is_valid_only_with_the_ledger) ... ok
+test_live_tools_mode_investigation (tests.test_tool_calling.LiveSmoke.test_live_tools_mode_investigation) ... skipped 'live test: set UC042_RUN_LIVE_TESTS=1 and OPENAI_API_KEY to run (makes real API calls)'
+test_dataset_level_rejections (tests.test_tool_calling.Registry.test_dataset_level_rejections) ... ok
+test_exactly_the_eight_read_only_tools (tests.test_tool_calling.Registry.test_exactly_the_eight_read_only_tools) ... ok
+test_rejections (tests.test_tool_calling.Registry.test_rejections) ... ok
+test_strict_function_definitions (tests.test_tool_calling.Registry.test_strict_function_definitions) ... ok
+test_valid_requests (tests.test_tool_calling.Registry.test_valid_requests) ... ok
+test_duplicate_tool_calls_are_not_re_executed_but_count (tests.test_tool_calling.ToolLoop.test_duplicate_tool_calls_are_not_re_executed_but_count) ... ok
+test_fixed_mode_is_the_default_and_unchanged (tests.test_tool_calling.ToolLoop.test_fixed_mode_is_the_default_and_unchanged) ... ok
+test_invalid_final_answer_gets_one_correction (tests.test_tool_calling.ToolLoop.test_invalid_final_answer_gets_one_correction) ... ok
+test_max_rounds (tests.test_tool_calling.ToolLoop.test_max_rounds) ... ok
+test_max_tool_calls (tests.test_tool_calling.ToolLoop.test_max_tool_calls) ... ok
+test_multiple_calls_in_one_response_and_multiple_rounds (tests.test_tool_calling.ToolLoop.test_multiple_calls_in_one_response_and_multiple_rounds) ... ok
+test_no_tool_call_final_answer (tests.test_tool_calling.ToolLoop.test_no_tool_call_final_answer) ... ok
+test_one_tool_call_history_and_call_id_linkage (tests.test_tool_calling.ToolLoop.test_one_tool_call_history_and_call_id_linkage) ... ok
+test_provider_failures (tests.test_tool_calling.ToolLoop.test_provider_failures) ... ok
+test_timeout_during_the_loop (tests.test_tool_calling.ToolLoop.test_timeout_during_the_loop) ... ok
+test_tools_mode_requires_a_tool_capable_provider (tests.test_tool_calling.ToolLoop.test_tools_mode_requires_a_tool_capable_provider) ... ok
+test_total_timeout_and_input_token_budget_stop_before_any_request (tests.test_tool_calling.ToolLoop.test_total_timeout_and_input_token_budget_stop_before_any_request) ... ok
+test_unknown_tool_invalid_json_and_tool_failure_are_reported_to_the_model (tests.test_tool_calling.ToolLoop.test_unknown_tool_invalid_json_and_tool_failure_are_reported_to_the_model) ... ok
+test_atomic_publication_failure_leaves_nothing (tests.test_tool_calling.ToolPersistence.test_atomic_publication_failure_leaves_nothing) ... ok
+test_different_tool_runs_never_overwrite_each_other (tests.test_tool_calling.ToolPersistence.test_different_tool_runs_never_overwrite_each_other) ... ok
+test_failed_tool_run_keeps_transcript_unpublished (tests.test_tool_calling.ToolPersistence.test_failed_tool_run_keeps_transcript_unpublished) ... ok
+test_ledger_transcript_and_hashes_are_persisted (tests.test_tool_calling.ToolPersistence.test_ledger_transcript_and_hashes_are_persisted) ... ok
+
+----------------------------------------------------------------------
+Ran 80 tests in 35.272s
+
+OK (skipped=1)
+
+[phase 4] 76 packets: 1948282 -> 1510682 characters (22.5% smaller)

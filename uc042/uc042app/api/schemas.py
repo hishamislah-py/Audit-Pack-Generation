@@ -75,6 +75,7 @@ class PackDetail(_Resp):
     metadata: dict
     executive_summary: dict
     statements: dict
+    candidate_relationships: list[dict] = Field(default_factory=list, description="Unverified candidate relationships (DATE_AND_AMOUNT_COINCIDENCE); never evidence")
     verification: dict
 
 
@@ -87,6 +88,20 @@ class PackReconciliation(_Resp):
     external_by_account_day: list[dict]
     opening_positions: dict
     client_balances_note: str
+
+
+class ControlCheck(_Resp):
+    check_id: str
+    control_code: str
+    control_name: str
+    check_outcome: Optional[str] = None
+    result_counts: dict[str, int]
+    exception_ids: list[str]
+
+
+class PackControls(_Resp):
+    pack_id: str
+    checks: list[ControlCheck]
 
 
 class PackSources(_Resp):
@@ -131,6 +146,151 @@ class AiConfirmation(_Req):
     confirmed: bool = False
     provider: Optional[str] = Field(None, max_length=32)
     model: Optional[str] = Field(None, max_length=64)
+    fallback_provider: Optional[str] = Field(None, max_length=32, description="Legacy: only 'none' is accepted (there is no automatic fallback provider)")
+    fallback_model: Optional[str] = Field(None, max_length=64)
+
+
+class AutoInvestigationRequest(_Req):
+    authorization: Optional[AiConfirmation] = Field(None, description="Required: the analyst's explicit AUTO_INVESTIGATION authorisation")
+    retry: bool = Field(False, description="Re-queue only the exceptions whose latest attempt failed (after a provider issue is resolved)")
+
+
+class SubmissionFinalPack(_Resp):
+    final_pack_id: str
+    generated_at: str
+    final_content_sha256: str
+
+
+class SubmissionEntry(_Resp):
+    submission_id: str
+    run_id: str
+    submitted_at: str
+    submitted_by: str
+    status: Optional[str] = None
+    pack_id: Optional[str] = None
+    outcome: Optional[str] = None
+    completed_at: Optional[str] = None
+    error: str = ""
+    auto_investigation: Optional[str] = None
+    final_packs: list[SubmissionFinalPack] = []
+
+
+class SubmissionPackage(_Resp):
+    """One ZIP package of a period with its submissions (GET /periods/{period_id}/submissions)."""
+    batch_id: str
+    created_at: str
+    status: str
+    zip_name: Optional[str] = None
+    zip_sha256: Optional[str] = None
+    gate: Optional[dict] = None
+    file_count: int
+    submissions: list[SubmissionEntry]
+
+
+# ---------------------------------------------------------------- packages and submission status (Phase B, read-only)
+SubmissionStage = Literal["PACKAGE_REJECTED", "PACKAGE_INCOMPLETE", "READY_TO_SUBMIT", "AUDIT_RUNNING", "AUDIT_FAILED",
+                          "AI_INVESTIGATING", "FINDINGS_TO_REVIEW", "READY_FOR_FINAL_REVIEW", "FINAL_REVIEW_IN_PROGRESS",
+                          "FINAL_PACK_GENERATED"]
+
+
+class PackageGate(_Resp):
+    passed: bool
+    missing_required: list[str] = []
+    present_required: int = 0  # how many required document types are present
+    required_total: int = 0
+    reason: Optional[str] = None  # why a rejected package was refused (unsafe / unexpected / unreadable archive)
+
+
+class SubmissionInvestigationCounts(_Resp):
+    """Per exception of the submission's pack (total = exception count): running (latest own job queued / running),
+    completed (an investigation produced for this submission), failed (latest own job failed / interrupted), not_started."""
+    total: int
+    completed: int
+    failed: int
+    running: int
+    not_started: int = 0
+
+
+class SubmissionDecisionCounts(_Resp):
+    """The submission's own analyst decisions on its latest completed investigation per exception."""
+    accepted: int
+    rejected: int
+    pending: int
+
+
+class SubmissionReviewRef(_Resp):
+    review_id: str
+    status: str
+
+
+class SubmissionFinalPackRef(_Resp):
+    final_pack_id: str
+    generated_at: str
+    version: Optional[int] = None
+
+
+class SubmissionStatus(_Resp):
+    submission_id: str
+    run_id: str
+    run_status: Optional[str] = None
+    run_error: str = ""
+    submitted_at: Optional[str] = None
+    submitted_by: Optional[str] = None
+    completed_at: Optional[str] = None
+    pack_id: Optional[str] = None
+    outcome: Optional[str] = None
+    exception_count: Optional[int] = None
+    auto_investigation_status: Optional[str] = None
+    investigations: SubmissionInvestigationCounts
+    decisions: SubmissionDecisionCounts
+    review: Optional[SubmissionReviewRef] = None  # the active review session of (pack, submission), else the latest
+    final_pack: Optional[SubmissionFinalPackRef] = None  # the submission's latest final pack
+    stage: SubmissionStage
+
+
+class SubmissionDetail(SubmissionStatus):
+    """GET /submissions/{submission_id}: the submission's status plus its package."""
+    batch_id: str
+    display_name: str
+    display_name_source: Literal["STORED", "DERIVED"]
+    period_id: str
+    zip_name: Optional[str] = None
+
+
+class PackageItem(_Resp):
+    """One ZIP submission package (GET /packages, PATCH /packages/{batch_id})."""
+    batch_id: str
+    display_name: str
+    display_name_source: Literal["STORED", "DERIVED"]  # DERIVED: from the ZIP file name (no name was set)
+    zip_name: Optional[str] = None
+    zip_sha256: Optional[str] = None
+    period_id: str
+    created_at: str
+    status: str
+    gate: PackageGate
+    document_count: int
+    submissions_count: int
+    submission_ids: list[str] = []  # newest first
+    latest_submission: Optional[SubmissionStatus] = None
+    stage: SubmissionStage  # the latest submission's stage, or the package's own (rejected / incomplete / ready to submit)
+
+
+class UpdatePackageRequest(_Req):
+    display_name: str = Field(max_length=1000, description="The package's display name (trimmed; at most 200 characters; "
+                                                           "empty clears it, and the name derived from the ZIP file name is shown)")
+
+
+class SubmissionRetryRequest(_Req):
+    authorization: Optional[AiConfirmation] = Field(None, description="Required: the analyst's explicit AUTO_INVESTIGATION authorisation")
+    exception_ids: Optional[list[str]] = Field(None, max_length=500, description="Limit the retry to these exceptions (default: every "
+                                               "exception of the submission without a completed investigation)")
+
+
+class ProcessRequest(_Req):
+    ai_authorization: Optional[AiConfirmation] = Field(
+        None, description="What the processing confirmation disclosed (provider, model). AI investigation of every "
+                          "exception of the resulting pack is mandatory; the confirmation is its run-level authorisation, and a "
+                          "configuration that changed since it was shown is refused")
 
 
 class StartInvestigationRequest(_Req):
@@ -169,6 +329,8 @@ class PublishedInvestigation(_Resp):
     ineligible_reasons: list[str]
     registry: Optional[dict] = None
     authorization: Optional[dict] = None
+    analyst_review: Optional["AnalystReview"] = None  # the analyst's active ACCEPT / REJECT decision; None = pending review
+    submission_id: Optional[str] = None  # the ZIP submission whose audit run produced it (decided only in that submission's review)
 
 
 class ExceptionInvestigations(_Resp):
@@ -177,6 +339,7 @@ class ExceptionInvestigations(_Resp):
     published: list[PublishedInvestigation]
     not_published: list[dict]
     active_jobs: list[Job]
+    submission_id: Optional[str] = None  # set only on a submission-scoped request (?submission_id=)
 
 
 class InvestigationDetail(_Resp):
@@ -198,6 +361,67 @@ class InvestigationDetail(_Resp):
     ineligible_reasons: list[str]
     registry: Optional[dict]
     authorization: Optional[dict] = None
+    analyst_review: Optional["AnalystReview"] = None
+    submission_id: Optional[str] = None  # the ZIP submission that produced it (findings.execution), None for legacy
+
+
+# ---------------------------------------------------------------- analyst review of AI investigations (Exception Workspace)
+class AnalystReviewRequest(_Req):
+    """ACCEPT (optional comment) or REJECT (mandatory reason for rejection, kept exactly as written). expected_revision is
+    the review revision the analyst decided on (0 for the first decision); a decision on an out-of-date view is refused."""
+    decision: Literal["ACCEPT", "REJECT"]
+    comment: str = Field("", max_length=8000)
+    rejection_reason: str = Field("", max_length=8000)
+    expected_revision: int = Field(ge=0)
+    submission_id: Optional[str] = Field(None, max_length=40, description="The ZIP submission whose review this decision belongs "
+                                         "to (counts only there); omitted: the legacy period-level decision")
+
+
+class AnalystReviewer(_Resp):
+    user_id: str
+    display_name: str
+
+
+class AnalystReview(_Resp):
+    analyst_review_id: str
+    period_id: str
+    pack_id: str
+    exception_id: str
+    investigation_id: str
+    findings_sha256: str
+    findings_schema_version: str
+    decision: Literal["ACCEPT", "REJECT"]
+    comment: str
+    rejection_reason: str
+    reviewer: AnalystReviewer
+    decided_at: str
+    revision: int
+    supersedes_review_id: Optional[str] = None
+    active: bool
+    pdf_unsupported_characters: list[dict] = []  # characters the audit PDF fonts cannot draw (final pack blocked until resolved)
+    submission_id: Optional[str] = None  # the ZIP submission whose review this decision belongs to (None: legacy decision)
+
+
+class ReviewHistoryEvent(_Resp):
+    at: str
+    kind: str
+    label: str
+    actor: Optional[str] = None
+    pack_id: str
+    exception_id: str
+    investigation_id: Optional[str] = None
+    details: dict
+
+
+class ExceptionReviewHistory(_Resp):
+    pack_id: str
+    exception_id: str
+    events: list[ReviewHistoryEvent]
+    active_decisions: dict  # period-level (legacy) scope: {investigation_id: active decision}
+    active_submission_decisions: dict = {}  # {submission_id: {investigation_id: active decision}}
+    pending_investigations: list[str]
+    exception_status: Literal["UNRESOLVED"]
+    note: str
 
 
 class InvestigationVerification(_Resp):
@@ -232,6 +456,9 @@ class ReviewListItem(_Resp):
     has_preview: bool
     final_pack_id: Optional[str] = None
     last_decision: Optional[dict] = None
+    submission_id: Optional[str] = None
+    run_id: Optional[str] = None
+    batch_id: Optional[str] = None
 
 
 class Readiness(_Resp):
@@ -239,6 +466,8 @@ class Readiness(_Resp):
     blockers: list[dict]
     warnings: list[dict]
     info: list[dict]
+    checklist: Optional[dict] = Field(None, description="Per-exception AI status, final-review disposition and next action, "
+                                                        "with counts, the preview state and the closing-summary status")
 
 
 class PreviewMeta(_Resp):
@@ -268,6 +497,14 @@ class ReviewSession(_Resp):
     last_decision_id: Optional[str] = None
     readiness: Readiness
     acknowledgement_text: str
+    submission_id: Optional[str] = None  # the ZIP submission under review (its own investigations and decisions only)
+    run_id: Optional[str] = None
+    batch_id: Optional[str] = None
+
+
+class OpenReviewRequest(_Req):
+    submission_id: Optional[str] = Field(None, max_length=40, description="Review one ZIP submission's audit result: only the "
+                                         "investigations and analyst decisions of that submission's run are used")
 
 
 class PreviewRequest(_Req):
@@ -304,6 +541,9 @@ class FinalPackListItem(_Resp):
     generated_at: str
     review_decision_id: str
     final_content_sha256: str
+    submission_id: Optional[str] = None  # traceability: ZIP submission -> upload batch -> audit run -> this final pack
+    run_id: Optional[str] = None
+    batch_id: Optional[str] = None
 
 
 class FinalPackDetail(_Resp):
@@ -401,7 +641,7 @@ class Period(_Resp):
 class UploadBatch(_Resp):
     batch_id: str
     period_id: str
-    origin: Literal["UPLOAD", "POC_DATASET_IMPORT"]
+    origin: Literal["UPLOAD", "POC_DATASET_IMPORT", "ZIP_SUBMISSION"]
     created_at: str
     created_by: str
     file_count: int
@@ -411,6 +651,7 @@ class UploadBatch(_Resp):
     error: str = ""
     confirmed_at: Optional[str] = None
     confirmed_by: Optional[str] = None
+    display_name: Optional[str] = None  # ZIP packages only: summary.package.display_name, else derived from the ZIP name
 
 
 class SourceDocument(_Resp):
@@ -462,6 +703,10 @@ class BatchDetail(_Resp):
 class ReconcileRequest(_Req):
     purpose: Literal["INITIAL", "REASSESSMENT"] = "INITIAL"
     reason: str = Field("", max_length=500)
+    ai_authorization: Optional[AiConfirmation] = Field(
+        None, description="What the processing confirmation disclosed (provider, model). AI investigation of every "
+                          "exception of the resulting pack is mandatory; the confirmation is its run-level authorisation, and a "
+                          "configuration that changed since it was shown is refused")
 
 
 class PeriodDetail(_Resp):
@@ -568,7 +813,7 @@ class AiConfiguration(_Resp):
 class AiAuthorization(_Resp):
     id: int
     authorization_id: str
-    operation: Literal["INVESTIGATION", "CLOSING_SUMMARY"]
+    operation: Literal["INVESTIGATION", "CLOSING_SUMMARY", "AUTO_INVESTIGATION"]
     result: str
     period_id: str
     pack_id: str
@@ -636,3 +881,8 @@ class DashboardSummary(_Resp):
     pending_reviews_period: int
     pending_reviews_global: int
     per_pack: list[dict]
+
+
+# Forward references to AnalystReview (defined after the models that use it).
+PublishedInvestigation.model_rebuild()
+InvestigationDetail.model_rebuild()

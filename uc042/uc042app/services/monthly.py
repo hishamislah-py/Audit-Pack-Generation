@@ -33,9 +33,10 @@ from uc042lib.prepare import prepare_case, selected_policy
 
 from .. import ids
 from ..clock import now_iso
-from ..errors import Conflict, InvalidInput, NotFound, ServiceUnavailable
+from ..errors import Conflict, InvalidInput, NotFound, Retired, ServiceUnavailable
 from ..repositories.base import DuplicateRecord
 from ..ingest import analysis as A
+from ..ingest import zip_package as Z
 from ..ingest.store import DocumentStore, StoreError
 
 log = logging.getLogger("uc042app")
@@ -50,6 +51,14 @@ BASELINE_REF = "BASELINE"  # a document-set entry taken from the verified source
 DOCUMENT_ID_RE = re.compile(r"^DOC-[0-9a-f]{24}$")
 RUN_ID_RE = re.compile(r"^RUN-[0-9a-f]{24}$")
 RUN_PURPOSES = ("INITIAL", "REASSESSMENT")
+# Independent ZIP submissions (approved 17 Nov 2026): one ZIP = one complete document set for one period. Its batch is never
+# part of the period's accumulated document set, and every explicit Submit for Audit creates a new submission and run.
+ZIP_ORIGIN = "ZIP_SUBMISSION"
+SUBMISSION_PURPOSE = "SUBMISSION"
+SUBMISSION_ID_RE = re.compile(r"^SUB-[0-9a-f]{24}$")
+PACKAGE_REJECTED, PACKAGE_INCOMPLETE = "PACKAGE_REJECTED", "PACKAGE_INCOMPLETE"
+# ZIP-only operation (consolidated remediation, 17 Nov 2026)
+LEGACY_RETIRED, ZIP_USE_SUBMIT = "LEGACY_WORKFLOW_RETIRED", "ZIP_PACKAGE_USE_SUBMIT"
 
 
 def processing_supported(period_id):
@@ -77,6 +86,22 @@ def _check(regex, value, what):
     return value
 
 
+MAX_DISPLAY_NAME = 200
+
+
+def package_display_name(value):
+    """A ZIP package's analyst-chosen display name (stored at summary["package"]["display_name"]; no schema change):
+    control characters removed, trimmed, at most MAX_DISPLAY_NAME characters. Empty (or None) means "not set"."""
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise InvalidInput("the display name must be text", code="INVALID_DISPLAY_NAME")
+    name = re.sub(r"[\x00-\x1f\x7f]", "", value).strip()
+    if len(name) > MAX_DISPLAY_NAME:
+        raise InvalidInput(f"the display name may have at most {MAX_DISPLAY_NAME} characters", code="INVALID_DISPLAY_NAME")
+    return name or None
+
+
 def _safe_name(name):
     name = Path(str(name or "")).name.strip()  # metadata only; the stored object is named by its hash
     name = re.sub(r"[\x00-\x1f]", "", name)[:255]
@@ -84,11 +109,15 @@ def _safe_name(name):
 
 
 class MonthlyService:
+    auto_investigations = None  # set by Services (automatic AI investigation after an authorised run)
     def __init__(self, settings, repos, packs, runner, final_packs=None):
         self.settings, self.repos, self.packs, self.runner = settings, repos, packs, runner
         self.final_packs = final_packs  # published final packs and their reassessment lineage (FinalPackService)
         self.store = DocumentStore(settings.document_store, settings.datasets_root) if settings.document_store else None
         self._lock = threading.RLock()  # serialises batch state changes (single backend process)
+        # submission_id -> run_id. The backend is a single process (storage.InstanceLock) and submit_for_audit is the only
+        # place a submission run is created, so this in-process index is complete once built (one scan, on first use).
+        self._submission_index = None
 
     # ------------------------------------------------------------------ guards
     def _require(self):
@@ -180,13 +209,24 @@ class MonthlyService:
         Policies (IN-17) are kept per version: "IN-17" is the version that governs the month (uc042lib.policy.select:
         the single applicable version or the month's approved selection) and "IN-17@vN.N" another applicable version
         that stays in the source inventory without governing reconciliation. No governing version: no "IN-17" entry."""
-        out = {}
-        batches = [b for b in self.repos.uploads.batches(period_id) if b["confirmed_at"]]
+        # ZIP submissions are independent document sets: never part of the period's accumulated set (and vice versa)
+        batches = [b for b in self.repos.uploads.batches(period_id) if b["confirmed_at"] and b.get("origin") != ZIP_ORIGIN]
         batches.sort(key=lambda b: b["confirmed_at"])
         if through_batch is not None:
             batches = [b for b in batches if b["batch_id"] != through_batch] + [{"batch_id": through_batch}]
-        for b in batches:
-            for d in self.repos.uploads.documents(batch_id=b["batch_id"]):
+        return self._set_of(period_id, [b["batch_id"] for b in batches])
+
+    def submission_set(self, batch_id):
+        """{evidence_id: document_id} of ONE batch only (a ZIP submission): its usable documents, policy versions selected
+        exactly as for the accumulated set. Nothing is inherited from earlier batches, runs or packs."""
+        batch = self.repos.uploads.batch(batch_id)
+        return self._set_of(batch["period_id"], [batch_id])
+
+    def _set_of(self, period_id, batch_ids):
+        """The latest usable document of each slot over `batch_ids` (in order), with the IN-17 policy selection applied."""
+        out = {}
+        for batch_id in batch_ids:
+            for d in self.repos.uploads.documents(batch_id=batch_id):
                 if self._usable(d):
                     out[A.slot(d)] = d["document_id"]
         versions = {k.split("@v", 1)[1]: out.pop(k) for k in [k for k in out if k.startswith("IN-17@v")]}
@@ -207,13 +247,63 @@ class MonthlyService:
                 "selected_document": selected, "approved_selection": approved.decision if approved else None,
                 "supplied_not_selected": sorted(k.split("@v", 1)[1] for k in current if k.startswith("IN-17@v"))}
 
+    # ------------------------------------------------------------------ ZIP-only operation: retired entry points
+    def _legacy_entry(self, action):
+        """The individual-document workflow is retired from active use: new audits are ZIP submissions only. Refused
+        unless the code-only Settings.legacy_entry_points switch is set (never from the environment)."""
+        if not getattr(self.settings, "legacy_entry_points", False):
+            raise Retired(f"{action} belongs to the retired individual-document workflow; a new audit is one ZIP package for the "
+                          "month: upload it (POST /api/v1/periods/{period_id}/packages), then Submit for Audit", code=LEGACY_RETIRED)
+
+    @staticmethod
+    def _not_a_package(batch, action):
+        """A ZIP submission package is never confirmed, processed or edited through the individual-document endpoints
+        (whatever the retired-workflow switch says): its only audit path is Submit for Audit."""
+        if batch.get("origin") == ZIP_ORIGIN:
+            raise Conflict(f"{batch['batch_id']} is a ZIP submission package: {action} does not apply; use Submit for Audit "
+                           "(POST /api/v1/uploads/{batch_id}/submit)", code=ZIP_USE_SUBMIT)
+
+    def zip_batch_ids(self, period_id=None):
+        """Batch IDs of ZIP submission packages (of one period, or of every period)."""
+        periods = [period_id] if period_id else [p["period_id"] for p in self.repos.periods.list()]
+        return {b["batch_id"] for pid in periods for b in self.repos.uploads.batches(pid) if b.get("origin") == ZIP_ORIGIN}
+
+    def submission_pack_ids(self, period_id):
+        """Packs of the period registered ONLY by ZIP submission runs (a pack a legacy run or a scenario registered too is
+        a legacy pack as well: content-addressed packs can be shared)."""
+        runs = {r["run_id"]: r for r in self.repos.runs.list(period_id=period_id)}
+        out = set()
+        for rec in self.repos.periods.packs(period_id):
+            run = runs.get(rec.get("processing_run_id") or "")
+            if run is not None and (run.get("result") or {}).get("purpose") == SUBMISSION_PURPOSE:
+                out.add(rec["pack_id"])
+        return out
+
+    def is_submission_only_pack(self, pack_id):
+        """True when every registration of the pack comes from ZIP submission runs: its investigations, decisions, reviews
+        and final packs then belong to submissions only (never to a pack-wide / period-level workflow)."""
+        if self.repos.periods is None or self.repos.runs is None:
+            return False
+        recs = [r for r in self.repos.periods.packs() if r["pack_id"] == pack_id]
+        if not recs:
+            return False
+        for rec in recs:
+            run = self.repos.runs.get(rec.get("processing_run_id")) if rec.get("processing_run_id") else None
+            if run is None or (run.get("result") or {}).get("purpose") != SUBMISSION_PURPOSE:
+                return False
+        return True
+
     # ------------------------------------------------------------------ published packs, reassessment and verified baselines
     def published_final_packs(self, period_id):
-        """Final audit packs published from the period's deterministic packs, oldest first (by generation time)."""
+        """Final audit packs published by the period's LEGACY workflow, oldest first (by generation time). A ZIP submission's
+        final pack (its record carries submission_id) is never a legacy publication: it never becomes a reassessment target,
+        a predecessor, or "received after publication" evidence (identified by the record, not by the content-addressed
+        pack_id, which identical content shares)."""
         if self.final_packs is None:
             return []
         packs = {r["pack_id"] for r in self.repos.periods.packs(period_id)}
-        return sorted((f for f in self.final_packs.list() if f["pack_id"] in packs), key=lambda f: f["generated_at"])
+        return sorted((f for f in self.final_packs.list() if f["pack_id"] in packs and not f.get("submission_id")),
+                      key=lambda f: f["generated_at"])
 
     def reassessment_target(self, period_id):
         """(latest final pack, its source pack ID): what a reassessment of the period reassesses, or (None, None)."""
@@ -289,11 +379,13 @@ class MonthlyService:
                 "baseline_problems": [], "effective_set": {}, "missing_required": [], "new_documents": [], "can_reassess": False,
                 "blockers": []}
         if final is not None:
+            zip_batches = self.zip_batch_ids(period_id)  # a ZIP submission's documents are never legacy evidence
             plan["new_documents"] = [{k: d[k] for k in ("document_id", "original_filename", "evidence_id", "category",
                                                         "submission_kind", "submission_reason", "created_at", "validation_status",
                                                         "batch_id")}
                                      for d in self.repos.uploads.documents(period_id=period_id)
-                                     if datetime.fromisoformat(d["created_at"]) > datetime.fromisoformat(final["generated_at"])]
+                                     if d["batch_id"] not in zip_batches
+                                     and datetime.fromisoformat(d["created_at"]) > datetime.fromisoformat(final["generated_at"])]
             try:
                 plan["baseline"] = self.baseline(target, period_id)
             except Conflict as e:
@@ -338,12 +430,19 @@ class MonthlyService:
             raise InvalidInput("the replaced document must be an earlier document of this period", code="INVALID_SUBMISSION")
         return reason, earlier
 
-    def upload(self, period_id, files, submission_kind="INITIAL", reason="", replaces_document_id=None, published_final_packs=()):
-        """files: [(original_filename, bytes)]. Stores every original, analyses it and records a batch. Nothing is
+    def upload(self, period_id, files, submission_kind="INITIAL", reason="", replaces_document_id=None, published_final_packs=(),
+               origin="UPLOAD", independent=False, summary=None):
+        """independent=True (a ZIP submission): the documents are checked on their own only (no comparison with earlier
+        uploads, no "received after publication" note, no fallback to earlier documents for letter slots); `origin` and an
+        initial `summary` (the package report) are recorded on the batch. Defaults keep the legacy behaviour unchanged.
+
+        files: [(original_filename, bytes)]. Stores every original, analyses it and records a batch. Nothing is
         processed here. submission_kind / reason / replaces_document_id record how the documents were added (_submission).
         published_final_packs: final audit packs already published for the period; documents received afterwards are
         marked as not yet incorporated in them (pending reassessment). Nothing published is changed."""
         self._require()
+        if origin != ZIP_ORIGIN:
+            self._legacy_entry("Uploading individual documents")
         period = self._period(period_id)
         if not files:
             raise InvalidInput("no files were uploaded", code="NO_FILES")
@@ -370,16 +469,16 @@ class MonthlyService:
                              reporting_period=period_id, created_at=created, submission_kind=submission_kind,
                              submission_reason=reason, replaces_document_id=earlier["document_id"] if earlier else None))
         for d in docs:
-            self._submission_checks(d, submission_kind, earlier, published_final_packs)
-        self._resolve_letters(period_id, docs)
-        self._duplicates(period_id, docs)
+            self._submission_checks(d, submission_kind, earlier, () if independent else published_final_packs)
+        self._resolve_letters(period_id, docs, independent=independent)
+        self._duplicates(period_id, docs, independent=independent)
         for d in docs:
             d["validation_status"] = A.status_of(d["checks"]["messages"])
             d.pop("slot_candidates", None)
             d.update(review_decision=None, review_comment="", reviewed_at=None, reviewed_by=None)
-        batch = {"batch_id": batch_id, "period_id": period_id, "origin": "UPLOAD", "created_at": created,
+        batch = {"batch_id": batch_id, "period_id": period_id, "origin": origin, "created_at": created,
                  "created_by": self.settings.analyst_id, "file_count": len(docs), "validation_status": "VALID",
-                 "status": "VALIDATED", "summary": {}, "error": "", "confirmed_at": None, "confirmed_by": None}
+                 "status": "VALIDATED", "summary": dict(summary or {}), "error": "", "confirmed_at": None, "confirmed_by": None}
         with self._lock:
             self.repos.uploads.create_batch(batch, docs)
             batch = self._summarise(batch_id)
@@ -421,7 +520,8 @@ class MonthlyService:
         None when there is none or it is ambiguous (several independent scenario packs) or it cannot be verified."""
         _, target = self.reassessment_target(period_id)
         if target is None:
-            packs = [r["pack_id"] for r in self.repos.periods.packs(period_id)]
+            only_submissions = self.submission_pack_ids(period_id)  # a ZIP submission's pack is never a legacy reference
+            packs = [r["pack_id"] for r in self.repos.periods.packs(period_id) if r["pack_id"] not in only_submissions]
             target = packs[0] if len(packs) == 1 else None
         if target is None:
             return None
@@ -437,7 +537,7 @@ class MonthlyService:
             path.write_bytes(self._baseline_bytes(baseline, fid))  # re-verified against the recorded SHA-256
             return read_csv(path)[1]
 
-    def _resolve_letters(self, period_id, docs):
+    def _resolve_letters(self, period_id, docs, independent=False):
         """Acknowledgement letters share key details; the slot is chosen by the letter reference in the account
         inventory (IN-02) of this batch, failing that of the period's current set (the engine's own rule), and failing
         that of the period's verified pack source inventory (a month registered from its dataset has no uploaded IN-02).
@@ -448,14 +548,14 @@ class MonthlyService:
         try:
             if inventory is not None:
                 rows = self._rows(inventory["storage_ref"], inventory["sha256"])
-            else:
+            elif not independent:  # a ZIP submission never borrows an earlier document's account inventory
                 cur = self.current_set(period_id).get("IN-02")
                 if cur:
                     d = self.repos.uploads.document(cur)
                     rows = self._rows(d["storage_ref"], d["sha256"])
         except (StoreError, OSError):
             rows = None
-        if rows is None and any(d["file_format"] == "PDF" and len(d.get("slot_candidates") or []) > 1 for d in docs):
+        if rows is None and not independent and any(d["file_format"] == "PDF" and len(d.get("slot_candidates") or []) > 1 for d in docs):
             ref = self.reference_baseline(period_id)
             if ref is not None and "IN-02" in ref["files"]:
                 try:
@@ -491,13 +591,16 @@ class MonthlyService:
         except (StoreError, OSError, ValueError):
             return set()
 
-    def _duplicates(self, period_id, docs):
-        """Flag (never remove) duplicates. Each flag that needs an analyst decision sets checks.decision_required."""
+    def _duplicates(self, period_id, docs, independent=False):
+        """Flag (never remove) duplicates. Each flag that needs an analyst decision sets checks.decision_required.
+        independent=True (a ZIP submission, approved 17 Nov 2026): nothing is compared with earlier uploads of this or another
+        period; the same file submitted again simply gives the same results. Only the package's own files are compared."""
         def flag(d, code, level, text, decide=True, **extra):
             d["checks"]["messages"].append(A._msg(code, level, text, **extra))
             if decide:
                 d["checks"]["decision_required"] = True
-        earlier = self.repos.uploads.documents(period_id=period_id)
+        zip_batches = set() if independent else self.zip_batch_ids()  # ZIP packages are never compared with legacy uploads
+        earlier = [] if independent else [e for e in self.repos.uploads.documents(period_id=period_id) if e["batch_id"] not in zip_batches]
         first_by_sha = {}
         for d in docs:
             if d["sha256"] in first_by_sha:
@@ -513,7 +616,9 @@ class MonthlyService:
             if renamed:
                 flag(d, "SAME_NAME_DIFFERENT_CONTENT", "WARNING", f"a different file with the same name was uploaded earlier "
                      f"(batch {renamed[0]['batch_id']}); both are kept, nothing is overwritten", other=renamed[0]["document_id"])
-            elsewhere = [e for e in self.repos.uploads.find_documents(sha256=d["sha256"]) if e["reporting_period"] != period_id]
+            elsewhere = [] if independent else \
+                [e for e in self.repos.uploads.find_documents(sha256=d["sha256"])
+                 if e["reporting_period"] != period_id and e["batch_id"] not in zip_batches]
             if elsewhere:
                 if d["file_format"] == "CSV" and d["evidence_id"] and d.get("record_count") == 0:
                     # A header-only file is identical in every month that has no records of its type: equal hashes say
@@ -554,7 +659,8 @@ class MonthlyService:
         docs = self.repos.uploads.documents(batch_id=batch_id)
         in_batch = {d["evidence_id"] for d in docs
                     if d["evidence_id"] and d["validation_status"] != "ERROR" and d["review_decision"] != "EXCLUDE"}
-        combined = self.current_set(batch["period_id"], through_batch=batch_id)
+        zip_batch = batch.get("origin") == ZIP_ORIGIN
+        combined = self.submission_set(batch_id) if zip_batch else self.current_set(batch["period_id"], through_batch=batch_id)
         # A document with errors is never processed, so it needs no decision (it cannot be included).
         pending = [d["document_id"] for d in docs if d["checks"].get("decision_required") and not d["review_decision"]
                    and d["validation_status"] != "ERROR"]
@@ -565,6 +671,8 @@ class MonthlyService:
                    "missing_optional": [f for f in A.OPTIONAL_IDS if f not in combined],
                    "decisions_pending": pending, "processing_set": combined,
                    "policy_selection": self.policy_selection(batch["period_id"], combined)}
+        if zip_batch:  # the package report and the batch's submission history are kept (never recomputed away)
+            summary.update({k: (batch.get("summary") or {})[k] for k in ("package", "submissions") if k in (batch.get("summary") or {})})
         if counts["ERROR"] == len(docs):
             status = "INVALID"
         elif summary["missing_required"]:
@@ -609,6 +717,8 @@ class MonthlyService:
         with self._lock:
             d = self.document(document_id)
             batch = self.repos.uploads.batch(d["batch_id"])
+            self._not_a_package(batch, "a document INCLUDE / EXCLUDE decision")
+            self._legacy_entry("A document INCLUDE / EXCLUDE decision")
             if batch["status"] != "VALIDATED":
                 raise Conflict("the batch is confirmed; decisions on its documents are final (upload a new batch to correct)",
                                code="BATCH_CONFIRMED")
@@ -624,6 +734,8 @@ class MonthlyService:
         with self._lock:
             detail = self.batch_detail(batch_id)
             batch, docs = detail["batch"], detail["documents"]
+            self._not_a_package(batch, "confirming a batch")
+            self._legacy_entry("Confirming an individual-document batch")
             if batch["status"] != "VALIDATED":
                 raise Conflict("the batch is already confirmed", code="BATCH_CONFIRMED")
             if batch["validation_status"] == "INVALID":
@@ -650,7 +762,7 @@ class MonthlyService:
         self._require()
         return self._period(period_id)
 
-    def reconcile(self, period_id, purpose="INITIAL", reason="", pending_reassessment=False):
+    def reconcile(self, period_id, purpose="INITIAL", reason="", pending_reassessment=False, ai_authorization=None):
         """Analyst-initiated reconciliation of one period (never automatic: not at start-up, on upload, on opening a report
         or on any other change). INITIAL runs the existing deterministic engine over the period's current confirmed
         document set. REASSESSMENT is for evidence received after a final audit pack was published: it needs that evidence
@@ -658,6 +770,7 @@ class MonthlyService:
         uploaded documents, superseding the verified original source documents of the pack being reassessed). The
         published packs are never changed; the new pack is linked to the pack it reassesses (pack lineage)."""
         self._require()
+        self._legacy_entry("Period reconciliation of individually uploaded documents")
         self._period(period_id)
         if purpose not in RUN_PURPOSES:
             raise InvalidInput(f"purpose must be one of {', '.join(RUN_PURPOSES)}", code="INVALID_PURPOSE")
@@ -673,14 +786,16 @@ class MonthlyService:
         if not confirmed:
             raise Conflict("the period has no confirmed upload batch to reconcile; upload, validate and confirm documents first",
                            code="NO_CONFIRMED_DOCUMENTS")
-        return self.process(confirmed[-1]["batch_id"], purpose=purpose, reason=reason[:500])
+        return self.process(confirmed[-1]["batch_id"], purpose=purpose, reason=reason[:500], ai_authorization=ai_authorization)
 
-    def process(self, batch_id, purpose="INITIAL", reason=""):
+    def process(self, batch_id, purpose="INITIAL", reason="", ai_authorization=None):
         """Start a processing run for the period's document set (after this confirmed batch). A retry is a new run.
         INITIAL processing is refused once the period has a published final audit pack: new evidence for a published
         period is assessed only through an explicit REASSESSMENT (never silently through the normal processing action)."""
         with self._lock:
             batch = self.batch_detail(batch_id)["batch"]
+            self._not_a_package(batch, "processing a batch")
+            self._legacy_entry("Processing an individual-document batch")
             if batch["status"] == "VALIDATED":
                 raise Conflict("confirm the batch before processing", code="BATCH_NOT_CONFIRMED")
             if any(r["status"] in ("QUEUED", "RUNNING") for r in self.repos.runs.list(period_id=batch["period_id"])):
@@ -704,14 +819,21 @@ class MonthlyService:
             if missing:
                 raise Conflict("required evidence is missing for this period: " + ", ".join(missing), code="INCOMPLETE",
                                extra={"missing": missing})
-            run = {"run_id": ids.new_id("RUN"), "period_id": period_id, "batch_id": batch_id, "job_id": None, "status": "QUEUED",
+            run_id = ids.new_id("RUN")
+            auto = None
+            if self.auto_investigations is not None:
+                # MANDATORY automatic AI investigation of the resulting pack (no opt-in): the processing confirmation, which
+                # disclosed it (ai_authorization: what it showed), is the run-level authorisation, recorded before the run.
+                # Without a usable provider the run still processes and carries NOT_STARTED with the configuration problem.
+                auto = self.auto_investigations.authorize_run(ai_authorization, period_id, run_id, purpose=purpose, batch_id=batch_id)
+            run = {"run_id": run_id, "period_id": period_id, "batch_id": batch_id, "job_id": None, "status": "QUEUED",
                    "started_at": None, "completed_at": None, "error": "", "created_at": now_iso(), "created_by": self.settings.analyst_id,
                    "result": {"document_set": current, "purpose": purpose, "reason": reason,
                               "predecessor_pack_id": target if purpose == "REASSESSMENT" else None,
                               "reassessed_final_pack_id": final["final_pack_id"] if purpose == "REASSESSMENT" else None,
                               "baseline": ({k: baseline[k] for k in ("pack_id", "dataset", "storage_profile")}
                                            | {"files": {fid: baseline["files"][fid] for fid, src in effective.items() if src == BASELINE_REF}})
-                              if baseline else None}}
+                              if baseline else None, **({"auto_investigation": auto} if auto else {})}}
             job = self.runner.create("PROCESSING", period_id, self.settings.analyst_id, inputs={"run_id": run["run_id"],
                                                                                                 "batch_id": batch_id})
             run["job_id"] = job["job_id"]
@@ -724,6 +846,199 @@ class MonthlyService:
             self._activity("REASSESSMENT_STARTED", "period", period_id, run_id=run["run_id"], reason=reason, pack_id=target,
                            final_pack_id=final["final_pack_id"])
         return self.repos.runs.get(run["run_id"])
+
+    # ------------------------------------------------------------------ independent ZIP submissions (17 Nov 2026)
+    def upload_package(self, period_id, data, zip_name="package.zip", limits=None, display_name=None):
+        """Upload ONE ZIP for a period: read it safely, map file names through the central schema (uc042lib.period), store
+        and analyse each mapped file with the existing upload pipeline (independently: nothing is compared with or borrowed
+        from earlier uploads), then apply the completeness gate. Nothing is processed: Submit for Audit is a separate,
+        explicit action. A package that is unsafe or contains files outside the schema is recorded as PACKAGE_REJECTED with
+        its report and no documents; nothing it contains reaches document analysis. Returns the batch detail.
+        display_name: optional analyst-chosen name of the package (kept for rejected packages too)."""
+        self._require()
+        display_name = package_display_name(display_name)
+        period = self._period(period_id)
+        cfg = PeriodConfig.from_id(period_id)
+        limits = limits or Z.ZipLimits.from_env()
+        zip_ref, zip_sha = self.store.put(data)  # the archive itself is kept, content-addressed (never lost, never processed)
+        base = {"zip_name": _safe_name(zip_name), "zip_sha256": zip_sha, "zip_storage_ref": zip_ref, "zip_bytes": len(data),
+                **({"display_name": display_name} if display_name else {})}
+        try:
+            inv, files = Z.read_package(data, cfg, limits)
+        except Z.PackageRejected as e:
+            return self._rejected_package(period, dict(base, error={"code": e.code, "message": str(e)}))
+        blocking = inv["unsafe"] or inv["unexpected"] or inv["duplicate_names"] or inv["duplicate_types"]
+        if blocking or not files:
+            report = self._package_gate(cfg, inv, [], {}) if not blocking else None
+            return self._rejected_package(period, dict(base, inventory=inv, gate=report or self._blocked_gate(inv)))
+        by_name = {name: (fid, version) for name, _, fid, version in files}
+        detail = self.upload(period_id, [(name, content) for name, content, _, _ in files], origin=ZIP_ORIGIN, independent=True,
+                             summary={"package": dict(base, inventory=inv)})
+        batch_id = detail["batch"]["batch_id"]
+        docs = detail["documents"]
+        gate = self._package_gate(cfg, inv, docs, self.submission_set(batch_id), by_name)
+        with self._lock:
+            batch = self.repos.uploads.batch(batch_id)
+            summary = dict(batch["summary"], package=dict(base, inventory=inv, gate=gate))
+            self.repos.uploads.update_batch(batch_id, {"summary": summary, "status": "VALIDATED" if gate["passed"] else PACKAGE_INCOMPLETE})
+        self._activity("PACKAGE_VALIDATED" if gate["passed"] else "PACKAGE_INCOMPLETE", "batch", batch_id, period_id=period_id,
+                       zip_sha256=zip_sha, missing_required=gate["missing_required"])
+        return self.batch_detail(batch_id)
+
+    @staticmethod
+    def _blocked_gate(inv):
+        return {"passed": False, "present_required": [], "missing_required": [], "present_optional": [], "duplicate_types":
+                inv["duplicate_types"], "duplicate_names": inv["duplicate_names"], "unexpected": inv["unexpected"],
+                "unsafe": inv["unsafe"], "mismatches": [], "unusable": [], "ignored_metadata": inv["ignored_metadata"],
+                "reason": "the package contains unsafe entries, files outside the approved UC-042 schema, or duplicates; "
+                          "no document was analysed"}
+
+    def _rejected_package(self, period, package):
+        """Record a rejected package (its report and the stored ZIP) as a batch with no documents: no run is possible."""
+        batch_id, created = ids.new_id("UPL"), now_iso()
+        batch = {"batch_id": batch_id, "period_id": period["period_id"], "origin": ZIP_ORIGIN, "created_at": created,
+                 "created_by": self.settings.analyst_id, "file_count": 0, "validation_status": "INVALID",
+                 "status": PACKAGE_REJECTED, "summary": {"package": package}, "error": "", "confirmed_at": None, "confirmed_by": None}
+        with self._lock:
+            self.repos.uploads.create_batch(batch, [])
+        self._activity("PACKAGE_REJECTED", "batch", batch_id, period_id=period["period_id"], zip_sha256=package["zip_sha256"])
+        return self.batch_detail(batch_id)
+
+    @staticmethod
+    def _package_gate(cfg, inv, docs, own_set, by_name=None):
+        """The completeness gate (schema membership, identification, readability, completeness; NOT a compliance or
+        data-quality assessment). Required: every PeriodConfig.required_ids type present exactly once, identified by its
+        file name AND by its content (they must agree), and usable under the existing document validation (a document with
+        an ERROR is never processed, so it cannot satisfy a required type). IN-18 / IN-19 are optional. WARNING-level
+        findings never block (they are reported by the audit as before)."""
+        by_name = by_name or {}
+        mismatches, unusable, optional_problems = [], [], []
+        for d in docs:
+            fid, version = by_name.get(d["original_filename"], (None, None))
+            content = d.get("evidence_id")
+            if content != fid:
+                mismatches.append({"name": d["original_filename"], "by_name": fid, "by_content": content,
+                                   "reason": "the content is not identified as this document type" if content is None else
+                                             f"the file name says {fid}, the content is {content}"})
+            elif fid == "IN-17" and version and A.policy_version(d) and A.policy_version(d) != version:
+                mismatches.append({"name": d["original_filename"], "by_name": f"IN-17 v{version}", "by_content": f"IN-17 v{A.policy_version(d)}",
+                                   "reason": "the policy version in the file name differs from the document's own version"})
+            errors = [m["message"] for m in d["checks"]["messages"] if m["level"] == "ERROR"]
+            if errors:
+                (optional_problems if fid in cfg.optional_ids else unusable).append(
+                    {"name": d["original_filename"], "evidence_id": fid, "errors": errors[:5]})
+        present_required = sorted(f for f in cfg.required_ids if f in own_set)
+        missing_required = [f for f in cfg.required_ids if f not in own_set]
+        present_optional = sorted(f for f in cfg.optional_ids if f in own_set)
+        passed = not (missing_required or mismatches or unusable or inv["unexpected"] or inv["unsafe"]
+                      or inv["duplicate_types"] or inv["duplicate_names"])
+        return {"passed": passed, "present_required": present_required, "missing_required": missing_required,
+                "present_optional": present_optional, "optional_not_usable": optional_problems,
+                "duplicate_types": inv["duplicate_types"], "duplicate_names": inv["duplicate_names"],
+                "unexpected": inv["unexpected"], "unsafe": inv["unsafe"], "mismatches": mismatches, "unusable": unusable,
+                "ignored_metadata": inv["ignored_metadata"], "required_total": len(cfg.required_ids)}
+
+    def submit_for_audit(self, batch_id, ai_authorization=None):
+        """The explicit Submit for Audit action on a complete ZIP package: a NEW submission ID and a NEW audit run every time
+        (also for a package identical to an earlier one), processing ONLY this package's documents (no inheritance from
+        earlier batches, runs or packs; no reassessment baseline). The per-period RUN_IN_PROGRESS guard is kept."""
+        self._require()
+        with self._lock:
+            batch = self.batch_detail(batch_id)["batch"]
+            if batch.get("origin") != ZIP_ORIGIN:
+                raise InvalidInput("only a ZIP submission package can be submitted for audit", code="NOT_A_PACKAGE")
+            gate = ((batch.get("summary") or {}).get("package") or {}).get("gate") or {}
+            if batch["status"] in (PACKAGE_REJECTED, PACKAGE_INCOMPLETE) or not gate.get("passed"):
+                raise Conflict("the package did not pass the completeness gate; it cannot be submitted for audit",
+                               code="PACKAGE_NOT_COMPLETE", extra={"gate": gate})
+            if batch["status"] == "PROCESSING" or any(r["status"] in ("QUEUED", "RUNNING") for r in self.repos.runs.list(period_id=batch["period_id"])):
+                raise Conflict("a processing run for this period is already in progress", code="RUN_IN_PROGRESS")
+            period_id = batch["period_id"]
+            document_set = self.submission_set(batch_id)
+            missing = [f for f in A.REQUIRED_IDS if f not in document_set]
+            if missing:  # defensive: the gate already guarantees this
+                raise Conflict("required evidence is missing from this package: " + ", ".join(missing), code="INCOMPLETE",
+                               extra={"missing": missing})
+            submission_id, run_id, submitted_at = ids.new_id("SUB"), ids.new_id("RUN"), now_iso()
+            auto = None
+            if self.auto_investigations is not None:
+                auto = self.auto_investigations.authorize_run(ai_authorization, period_id, run_id, purpose=SUBMISSION_PURPOSE,
+                                                              batch_id=batch_id, submission_id=submission_id)
+            run = {"run_id": run_id, "period_id": period_id, "batch_id": batch_id, "job_id": None, "status": "QUEUED",
+                   "started_at": None, "completed_at": None, "error": "", "created_at": submitted_at, "created_by": self.settings.analyst_id,
+                   "result": {"document_set": document_set, "purpose": SUBMISSION_PURPOSE, "reason": "", "submission_id": submission_id,
+                              "zip_sha256": (batch["summary"].get("package") or {}).get("zip_sha256"),
+                              "predecessor_pack_id": None, "reassessed_final_pack_id": None, "baseline": None,
+                              **({"auto_investigation": auto} if auto else {})}}
+            job = self.runner.create("PROCESSING", period_id, self.settings.analyst_id, inputs={"run_id": run_id, "batch_id": batch_id,
+                                                                                                "submission_id": submission_id})
+            run["job_id"] = job["job_id"]
+            self.repos.runs.create(run)
+            if self._submission_index is not None:
+                self._submission_index[submission_id] = run_id
+            submissions = list((batch.get("summary") or {}).get("submissions") or []) + [
+                {"submission_id": submission_id, "run_id": run_id, "submitted_at": submitted_at, "submitted_by": self.settings.analyst_id}]
+            self.repos.uploads.update_batch(batch_id, {"status": "PROCESSING", "confirmed_at": batch.get("confirmed_at") or submitted_at,
+                                                       "confirmed_by": batch.get("confirmed_by") or self.settings.analyst_id,
+                                                       "summary": dict(batch["summary"], submissions=submissions)})
+            self.repos.periods.update(period_id, {"status": "PROCESSING"})
+            self.runner.submit(job, self._execute)
+        self._activity("SUBMITTED_FOR_AUDIT", "run", run_id, period_id=period_id, batch_id=batch_id, submission_id=submission_id,
+                       job_id=job["job_id"])
+        return self.repos.runs.get(run_id)
+
+    def _derive_statuses(self, period_id, batch_id):
+        """Batch and period status, derived deterministically from EVERY recorded run (never only the latest): a run in
+        progress -> PROCESSING; else any successful run (for the period: or any registered pack) -> PROCESSED; else
+        PROCESSING_FAILED. A later failed resubmission therefore never hides an earlier successful audit; each run's own
+        outcome stays on the run."""
+        runs = self.repos.runs.list(period_id=period_id)
+        active = ("QUEUED", "RUNNING")
+
+        def derive(rs, extra_success=False):
+            if any(r["status"] in active for r in rs):
+                return "PROCESSING"
+            return "PROCESSED" if extra_success or any(r["status"] == "SUCCEEDED" for r in rs) else "PROCESSING_FAILED"
+        self.repos.uploads.update_batch(batch_id, {"status": derive([r for r in runs if r["batch_id"] == batch_id])})
+        self.repos.periods.update(period_id, {"status": derive(runs, bool(self.repos.periods.packs(period_id))),
+                                              "last_processed_at": now_iso()})
+
+    def submission_run(self, submission_id):
+        """The audit run of one submission (None when unknown): an indexed lookup (submission_id -> run_id, then the run by
+        its primary key), never a scan of every run per call."""
+        _check(SUBMISSION_ID_RE, submission_id, "submission id")
+        if self.repos.runs is None:
+            return None
+        with self._lock:
+            if self._submission_index is None:  # built once per process
+                self._submission_index = {(r.get("result") or {}).get("submission_id"): r["run_id"] for r in self.repos.runs.list()
+                                          if (r.get("result") or {}).get("submission_id")}
+            run_id = self._submission_index.get(submission_id)
+        return self.repos.runs.get(run_id) if run_id else None
+
+    def submissions(self, period_id):
+        """Every ZIP package of the period with its submissions (newest first): package report, submission ID, audit run,
+        status, deterministic pack and outcome. Identical packages are separate entries."""
+        self._require()
+        self._period(period_id)
+        runs = {r["run_id"]: r for r in self.repos.runs.list(period_id=period_id)}
+        out = []
+        for b in self.repos.uploads.batches(period_id):
+            if b.get("origin") != ZIP_ORIGIN:
+                continue
+            pkg = (b.get("summary") or {}).get("package") or {}
+            subs = []
+            for s in (b.get("summary") or {}).get("submissions") or []:
+                r = runs.get(s["run_id"]) or {}
+                res = r.get("result") or {}
+                subs.append(dict(s, status=r.get("status"), pack_id=res.get("pack_id"), outcome=res.get("outcome"),
+                                 completed_at=r.get("completed_at"), error=r.get("error") or "",
+                                 auto_investigation=(res.get("auto_investigation") or {}).get("status")))
+            out.append({"batch_id": b["batch_id"], "created_at": b["created_at"], "status": b["status"],
+                        "zip_name": pkg.get("zip_name"), "zip_sha256": pkg.get("zip_sha256"), "gate": pkg.get("gate"),
+                        "file_count": b["file_count"], "submissions": subs})
+        out.sort(key=lambda x: x["created_at"], reverse=True)
+        return out
 
     def run(self, run_id):
         self._require()
@@ -745,11 +1060,22 @@ class MonthlyService:
         result = dict(run["result"], **(result or {}))
         self.repos.runs.update(run_id, {"status": status, "completed_at": now_iso(), "error": error, "result": result})
         ok = status == "SUCCEEDED"
-        self.repos.uploads.update_batch(run["batch_id"], {"status": "PROCESSED" if ok else "PROCESSING_FAILED"})
-        self.repos.periods.update(run["period_id"], {"status": "PROCESSED" if ok or self.repos.periods.packs(run["period_id"])
-                                                     else "PROCESSING_FAILED", "last_processed_at": now_iso()})
+        self._derive_statuses(run["period_id"], run["batch_id"])
         self._activity("PROCESSING_SUCCEEDED" if ok else "PROCESSING_FAILED", "run", run_id, pack_id=result.get("pack_id"),
                        outcome=result.get("outcome"))
+        auto = result.get("auto_investigation")
+        if auto and auto.get("status") == "AUTHORIZED" and self.auto_investigations is not None:
+            if ok and result.get("pack_id"):
+                try:  # the pack is persisted, verified and registered at this point
+                    enq = self.auto_investigations.after_run(dict(run, result=result), result["pack_id"])
+                    auto = dict(auto, status="ENQUEUED", pack_id=result["pack_id"], summary=enq["summary"], items=enq["items"])
+                except Exception as e:  # recorded on the run; the reconciliation result stands
+                    log.exception("automatic investigation enqueue failed for run %s", run_id)
+                    auto = dict(auto, status="ENQUEUE_FAILED", error=str(e)[:300])
+            else:
+                auto = dict(auto, status="NOT_STARTED", error="the reconciliation run did not produce a pack")
+            result = dict(result, auto_investigation=auto)
+            self.repos.runs.update(run_id, {"result": result})
         job_result = {"run_id": run_id, "status": status, "pack_id": result.get("pack_id"), "outcome": result.get("outcome")}
         return ("COMPLETED" if ok else "FAILED"), job_result, error
 
@@ -811,7 +1137,8 @@ class MonthlyService:
         return "SUCCEEDED", {"pack_id": pack_id, "outcome": outcome, "case": case_dir.name, "intake": intake_summary,
                              "policy_version": version, "baseline_files": sorted(base),
                              "exceptions": len(exc), "engine_case_status": self.packs.summary(verified)["engine_case_status"],
-                             "continuity": self._continuity(period, case_dir), "lineage": lineage}, ""
+                             "continuity": self._continuity(period, case_dir, "SUBMISSION" if (run.get("result") or {}).get("purpose") == SUBMISSION_PURPOSE else "LEGACY"),
+                             "lineage": lineage}, ""
 
     def _record_lineage(self, run, pack):
         """A REASSESSMENT pack is linked to the pack it reassesses (and to its lineage's first pack), with what changed.
@@ -871,22 +1198,27 @@ class MonthlyService:
                                "unchanged": sorted(f"{be[k]} = {ae[k]}" for k in set(ae) & set(be))},
                 "baseline_files": sorted(((run or {}).get("result", {}).get("baseline") or {}).get("files", {}))}
 
-    def _continuity(self, period, case_dir):
+    def _continuity(self, period, case_dir, workflow="LEGACY"):
         """Opening positions against the previous period's closing positions (uc042lib.continuity), using the previous
-        period's latest successful run's case. Without one: NOT_VERIFIABLE; nothing is assumed."""
+        period's latest successful run's case IN THE SAME WORKFLOW: a ZIP submission run is compared with the previous
+        period's latest successful submission run, a legacy run with the previous period's latest successful legacy run;
+        never across workflows. The comparator is recorded (basis). Without one: NOT_VERIFIABLE; nothing is assumed."""
         from uc042lib.continuity import compare
+        submission = workflow == "SUBMISSION"
         prev_runs = [r for r in self.repos.runs.list(period_id=period.previous.period_id) if r["status"] == "SUCCEEDED"
-                     and r["result"].get("case")]
+                     and r["result"].get("case") and (r["result"].get("purpose") == SUBMISSION_PURPOSE) == submission]
+        basis = {"workflow": "SUBMISSION" if submission else "LEGACY", "previous_period": period.previous.period_id,
+                 "previous_run_id": prev_runs[-1]["run_id"] if prev_runs else None}
         prev_case = self.store.cases_root / prev_runs[-1]["result"]["case"] if prev_runs else None
         try:
             report = compare(prev_case if prev_case and prev_case.is_dir() else None, case_dir, period, period.previous)
         except Exception as e:  # continuity is reported, never allowed to change or fail the run's engine result
-            return {"status": "NOT_VERIFIABLE", "previous_period": period.previous.period_id,
+            return {"status": "NOT_VERIFIABLE", "previous_period": period.previous.period_id, "basis": basis,
                     "items": [], "error": f"{type(e).__name__}: continuity could not be assessed"}
         counts = {}
         for i in report["items"]:
             counts[i["status"]] = counts.get(i["status"], 0) + 1
-        return dict(report, counts=counts)
+        return dict(report, counts=counts, basis=basis)
 
     @staticmethod
     def _read_intake(case_dir):

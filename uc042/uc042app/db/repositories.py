@@ -8,8 +8,10 @@ from sqlalchemy import func, select, update
 from sqlalchemy.exc import IntegrityError
 
 from ..repositories.base import (ActivityRepository, AiAuthorizationRepository, AuthorizationRepository, CaseRepository,
-                                 ConcurrentUpdate, DuplicateRecord, FinalPackRecordRepository, JobRepository, LineageRepository,
-                                 PeriodRepository, ProcessingRunRepository, RegistryRepository, ReviewRepository, UploadRepository)
+                                 ConcurrentUpdate, DuplicateRecord, FinalPackRecordRepository, InvestigationReviewRepository,
+                                 JobRepository, LineageRepository, PeriodRepository, ProcessingRunRepository, RegistryRepository,
+                                 ReviewRepository, UploadRepository)
+from ..clock import utc_iso
 from . import models as m
 
 
@@ -408,6 +410,50 @@ class SqlAiAuthorizationRepository(_Repo, AiAuthorizationRepository):
             return [_row_dict(r, AI_AUTH_COLS) for r in s.scalars(q)]
 
 
+INV_REVIEW_COLS = ("id", "analyst_review_id", "period_id", "pack_id", "exception_id", "investigation_id", "findings_sha256",
+                   "findings_schema_version", "decision", "comment", "rejection_reason", "reviewer_id", "reviewer_name", "decided_at",
+                   "revision", "supersedes_review_id", "submission_id")
+
+
+class SqlInvestigationReviewRepository(_Repo, InvestigationReviewRepository):
+    """Insert and read only (PostgreSQL refuses UPDATE and DELETE, migration 0005). The (investigation_id, revision)
+    unique constraint makes the revision check race-free: of two concurrent decisions on one revision only one is stored.
+    Migration 0006: revisions are numbered per investigation AND submission scope (legacy decisions: submission_id NULL)."""
+    def append(self, rec, expected_revision):
+        t = m.InvestigationReviewRow
+        sub = rec.get("submission_id")
+        try:
+            with self.sessions.begin() as s:
+                scope = t.submission_id.is_(None) if sub is None else t.submission_id == sub
+                latest = s.scalar(select(func.max(t.revision)).where(t.investigation_id == rec["investigation_id"], scope)) or 0
+                if latest != expected_revision:
+                    raise ConcurrentUpdate(f"{rec['investigation_id']} is at review revision {latest}, not {expected_revision}")
+                row = t(**dict({k: v for k, v in rec.items() if k != "id"}, revision=expected_revision + 1,
+                               decided_at=_dt(utc_iso(rec["decided_at"]))))  # stored as UTC (SQLite keeps no offset)
+                s.add(row)
+                s.flush()
+                return self._dict(row)
+        except IntegrityError:
+            raise ConcurrentUpdate(f"{rec['investigation_id']}: another decision was stored on revision {expected_revision + 1}") from None
+
+    @staticmethod
+    def _dict(row):
+        """decided_at as canonical UTC: PostgreSQL returns timestamptz in the session's time zone (for example +05:30), and
+        the decision is the same instant whatever that zone is (it is part of the review snapshot hash)."""
+        d = _row_dict(row, INV_REVIEW_COLS)
+        d["decided_at"] = utc_iso(row.decided_at if row.decided_at.tzinfo else row.decided_at.replace(tzinfo=timezone.utc))
+        return d
+
+    def list(self, pack_id=None, exception_id=None, investigation_id=None):
+        t = m.InvestigationReviewRow
+        q = select(t).order_by(t.id)
+        for col, value in ((t.pack_id, pack_id), (t.exception_id, exception_id), (t.investigation_id, investigation_id)):
+            if value is not None:
+                q = q.where(col == value)
+        with self.sessions() as s:
+            return [self._dict(r) for r in s.scalars(q)]
+
+
 class SqlLineageRepository(_Repo, LineageRepository):
     def add(self, row):
         try:
@@ -493,6 +539,7 @@ class SqlRepositories:
         self.cases = SqlCaseRepository(sessions)
         self.authorizations = SqlAuthorizationRepository(sessions)
         self.ai_authorizations = SqlAiAuthorizationRepository(sessions)
+        self.investigation_reviews = SqlInvestigationReviewRepository(sessions)
         self.lineage = SqlLineageRepository(sessions)
         self.jobs = SqlJobRepository(sessions)
         self.reviews = SqlReviewRepository(sessions)

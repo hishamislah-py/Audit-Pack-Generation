@@ -1,0 +1,13 @@
+{
+ "description": "Live closing-summary refusal, TC06 (engine-level live test, 23 Nov 2026 06:39:54). The refused response text was NOT persisted (requests use store=false and the test harness kept only the validator findings); the item below is RECONSTRUCTED exactly from the two findings: one unverified_hypotheses item (index 4) that cited only these two source record IDs.",
+ "model": "gpt-6-luna",
+ "provider_request_id": "req_04444c6369a542e9a3ea2dcbb7277466",
+ "provider_response_id": "resp_088b0d2e7a7530d3016b0392415f3487d0a5854ebdc1555b8c",
+ "prompt_version": "uc042-closing-summary-prompt/1.3",
+ "kind": "invalid_summary",
+ "live_findings": [
+  "unverified_hypotheses[4]: references not in the supplied input: ['IN-03:CBS-20260917-C0004-GBP', 'IN-03:CBS-20260917-C0007-GBP']",
+  "unverified_hypotheses[4]: must reference a hypothesis or unverified relationship"
+ ],
+ "refused_item_source_refs": ["IN-03:CBS-20260917-C0004-GBP", "IN-03:CBS-20260917-C0007-GBP"]
+}

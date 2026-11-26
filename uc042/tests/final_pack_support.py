@@ -95,9 +95,29 @@ def summary_output(summary_input, edit=None):
         "evidence_gaps": [{"text": "Evidence gaps are listed by the investigation.", "source_refs": gaps[:2]}] if gaps else [],
         "suggested_next_steps": [{"text": "Obtain the evidence the investigation lists as needed.", "source_refs": steps[:1]}] if steps else [],
         "limitations": ["Synthetic data; investigations examine one exception at a time."]}
+    if "allowed_source_refs" in summary_input:   # input 1.1: one generic, cautious assessment per group / candidate
+        data["group_assessments"] = scripted_group_assessments(summary_input)
     if edit:
         edit(data)
     return ClosingSummaryOutput.model_validate(data)
+
+
+def scripted_group_assessments(summary_input):
+    """Generic scripted group assessments (a test double, not AI analysis): every group and candidate relationship of the
+    input is assessed UNVERIFIED with LOW confidence, citing only the source records the input attaches to it. Scenario
+    tests replace these with scenario-specific scripted outputs."""
+    out = []
+    units = [(g["group_id"], g["exception_ids"], g["source_evidence_ids"]) for g in summary_input["investigation_groups"]]
+    units += [(c["candidate_id"], c["exception_ids"], c["source_evidence_ids"]) for c in summary_input["candidate_relationships"]]
+    for uid, exc, src in units:
+        out.append({"group_id": uid, "exception_ids": [i.strip() for i in exc.split(";") if i.strip()],
+                    "related_exception_ids": [], "relationship_verdict": "UNVERIFIED",
+                    "common_cause_hypothesis": "SCRIPTED: a common cause may exist but is not established by the supplied records.",
+                    "supporting_evidence": list(src[:2]), "contradicting_evidence": [],
+                    "missing_evidence": ["SCRIPTED: records that would link these exceptions directly."],
+                    "analyst_action": "SCRIPTED: review the linked records for a shared posting or source.",
+                    "confidence": "LOW", "rationale": "SCRIPTED: the engine links these exceptions for review only."})
+    return out
 
 
 def summary_investigator(snapshot, edit=None):

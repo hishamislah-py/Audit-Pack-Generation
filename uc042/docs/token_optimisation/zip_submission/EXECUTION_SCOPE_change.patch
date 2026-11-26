@@ -1,0 +1,385 @@
+diff -ruN -x __pycache__ C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/pre_exec_scope/uc042lib/investigation/graph.py uc042lib/investigation/graph.py
+--- C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/pre_exec_scope/uc042lib/investigation/graph.py	2026-11-16 12:14:19.000000000 +0530
++++ uc042lib/investigation/graph.py	2026-11-17 14:19:30.212591600 +0530
+@@ -51,6 +51,7 @@
+     ledger: dict          # accumulated evidence: initial packet + tool results, with allowed_citation_ids and ledger_sha256
+     tool_calls: list      # tool execution transcript
+     tool_summary: dict    # calls, rounds, stop reason, status, tools used, token usage
++    execution: dict       # the originating audit-run execution (submission, run, authorisation, job); empty otherwise
+ 
+ 
+ def _cfg(config_, key, default=None):
+@@ -245,7 +246,8 @@
+                 evidence_packet_sha256=packet.get("packet_sha256", ""), investigation_mode=_mode(state),
+                 evidence_ledger_sha256=(state.get("ledger") or {}).get("ledger_sha256", ""),
+                 tool_summary={k: v for k, v in (state.get("tool_summary") or {}).items()},
+-                investigated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"))
++                investigated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
++                execution=dict(state.get("execution") or {}))
+ 
+ 
+ def _mode(state):
+@@ -372,11 +374,12 @@
+ 
+ 
+ def run_investigation(pack_id, exception_id, investigator, packs_root=None, datasets_root=None, investigations_root=None,
+-                      mode="fixed", tool_limits=None, profile=None, period_id=None):
++                      mode="fixed", tool_limits=None, profile=None, period_id=None, execution=None):
+     """Invoke the graph for one exception. mode 'fixed' (V1, default) or 'tools' (V2 nested tool-calling subgraph); the
+     CLI passes the UC042_INVESTIGATION_MODE setting explicitly. Input roots: explicit packs and datasets roots, or a
+     profile / period (uc042lib.investigation.roots); they are validated before anything is read, and a pack outside the
+-    profile's periods is refused (InvestigationRootsError). Returns the final state."""
++    profile's periods is refused (InvestigationRootsError). execution: the originating audit-run execution (submission,
++    run, authorisation, job); it is stored with the result and makes that execution's artefact its own. Returns the final state."""
+     global GRAPH
+     if mode not in settings.MODES:
+         raise ValueError(f"unknown investigation mode {mode!r}")
+@@ -385,4 +388,5 @@
+     if GRAPH is None:
+         GRAPH = build_graph()
+     cfg = {"configurable": {"investigator": investigator, **approved.as_kwargs(), "tool_limits": tool_limits}}
+-    return GRAPH.invoke({"pack_id": pack_id, "exception_id": exception_id, "trace": [], "investigation_mode": mode}, config=cfg)
++    return GRAPH.invoke({"pack_id": pack_id, "exception_id": exception_id, "trace": [], "investigation_mode": mode,
++                         "execution": dict(execution or {})}, config=cfg)
+diff -ruN -x __pycache__ C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/pre_exec_scope/uc042lib/investigation/models.py uc042lib/investigation/models.py
+--- C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/pre_exec_scope/uc042lib/investigation/models.py	2026-11-16 12:14:19.000000000 +0530
++++ uc042lib/investigation/models.py	2026-11-17 14:19:19.820526400 +0530
+@@ -2,7 +2,7 @@
+ InvestigationResult with identity, provenance and validation fields that the model cannot set."""
+ from typing import Annotated, Literal, Optional
+ 
+-from pydantic import BaseModel, ConfigDict, Field, WithJsonSchema
++from pydantic import BaseModel, ConfigDict, Field, WithJsonSchema, model_serializer
+ 
+ EvidenceAssessment = Literal["EVIDENCE_SUFFICIENT", "PARTIALLY_SUFFICIENT", "INSUFFICIENT_EVIDENCE", "CONFLICTING_EVIDENCE"]
+ 
+@@ -137,3 +137,16 @@
+     investigated_at: str = ""
+     statement: str = ("AI investigation findings are an aid to human review. They do not change any deterministic control "
+                       "outcome, do not resolve or close any exception, and are not a compliance opinion.")
++    # The audit-run execution that produced this result (independent ZIP submissions, 17 Nov 2026): submission_id, run_id,
++    # authorization_id and job_id. It is part of the stored findings and therefore of the investigation identity, so every
++    # execution is its own artefact: an identical result from another submission, run or job never shares (or is compared
++    # with) this one. Empty for investigations outside a submission run; it is then omitted from the stored findings, which
++    # keeps their bytes and identity exactly as before.
++    execution: dict = Field(default_factory=dict)
++
++    @model_serializer(mode="wrap")
++    def _omit_empty_execution(self, handler):
++        data = handler(self)
++        if isinstance(data, dict) and not data.get("execution"):
++            data.pop("execution", None)
++        return data
+diff -ruN -x __pycache__ C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/pre_exec_scope/uc042lib/investigation/persistence.py uc042lib/investigation/persistence.py
+--- C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/pre_exec_scope/uc042lib/investigation/persistence.py	2026-11-02 17:45:32.000000000 +0530
++++ uc042lib/investigation/persistence.py	2026-11-17 14:19:30.212591600 +0530
+@@ -35,7 +35,9 @@
+ def investigation_id_from_findings(findings, packet_sha256):
+     """Identity over the findings exactly as stored, so artefacts written under an earlier findings schema remain
+     verifiable after fields are added. Per-call metadata (usage, provider response IDs) is excluded; in tools mode the
+-    findings include evidence_ledger_sha256, so the accumulated evidence is part of the identity."""
++    findings include evidence_ledger_sha256, so the accumulated evidence is part of the identity. The originating execution
++    (findings["execution"]: submission, run, authorisation, job; stored only for audit-run investigations) is part of the
++    identity too, so each execution publishes its own artefact and is never compared with another execution's."""
+     core = {k: v for k, v in findings.items() if k not in ("investigation_id", "investigated_at", "model_metadata")}
+     meta = {k: v for k, v in (findings.get("model_metadata") or {}).items() if k not in ("usage", "provider_response")}
+     basis = canonical({"findings": core, "model": meta, "packet": packet_sha256})
+diff -ruN -x __pycache__ C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/pre_exec_scope/uc042app/services/auto_investigations.py uc042app/services/auto_investigations.py
+--- C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/pre_exec_scope/uc042app/services/auto_investigations.py	2026-11-17 13:56:58.000000000 +0530
++++ uc042app/services/auto_investigations.py	2026-11-17 14:19:51.346595300 +0530
+@@ -133,13 +133,14 @@
+                 "can_retry": any(r["state"] == FAILED for r in rows)}
+ 
+     # ---------------------------------------------------------------- enqueue
+-    def enqueue(self, pack_id, authorization_id, trigger, retry=False, run_id=None, fresh=False):
++    def enqueue(self, pack_id, authorization_id, trigger, retry=False, run_id=None, fresh=False, execution=None):
+         """Queue every applicable exception of the pack (all its exceptions: each stays OPEN / UNRESOLVED) under the recorded
+         authorisation. Returns the per-exception outcomes; records them in one activity event.
+ 
+         fresh=True (an independent ZIP submission, approved 17 Nov 2026): every exception is investigated again for this
+-        submission, whatever earlier submissions of identical content produced (their investigations and analyst decisions
+-        are never reused); an already ACTIVE job is still never duplicated."""
++        submission's audit run (execution: {submission_id, run_id, authorization_id}), whatever earlier submissions of
++        identical content produced or are still running: their jobs, investigations and analyst decisions are never reused,
++        and each result is stored as this execution's own artefact."""
+         if trigger not in AUTO_TRIGGERS:
+             raise InvalidInput("unknown trigger")
+         pack = self.packs.load(pack_id)
+@@ -147,14 +148,15 @@
+         for exc in self.packs.exception_ids(pack):
+             st = self.exception_status(pack_id, exc, pack)
+             job = st["job"]
+-            if st["state"] in (QUEUED, IN_PROGRESS):
+-                items.append({"exception_id": exc, "outcome": "ALREADY_ACTIVE", "job_id": job and job["job_id"]})
+-            elif fresh:
++            if fresh:  # the audit run is the execution scope: never another run's active or finished job
+                 try:
+-                    new, created = self.investigations.enqueue_authorized(pack_id, exc, authorization_id, trigger)
++                    new, created = self.investigations.enqueue_authorized(pack_id, exc, authorization_id, trigger,
++                                                                          execution=execution or {"authorization_id": authorization_id})
+                     items.append({"exception_id": exc, "outcome": "QUEUED" if created else "ALREADY_ACTIVE", "job_id": new["job_id"]})
+                 except (ServiceUnavailable, InvalidInput) as e:
+                     items.append({"exception_id": exc, "outcome": "NOT_QUEUED", "reason": getattr(e, "detail", str(e))[:300]})
++            elif st["state"] in (QUEUED, IN_PROGRESS):
++                items.append({"exception_id": exc, "outcome": "ALREADY_ACTIVE", "job_id": job and job["job_id"]})
+             elif st["usable_investigations"]:
+                 items.append({"exception_id": exc, "outcome": "ALREADY_INVESTIGATED", "investigation_id": st["usable_investigations"][0]})
+             elif st["state"] == FAILED and not retry:
+@@ -189,8 +191,11 @@
+         auto = (run.get("result") or {}).get("auto_investigation") or {}
+         if not auto.get("authorization_id") or auto.get("status") != "AUTHORIZED" or not pack_id:
+             return None
+-        fresh = (run.get("result") or {}).get("purpose") == "SUBMISSION"  # independent submission: fresh investigations
+-        return self.enqueue(pack_id, auto["authorization_id"], "AUTO_RUN", run_id=run["run_id"], fresh=fresh)
++        result = run.get("result") or {}
++        if result.get("purpose") == "SUBMISSION":  # independent submission: this audit run is the execution scope
++            execution = {"submission_id": result.get("submission_id"), "run_id": run["run_id"], "authorization_id": auto["authorization_id"]}
++            return self.enqueue(pack_id, auto["authorization_id"], "AUTO_RUN", run_id=run["run_id"], fresh=True, execution=execution)
++        return self.enqueue(pack_id, auto["authorization_id"], "AUTO_RUN", run_id=run["run_id"])
+ 
+     def submission_jobs(self, run):
+         """{exception_id: the latest investigation job queued under one submission's run authorisation} (any status)."""
+diff -ruN -x __pycache__ C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/pre_exec_scope/uc042app/services/investigations.py uc042app/services/investigations.py
+--- C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/pre_exec_scope/uc042app/services/investigations.py	2026-11-16 16:53:37.000000000 +0530
++++ uc042app/services/investigations.py	2026-11-17 14:19:51.346595300 +0530
+@@ -286,21 +286,26 @@
+             self.runner.submit(job, lambda j: self._execute(j, investigator), lane="ai")
+         return job
+ 
+-    def enqueue_authorized(self, pack_id, exception_id, authorization_id, trigger, retry_of=None):
++    def enqueue_authorized(self, pack_id, exception_id, authorization_id, trigger, retry_of=None, execution=None):
+         """Queue one investigation under an AUTO_INVESTIGATION authorisation that is already recorded (the run- or pack-
+         level authorisation of AutoInvestigationService). The same job, graph, tools, validation, persistence and registry
+         as start(); one active job per exception (idempotent: an active job is returned, never duplicated). Returns
+-        (job, created)."""
++        (job, created).
++
++        execution: the audit run this investigation belongs to ({submission_id, run_id, authorization_id}; independent ZIP
++        submissions). The audit run is then the execution scope: a NEW job is always created for it (another run's active
++        or finished job is never reused) and its result is stored as that execution's own artefact."""
+         with self.locks.hold(pack_id):
+             pack = self.packs.load(pack_id)
+             self.packs.exception(pack, exception_id)
+             active = self.runner.active(pack_id, exception_id, "INVESTIGATION")
+-            if active:
++            if active and execution is None:
+                 return active[0], False
+             investigator = self._investigator()  # a fresh investigator per job: the provider switch is per operation
+             job = self.runner.create("INVESTIGATION", pack_id, self.settings.analyst_id, exception_id,
+                                      {"mode": "tools", "workflow_version": inv_config.TOOLS_WORKFLOW_VERSION,
+-                                      "authorization_id": authorization_id, "trigger": trigger}, retry_of)
++                                      "authorization_id": authorization_id, "trigger": trigger,
++                                      **({"execution": dict(execution)} if execution else {})}, retry_of)
+             self.runner.submit(job, lambda j: self._execute(j, investigator), lane="ai")
+         return job, True
+ 
+@@ -314,12 +319,18 @@
+             return Path(store) / "cases"
+         return datasets_root
+ 
++    @staticmethod
++    def _execution_of(job):
++        """The execution scope stored with the result: the job's audit run plus the job itself (None outside a run)."""
++        execution = (job.get("inputs") or {}).get("execution")
++        return dict(execution, job_id=job["job_id"]) if execution else None
++
+     def _execute(self, job, investigator):
+         roots = self.packs.root_set(job["pack_id"])
+         state = run_investigation(job["pack_id"], job["exception_id"], investigator, packs_root=roots.packs_root,
+                                   datasets_root=self.datasets_root_for(job["pack_id"]),
+                                   investigations_root=Path(roots.investigations_root), mode="tools",
+-                                  tool_limits=inv_config.tool_limits())
++                                  tool_limits=inv_config.tool_limits(), execution=self._execution_of(job))
+         outcome, res = state.get("persist_outcome"), state.get("result") or {}
+         result = {"persist_outcome": outcome, "investigation_status": res.get("investigation_status"),
+                   "validation_status": res.get("validation_status"), "investigation_id": None, "registered": False,
+diff -ruN -x __pycache__ C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/pre_exec_scope/uc042app/services/reviews.py uc042app/services/reviews.py
+--- C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/pre_exec_scope/uc042app/services/reviews.py	2026-11-17 13:56:58.000000000 +0530
++++ uc042app/services/reviews.py	2026-11-17 14:20:05.210090900 +0530
+@@ -232,7 +232,11 @@
+     def readiness(self, session, pack=None):
+         pack = pack or self.packs.load(session["pack_id"])
+         blockers, warnings, info = [], [], []
++        run = self.monthly.submission_run(session["submission_id"]) if session.get("submission_id") and self.monthly is not None else None
++        own_auth = (((run or {}).get("result") or {}).get("auto_investigation") or {}).get("authorization_id")
+         for j in self.runner.active(session["pack_id"], operation="INVESTIGATION"):
++            if session.get("submission_id") and (j.get("inputs") or {}).get("authorization_id") != own_auth:
++                continue  # another submission's execution never blocks (or feeds) this submission's review
+             blockers.append({"code": "INVESTIGATION_RUNNING", "detail": f"an investigation of {j['exception_id']} is {j['status']}"})
+         active = self._active_reviews(session["pack_id"], session.get("submission_id"))
+         produced = self._produced(session)
+diff -ruN -x __pycache__ C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/pre_exec_scope/tests/test_zip_submissions.py tests/test_zip_submissions.py
+--- C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/pre_exec_scope/tests/test_zip_submissions.py	2026-11-17 13:58:55.000000000 +0530
++++ tests/test_zip_submissions.py	2026-11-17 14:21:15.503782400 +0530
+@@ -466,65 +466,127 @@
+ 
+ 
+ class IdenticalAnswers(Answers):
+-    """A model answering an identical evidence packet with identical findings (no per-call variation)."""
++    """A model answering an identical evidence packet with identical findings (no per-call variation). `hold`, when set,
++    keeps investigation calls waiting (to have one submission's jobs still running when the next one is submitted)."""
++    hold = None
+ 
+     def respond(self, kw):
+         content = kw["input"][0]["content"]
+         if "<audit_pack_input>" in content:
+             return self.mock.respond(kw)
++        if self.hold is not None:
++            self.hold.wait(60)
+         return raw(LLMInvestigationOutput.model_validate(OFFLINE.investigate(packet_from_message(content))[0].model_dump()))
+ 
+ 
+ class IdenticalFindings(SubmissionReview):
+-    """Known limitation (library, out of scope): investigation identity excludes per-call metadata but write-once publication
+-    compares it, so a fresh investigation that repeats an earlier submission's findings word for word may be refused
+-    (ImmutabilityError). The submission's review must then say so and require a documented exclusion; it must never fall
+-    back on the other submission's investigation, and the earlier final pack stays unchanged."""
+-
+-    # the inherited tests use varying answers (SubmissionReview); only the identical-answer case runs here
++    """The audit run is the investigation execution scope (17 Nov 2026): two identical ZIP submissions whose models return
++    word-for-word identical findings each execute and persist their own investigations (own artefacts, own execution
++    metadata, own analyst decisions); nothing is compared with, rejected because of, or reused from the other submission,
++    and nothing earlier is overwritten."""
++    # the inherited tests use varying answers (SubmissionReview); only the identical-answer cases run here
+     test_identical_submissions_get_separate_reviews_decisions_and_final_packs = None
+     test_submission_scoping_is_enforced = None
+ 
+     def setUp(self):
+         super().setUp()
+-        IdenticalAnswers(self.provider)
++        self.answers = IdenticalAnswers(self.provider)
++
++    def jobs_of(self, run):
++        return self.svc.auto_investigations.submission_jobs(self.svc.repos.runs.get(run["run_id"]))
++
++    def artefact(self, inv):
++        return next(p for p in self.inv_root.rglob(inv) if p.is_dir())
+ 
+-    def test_a_refused_repeat_investigation_needs_a_documented_exclusion_never_the_other_submissions(self):
++    def test_identical_submissions_each_execute_and_persist_their_own_investigations(self):
++        from uc042lib.investigation.persistence import investigation_id_from_findings, verify_published
+         data = make_zip(FILES)
+-        _, run_a = self.submitted(data)
+-        fp_a, produced_a = self.review_to_final_pack(run_a)
++        batch_a, run_a = self.submitted(data)
++        produced_a = self.produced(run_a)
++        dirs_a = {inv: self.artefact(inv) for inv in produced_a.values()}
++        trees_a = {inv: sha_tree(d) for inv, d in dirs_a.items()}
++        fp_a, _ = self.review_to_final_pack(run_a)
+         fp_a_dir = next(r / fp_a for r in self.svc.final_packs.roots() if (r / fp_a).is_dir())
+-        before = sha_tree(fp_a_dir)
+-        _, run_b = self.submitted(data)
+-        sub_b, pack_id = run_b["result"]["submission_id"], run_b["result"]["pack_id"]
++        fp_before = sha_tree(fp_a_dir)
++
++        batch_b, run_b = self.submitted(data)  # identical ZIP, identical model answers
+         produced_b = self.produced(run_b)
+-        s = self.post(f"/api/v1/packs/{pack_id}/reviews", {"submission_id": sub_b}).json()
+-        rows = {r["exception_id"]: r for r in s["readiness"]["checklist"]["exceptions"]}
+-        missing = [e for e in produced_a if e not in produced_b]
+-        for e in missing:  # this submission's attempt was refused: never reported as "not investigated", never A's investigation
+-            self.assertEqual((rows[e]["inclusion"], rows[e]["ai_state"], rows[e]["disposition"]), ("NOT_INVESTIGATED", "FAILED", "FAILED_ACTION_NEEDED"))
+-            self.assertIn(f"{e}: this submission's AI investigation did not produce a usable result",
+-                          json.dumps(s["readiness"]["blockers"]))
+-        for e, inv in produced_b.items():  # an identical artefact, decided again for this submission
+-            self.assertEqual(inv, produced_a[e])
+-            self.assertEqual(rows[e]["decision"], None)
+-            self.assertEqual(self.post(f"/api/v1/investigations/{inv}/analyst-review", {"decision": "ACCEPT", "expected_revision": 0,
+-                                                                                         "submission_id": sub_b}).status_code, 201)
+-        sel = [x if x["exception_id"] not in missing else {"exception_id": x["exception_id"], "inclusion": "EXCLUDED_BY_ANALYST",
+-                                                           "reason": "The repeat investigation was refused; excluded for this submission."}
+-               for x in s["selections"]]
+-        if missing:  # including the other submission's investigation is refused
+-            bad = [dict(x, inclusion="INCLUDED", investigation_id=produced_a[x["exception_id"]], reason="") if x["exception_id"] == missing[0]
+-                   else x for x in sel]
+-            r = self.patch(f"/api/v1/reviews/{s['review_id']}/selections", {"selections": bad, "expected_revision": s["revision"]})
+-            self.assertEqual((r.status_code, r.json()["code"]), (422, "INVESTIGATION_NOT_IN_SUBMISSION"))
+-        s = self.patch(f"/api/v1/reviews/{s['review_id']}/selections", {"selections": sel, "expected_revision": s["revision"]}).json()
+-        r = self.post(f"/api/v1/reviews/{s['review_id']}/preview", {"authorization": AI_OK})
+-        self.wait_job(r.json()["job_id"], 120)
+-        s = self.get(f"/api/v1/reviews/{s['review_id']}").json()
+-        self.assertTrue(s["readiness"]["ready"], s["readiness"])
+-        g = self.post(f"/api/v1/reviews/{s['review_id']}/decision", {"decision": "GENERATE", "acknowledgement_accepted": True,
+-                                                                     "snapshot_sha256": s["current_preview"]["snapshot_sha256"]})
+-        self.assertEqual(g.status_code, 201, g.text)
+-        self.assertNotEqual(g.json()["final_pack"]["final_pack_id"], fp_a)
+-        self.assertEqual(sha_tree(fp_a_dir), before)
++        jobs_a, jobs_b = self.jobs_of(run_a), self.jobs_of(run_b)
++        self.assertEqual(set(produced_b), set(produced_a))  # every exception investigated again, none skipped or refused
++        self.assertTrue(set(produced_a.values()).isdisjoint(produced_b.values()))  # separate artefacts, separate IDs
++        self.assertTrue(all(j["status"] == "COMPLETED" and j["result"]["persist_outcome"] == "PUBLISHED" for j in jobs_b.values()), jobs_b)
++        self.assertTrue({j["job_id"] for j in jobs_a.values()}.isdisjoint(j["job_id"] for j in jobs_b.values()))
++        for e, inv in produced_b.items():
++            d = self.artefact(inv)
++            self.assertEqual(verify_published(d), [])
++            f, f_a = (json.loads((x / "findings.json").read_text(encoding="utf-8")) for x in (d, dirs_a[produced_a[e]]))
++            # stored against its originating execution, with its own execution metadata
++            self.assertEqual(f["execution"], {"submission_id": run_b["result"]["submission_id"], "run_id": run_b["run_id"],
++                                              "authorization_id": run_b["result"]["auto_investigation"]["authorization_id"],
++                                              "job_id": jobs_b[e]["job_id"]})
++            self.assertEqual(f_a["execution"]["submission_id"], run_a["result"]["submission_id"])
++            self.assertTrue(f["model_metadata"]["usage"] and f["model_metadata"]["model"] and f["investigated_at"])
++            # the same analysis content; the identity differs only by the execution
++            strip = lambda x: {k: v for k, v in x.items() if k not in ("execution", "investigation_id", "investigated_at", "model_metadata")}  # noqa: E731
++            self.assertEqual(strip(f), strip(f_a))
++            self.assertEqual(investigation_id_from_findings(f, f["evidence_packet_sha256"]), inv)
++            self.assertEqual(len(list((d / "runs").glob("*.json"))), 1)  # its own first run record, not appended elsewhere
++        # nothing earlier is overwritten or appended to
++        self.assertEqual({inv: sha_tree(d) for inv, d in dirs_a.items()}, trees_a)
++        self.assertEqual(sha_tree(fp_a_dir), fp_before)
++        registered = {e["investigation_id"] for e in self.svc.registry.entries()}
++        self.assertTrue(set(produced_a.values()) | set(produced_b.values()) <= registered)
++
++        # analyst decisions are isolated: B starts with every investigation pending and decides its own
++        fp_b, _ = self.review_to_final_pack(run_b)
++        self.assertNotEqual(fp_a, fp_b)
++        sub_a, sub_b = run_a["result"]["submission_id"], run_b["result"]["submission_id"]
++        for e in produced_a:
++            hist_a = self.get(f"/api/v1/investigations/{produced_a[e]}/analyst-reviews?submission_id={sub_a}").json()
++            hist_b = self.get(f"/api/v1/investigations/{produced_b[e]}/analyst-reviews?submission_id={sub_b}").json()
++            self.assertEqual(([x["revision"] for x in hist_a], [x["revision"] for x in hist_b]), ([1], [1]))
++            self.assertEqual(self.get(f"/api/v1/investigations/{produced_a[e]}/analyst-reviews?submission_id={sub_b}").json(), [])
++        final_b = self.get(f"/api/v1/final-packs/{fp_b}/json").json()
++        self.assertEqual(sorted(i["investigation_id"] for i in final_b["ai_investigations"]), sorted(produced_b.values()))
++        self.assertEqual(sha_tree(fp_a_dir), fp_before)
++
++    def test_a_running_earlier_submission_is_never_reused_by_the_next(self):
++        import threading
++        self.answers.hold = threading.Event()
++        data = make_zip(FILES)
++        d_a = self.upload_zip(data)
++        run_a = self.submit(d_a["batch"]["batch_id"])
++        self.svc.runner.wait(run_a["job_id"], timeout=180)  # A's audit run done; its investigations are held QUEUED / RUNNING
++        run_a = self.get(f"/api/v1/processing-runs/{run_a['run_id']}").json()
++        d_b = self.upload_zip(data)
++        run_b = self.submit(d_b["batch"]["batch_id"])
++        self.svc.runner.wait(run_b["job_id"], timeout=180)
++        run_b = self.get(f"/api/v1/processing-runs/{run_b['run_id']}").json()
++        items_a, items_b = (r["result"]["auto_investigation"]["items"] for r in (run_a, run_b))
++        self.assertTrue(all(i["outcome"] == "QUEUED" for i in items_b), items_b)  # not ALREADY_ACTIVE: A's jobs are not reused
++        self.assertTrue({i["job_id"] for i in items_a}.isdisjoint(i["job_id"] for i in items_b))
++        self.answers.hold.set()
++        for i in items_a + items_b:
++            self.svc.runner.wait(i["job_id"], 120)
++        pa, pb = self.produced(run_a), self.produced(run_b)
++        self.assertEqual(set(pa), set(pb))
++        self.assertTrue(set(pa.values()).isdisjoint(pb.values()))
++
++
++class LegacyIdentityUnchanged(unittest.TestCase):
++    """Investigations outside a submission run store no execution: their findings bytes and identity are exactly as before."""
++
++    def test_empty_execution_is_omitted_and_identity_is_unchanged(self):
++        from uc042lib.investigation.models import InvestigationResult
++        from uc042lib.investigation.persistence import investigation_id_from_findings
++        base = dict(investigation_id="", pack_id="P", pack_content_sha256="a" * 64, exception_id="EXC-1", original_exception_status="OPEN",
++                    original_review_status="", original_evidence_status="", investigation_scope={}, investigation_route="r",
++                    investigation_status="COMPLETED", validation_status="VALID", evidence_packet_sha256="b" * 64)
++        legacy = InvestigationResult(**base).model_dump()
++        self.assertNotIn("execution", legacy)
++        self.assertEqual(json.loads(InvestigationResult(**base).model_dump_json()), legacy)
++        scoped = InvestigationResult(**base, execution={"submission_id": "SUB-1", "run_id": "RUN-1", "job_id": "JOB-1"}).model_dump()
++        self.assertEqual(scoped["execution"]["job_id"], "JOB-1")
++        self.assertNotEqual(investigation_id_from_findings(legacy, "b" * 64), investigation_id_from_findings(scoped, "b" * 64))
++        other_job = dict(scoped, execution=dict(scoped["execution"], job_id="JOB-2"))
++        self.assertNotEqual(investigation_id_from_findings(scoped, "b" * 64), investigation_id_from_findings(other_job, "b" * 64))

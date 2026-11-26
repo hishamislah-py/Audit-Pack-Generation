@@ -14,6 +14,7 @@ from unittest import mock
 
 from tests.api_support import AI_OK, ROOT, TEST_REPOSITORIES, ApiCase, test_database_url
 from tests.final_pack_support import OFFLINE, sha_tree
+from uc042lib.pack.generate import build as build_pack
 
 DATASETS = ROOT / "uc042_dataset"
 S05 = DATASETS / "scn_S05_unexplained_gbp_difference"
@@ -28,6 +29,11 @@ def scenario_files(dataset=S05, skip=()):
 
 
 class MonthlyCase(ApiCase):
+    # The individual-document workflow is retired from active use (ZIP-only operation, 17 Nov 2026); these regression tests
+    # keep covering its shared engine path on historical-style data, so they opt in explicitly (never possible from the
+    # environment). ZIP submission tests set this to False and prove the retired entry points refuse.
+    LEGACY_ENTRY_POINTS = True
+
     @classmethod
     def setUpClass(cls):
         cls.dataset_before = sha_tree(DATASETS)
@@ -45,7 +51,8 @@ class MonthlyCase(ApiCase):
         for pack in (S05_PACK, SC2_PACK):
             shutil.copytree(ROOT / "packs" / pack, self.packs_root / pack)
         url = test_database_url(self.tmp) if TEST_REPOSITORIES == "postgres" else f"sqlite:///{(self.tmp / 'm.db').as_posix()}"
-        self.settings = self.settings.with_(packs_root=self.packs_root, document_store=self.tmp / "docs", database_url=url)
+        self.settings = self.settings.with_(packs_root=self.packs_root, document_store=self.tmp / "docs", database_url=url,
+                                            legacy_entry_points=self.LEGACY_ENTRY_POINTS)
         self.start_app()
 
     # ------------------------------------------------------------------ helpers
@@ -255,17 +262,26 @@ class Processing(MonthlyCase):
 
     def test_processing_produces_a_new_verified_pack_matching_the_engine(self):
         batch_id = self.confirmed_september()
-        run = self.process(batch_id)
+        run = self.process(batch_id)  # the application always runs the engine under the approved rules
         self.assertEqual(run["status"], "SUCCEEDED", run)
         self.assertEqual(run["result"]["outcome"], "PUBLISHED")
         pack_id = run["result"]["pack_id"]
         self.assertTrue((self.packs_root / pack_id / "pack.json").is_file())
         new = self.get(f"/api/v1/packs/{pack_id}").json()
         original = self.get(f"/api/v1/packs/{S05_PACK}").json()
-        self.assertEqual(new["summary"]["exceptions"], original["summary"]["exceptions"])  # the same engine, the same inputs
-        self.assertEqual(new["summary"]["outcomes"], original["summary"]["outcomes"])
-        self.assertEqual(self.get(f"/api/v1/packs/{pack_id}/reconciliation").json()["internal_by_currency_day"],
-                         self.get(f"/api/v1/packs/{S05_PACK}/reconciliation").json()["internal_by_currency_day"])
+        self.assertEqual(new["summary"]["exceptions"], original["summary"]["exceptions"])  # the same inputs, the same exceptions
+        status, engine_pack, _, _, _ = build_pack(S05)  # the engine's own result for the same inputs (approved rules)
+        self.assertEqual(status, "GENERATED")
+        self.assertEqual(new["summary"]["outcomes"], self.svc.packs.summary(engine_pack)["outcomes"])
+        # the stored S05 pack was published under the pre-17-Nov rule (zero difference NOT_APPLICABLE); the only approved
+        # difference is that outcome becoming PASS on zero-difference days: every other value is identical
+        def approved(rows):
+            return [dict(r, difference_outcome="PASS") if r.get("difference_outcome") == "NOT_APPLICABLE"
+                    and r.get("difference") == "0.00" and r.get("difference_reported") == "0.00" else r for r in rows]
+        new_rows = self.get(f"/api/v1/packs/{pack_id}/reconciliation").json()["internal_by_currency_day"]
+        stored_rows = self.get(f"/api/v1/packs/{S05_PACK}/reconciliation").json()["internal_by_currency_day"]
+        self.assertEqual(new_rows, approved(stored_rows))
+        self.assertNotEqual(new_rows, stored_rows)  # the approved rule is in effect
         period = self.get("/api/v1/periods/PER-2026-09").json()
         ref = next(p for p in period["period"]["packs"] if p["pack_id"] == pack_id)
         self.assertEqual((ref["origin"], ref["processing_run_id"]), ("UPLOAD_PROCESSING", run["run_id"]))
@@ -278,7 +294,7 @@ class Processing(MonthlyCase):
 
         # Retry: a new run; the identical pack is left untouched (write-once), the first run's record is unchanged.
         before = sha_tree(self.packs_root / pack_id)
-        retry = self.process(batch_id)
+        retry = self.process(batch_id)  # identical inputs and rules: the identical pack
         self.assertNotEqual(retry["run_id"], run["run_id"])
         self.assertEqual((retry["status"], retry["result"]["outcome"], retry["result"]["pack_id"]), ("SUCCEEDED", "ALREADY_EXISTS", pack_id))
         self.assertEqual(sha_tree(self.packs_root / pack_id), before)
@@ -374,10 +390,21 @@ class AnalystWorkflow(MonthlyCase):
         # 4-5. Decision with a comment, then confirmation.
         self.post(f"/api/v1/documents/{dup['document_id']}/review", {"decision": "EXCLUDE", "comment": "Uploaded twice by mistake"})
         self.assertEqual(self.post(f"/api/v1/uploads/{batch_id}/confirm").json()["batch"]["status"], "CONFIRMED")
-        # 6-7. Processing produces a new, verified pack (no final pack is published by processing).
+        # 6-7. Processing produces a new, verified pack (no final pack is published by processing) and, mandatorily,
+        # queues an AI investigation of every exception of it (here the provider is unreachable: each attempt fails,
+        # with its reason, and is left unpublished).
+        import httpx2
+        import openai
+        self.provider.error = openai.APIConnectionError(request=httpx2.Request("POST", "https://api.openai.com/v1/responses"))
         run = self.process(batch_id)
         self.assertEqual(run["status"], "SUCCEEDED", run)
         pack_id = run["result"]["pack_id"]
+        auto = run["result"]["auto_investigation"]
+        self.assertEqual(auto["status"], "ENQUEUED", auto)
+        for i in auto["items"]:
+            self.assertEqual(self.wait_job(i["job_id"])["status"], "FAILED")
+        self.provider.error = None
+        failed = {i["exception_id"]: i["job_id"] for i in auto["items"]}
         self.assertEqual(list((self.tmp / "final_packs").glob("FAP-*")) if (self.tmp / "final_packs").is_dir() else [], [])
         # 8. The archive shows the period with results and no final pack yet.
         sep = self.get("/api/v1/periods/PER-2026-09").json()["period"]
@@ -386,20 +413,34 @@ class AnalystWorkflow(MonthlyCase):
         # 9. Exceptions of the new pack, all unresolved.
         exc = self.get(f"/api/v1/packs/{pack_id}/exceptions").json()
         self.assertTrue(exc)
+        self.assertEqual(sorted(failed), sorted(x["exception_id"] for x in exc))  # every exception was attempted
         exc_id = exc[0]["exception_id"]
-        # 10. AI investigation (OpenAI mocked) reads the run's prepared case and is published and eligible.
+        # 10. The explicit retry of one (OpenAI mocked) reads the run's prepared case and is published and eligible.
         self.provider.output = self.investigation_output_for(pack_id, exc_id)
-        job = self.post(f"/api/v1/packs/{pack_id}/exceptions/{exc_id}/investigations", {"mode": "tools", "authorization": AI_OK}).json()
+        job = self.post(f"/api/v1/packs/{pack_id}/exceptions/{exc_id}/investigations",
+                        {"mode": "tools", "authorization": AI_OK, "retry_of": failed[exc_id]}).json()
         job = self.wait_job(job["job_id"])
         self.assertEqual((job["status"], job["result"]["persist_outcome"]), ("COMPLETED", "PUBLISHED"), job)
         rows = self.get(f"/api/v1/packs/{pack_id}/exceptions/{exc_id}/investigations").json()["published"]
         self.assertTrue(rows[0]["eligible"], rows)
         findings = self.get(f"/api/v1/investigations/{rows[0]['investigation_id']}/findings").json()
         self.assertTrue(all(h.get("status", "HYPOTHESIS") != "CONFIRMED" for h in findings.get("hypotheses", [])))
+        self.accept_investigation(rows[0]["investigation_id"])  # the analyst's ACCEPT in the Exception Workspace
         # 11-12. Final review: preview, then HOLD (publishes nothing).
         r = self.post(f"/api/v1/packs/{pack_id}/reviews")
         self.assertIn(r.status_code, (200, 201), r.text)
-        s = self.preview(r.json()["review_id"])
+        s = r.json()
+        others = [x["exception_id"] for x in exc[1:]]
+        # a failed investigation is never reported as "not investigated": it blocks until retried or excluded with a reason
+        self.assertEqual(sorted(b["detail"].split(":")[0] for b in s["readiness"]["blockers"] if b["code"] == "INVESTIGATION_FAILED_NO_DISPOSITION"),
+                         sorted(others))
+        sel = [x if x["exception_id"] == exc_id else {"exception_id": x["exception_id"], "inclusion": "EXCLUDED_BY_ANALYST",
+                                                      "reason": "AI investigation failed: provider unreachable; reported from the deterministic results"}
+               for x in s["selections"]]
+        r = self.patch(f"/api/v1/reviews/{s['review_id']}/selections", {"selections": sel, "expected_revision": s["revision"]})
+        self.assertEqual(r.status_code, 200, r.text)
+        self.assertEqual(r.json()["readiness"]["checklist"]["counts"]["excluded"], len(others))
+        s = self.preview(s["review_id"])
         held = self.post(f"/api/v1/reviews/{s['review_id']}/decision", {"decision": "HOLD", "comment": "Waiting for the bank trace."})
         self.assertEqual(held.json()["session_status"], "ON_HOLD")
         self.assertFalse((self.tmp / "final_packs").is_dir() and list((self.tmp / "final_packs").glob("FAP-*")))

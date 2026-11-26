@@ -1,0 +1,53 @@
+test_every_compared_link_is_one_to_one_and_signed (tests.test_stage3_dr04_amounts.RealPackets.test_every_compared_link_is_one_to_one_and_signed) ... ok
+test_h202606_split_links_are_not_compared (tests.test_stage3_dr04_amounts.RealPackets.test_h202606_split_links_are_not_compared) ... ok
+test_relationship_definitions_unchanged (tests.test_stage3_dr04_amounts.RealPackets.test_relationship_definitions_unchanged) ... ok
+test_column_states_the_rule (tests.test_stage3_dr04_amounts.SignedOneToOne.test_column_states_the_rule) ... ok
+test_many_to_one_is_not_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_many_to_one_is_not_compared) ... ok
+test_matching_one_to_one_amounts_agree (tests.test_stage3_dr04_amounts.SignedOneToOne.test_matching_one_to_one_amounts_agree) ... ok
+test_missing_amounts_or_directions_are_not_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_missing_amounts_or_directions_are_not_compared) ... ok
+test_one_to_many_is_not_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_one_to_many_is_not_compared)
+The review's H202606 shape: one batch, two bank entries with the same reference. ... ok
+test_opposite_signed_amounts_do_not_agree (tests.test_stage3_dr04_amounts.SignedOneToOne.test_opposite_signed_amounts_do_not_agree)
+Equal magnitudes in opposite directions: under 1.1 (absolute values) these 'agreed'. ... ok
+test_part_to_whole_is_never_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_part_to_whole_is_never_compared) ... ok
+test_sc3c_reference_matches_with_different_amounts (tests.test_phase5_verified_links.AmountMismatchesStayVisible.test_sc3c_reference_matches_with_different_amounts) ... ok
+test_the_15_nov_redundant_follow_relationship_calls_are_already_listed (tests.test_phase5_verified_links.RedundantRequestsUnnecessary.test_the_15_nov_redundant_follow_relationship_calls_are_already_listed)
+15 Nov SC3C EXC-01 round 2 re-followed two links that were already in the packet; both are now listed. ... ok
+test_every_listed_link_matches_the_tool_result (tests.test_phase5_verified_links.VerifiedLinks.test_every_listed_link_matches_the_tool_result) ... ok
+test_no_candidate_or_coincidence_listed_as_verified (tests.test_phase5_verified_links.VerifiedLinks.test_no_candidate_or_coincidence_listed_as_verified) ... ok
+test_own_funds_topup_date_edge_is_contextual_only (tests.test_phase5_verified_links.VerifiedLinks.test_own_funds_topup_date_edge_is_contextual_only) ... ok
+test_view_with_links_is_still_lossless (tests.test_phase5_verified_links.VerifiedLinks.test_view_with_links_is_still_lossless) ... ok
+test_candidate_ids_hypothesis_only (tests.test_phase4_model_view.CandidatesHypothesesOnly.test_candidate_ids_hypothesis_only) ... ok
+test_view_rows_match_the_source_csv_files (tests.test_phase4_model_view.IndependentCitationCheck.test_view_rows_match_the_source_csv_files) ... ok
+test_model_view_deterministic (tests.test_phase4_model_view.Lossless.test_model_view_deterministic) ... ok
+test_model_view_lossless (tests.test_phase4_model_view.Lossless.test_model_view_lossless) ... ok
+test_stored_packet_unchanged (tests.test_phase4_model_view.Lossless.test_stored_packet_unchanged) ... ok
+test_prompt_rules_preserved (tests.test_phase4_model_view.Requests.test_prompt_rules_preserved) ... ok
+test_schema_not_duplicated_and_text_format_unchanged (tests.test_phase4_model_view.Requests.test_schema_not_duplicated_and_text_format_unchanged) ... ok
+test_view_version_and_hash_recorded_and_reproducible (tests.test_phase4_model_view.Requests.test_view_version_and_hash_recorded_and_reproducible) ... ok
+test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) ... ok
+test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) ... ok
+test_the_57_view_1_1_ordering_failures_are_covered (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_the_57_view_1_1_ordering_failures_are_covered)
+Packets whose stored order differs from the view's sorted layout (the 57 hash failures of view 1.1). ... ok
+test_token_reduction_is_preserved (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_token_reduction_is_preserved) ... ok
+test_version_is_1_2 (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_version_is_1_2) ... ok
+test_view_is_deterministic (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_view_is_deterministic) ... ok
+test_derived_edges_out_of_derivation_order_and_interleaved (tests.test_stage2_exact_reconstruction.OrderingEdgeCases.test_derived_edges_out_of_derivation_order_and_interleaved) ... ok
+test_empty_relationships_and_single_record (tests.test_stage2_exact_reconstruction.OrderingEdgeCases.test_empty_relationships_and_single_record) ... ok
+test_reversed_lists (tests.test_stage2_exact_reconstruction.OrderingEdgeCases.test_reversed_lists) ... ok
+test_tampered_order_fails_closed (tests.test_stage2_exact_reconstruction.OrderingEdgeCases.test_tampered_order_fails_closed) ... ok
+test_the_app_still_runs_tools_mode (tests.test_phase6_deterministic.ApplicationDefaultUnchanged.test_the_app_still_runs_tools_mode) ... ok
+test_single_request_on_the_extended_packet (tests.test_phase6_deterministic.DeterministicMode.test_single_request_on_the_extended_packet) ... ok
+test_size_guard_sends_nothing (tests.test_phase6_deterministic.DeterministicMode.test_size_guard_sends_nothing) ... ok
+test_uncovered_route_falls_back_to_tools_and_says_so (tests.test_phase6_deterministic.DeterministicMode.test_uncovered_route_falls_back_to_tools_and_says_so) ... ok
+test_every_previously_cited_model_fetched_record_is_supplied (tests.test_phase6_deterministic.Parity.test_every_previously_cited_model_fetched_record_is_supplied) ... ok
+test_candidates_stay_hypotheses_only (tests.test_phase6_deterministic.Policy.test_candidates_stay_hypotheses_only) ... ok
+test_no_duplicate_not_found_searches_and_view_lossless (tests.test_phase6_deterministic.Policy.test_no_duplicate_not_found_searches_and_view_lossless) ... ok
+test_no_silent_pruning_under_a_tight_budget (tests.test_phase6_deterministic.Policy.test_no_silent_pruning_under_a_tight_budget) ... ok
+
+----------------------------------------------------------------------
+Ran 42 tests in 63.674s
+
+OK
+
+[phase 4] 76 packets: 1948282 -> 1504298 characters (22.8% smaller)

@@ -15,17 +15,27 @@ from .. import ids
 from ..clock import now_iso
 from ..errors import Conflict, InvalidInput, NotFound
 
-INVESTIGATION, CLOSING_SUMMARY = "INVESTIGATION", "CLOSING_SUMMARY"
+INVESTIGATION, CLOSING_SUMMARY, AUTO_INVESTIGATION = "INVESTIGATION", "CLOSING_SUMMARY", "AUTO_INVESTIGATION"
 AUTHORIZED = "AUTHORIZED"
 
 STATEMENTS = {
     INVESTIGATION: ("I authorise one AI investigation of this exception by the configured model. Live API calls may incur "
                     "charges. The AI uses only the approved evidence sources of this deterministic pack. It cannot resolve "
                     "the exception, change the deterministic results or approve the audit."),
+    AUTO_INVESTIGATION: ("I authorise automatic AI investigations, by the configured model, of every applicable exception in the "
+                         "deterministic pack this authorisation covers (the pack produced by this reconciliation run, or the pack "
+                         "named). One investigation runs per exception, in the background. Live API calls may incur charges. The "
+                         "AI uses only the approved evidence sources of the pack. It cannot resolve any exception, change the "
+                         "deterministic results or approve the audit."),
     CLOSING_SUMMARY: ("I authorise one AI closing-summary request for this final review by the configured model. Live API calls "
                       "may incur charges. The summary is written from the deterministic pack and the selected investigations "
                       "only. It does not resolve exceptions, approve the audit or certify compliance."),
 }
+
+
+def statements():
+    """The statements the analyst confirms (OpenAI is the only provider; there is no automatic fallback)."""
+    return dict(STATEMENTS)
 
 
 def period_of(pack_id):
@@ -49,10 +59,13 @@ class AiAuthorizationService:
             provider, model, effort, problem = "", "", None, str(e)[:200]
         key = {"openai": inv_config.ENV_OPENAI_KEY, "anthropic": getattr(inv_config, "ENV_ANTHROPIC_KEY", "ANTHROPIC_API_KEY")}
         configured = problem is None and provider in key and inv_config.api_key_configured(key[provider])
+        if problem is None and not configured:  # say what is missing (the variable's name only, never a value)
+            problem = (f"{key[provider]} is not set in the backend environment" if provider in key
+                       else f"provider {provider!r} cannot be used for live AI operations from the application")
         return {"provider": provider, "model": model, "reasoning_effort": effort, "provider_configured": bool(configured),
                 "configuration_problem": problem, "investigation_mode": "tools", "tool_limits": inv_config.tool_limits(),
                 "charges_notice": "Live API calls to the configured provider may incur charges.",
-                "statements": dict(STATEMENTS)}
+                "statements": statements()}
 
     # ---------------------------------------------------------------- the confirmation
     def require(self, operation, confirmation):
@@ -67,17 +80,22 @@ class AiAuthorizationService:
             given = confirmation.get(field)
             if given and given != config[field]:
                 return config, f"the {field} changed since it was shown ({given!r} -> {config[field]!r}); review and confirm again"
+        for field in ("provider", "model"):  # there is no fallback provider: a dialog that showed one is out of date
+            given = confirmation.get(f"fallback_{field}")
+            if given is not None and given != "none":
+                return config, (f"the fallback {field} changed since it was shown ({given!r} -> 'none'): there is no automatic "
+                                "fallback provider; review and confirm again")
         return config, None
 
     def record(self, operation, result, pack_id, config, exception_id=None, review_id=None, case_id=None, job_id=None,
-               authorization_id=None, **details):
+               authorization_id=None, period_id=None, **details):
         """Append one immutable authorisation record (the result is AUTHORIZED or REFUSED_<code>)."""
         rec = {"authorization_id": authorization_id or ids.new_id("AIA"), "operation": operation, "result": result,
-               "period_id": period_of(pack_id), "pack_id": pack_id, "exception_id": exception_id, "review_id": review_id,
+               "period_id": period_id or period_of(pack_id), "pack_id": pack_id, "exception_id": exception_id, "review_id": review_id,
                "case_id": case_id, "job_id": job_id, "provider": details.pop("provider", None) or config.get("provider") or "",
                "model": details.pop("model", None) or config.get("model") or "", "authorized_by": self.settings.analyst_id,
                "authorized_at": now_iso(),
-               "details": dict(details, statement=STATEMENTS[operation], provider_configured=config.get("provider_configured"),
+               "details": dict(details, statement=config.get("statements", STATEMENTS)[operation], provider_configured=config.get("provider_configured"),
                                reasoning_effort=config.get("reasoning_effort"))}
         rec = self.repo.record(rec)
         if self.activity is not None:

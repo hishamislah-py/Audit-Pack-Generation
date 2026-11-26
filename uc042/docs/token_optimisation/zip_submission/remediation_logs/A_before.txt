@@ -1,0 +1,102 @@
+E..F....EFFFE
+======================================================================
+ERROR: test_process_on_an_incomplete_zip_package_with_legacy_documents_present (tests.test_zip_only_workflow.RetiredEndpointsRefuseZipEvenWithTheRetiredWorkflowEnabled.test_process_on_an_incomplete_zip_package_with_legacy_documents_present)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 109, in test_process_on_an_incomplete_zip_package_with_legacy_documents_present
+    self.assertEqual((r.status_code, r.json()["code"]), (409, "ZIP_PACKAGE_USE_SUBMIT"))
+                                     ~~~~~~~~^^^^^^^^
+KeyError: 'code'
+
+======================================================================
+ERROR: test_retired_endpoints_never_act_on_a_zip_package (tests.test_zip_only_workflow.ZipOnlyOperation.test_retired_endpoints_never_act_on_a_zip_package) (status='VALIDATED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 76, in test_retired_endpoints_never_act_on_a_zip_package
+    self.assertEqual((r.status_code, r.json()["code"]), (409, "ZIP_PACKAGE_USE_SUBMIT"), url)
+                                     ~~~~~~~~^^^^^^^^
+KeyError: 'code'
+
+======================================================================
+ERROR: test_retired_individual_document_entry_points_refuse (tests.test_zip_only_workflow.ZipOnlyOperation.test_retired_individual_document_entry_points_refuse)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 60, in test_retired_individual_document_entry_points_refuse
+    self.assertEqual((r.status_code, r.json()["code"]), (410, "LEGACY_WORKFLOW_RETIRED"))
+                                     ~~~~~~~~^^^^^^^^
+KeyError: 'code'
+
+======================================================================
+FAIL: test_a_submission_final_pack_and_documents_never_feed_the_legacy_period (tests.test_zip_only_workflow.SubmissionsDoNotAffectLegacyPeriodCalculations.test_a_submission_final_pack_and_documents_never_feed_the_legacy_period)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 125, in test_a_submission_final_pack_and_documents_never_feed_the_legacy_period
+    self.assertEqual(m.published_final_packs(PERIOD), [])  # the submission's final pack is not a legacy publication
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [{'final_pack_id': 'FAP-CASE-PER-2026-09-v[434 chars]72'}] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+{'final_pack_id': 'FAP-CASE-PER-2026-09-v1-ea30e43753c0', 'pack_id': 'PACK-CASE-PER-2026-09-ba8caa0eee64', 'version': 1, 'supersedes_final_pack_id': None, 'generated_at': '2026-11-17T10:14:25+00:00', 'review_decision_id': 'RD-3470161c803dd5aa8ed725e0', 'final_content_sha256': 'ea30e43753c052755dbec61044fcb6db6d087bc49e1991ccf9c3d64be9110335', 'submission_id': 'SUB-64dc658d9a478df15a8b2d94', 'run_id': 'RUN-38f0107684f6c38a79829fb5', 'batch_id': 'UPL-3878722956b7117dbc0ba472'}
+
++ []
+- [{'batch_id': 'UPL-3878722956b7117dbc0ba472',
+-   'final_content_sha256': 'ea30e43753c052755dbec61044fcb6db6d087bc49e1991ccf9c3d64be9110335',
+-   'final_pack_id': 'FAP-CASE-PER-2026-09-v1-ea30e43753c0',
+-   'generated_at': '2026-11-17T10:14:25+00:00',
+-   'pack_id': 'PACK-CASE-PER-2026-09-ba8caa0eee64',
+-   'review_decision_id': 'RD-3470161c803dd5aa8ed725e0',
+-   'run_id': 'RUN-38f0107684f6c38a79829fb5',
+-   'submission_id': 'SUB-64dc658d9a478df15a8b2d94',
+-   'supersedes_final_pack_id': None,
+-   'version': 1}]
+
+======================================================================
+FAIL: test_retired_endpoints_never_act_on_a_zip_package (tests.test_zip_only_workflow.ZipOnlyOperation.test_retired_endpoints_never_act_on_a_zip_package) (status='PACKAGE_INCOMPLETE')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 76, in test_retired_endpoints_never_act_on_a_zip_package
+    self.assertEqual((r.status_code, r.json()["code"]), (409, "ZIP_PACKAGE_USE_SUBMIT"), url)
+AssertionError: Tuples differ: (409, 'BATCH_CONFIRMED') != (409, 'ZIP_PACKAGE_USE_SUBMIT')
+
+First differing element 1:
+'BATCH_CONFIRMED'
+'ZIP_PACKAGE_USE_SUBMIT'
+
+- (409, 'BATCH_CONFIRMED')
++ (409, 'ZIP_PACKAGE_USE_SUBMIT') : /api/v1/uploads/UPL-95d8f66eb1290bfc784bba94/confirm
+
+======================================================================
+FAIL: test_retired_endpoints_never_act_on_a_zip_package (tests.test_zip_only_workflow.ZipOnlyOperation.test_retired_endpoints_never_act_on_a_zip_package) (status='PACKAGE_REJECTED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 76, in test_retired_endpoints_never_act_on_a_zip_package
+    self.assertEqual((r.status_code, r.json()["code"]), (409, "ZIP_PACKAGE_USE_SUBMIT"), url)
+AssertionError: Tuples differ: (409, 'BATCH_CONFIRMED') != (409, 'ZIP_PACKAGE_USE_SUBMIT')
+
+First differing element 1:
+'BATCH_CONFIRMED'
+'ZIP_PACKAGE_USE_SUBMIT'
+
+- (409, 'BATCH_CONFIRMED')
++ (409, 'ZIP_PACKAGE_USE_SUBMIT') : /api/v1/uploads/UPL-ff7443593a384c3a6c7088c8/confirm
+
+======================================================================
+FAIL: test_retired_endpoints_never_act_on_a_zip_package (tests.test_zip_only_workflow.ZipOnlyOperation.test_retired_endpoints_never_act_on_a_zip_package) (status='PROCESSED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 76, in test_retired_endpoints_never_act_on_a_zip_package
+    self.assertEqual((r.status_code, r.json()["code"]), (409, "ZIP_PACKAGE_USE_SUBMIT"), url)
+AssertionError: Tuples differ: (409, 'BATCH_CONFIRMED') != (409, 'ZIP_PACKAGE_USE_SUBMIT')
+
+First differing element 1:
+'BATCH_CONFIRMED'
+'ZIP_PACKAGE_USE_SUBMIT'
+
+- (409, 'BATCH_CONFIRMED')
++ (409, 'ZIP_PACKAGE_USE_SUBMIT') : /api/v1/uploads/UPL-6b6fe8f166e2c3c66a111728/confirm
+
+----------------------------------------------------------------------
+Ran 10 tests in 53.054s
+
+FAILED (failures=4, errors=3)

@@ -120,15 +120,17 @@ class Scenario1Acceptance(unittest.TestCase):
     def test_ac3_ac4_all_results_and_outcomes(self):
         co = self.p["executive_summary"]["control_outcomes"]
         self.assertEqual((co["total_results"], co["by_outcome"], co["check_types_with_results"]),
-                         (1886, {"NOT_APPLICABLE": 88, "PASS": 1798}, 32))
+                         (1886, {"PASS": 1886}, 32))  # 17 Nov 2026: the 88 zero differences (C06/C08) are PASS
         ids = [e["result_id"] for c in self.p["control_register"] for e in c["results"]]
         self.assertEqual(sorted(ids), sorted(model.result_id(r) for r in self.v.results))
         na = {c["check_id"]: c["result_counts"] for c in self.p["control_register"] if "NOT_APPLICABLE" in c["result_counts"]}
-        self.assertEqual(na, {"C06-DIFFERENCE": {"NOT_APPLICABLE": 44}, "C08-DIFFERENCE": {"NOT_APPLICABLE": 44}})
+        self.assertEqual(na, {})
+        zero = {c["check_id"]: c["result_counts"] for c in self.p["control_register"] if c["check_id"] in ("C06-DIFFERENCE", "C08-DIFFERENCE")}
+        self.assertEqual(zero, {"C06-DIFFERENCE": {"PASS": 44}, "C08-DIFFERENCE": {"PASS": 44}})
         self.assertEqual(co["checks_no_findings"], ["BANK-CASH-LINK"])  # emits results only on failure; never shown as PASS
         expected = {"V01-SCHEMA": 14, "V01-PDF": 5, "C03-POLICY": 1, "C03-POINT": 3, "C01-COVER": 44, "C14-COVER": 484, "C07-COVER": 44,
                     "DQ23-STATEMENT": 88, "DQ22-CONTINUITY": 86, "BC-VS-EOD": 44, "CASH-BANK-LINK": 222, "C04-REQUIREMENT": 44,
-                    "C05-RESOURCE": 44, "C07-BANK-EVIDENCE": 44, "RC2-LEDGER": 44, "C11-BATCH-ARITH": 88, "C11-BATCH-BANK": 88,
+                    "C05-RESOURCE": 44, "C06-DIFFERENCE": 44, "C07-BANK-EVIDENCE": 44, "C08-DIFFERENCE": 44, "RC2-LEDGER": 44, "C11-BATCH-ARITH": 88, "C11-BATCH-BANK": 88,
                     "C11-TXN-LINE": 1, "FUND-TOPUP": 44, "RC4-DIRECT": 90, "C09-ALLOCATION": 2, "C11-BANK-ENTRY": 1, "C12-REFUND": 2,
                     "CBAL-NONNEG": 1, "CBAL-ROLLFWD": 264, "C13-CURRENCY": 1, "C10-DESIGNATION": 2, "C16-GOVERNANCE": 1, "C16-RETURN": 1,
                     "DISC-LOG": 1}

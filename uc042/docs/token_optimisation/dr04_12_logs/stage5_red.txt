@@ -1,0 +1,19 @@
+test_stage5_telemetry (unittest.loader._FailedTest.test_stage5_telemetry) ... ERROR
+
+======================================================================
+ERROR: test_stage5_telemetry (unittest.loader._FailedTest.test_stage5_telemetry)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_stage5_telemetry
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\AppData\Local\Programs\Python\Python311\Lib\unittest\loader.py", line 154, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage5_telemetry.py", line 20, in <module>
+    from uc042app.services.reviews import summary_failure_record
+ImportError: cannot import name 'summary_failure_record' from 'uc042app.services.reviews' (C:\Users\artlptp263user\p10\uc042_token_optimisation\uc042app\services\reviews.py)
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

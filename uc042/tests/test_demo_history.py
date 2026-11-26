@@ -27,6 +27,7 @@ from uc042lib.continuity import compare
 from uc042lib.investigation import config as inv_config
 from uc042lib.investigation.retrieval import EvidenceStore, RetrievalError, _inside, pack_policy_version
 from uc042lib.pack import model as pack_model
+from tests.rule_history import PUBLISHED_RULES
 from uc042lib.pack.generate import build
 from uc042lib.period import BASELINE, PeriodConfig, PeriodError, resolve
 from uc042lib.validate import Validator, case_status
@@ -64,9 +65,55 @@ JUNE_DISCREPANCY_FILES = {
 PROTECTED = {
     "uc042_dataset": ("b99dafac95d8ff8817499afa133a42e2fc261ddda75c0cdf837045c7ddb07945", 287),
     "packs": ("b77431dc9e3a28f2841abffdbbcce1f6bffc7f3d2496c236b9deef0bbf2f1560", 72),
-    "tests/golden": ("21fea1e691d1b93d6a1b4b10ff1d5eedd025ad8319e5f8e1cdad069ea7d42f9d", 10),
+    # tests/golden re-pinned 17 Nov 2026 (owner-approved C06/C08 rule: a reconciled zero difference is PASS, not
+    # NOT_APPLICABLE). Previous pin 21fea1e6...42f9d. The only snapshot differences are those outcomes (tests/golden/README.md).
+    "tests/golden": ("5d0ceefcdcc15234fb5035ecc1e9ec9de1c83679b142b5f21b75a389178cd42a", 10),
     "investigations": ("9f5081030697f144bfef2993bc28da1bd78948db8ee168a8f03329bb09480a55", 34),
-    "uc042lib/final_pack": ("af18244c8c25c857bd5344ecfecbbe290b6b1ab894fa35190f00395e77d80f37", 12),
+    # The final-pack LIBRARY (code, not historical data) is re-pinned only for reviewed, intentional changes:
+    #   af18244c...7d80f37 (12 files)  original pin.
+    #   1a638662...c1bf107 (12 files)  Phase 8: publish_final_pack(..., expected=None) (report 20 §8; reconstructing the
+    #                                  pre-Phase-8 persistence.py reproduces af18... exactly).
+    #   b6509a20...89f38c (18 files)   Phase 10 analyst ACCEPT/REJECT review, UTC review timestamps, the Unicode PDF renderer
+    #                                  (2.0-unicode, bundled DejaVu fonts) and primary final-pack storage outside the
+    #                                  repository (UC042_P10_FINAL_INTEGRATION_READINESS_REPORT_V2.md, B1). Published packs
+    #                                  re-render with the renderer they declare; the February pack verifies byte for byte.
+    #   8b0d6aa8...9f7942 (18 files)   Clone E end-to-end workflow: the explicit REJECTED BY ANALYST disposition and the
+    #                                  optional comment on a rejection (rendered only for packs that carry the new
+    #                                  "disposition" field, so every earlier pack, including 4 with rejections, re-renders
+    #                                  and verifies byte for byte), and the check that no rejected AI text appears anywhere
+    #                                  in a final pack (END_TO_END_ANALYST_WORKFLOW.md). Owner approval required for P10/live.
+    # 12 Nov 2026 (clone E, live verification): summary.py / model.py: the closing-summary prompt 1.1 tells the model to
+    #                                  negate each disclaimer term separately (a live summary was refused for a long negated
+    #                                  list); the validation is unchanged. Every published final pack re-verified before
+    #                                  re-pinning (LIVE_VERIFICATION_REPORT.md). Owner approval required for P10/live.
+    # 17 Nov 2026 (owner-approved PDF renderer correction): renderer 2.1-unicode lets a table row split inside the row, so a
+    #                                  long finding flows across pages instead of failing GENERATE with a LayoutError (live
+    #                                  walkthrough: a 7,918-character field). New packs declare 2.1; packs declaring 1.0 or 2.0
+    #                                  render exactly as published (every published final pack re-verified byte for byte).
+    #                                  Files: model.py, assemble.py, validate.py, render_pdf.py. Previous pin bf2dc23b...709cae.
+    # 18 Nov 2026 (owner-approved renderer 3.0 + final-pack schema 1.3, UC042_RENDERER_3_IMPLEMENTATION_REPORT.md): the
+    #                                  outcome-first report (new report_v3.py, outcome.py), a renderer dispatcher with the
+    #                                  2.x builder frozen (report.py build_report_v2), closing summary NOT_REQUIRED for packs
+    #                                  without exceptions and prompt 1.2 (summary.py, model.py), outcome checks (validate.py),
+    #                                  assemble.py, render_pdf.py, render_html.py, __init__.py. 1.2 stays reserved for A1. Every
+    #                                  published final pack re-verified byte for byte. Previous pin 58abb4a4...fc64d4 (18 files).
+    # 22 Nov 2026 (Fix8 D5 / D-04, Agent B; needs owner approval like every re-pin): the rejected-content leak check compares
+    #                                  sentences, normalised, and exempts a sentence that an ACCEPTED investigation, the
+    #                                  deterministic pack, the closing-summary input or the fixed final-pack wording states
+    #                                  (validate.py), and a closing-summary item whose own citation states the sentence
+    #                                  (same words, any order, no negation dropped); FinalPackValidationError carries
+    #                                  structured diagnostics (assemble.py).
+    #                                  Published packs are unaffected (verify_final_pack does not re-run validation).
+    #                                  Previous pin c2dc8804...0dda8 (20 files).
+    "uc042lib/final_pack": ("92a91055b6c3fd33a43f6951c6cc9ad454974c62a7df7b5c61127416597071bf", 20),
+    # 20 Nov 2026 (owner-approved CF-1 correction, RINGFENCE_AI_MISSING_EVIDENCE_CITATION_IMPLEMENTATION_REPORT): validate.py
+    #                                  FV7/FV8 uses the investigation validator's support rule (findings schema 1.5): a
+    #                                  completeness result (MISS-) supports a confirmed observation only when the finding declares
+    #                                  EVIDENCE_ABSENCE and the item is traceable to INSUFFICIENT_EVIDENCE results of the same
+    #                                  exception; nothing else changes. All 91 published final packs on disk re-verified with
+    #                                  identical results. Previous pin c2dc8804...0dda8 (20 files).
+    # 23 Nov 2026 (Session 1 citation fix, branch fix/S1-citation): CF-1 above is merged with the D5 change. The pin above is
+    #                                  NOT updated: the combined digest awaits owner approval (test fails until then).
 }
 SEPTEMBER_PACKS = {"PACK-S01-PER-2026-09-577b06a1d894", "PACK-S02-PER-2026-09-f3dfa52766bb", "PACK-S05-PER-2026-09-ddd0fdc8b731",
                    "PACK-SC2-PER-2026-09-aaca8a8b7194", "PACK-SC3B-PER-2026-09-137351796028", "PACK-SC3C-PER-2026-09-28bb49134f15",
@@ -74,6 +121,34 @@ SEPTEMBER_PACKS = {"PACK-S01-PER-2026-09-577b06a1d894", "PACK-S02-PER-2026-09-f3
 
 
 # ------------------------------------------------------------------------------------------------------- helpers
+CODE_IDENTIFIERS = {"engine_fingerprint", "pack_layer_fingerprint", "processing_run_id", "pack_content_sha256", "pack_id"}
+
+
+def code_values(d, out=None):
+    """Every value of a code-derived identifier in a pack (they change whenever engine or pack-layer code changes)."""
+    out = set() if out is None else out
+    if isinstance(d, dict):
+        for k, v in d.items():
+            if k in CODE_IDENTIFIERS and isinstance(v, str):
+                out.add(v)
+            code_values(v, out)
+    elif isinstance(d, list):
+        for v in d:
+            code_values(v, out)
+    return out
+
+
+def code_masked(p, text=None, extra=()):
+    """`text` (default: the pack's canonical JSON) with every code-derived identifier of `p` (and of `extra` packs) masked."""
+    text = pack_model.canonical(p) if text is None else text
+    values = code_values(p)
+    for e in extra:
+        code_values(e, values)
+    for v in sorted(values, key=len, reverse=True):
+        text = text.replace(v, "<CODE>")
+    return text
+
+
 def sha256(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
@@ -651,27 +726,11 @@ class PeriodAwareEngine(unittest.TestCase):
         self.assertEqual([k for k, n in ids.items() if n > 1], [])
 
     def test_september_packs_rebuild_identically_apart_from_code_identifiers(self):
-        code = {"engine_fingerprint", "pack_layer_fingerprint", "processing_run_id", "pack_content_sha256", "pack_id"}
-
-        def values(d, out):
-            if isinstance(d, dict):
-                for k, v in d.items():
-                    if k in code and isinstance(v, str):
-                        out.add(v)
-                    values(v, out)
-            elif isinstance(d, list):
-                for v in d:
-                    values(v, out)
-            return out
-
-        def masked(p):
-            text = pack_model.canonical(p)
-            for v in sorted(values(p, set()), key=len, reverse=True):
-                text = text.replace(v, "<CODE>")
-            return text
+        masked = code_masked
         for pdir in sorted((ROOT / "packs").iterdir()):
             stored = json.loads((pdir / "pack.json").read_text(encoding="utf-8"))
-            status, pack, _, outputs, _ = build(SEPT_DATASETS / stored["metadata"]["source_dataset"]["dataset"])
+            # rebuilt under the rules the stored pack was published with (passed explicitly to the engine)
+            status, pack, _, outputs, _ = build(SEPT_DATASETS / stored["metadata"]["source_dataset"]["dataset"], rules=PUBLISHED_RULES)
             self.assertEqual(status, "GENERATED", pdir.name)
             self.assertEqual(masked(stored), masked(pack), pdir.name)
             for name, content in outputs.items():
@@ -747,7 +806,7 @@ class ScenarioBehaviour(unittest.TestCase):
         self.assertEqual({d: f"{x:.2f}" for d, x in diffs.items() if x}, {f"2026-03-{d}": "-517.30" for d in (17, 18, 19)})
         self.assertEqual(diffs["2026-03-31"], 0)  # brought back into agreement by the month end
         # internal view (requirement vs resource) unaffected, on the difference days too
-        self.assertEqual({r["outcome"] for r in results(v, "C06-DIFFERENCE")}, {"NOT_APPLICABLE"})
+        self.assertEqual({r["outcome"] for r in results(v, "C06-DIFFERENCE")}, {"PASS"})  # zero difference: PASS (17 Nov 2026)
         self.assertEqual({r["outcome"] for r in results(v, "C04-REQUIREMENT") + results(v, "C05-RESOURCE")}, {"PASS"})
         self.assertEqual(results(v, "DISC-LOG")[0]["outcome"], "FAIL")
         self.assertEqual(len(v.groups), 1)
@@ -887,13 +946,21 @@ class OutputPacks(unittest.TestCase):
     def test_each_pack_is_reproduced_exactly_by_the_current_code(self):
         for t in TOKENS:
             rec = MANIFEST[t]
-            status, pack, html, outputs, _ = build(DATASETS / t, PeriodConfig.from_id(rec["period_id"], rec["policy_version"]))
+            # Rebuilt under the rule the stored pack was published with (C06/C08 zero difference NOT_APPLICABLE before
+            # 17 Nov 2026). The engine changed since, so code-derived identifiers (engine fingerprint, run ID, pack ID,
+            # content hash) differ by design; everything else must match byte for byte.
+            status, pack, html, outputs, _ = build(DATASETS / t, PeriodConfig.from_id(rec["period_id"], rec["policy_version"]),
+                                                   rules=PUBLISHED_RULES)
             stored = DEMO / "packs" / rec["pack_id"]
-            self.assertEqual((status, pack["metadata"]["pack_id"]), ("GENERATED", rec["pack_id"]), t)
-            self.assertEqual(pack_model.canonical(pack), (stored / "pack.json").read_text(encoding="utf-8"), t)
-            self.assertEqual(html, (stored / "pack.html").read_text(encoding="utf-8"), t)
+            stored_pack = json.loads((stored / "pack.json").read_text(encoding="utf-8"))
+            self.assertEqual(status, "GENERATED", t)
+            self.assertEqual((stored / "pack.json").read_text(encoding="utf-8"), pack_model.canonical(stored_pack), t)  # stored as published
+            self.assertEqual(code_masked(pack), code_masked(stored_pack), t)
+            self.assertEqual(code_masked(pack, html, extra=[stored_pack]),
+                             code_masked(pack, (stored / "pack.html").read_text(encoding="utf-8"), extra=[stored_pack]), t)
             for name, content in outputs.items():
-                self.assertEqual((stored / "processing" / name).read_text(encoding="utf-8"), content, (t, name))
+                self.assertEqual(code_masked(pack, (stored / "processing" / name).read_text(encoding="utf-8"), extra=[stored_pack]),
+                                 code_masked(pack, content, extra=[stored_pack]), (t, name))
 
     def test_engine_never_opens_the_scenario_oracles(self):
         """Run on the package's own case folder, which sits next to scenario_definition.json and mutations.json: every

@@ -5,12 +5,13 @@ from fastapi import APIRouter, Depends, Query, Response
 
 from uc042lib.final_pack import render_html, render_pdf
 from uc042lib.final_pack.model import ACKNOWLEDGEMENT_TEXT
+from uc042lib.final_pack.render_pdf import PdfGlyphError
 from uc042lib.pack.model import canonical
 
-from ...errors import Conflict
+from ...errors import Conflict, InvalidInput
 from ..deps import services
-from ..schemas import (DecisionRequest, DecisionResponse, Job, PreviewMeta, PreviewRequest, ReviewHistory, ReviewListItem, ReviewSession,
-                       SelectionsRequest)
+from ..schemas import (DecisionRequest, DecisionResponse, Job, OpenReviewRequest, PreviewMeta, PreviewRequest, ReviewHistory,
+                       ReviewListItem, ReviewSession, SelectionsRequest)
 
 router = APIRouter(prefix="/api/v1", tags=["reviews"])
 HTML_CSP = "sandbox; default-src 'none'; style-src 'unsafe-inline'; img-src data:"
@@ -33,9 +34,10 @@ def list_reviews(pack_id: Optional[str] = Query(None), status: Optional[Literal[
 
 
 @router.post("/packs/{pack_id}/reviews", response_model=ReviewSession, status_code=201,
-             summary="Open a review session for a pack (returns the existing active session with 200)")
-def open_review(pack_id: str, response: Response, svc=Depends(services)):
-    session, created = svc.reviews.open(pack_id)
+             summary="Open a review session for a pack (returns the existing active session with 200). With submission_id: "
+                     "the review of one ZIP submission's audit result (its own investigations and decisions only)")
+def open_review(pack_id: str, response: Response, body: Optional[OpenReviewRequest] = None, svc=Depends(services)):
+    session, created = svc.reviews.open(pack_id, body.submission_id if body else None)
     response.status_code = 201 if created else 200
     return _view(svc, session)
 
@@ -76,7 +78,11 @@ def get_preview_file(review_id: str, kind: Literal["html", "pdf", "json"],
     if kind == "html":
         return Response(render_html(document), media_type="text/html; charset=utf-8", headers=dict(headers, **{"Content-Security-Policy": HTML_CSP}))
     if kind == "pdf":
-        return Response(render_pdf(document), media_type="application/pdf",
+        try:
+            pdf = render_pdf(document)
+        except PdfGlyphError as e:  # never a PDF with substituted characters
+            raise InvalidInput(str(e), code="PDF_GLYPHS_UNSUPPORTED") from None
+        return Response(pdf, media_type="application/pdf",
                         headers=dict(headers, **{"Content-Disposition": f'inline; filename="{meta["preview_final_pack_id"]}.pdf"'}))
     return Response(canonical(document), media_type="application/json", headers=headers)
 

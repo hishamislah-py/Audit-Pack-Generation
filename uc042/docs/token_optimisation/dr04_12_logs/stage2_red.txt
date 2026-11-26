@@ -1,0 +1,1243 @@
+test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) ... 
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:S02/EXC-S02-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:S05/EXC-S05-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:S05/EXC-S05-02] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC2/EXC-SC2-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC3B/EXC-SC3B-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC3C/EXC-SC3C-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC3C/EXC-SC3C-02] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC3C/EXC-SC3C-03] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5A/EXC-SC5A-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5A/EXC-SC5A-02] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-02] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-03] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-04] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-05] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-06] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-07] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-08] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-09] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-10] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-11] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-12] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-13] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-14] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-15] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-16] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-17] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5D/EXC-SC5D-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5D/EXC-SC5D-02] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5D/EXC-SC5D-03] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202602/EXC-H202602-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202603/EXC-H202603-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202603/EXC-H202603-02] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202603/EXC-H202603-03] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202605/EXC-H202605-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202605/EXC-H202605-02] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202605/EXC-H202605-03] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202605/EXC-H202605-04] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202606/EXC-H202606-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202606/EXC-H202606-02] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202606/EXC-H202606-03] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202606/EXC-H202606-04] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202607/EXC-H202607-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202607/EXC-H202607-02] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202607/EXC-H202607-03] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202607/EXC-H202607-04] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202607/EXC-H202607-05] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-02] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-03] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-04] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-05] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-06] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-07] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-08] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [case:CASE/EXC-CASE-01] ... FAIL
+  test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [case:CASE/EXC-CASE-11] ... FAIL
+test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) ... FAIL
+test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) ... 
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:S02/EXC-S02-01] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:S05/EXC-S05-01] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:S05/EXC-S05-02] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC2/EXC-SC2-01] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC3B/EXC-SC3B-01] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC3C/EXC-SC3C-01] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC3C/EXC-SC3C-02] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC3C/EXC-SC3C-03] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5A/EXC-SC5A-01] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5A/EXC-SC5A-02] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-01] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-02] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-03] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-04] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-05] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-06] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-07] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-08] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-09] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-10] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-11] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-12] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-13] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-14] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-15] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-16] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-17] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5D/EXC-SC5D-01] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5D/EXC-SC5D-02] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5D/EXC-SC5D-03] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202602/EXC-H202602-01] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202603/EXC-H202603-01] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202603/EXC-H202603-02] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202603/EXC-H202603-03] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202605/EXC-H202605-01] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202605/EXC-H202605-02] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202605/EXC-H202605-03] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202605/EXC-H202605-04] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202606/EXC-H202606-01] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202606/EXC-H202606-02] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202606/EXC-H202606-03] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202607/EXC-H202607-01] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202607/EXC-H202607-02] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202607/EXC-H202607-03] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202607/EXC-H202607-04] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202608/EXC-H202608-01] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202608/EXC-H202608-02] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202608/EXC-H202608-03] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202608/EXC-H202608-04] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202608/EXC-H202608-05] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202608/EXC-H202608-07] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202608/EXC-H202608-08] ... FAIL
+  test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [case:CASE/EXC-CASE-01] ... FAIL
+test_the_57_view_1_1_ordering_failures_are_covered (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_the_57_view_1_1_ordering_failures_are_covered)
+Packets whose stored order differs from the view's sorted layout (the 57 hash failures of view 1.1). ... FAIL
+test_token_reduction_is_preserved (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_token_reduction_is_preserved) ... ok
+test_version_is_1_2 (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_version_is_1_2) ... FAIL
+test_view_is_deterministic (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_view_is_deterministic) ... ok
+test_derived_edges_out_of_derivation_order_and_interleaved (tests.test_stage2_exact_reconstruction.OrderingEdgeCases.test_derived_edges_out_of_derivation_order_and_interleaved) ... FAIL
+test_empty_relationships_and_single_record (tests.test_stage2_exact_reconstruction.OrderingEdgeCases.test_empty_relationships_and_single_record) ... ok
+test_reversed_lists (tests.test_stage2_exact_reconstruction.OrderingEdgeCases.test_reversed_lists) ... FAIL
+test_tampered_order_fails_closed (tests.test_stage2_exact_reconstruction.OrderingEdgeCases.test_tampered_order_fails_closed) ... ERROR
+
+======================================================================
+ERROR: test_tampered_order_fails_closed (tests.test_stage2_exact_reconstruction.OrderingEdgeCases.test_tampered_order_fails_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 123, in test_tampered_order_fails_closed
+    v["relationship_order"] = v["relationship_order"][:-1]  # one edge unaccounted for
+                              ~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'relationship_order'
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:S02/EXC-S02-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '21be458e37e5d72e298dd0a26638[21875 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-S02-PER-2026-09-f3dfa52766bb'[21875 chars]f0c'}
+Diff is 57525 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:S05/EXC-S05-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '6d051344cdb9cfbd03b7ca1189da[55741 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-S05-PER-2026-09-ddd0fdc8b731'[55741 chars]c85'}
+Diff is 130409 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:S05/EXC-S05-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '9605bdb5ad379e11dfcbdbd1d304[55706 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-S05-PER-2026-09-ddd0fdc8b731'[55706 chars]8ed'}
+Diff is 157794 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC2/EXC-SC2-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'f0393c923d8ea2610d02e432e190[30710 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-SC2-PER-2026-09-aaca8a8b7194'[30710 chars]3d6'}
+Diff is 78910 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC3B/EXC-SC3B-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '270f7883ee899aa4e2cfc3eff8ad[16279 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-SC3B-PER-2026-09-137351796028[16279 chars]744'}
+Diff is 44851 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC3C/EXC-SC3C-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '3ed37fab3b89a347653af9895a72[84396 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-SC3C-PER-2026-09-28bb49134f15[84396 chars]48c'}
+Diff is 204742 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC3C/EXC-SC3C-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '92ae48dd9f421e58648afdaa1988[84297 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-SC3C-PER-2026-09-28bb49134f15[84297 chars]e6a'}
+Diff is 258938 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC3C/EXC-SC3C-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '27f84b39681e897abfc4c96538a1[84336 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-SC3C-PER-2026-09-28bb49134f15[84336 chars]f9b'}
+Diff is 258651 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5A/EXC-SC5A-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'a31fade3ef2c9ce64727c34bcdc2[24827 chars]05']} != {'pac[43 chars]'pack_id': 'PACK-SC5A-PER-2026-09-ae391170b93a[24827 chars]64b'}
+Diff is 69370 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5A/EXC-SC5A-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '12f9a1ec3e8cce8e40ba4cf816a7[24818 chars]05']} != {'pac[43 chars]'pack_id': 'PACK-SC5A-PER-2026-09-ae391170b93a[24818 chars]660'}
+Diff is 69622 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '6db8741af8666ee681e917503f01[30790 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[30790 chars]355'}
+Diff is 64566 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '2afa2a9640759df5ca6e35835ce2[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]419'}
+Diff is 70410 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '08d32a2cca784f26cd7cb3b2faa7[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]8c1'}
+Diff is 70411 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-04]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '5914ea5b361e9e79f2b7427ca679[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]bfe'}
+Diff is 70411 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-05]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'ba23a2cd8c7871bc85587424c2ae[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]9d5'}
+Diff is 70411 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-06]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'c8fe36df9e155500c88e76078be1[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]85f'}
+Diff is 70411 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-07]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'b3058730e10587feef090218c32e[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]74a'}
+Diff is 70411 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-08]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '2b7859e445b76aa6a4d05e090f45[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]f9d'}
+Diff is 70410 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-09]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '396273a3e69c2a19f2ed6e97394d[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]98f'}
+Diff is 70411 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-10]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '7dea7a98dc9bea90e10f6b60989e[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]c41'}
+Diff is 70411 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-11]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'd67703503aec0c8aba050e3c51e2[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]000'}
+Diff is 70411 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-12]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '45725842d6d84d51a601800102fc[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]d57'}
+Diff is 70411 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-13]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '67f07978d85b5a64eb2c4ab97593[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]7b0'}
+Diff is 70411 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-14]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '08383bab70a2b0f5bcf1f6a0bc60[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]8f4'}
+Diff is 70410 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-15]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'ef487605d33873eb0bdb20fe5d56[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]a25'}
+Diff is 70411 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-16]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'ea9d83c5ae557c8d791ba9ffb55d[32022 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[32022 chars]878'}
+Diff is 70410 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5C/EXC-SC5C-17]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'e6e2de6dec9b52fb94aaf405faa2[30784 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[30784 chars]3d7'}
+Diff is 73202 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5D/EXC-SC5D-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'be0f3ae3c05aec9b3bca8ca088e0[19650 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5D-PER-2026-09-2c5a7ae2e160[19650 chars]1d1'}
+Diff is 46934 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5D/EXC-SC5D-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '1c9cd0df8f9371b0f35467a7a993[19644 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5D-PER-2026-09-2c5a7ae2e160[19644 chars]b58'}
+Diff is 50042 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [scenario:SC5D/EXC-SC5D-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '5f91aac4f059127274622b526d61[19618 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-SC5D-PER-2026-09-2c5a7ae2e160[19618 chars]91d'}
+Diff is 50546 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202602/EXC-H202602-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '760adfe5480557d379c65d32069e[24385 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-H202602-PER-2026-02-195df2e1f[24385 chars]a34'}
+Diff is 65372 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202603/EXC-H202603-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '6e5cbb3b8b5a8aaedcc5899e469a[42833 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-H202603-PER-2026-03-d1d37aea9[42833 chars]e20'}
+Diff is 111359 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202603/EXC-H202603-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '1ac5f7347cb3fa3b7fca8edd18a9[42815 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-H202603-PER-2026-03-d1d37aea9[42815 chars]933'}
+Diff is 119865 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202603/EXC-H202603-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '4bde75a64b870054a9b1e0a6a732[50130 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-H202603-PER-2026-03-d1d37aea9[50130 chars]fee'}
+Diff is 144786 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202605/EXC-H202605-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'd94d0551cfa84b983fdb35d1cb48[24382 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-H202605-PER-2026-05-051d209cc[24382 chars]6f0'}
+Diff is 65373 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202605/EXC-H202605-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '93801d4d1ab70af898f6f3a87573[42855 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-H202605-PER-2026-05-051d209cc[42855 chars]5e7'}
+Diff is 111384 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202605/EXC-H202605-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'e2d9f531e240633151c006c2efd2[42836 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-H202605-PER-2026-05-051d209cc[42836 chars]f4b'}
+Diff is 119895 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202605/EXC-H202605-04]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '2054f841adf4f5b604a961342a3d[50151 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-H202605-PER-2026-05-051d209cc[50151 chars]602'}
+Diff is 145563 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202606/EXC-H202606-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'a3bf822c9f72dfa3faa778d0e3f5[19082 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-H202606-PER-2026-06-a07de266b[19082 chars]149'}
+Diff is 46730 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202606/EXC-H202606-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '4c3215f8d73756ca1ff5c2212b26[15961 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-H202606-PER-2026-06-a07de266b[15961 chars]6c8'}
+Diff is 45125 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202606/EXC-H202606-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'd48bb427e5663fef4e5943c277e7[19122 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-H202606-PER-2026-06-a07de266b[19122 chars]21f'}
+Diff is 45660 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202606/EXC-H202606-04]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '5c6e6af6c9b6759d280cb2554ed8[15949 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-H202606-PER-2026-06-a07de266b[15949 chars]fae'}
+Diff is 37928 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202607/EXC-H202607-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '2c04b45a322d320a6ab0b0500183[24382 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-H202607-PER-2026-07-5d8714f8c[24382 chars]2be'}
+Diff is 65368 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202607/EXC-H202607-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '75b5faef063fc54dd3d6887cbe06[19082 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-H202607-PER-2026-07-5d8714f8c[19082 chars]161'}
+Diff is 46726 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202607/EXC-H202607-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'fae10f41e54c039cd28e58f5f157[15963 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-H202607-PER-2026-07-5d8714f8c[15963 chars]04c'}
+Diff is 45124 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202607/EXC-H202607-04]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'e93b7781729d51786fee3fb23903[19122 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-H202607-PER-2026-07-5d8714f8c[19122 chars]989'}
+Diff is 45660 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202607/EXC-H202607-05]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'c1ae7e309f07169adb142e721dc4[15951 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-H202607-PER-2026-07-5d8714f8c[15951 chars]48e'}
+Diff is 37931 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'd4d8d94c6fac2c2b789762033786[44526 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[44526 chars]105'}
+Diff is 114588 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'f9ba83cc864c7d12fc4a450d2cf6[24383 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[24383 chars]4cd'}
+Diff is 65368 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '130cf8eebfa077b1fe292b399bdf[19079 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[19079 chars]4e1'}
+Diff is 46725 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-04]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'fe0ec6fc178f45e9bef7aeda4b0e[15963 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[15963 chars]0ca'}
+Diff is 45124 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-05]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '0d63ffc46fc8b2dff0a6c603e52a[19119 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[19119 chars]173'}
+Diff is 45656 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-06]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '84282c11d31beeba4149d11dab2d[15951 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[15951 chars]6df'}
+Diff is 37931 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-07]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': 'dbb93bdb5033d4740dbca0dfd45c[44508 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[44508 chars]5da'}
+Diff is 125705 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [history:H202608/EXC-H202608-08]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '5d7bc14fd00720c8aead15e7072c[51823 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[51823 chars]76c'}
+Diff is 152912 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [case:CASE/EXC-CASE-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '96a1a4900f8fac2a9ac8273036a3[43211 chars]01']} != {'pac[43 chars]'pack_id': 'PACK-CASE-PER-2026-09-9c7e777c3353[43211 chars]b9a'}
+Diff is 97006 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes) [case:CASE/EXC-CASE-11]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 51, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual(r, p)  # every value, every list in its original order
+    ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pac[43 chars]'packet_sha256': '0a5cba45078a54920e4a948ac9e5[8665 chars]U1']} != {'pac[43 chars]'pack_id': 'PACK-CASE-PER-2026-09-9c7e777c3353[8665 chars]b53'}
+Diff is 20364 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_76_packets_reconstruct_exactly_with_matching_hashes (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_all_76_packets_reconstruct_exactly_with_matching_hashes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 58, in test_all_76_packets_reconstruct_exactly_with_matching_hashes
+    self.assertEqual((exact, hashes), (76, 76))
+AssertionError: Tuples differ: (19, 19) != (76, 76)
+
+First differing element 0:
+19
+76
+
+- (19, 19)
++ (76, 76)
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:S02/EXC-S02-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'e32ae1e8f004c5bf70f1135f73d3[35419 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-S02-PER-2026-09-f3dfa52766bb'[35419 chars]df7'}
+Diff is 100497 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:S05/EXC-S05-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '6e9e64c8e12499050a3838309491[82507 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-S05-PER-2026-09-ddd0fdc8b731'[82507 chars]4a8'}
+Diff is 236549 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:S05/EXC-S05-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'def2ae31d605b8ce22a4506098fa[82472 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-S05-PER-2026-09-ddd0fdc8b731'[82472 chars]3f3'}
+Diff is 237809 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC2/EXC-SC2-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'fc029078c76fcc1caff2adad299f[45814 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC2-PER-2026-09-aaca8a8b7194'[45814 chars]362'}
+Diff is 132561 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC3B/EXC-SC3B-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'd0fbae5069c0ff1696da11150401[21147 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC3B-PER-2026-09-137351796028[21147 chars]cc5'}
+Diff is 62405 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC3C/EXC-SC3C-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '4cea2ebf4d9dfa2c0c7dbe630e76[92257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC3C-PER-2026-09-28bb49134f15[92257 chars]5c3'}
+Diff is 268443 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC3C/EXC-SC3C-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'c318fcebff025c5aee07f22a0287[92158 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC3C-PER-2026-09-28bb49134f15[92158 chars]19b'}
+Diff is 270399 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC3C/EXC-SC3C-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '115ab6058f87ff1b5509241d1a89[92197 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC3C-PER-2026-09-28bb49134f15[92197 chars]430'}
+Diff is 269921 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5A/EXC-SC5A-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '76e3ae245a58660ca2f23f3c4860[28483 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5A-PER-2026-09-ae391170b93a[28483 chars]379'}
+Diff is 76190 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5A/EXC-SC5A-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '1f0b7493149c20214c9788373c76[28474 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5A-PER-2026-09-ae391170b93a[28474 chars]03d'}
+Diff is 76130 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'ce894ec16d4a5121db6b40b5ba89[34446 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[34446 chars]2fd'}
+Diff is 76438 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '76036abcc481edfa69716e16db39[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]dba'}
+Diff is 90953 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'a3e5e981526a306fa810d2ba1d6a[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]a64'}
+Diff is 90954 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-04]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'eced84f836adef9b52630811f451[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]06d'}
+Diff is 90954 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-05]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '8ececec8767e08794754e6c106ac[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]7c6'}
+Diff is 90954 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-06]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'cbc0e38093931af52796b675c8c7[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]08c'}
+Diff is 90954 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-07]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '2a26aedcb015d41a7c1511bed216[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]fe7'}
+Diff is 90954 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-08]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'd1a414d6c86476233fb79faf8d07[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]479'}
+Diff is 90953 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-09]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'abfd8cc5692be7b1df91209c09c0[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]131'}
+Diff is 90954 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-10]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '3f4b17e5c8c890c3b851ddfc1180[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]0a5'}
+Diff is 90954 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-11]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '286fc989d39aabd7fac8668b90a5[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]ab8'}
+Diff is 90954 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-12]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '0c8eff3b01d3f228dfa4b5f1286f[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]2cd'}
+Diff is 90954 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-13]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'c1075cc7d8a56a871677ef5c5ba8[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]f75'}
+Diff is 90954 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-14]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'cec13f1371d6236c2b522df753ea[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]ab2'}
+Diff is 90953 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-15]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '5beabe3bdc5d5afd61bb9d069dfa[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]90e'}
+Diff is 90954 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-16]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '8560ac8406f27cafcb2ff0bcbb79[39257 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[39257 chars]ea6'}
+Diff is 90953 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5C/EXC-SC5C-17]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '14a9bd2353f08f5e1b54261dab5a[34440 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5C-PER-2026-09-eaac7e6b1444[34440 chars]815'}
+Diff is 83292 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5D/EXC-SC5D-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '0bab265f8b6d95811c09283011d3[23306 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5D-PER-2026-09-2c5a7ae2e160[23306 chars]196'}
+Diff is 58159 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5D/EXC-SC5D-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '7850dcfe17bd0c749945119bc71f[23300 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5D-PER-2026-09-2c5a7ae2e160[23300 chars]171'}
+Diff is 58476 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [scenario:SC5D/EXC-SC5D-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '40247e4c28f5bf38b263d494a353[23274 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-SC5D-PER-2026-09-2c5a7ae2e160[23274 chars]ccd'}
+Diff is 61907 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202602/EXC-H202602-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'f15ab81a08608c5d00c3c5639cf7[38213 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202602-PER-2026-02-195df2e1f[38213 chars]714'}
+Diff is 108520 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202603/EXC-H202603-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '4f675254e530ff288124fa30dde9[69594 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202603-PER-2026-03-d1d37aea9[69594 chars]d1c'}
+Diff is 199836 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202603/EXC-H202603-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '839549df2dd491ee77891a7783ef[69576 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202603-PER-2026-03-d1d37aea9[69576 chars]bc3'}
+Diff is 201310 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202603/EXC-H202603-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'b185a33b6f681708533c59466a48[79208 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202603-PER-2026-03-d1d37aea9[79208 chars]2d3'}
+Diff is 234583 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202605/EXC-H202605-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '67414ec6e1b94f6c47ec7d92eb30[39908 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202605-PER-2026-05-051d209cc[39908 chars]2df'}
+Diff is 112556 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202605/EXC-H202605-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '95e8e707e6c713f92e6c39802310[69619 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202605-PER-2026-05-051d209cc[69619 chars]64c'}
+Diff is 199952 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202605/EXC-H202605-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'bda8b9a97296b7071e111c24e6af[69600 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202605-PER-2026-05-051d209cc[69600 chars]b92'}
+Diff is 201426 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202605/EXC-H202605-04]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'acbe84520997651bfdc029ffe39f[79224 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202605-PER-2026-05-051d209cc[79224 chars]7d3'}
+Diff is 234914 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202606/EXC-H202606-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'dc4f5dd602d6afc7602f27ef1e8b[28737 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202606-PER-2026-06-a07de266b[28737 chars]316'}
+Diff is 82035 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202606/EXC-H202606-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '674b6ba54b99ef536498db38a60c[20829 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202606-PER-2026-06-a07de266b[20829 chars]a1d'}
+Diff is 59509 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202606/EXC-H202606-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'd8aa9b9efd214d17d05dd503e3d7[28777 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202606-PER-2026-06-a07de266b[28777 chars]ce0'}
+Diff is 82332 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202607/EXC-H202607-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'c6f9e953b1d187a4ef32e1490779[38212 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202607-PER-2026-07-5d8714f8c[38212 chars]6da'}
+Diff is 108515 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202607/EXC-H202607-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '155ee79137cc8c85497ac36efb3f[28737 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202607-PER-2026-07-5d8714f8c[28737 chars]d07'}
+Diff is 82035 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202607/EXC-H202607-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'b1261e70a74f11deaccf1907c934[20831 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202607-PER-2026-07-5d8714f8c[20831 chars]018'}
+Diff is 59513 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202607/EXC-H202607-04]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'c0abbefa16f50e45c048916ee62b[28777 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202607-PER-2026-07-5d8714f8c[28777 chars]340'}
+Diff is 82332 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202608/EXC-H202608-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '6d2208ae825ae1c956e808278326[71289 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[71289 chars]b80'}
+Diff is 205428 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202608/EXC-H202608-02]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '15879e1f47f9c95ad901f6b42ea4[38213 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[38213 chars]47b'}
+Diff is 108643 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202608/EXC-H202608-03]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': 'f6bfc0a87479e0ae0a7bb7e6a949[28734 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[28734 chars]1be'}
+Diff is 82029 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202608/EXC-H202608-04]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '1d37e5ac0c94327f2fd3a16480be[20831 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[20831 chars]dcd'}
+Diff is 59513 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202608/EXC-H202608-05]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '06484e56467ad75f67571868bcfc[28774 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[28774 chars]154'}
+Diff is 82326 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202608/EXC-H202608-07]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '2d9e16fd11939b60a474b1345988[71271 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[71271 chars]6da'}
+Diff is 206902 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [history:H202608/EXC-H202608-08]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '8fcc58e756ecf3f51e8979922ba4[80896 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-H202608-PER-2026-08-22a356a95[80896 chars]15d'}
+Diff is 240156 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_deterministic_packets_reconstruct_exactly (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_deterministic_packets_reconstruct_exactly) [case:CASE/EXC-CASE-01]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 77, in test_deterministic_packets_reconstruct_exactly
+    self.assertEqual(r, p)
+AssertionError: {'pac[47 chars]'packet_sha256': '406224e8892b0800686202c192da[51812 chars]1.3'} != {'pac[47 chars]'pack_id': 'PACK-CASE-PER-2026-09-9c7e777c3353[51812 chars]224'}
+Diff is 148851 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_the_57_view_1_1_ordering_failures_are_covered (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_the_57_view_1_1_ordering_failures_are_covered)
+Packets whose stored order differs from the view's sorted layout (the 57 hash failures of view 1.1).
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 67, in test_the_57_view_1_1_ordering_failures_are_covered
+    self.assertEqual(round_trip(p), p, label)
+AssertionError: {'pac[43 chars]'packet_sha256': '21be458e37e5d72e298dd0a26638[21875 chars]03']} != {'pac[43 chars]'pack_id': 'PACK-S02-PER-2026-09-f3dfa52766bb'[21875 chars]f0c'}
+Diff is 57525 characters long. Set self.maxDiff to None to see it. : scenario:S02/EXC-S02-01
+
+======================================================================
+FAIL: test_version_is_1_2 (tests.test_stage2_exact_reconstruction.ExactReconstruction.test_version_is_1_2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 42, in test_version_is_1_2
+    self.assertEqual(MODEL_VIEW_VERSION, "uc042-model-view/1.2")
+AssertionError: 'uc042-model-view/1.1' != 'uc042-model-view/1.2'
+- uc042-model-view/1.1
+?                    ^
++ uc042-model-view/1.2
+?                    ^
+
+
+======================================================================
+FAIL: test_derived_edges_out_of_derivation_order_and_interleaved (tests.test_stage2_exact_reconstruction.OrderingEdgeCases.test_derived_edges_out_of_derivation_order_and_interleaved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 112, in test_derived_edges_out_of_derivation_order_and_interleaved
+    self.check(p)
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 99, in check
+    self.assertEqual(r, p)
+AssertionError: {'pac[43 chars]'packet_sha256': '3ed37fab3b89a347653af9895a72[84396 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-SC3C-PER-2026-09-28bb49134f15[84396 chars]48c'}
+Diff is 204852 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_reversed_lists (tests.test_stage2_exact_reconstruction.OrderingEdgeCases.test_reversed_lists)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 106, in test_reversed_lists
+    self.check(p)
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage2_exact_reconstruction.py", line 99, in check
+    self.assertEqual(r, p)
+AssertionError: {'pac[43 chars]'packet_sha256': '3ed37fab3b89a347653af9895a72[84396 chars]02']} != {'pac[43 chars]'pack_id': 'PACK-SC3C-PER-2026-09-28bb49134f15[84396 chars]48c'}
+Diff is 275141 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 10 tests in 7.700s
+
+FAILED (failures=115, errors=1)

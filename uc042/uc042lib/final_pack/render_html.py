@@ -3,6 +3,7 @@
 from html import escape
 
 from ..pack.render_html import CSS as PACK_CSS
+from .model import OUTCOME_RENDERER_VERSION
 from .report import build_report
 
 EXTRA_CSS = """
@@ -32,6 +33,14 @@ def _t(x):
 
 def _block(b):
     t = b["type"]
+    if t == "outcome":  # renderer 3.0
+        tiles = "".join(f"<div class='tile'><b>{_t(v)}</b><span>{_t(k)}</span></div>" for k, v in b["tiles"])
+        cls = "ok" if b["badge"] == "CLEAN" else "bad"
+        return (f"<div class='outcome'><div class='obadge {cls}'>{_t(b['badge'])}</div>"
+                f"<p class='muted'>{_t(b['label'])}</p><div class='tiles'>{tiles}</div><p class='headline'>{_t(b['headline'])}</p></div>")
+    if t == "toc" and b.get("columns") == 1:  # renderer 3.0
+        return ("<nav class='toc notice'><b>Contents</b><ol class='one'>" +
+                "".join(f"<li><a href='#{a}'>{_t(title)}</a></li>" for _, title, a in b["entries"]) + "</ol></nav>")
     if t == "title":
         return f"<h1>{_t(b['text'])}</h1><p class='subtitle'>{_t(b['subtitle'])}</p>"
     if t == "section":
@@ -63,8 +72,31 @@ def _block(b):
     raise ValueError(f"unknown block type {t!r}")
 
 
+# Schema 1.1 (analyst reviews) only, so a published 1.0 pack still renders byte-identically (verify_final_pack). The
+# analyst's reason keeps its line breaks.
+REVIEW_CSS = """
+.item.rejected{border:2px solid var(--bad);border-left-width:6px}.item.rejected .badge{color:var(--bad)}
+.item.accepted{border-left:5px solid var(--ok)}.item.accepted .badge{color:var(--ok)}
+.item.rejected dd,.item.accepted dd{white-space:pre-wrap}
+"""
+
+
+# Renderer 3.0 only (outcome panel, one-column contents, positive notice); 1.x / 2.x packs keep their exact CSS.
+V3_CSS = """
+.outcome{border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0}
+.obadge{display:inline-block;font-weight:700;font-size:20px;color:#fff;padding:4px 12px;border-radius:4px}
+.obadge.ok{background:var(--ok)}.obadge.bad{background:var(--bad)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:8px 0}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px}.tile b{display:block;font-size:20px}
+.tile span{font-size:12px;color:var(--muted)}.headline{font-weight:700}.toc ol.one{columns:1}
+.notice.ok{border-left:4px solid var(--ok)}
+"""
+
+
 def render_html(final):
     blocks = build_report(final)
+    v3 = final["metadata"].get("report_renderer") == OUTCOME_RENDERER_VERSION
+    css = PACK_CSS + EXTRA_CSS + (REVIEW_CSS if "analyst_reviews" in final else "") + (V3_CSS if v3 else "")
     parts, closing = [], False
     for b in blocks:
         if b["type"] == "section" and b["anchor"] == "closing-summary":
@@ -77,5 +109,5 @@ def render_html(final):
     m = final["metadata"]
     return ("<!doctype html><html lang='en'><head><meta charset='utf-8'>"
             "<meta name='viewport' content='width=device-width, initial-scale=1'>"
-            f"<title>{_t(m['final_pack_id'])}</title><style>{PACK_CSS}{EXTRA_CSS}</style></head><body><main>"
+            f"<title>{_t(m['final_pack_id'])}</title><style>{css}</style></head><body><main>"
             + "".join(parts) + "</main></body></html>\n")

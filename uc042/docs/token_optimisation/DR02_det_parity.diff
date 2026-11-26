@@ -1,0 +1,253 @@
+--- C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/dr0103/pre/tests/det_parity.py	2026-11-16 15:37:10.700046700 +0530
++++ tests/det_parity.py	2026-11-16 15:29:49.495073300 +0530
+@@ -1,14 +1,21 @@
+-"""Phase 6 offline parity harness (no AI call, read-only on every input).
++"""Phase 6 offline parity harness (no AI call, read-only on every input). Strict since the independent review (DR-02).
+ 
+-For every persisted tools-mode investigation found (published and not published) in this copy, in Clone E's storage and in
+-the 16 Nov showcase storage, rebuild the deterministic packet for the same pack and exception and measure:
+-  * coverage of every record the MODEL fetched with a tool and then cited (the records deterministic retrieval must supply);
+-  * coverage of the model's cited NOT_FOUND searches (same file / account / date / reference);
+-  * MISS items preserved; candidate classification unchanged; packet size; pruning register.
++For every persisted investigation record found (published and not published) in this copy, in Clone E's storage and in
++the 16 Nov showcase storage:
++  * tools-mode records with a tool-call transcript are compared: the deterministic packet is rebuilt for the same pack and
++    exception and measured for
++      - coverage of every record the MODEL fetched with a tool and then cited (the records deterministic retrieval must
++        supply);
++      - coverage of every NOT_FOUND search the model cited. STRICT (DR-02): covered only by a deterministic search with
++        the same COMPLETE normalised query (every key; only date / reference synonyms folded; a None filter equals an
++        absent one) whose own result is also NOT_FOUND. Every miss is listed; the denominator is never reduced;
++      - packet size and pruning register;
++  * every other record (fixed mode, no transcript) is listed under "excluded" with its reason: nothing is skipped silently;
++  * attempts are reported by status: published, completed but not published, failed (and any other status).
++The normaliser below is the harness's own, deliberately independent of det_retrieval._norm.
+ Usage: python -I -m tests.det_parity [out.json]"""
+ import glob
+ import json
+-import os
+ import sys
+ from pathlib import Path
+ 
+@@ -27,6 +34,29 @@
+     ("showcase", P10 / "env_s" / "investigations", P10 / "env_s" / "packs", P10 / "env_s" / "docstore" / "cases"),
+ ]
+ 
++DATE_KEYS = ("date", "statement_date", "booking_date", "recon_date")
++REFERENCE_KEYS = ("reference", "bank_reference")
++
++
++def full_query(query):
++    """The harness's own complete normalised query: every key kept; None values dropped (no filter); the date and the
++    reference synonyms mapped to one name each when they agree."""
++    q = {k: v for k, v in (query or {}).items() if v is not None}
++    for group, name in ((DATE_KEYS, "date"), (REFERENCE_KEYS, "reference")):
++        present = {k: q[k] for k in group if k in q}
++        if present and len(set(json.dumps(v) for v in present.values())) == 1:
++            value = next(iter(present.values()))
++            for k in present:
++                q.pop(k)
++            q[name] = value
++    return json.dumps(q, sort_keys=True, ensure_ascii=False)
++
++
++def not_found_covered(model_search, det_searches):
++    """True only when a deterministic search has the same complete normalised query AND is itself NOT_FOUND."""
++    key = full_query(model_search.get("query"))
++    return any(s.get("result") == "NOT_FOUND" and full_query(s.get("query")) == key for s in det_searches)
++
+ 
+ def _cited(f):
+     ids = set()
+@@ -41,34 +71,54 @@
+     return ids
+ 
+ 
+-def _attempts():
++def _status(kind, f):
++    if kind == "published":
++        return "published"
++    s = (f.get("investigation_status") or "").upper()
++    return {"COMPLETED": "completed_not_published", "FAILED": "failed"}.get(s, "other")
++
++
++def _records():
++    """Every persisted record: (label, kind, findings, ledger, tool_calls, packs_root, data_root, excluded_reason, path)."""
+     for label, inv_root, packs_root, data_root in STORES:
+         if not inv_root.is_dir():
+             continue
+         for fp in sorted(glob.glob(str(inv_root / "PACK-*" / "EXC-*" / "INV-*" / "findings.json"))):
+             d = Path(fp).parent
+             f = json.loads(Path(fp).read_text(encoding="utf-8"))
+-            if f.get("investigation_mode") != "tools" or not (d / "tool_calls.json").is_file():
+-                continue
+-            tc = json.loads((d / "tool_calls.json").read_text(encoding="utf-8"))
+-            yield label, "published", f, json.loads((d / "evidence_ledger.json").read_text(encoding="utf-8")), tc, packs_root, data_root
++            why = None
++            if f.get("investigation_mode") != "tools":
++                why = f"{f.get('investigation_mode') or 'fixed'} mode: no model-directed tool fetches to compare"
++            elif not (d / "tool_calls.json").is_file() or not (d / "evidence_ledger.json").is_file():
++                why = "tools mode without a tool-call transcript or evidence ledger"
++            tc = json.loads((d / "tool_calls.json").read_text(encoding="utf-8")) if not why else None
++            ledger = json.loads((d / "evidence_ledger.json").read_text(encoding="utf-8")) if not why else None
++            yield label, "published", f, ledger, tc, packs_root, data_root, why, fp
+         for fp in sorted(glob.glob(str(inv_root / "_not_published" / "PACK-*" / "*" / "*.json"))):
+             x = json.loads(Path(fp).read_text(encoding="utf-8"))
+             f = x.get("result") or {}
+-            if f.get("investigation_mode") != "tools" or not x.get("tool_calls") or not x.get("evidence_ledger"):
+-                continue
+-            yield label, "not_published", f, x["evidence_ledger"], x["tool_calls"], packs_root, data_root
+-
++            why = None
++            if f.get("investigation_mode") != "tools":
++                why = f"{f.get('investigation_mode') or 'fixed'} mode: no model-directed tool fetches to compare"
++            elif not x.get("tool_calls") or not x.get("evidence_ledger"):
++                why = "tools mode without a tool-call transcript or evidence ledger"
++            yield label, "not_published", f, x.get("evidence_ledger"), x.get("tool_calls"), packs_root, data_root, why, fp
++
++
++def _excluded_row(label, kind, f, why, fp):
++    return {"store": label, "status": _status(kind, f), "pack_id": f.get("pack_id"), "exception_id": f.get("exception_id"),
++            "investigation_id": f.get("investigation_id"), "investigation_mode": f.get("investigation_mode"), "reason": why,
++            "record": Path(fp).name}
+ 
+-def _q(s):
+-    q = s.get("query") or {}
+-    return (q.get("file"), q.get("account_id"), q.get("date") or q.get("statement_date") or q.get("booking_date"),
+-            q.get("bank_reference") or q.get("reference"), q.get("txn_id"), q.get("batch_id"))
+ 
+-
+-def run():
++def run(excluded=None):
++    """Rows of compared attempts. Records that cannot be compared are appended to `excluded` (when given) with a reason."""
+     rows = []
+-    for label, status, f, ledger, tc, packs_root, data_root in _attempts():
++    for label, kind, f, ledger, tc, packs_root, data_root, why, fp in _records():
++        if why:
++            if excluded is not None:
++                excluded.append(_excluded_row(label, kind, f, why, fp))
++            continue
+         pid, exc = f["pack_id"], f["exception_id"]
+         pack = store = None
+         errors = []
+@@ -80,6 +130,7 @@
+             except Exception as e:  # noqa: BLE001 - reported, never hidden
+                 errors.append(str(e)[:80])
+                 pack = store = None
++        status = _status(kind, f)
+         if store is None:
+             rows.append({"store": label, "status": status, "pack_id": pid, "exception_id": exc, "error": f"pack or sources not loadable: {errors[-1:]}"})
+             continue
+@@ -101,49 +152,67 @@
+             reg = det.expand(col, case, route, store)
+             p = det.finalise_packet(build_packet(case, build_scope(case), route, col), reg)
+             ids = {r["evidence_id"] for r in p["source_records"]}
+-            det_q = {_q(s) for s in p["searches"]}
+-            det_found_files = {(r["file_id"]) for r in p["source_records"]}
+-            nf_cov = []
+-            for s in cited_nf:
+-                key = _q(s)
+-                nf_cov.append({"search": s["description"][:90], "covered": key in det_q or any(
+-                    k[0] == key[0] and k[1] == key[1] and k[2] == key[2] and (k[3] == key[3]) for k in det_q)})
++            nf_missed = [{"search_id": s["search_id"], "query": s["query"], "description": s["description"][:120]}
++                         for s in cited_nf if not not_found_covered(s, p["searches"])]
+             row.update(covered=[i for i in target if i in ids], missed=[i for i in target if i not in ids],
+-                       not_found_searches_cited=len(cited_nf), not_found_covered=sum(x["covered"] for x in nf_cov),
+-                       not_found_detail=[x for x in nf_cov if not x["covered"]],
++                       not_found_searches_cited=len(cited_nf), not_found_covered=len(cited_nf) - len(nf_missed),
++                       not_found_missed=nf_missed,
++                       # informational only: both are taken from the case, so they cannot differ by construction
+                        miss_items_preserved=[m["item_id"] for m in base["missing_evidence"]] == [m["item_id"] for m in p["missing_evidence"]],
+                        candidates_unchanged=base["candidate_relationships"] == p["candidate_relationships"],
+                        candidates_not_citable_in_findings=all(c["candidate_id"] not in ids for c in p["candidate_relationships"]),
+                        records_base=len(base["source_records"]), records_det=len(p["source_records"]),
+                        view_chars_base=len(model_view_text(base)), view_chars_det=len(model_view_text(p)),
++                       retrieval_rule_version=p["retrieval_rule_version"],
+                        pruning_register=reg, at_cap=len(p["source_records"]) >= det.DET_MAX_RECORDS)
+         rows.append(row)
+     return rows
+ 
+ 
+-def summary(rows):
+-    sup = [r for r in rows if r.get("deterministic_supported")]
++def _coverage(sup):
+     targets = sum(len(r["model_fetched_and_cited"]) for r in sup)
+     covered = sum(len(r["covered"]) for r in sup)
+     uniq_t = {(r["pack_id"], r["exception_id"], i) for r in sup for i in r["model_fetched_and_cited"]}
+     uniq_c = {(r["pack_id"], r["exception_id"], i) for r in sup for i in r["covered"]}
+-    return {"investigations_examined": len(rows), "deterministic_supported": len(sup),
+-            "unsupported_routes": sorted({r.get("route") for r in rows if not r.get("deterministic_supported") and r.get("route")}),
+-            "errors": [r for r in rows if r.get("error")],
+-            "cited_model_fetched_records": targets, "covered": covered,
++    return {"compared": len(sup), "cited_model_fetched_records": targets, "covered": covered,
+             "distinct_per_exception": {"targets": len(uniq_t), "covered": len(uniq_c)},
+-            "missed": sorted({(r["pack_id"], r["exception_id"], i) for r in sup for i in r["missed"]}),
+             "not_found_searches_cited": sum(r["not_found_searches_cited"] for r in sup),
+-            "not_found_covered": sum(r["not_found_covered"] for r in sup),
+-            "miss_items_preserved_all": all(r["miss_items_preserved"] for r in sup),
+-            "candidates_unchanged_all": all(r["candidates_unchanged"] for r in sup),
+-            "any_at_record_budget": [(r["pack_id"], r["exception_id"]) for r in sup if r["at_cap"]],
+-            "pruning_entries": sum(len(r["pruning_register"]) for r in sup)}
++            "not_found_covered": sum(r["not_found_covered"] for r in sup)}
++
++
++def summary(rows, excluded=None):
++    if excluded is None:  # recompute the excluded list (read-only) so the summary always reports it
++        excluded = []
++        for label, kind, f, _, _, _, _, why, fp in _records():
++            if why:
++                excluded.append(_excluded_row(label, kind, f, why, fp))
++    sup = [r for r in rows if r.get("deterministic_supported")]
++    by = {k: [r for r in rows if r.get("status") == k] for k in ("published", "completed_not_published", "failed", "other")}
++    out = {"investigations_examined": len(rows), "deterministic_supported": len(sup),
++           "attempts": {"published": len(by["published"]), "completed_not_published": len(by["completed_not_published"]),
++                        "failed": len(by["failed"]), "other": len(by["other"]),
++                        "completed_investigations": len(by["published"]) + len(by["completed_not_published"])},
++           "excluded": excluded,
++           "unsupported_routes": sorted({r.get("route") for r in rows if not r.get("deterministic_supported") and r.get("route")}),
++           "errors": [r for r in rows if r.get("error")],
++           "missed": sorted({(r["pack_id"], r["exception_id"], i) for r in sup for i in r["missed"]}),
++           "not_found_missed": [dict(m, store=r["store"], status=r["status"], pack_id=r["pack_id"], exception_id=r["exception_id"])
++                                for r in sup for m in r["not_found_missed"]],
++           "not_found_matching": "strict: complete normalised query and deterministic result NOT_FOUND",
++           "miss_items_preserved_all": all(r["miss_items_preserved"] for r in sup),
++           "candidates_unchanged_all": all(r["candidates_unchanged"] for r in sup),
++           "any_at_record_budget": [(r["pack_id"], r["exception_id"]) for r in sup if r["at_cap"]],
++           "pruning_entries": sum(len(r["pruning_register"]) for r in sup),
++           "retrieval_rule_versions": sorted({r["retrieval_rule_version"] for r in sup})}
++    out.update(_coverage(sup))
++    out["by_status"] = {k: _coverage([r for r in v if r.get("deterministic_supported")]) for k, v in by.items() if v}
++    return out
+ 
+ 
+ if __name__ == "__main__":
+-    rows = run()
+-    out = {"summary": summary(rows), "rows": rows}
++    excluded = []
++    rows = run(excluded)
++    out = {"summary": summary(rows, excluded), "rows": rows}
+     if len(sys.argv) > 1:
+         Path(sys.argv[1]).write_text(json.dumps(out, indent=1, default=str), encoding="utf-8")
+     print(json.dumps(out["summary"], indent=1, default=str))
+--- C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/dr0103/pre/tests/test_phase6_deterministic.py	2026-11-16 15:37:10.716428100 +0530
++++ tests/test_phase6_deterministic.py	2026-11-16 15:35:27.753915700 +0530
+@@ -2,7 +2,8 @@
+ 
+ Offline (mocked OpenAI client): deterministic mode makes one structured request on a Python-extended packet; uncovered
+ routes fall back to tools mode and say so; a pre-request size guard stops oversized single requests; pruning is explicit;
+-NOT_FOUND searches are not duplicated; offline parity with every persisted tools-mode investigation is 100%.
++NOT_FOUND searches are not duplicated; offline record parity with every persisted tools-mode investigation is 100%
++(strict NOT_FOUND parity, with its one known shape miss, is in tests.test_dr01_dr03_remediation).
+ Run: python -m unittest tests.test_phase6_deterministic -v"""
+ import json
+ import os
+@@ -107,7 +108,8 @@
+         self.assertGreaterEqual(s["investigations_examined"], 20)
+         self.assertEqual(s["errors"], [])
+         self.assertEqual((s["covered"], s["missed"]), (s["cited_model_fetched_records"], []))
+-        self.assertEqual(s["not_found_covered"], s["not_found_searches_cited"])
++        # DR-02: strict NOT_FOUND matching; every cited search is either covered or listed as missed (none hidden)
++        self.assertEqual(s["not_found_covered"] + len(s["not_found_missed"]), s["not_found_searches_cited"])
+         self.assertTrue(s["miss_items_preserved_all"] and s["candidates_unchanged_all"])
+         self.assertEqual(s["any_at_record_budget"], [])
+ 

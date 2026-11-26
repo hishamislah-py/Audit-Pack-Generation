@@ -549,7 +549,7 @@ The internal reconciliation compares what the firm **owes** clients (requirement
 | 10 Dates | As C04/C05. |
 | 11 Missing evidence | Either side `None` → INSUF with the first root (line 736). |
 | 12 Output | `computed` difference; `reported` firm difference. |
-| 13 Outcomes | INSUF if not computable. FAIL "reported difference differs from recomputed" if computed ≠ reported. NOT_APPLICABLE "no difference to resolve" if both 0.00. FAIL "difference requires same-day resolution (CASS 15.8.50R)" if computed = reported ≠ 0.00. |
+| 13 Outcomes | INSUF if not computable. FAIL "reported difference differs from recomputed" if computed ≠ reported. **PASS** "no difference to resolve" if both 0.00 (Approved 17 Nov 2026: a reconciled zero difference is **PASS**; packs published before that date record it as NOT_APPLICABLE and are kept unchanged. The rule is explicit engine configuration, `EngineRules`, recorded in the pack's configuration fingerprint). FAIL "difference requires same-day resolution (CASS 15.8.50R)" if computed = reported ≠ 0.00. |
 | 14 Exceptions | Each FAIL day → its own `INTERNAL_DIFFERENCE|d/ccy`, Critical (validate.py:1237–1239). **Consecutive days are not merged.** They are linked by L2 PERSISTENCE when the value and currency are the same on consecutive reconciliation days (1374–1382), and by L3 to roll-forward or requirement failures (1395–1412). |
 | 15 Tests | `test_baseline.py::Regressions::test_not_applicable_only_where_documented`; `test_e1_e2.py::E2InvestigationGroups::test_e2_2_refund_twice_group`; `test_e1_e2.py::E2InvestigationGroups::test_e2_3_closing_snapshot_group`; `test_demo_history.py::ScenarioBehaviour::test_unexplained_gbp_difference_march`; `test_review_hardening.py::ContradictionClassification::test_s05_internal_vs_external_views_are_not_a_contradiction`. |
 | 16 Limitations | Exceptions for internal differences carry blank `account_id`, `currency` and `amount` (only bank-ledger and unmatched-entry kinds populate them, validate.py:1254–1273). |
@@ -682,7 +682,7 @@ C08 outcome conditions:
 |---|---|---|
 | Bank or Ledger is None | INSUFFICIENT_EVIDENCE | "bank evidence not provided; difference not computed" |
 | Computed ≠ `difference_reported` | FAIL | "reported difference differs from recomputed" (+ timing detail if the computed difference ≠ 0) |
-| Computed = reported = 0.00 | NOT_APPLICABLE | "bank equals ledger" |
+| Computed = reported = 0.00 | PASS (NOT_APPLICABLE in packs published before 17 Nov 2026) | "bank equals ledger" |
 | Computed = reported ≠ 0.00 | FAIL | TIMING_EVIDENCED / TIMING_PARTIAL: "bank-ledger difference; …". Otherwise "unexplained bank-ledger difference" (+ "(timing claimed, not evidenced)" if `timing_difference_claimed` = true) |
 
 **Timing evidence never changes the outcome.** The evidence status (TIMING_EVIDENCED, TIMING_PARTIAL, TIMING_UNVERIFIABLE, NOT_EVIDENCED; `timing_assessment`, 158–176) changes only the wording. It says "awaiting human confirmation; not resolved".
@@ -959,9 +959,9 @@ C08 outcome conditions:
 | 3 Question | Did each unidentified or unallocated receipt arrive at the bank, and was it allocated to a client by the next business day? |
 | 4 Inputs | IN-02, IN-04, IN-09, IN-11. |
 | 5 Columns | IN-04 `receipt_id`, `bank_reference`, `receipt_date`, `amount`, `currency`, `allocated_ts`, `allocated_date`, `client_id`; IN-09 `end_to_end_ref`, `amount`, `currency`; IN-11 `txn_type`, `payment_reference`, `executed_ts`, `client_id`. |
-| 6 Join / match | IN-04 `bank_reference` = IN-09 `end_to_end_ref` (safeguarding); allocation transaction = LOAD_BANK with the same `payment_reference`. |
+| 6 Join / match | IN-04 `bank_reference` = IN-09 `end_to_end_ref` (safeguarding); allocation transaction = LOAD_BANK with the same `payment_reference` (the primary key; exact, case-sensitive comparison, no normalisation). |
 | 7 Grouping | Per receipt. |
-| 8 Calculation | Lines 970–1011. (a) The receipt must match exactly one bank credit with equal amount text and currency, unless received before the period start (P1 note). (b) If allocated: the allocation date must be ≤ next business day after `receipt_date`; if allocated inside the period, exactly one LOAD_BANK with `executed_ts` = `allocated_ts` and the same client is required. (c) If open: FAIL if the due date ≤ period end, else PASS "open at the period end; allocation due by …". |
+| 8 Calculation | Lines 970–1011. (a) The receipt must match exactly one bank credit with equal amount text and currency, unless received before the period start (P1 note). (b) If allocated: the allocation date must be ≤ next business day after `receipt_date`; if allocated inside the period, exactly one LOAD_BANK carrying the receipt's `bank_reference` as `payment_reference`, for the same client, is required (approved 17 Nov 2026: `executed_ts` need not equal `allocated_ts`). A missing or whitespace-only reference fails ("the receipt has no payment reference"); no match, more than one match (ambiguous) or another client fails. When exactly one LOAD_BANK matches but an excluded (invalid) IN-11 row could carry the same reference, the duplicate may be hidden: INSUFFICIENT_EVIDENCE, never PASS (consolidated remediation, 17 Nov 2026). (c) If open: FAIL if the due date ≤ period end, else PASS "open at the period end; allocation due by …". |
 | 9 Tolerance | Next business day (A.6). |
 | 10 Dates | Deadline uses the allocation date in its stated offset; "after period end" uses London. |
 | 11 Missing evidence | Issues plus missing or tainted bank or transaction evidence → INSUF. |
@@ -969,7 +969,7 @@ C08 outcome conditions:
 | 13 Outcomes | PASS / FAIL / INSUF. |
 | 14 Exceptions | `C09-ALLOCATION|receipt` High. |
 | 15 Tests | `test_period_decisions.py::A1UnallocatedReceipts::test_september_receipt_allocated_1_october_counts_as_open_on_30_september`, `::test_allocation_transaction_in_october_is_reported_but_not_required`, `::test_late_allocation_after_period_end_fails_timeliness`, `::test_receipt_still_open_at_period_end_within_deadline`, `::test_receipt_received_in_october_is_out_of_period_and_does_not_affect_september`, `::test_overdue_receipt_never_allocated_fails`. |
-| 16 Limitations | The `classification` (UNALLOCATED / UNIDENTIFIED) and `identified_date` are not used. |
+| 16 Limitations | The `classification` (UNALLOCATED / UNIDENTIFIED) and `identified_date` are not used. **Accepted design risk (L13, approved 17 Nov 2026):** the ledger `executed_ts` is not compared with the register's `allocated_ts`, so a LOAD_BANK executed days after the recorded allocation still matches; timeliness is assessed from `allocated_ts` only. A missing register reference is a data-quality exclusion (IN-04 `bank_reference` is mandatory), so C09 then reports nothing for that receipt and the DQ failure stands. |
 | **Why** | Money received but not yet credited to a client must still be safeguarded and allocated promptly. |
 
 ### C12-REFUND — Reversal validity
@@ -1205,7 +1205,7 @@ Source: `demo_history/packs/PACK-H202602-PER-2026-02-195df2e1f216/pack.json` (re
 **What still passed for that scope.** This shows that missing is not zero, and that only the affected results are withheld:
 
 - **RC2-LEDGER** 2026-02-16/SGA-EUR-01: computed 73199.44 from 57 cash-book entries to 17:00 = reported 73199.44, so PASS (synthetic). The ledger side exists but the bank side does not, so C08 shows "not available", not 0.00.
-- **Internal reconciliation EUR, 16 Feb:** requirement 73199.44 (4 client balances, IN-03 L142–145, + 0 open receipts) = reported, so C04 PASS. Item A 73199.44, items B–D 0.00, resource 73199.44 = reported, so C05 PASS. Difference 0.00 = reported, so C06 NOT_APPLICABLE (all synthetic). The internal reconciliation uses the ledger, not the bank, so it can be assessed.
+- **Internal reconciliation EUR, 16 Feb:** requirement 73199.44 (4 client balances, IN-03 L142–145, + 0 open receipts) = reported, so C04 PASS. Item A 73199.44, items B–D 0.00, resource 73199.44 = reported, so C05 PASS. Difference 0.00 = reported, so C06 PASS (NOT_APPLICABLE in the pack as published before 17 Nov 2026; all synthetic). The internal reconciliation uses the ledger, not the bank, so it can be assessed.
 - **BC-VS-EOD** produced no 16 Feb result for SGA-EUR-01, because it iterates only over IN-07 rows that exist. The 16 Feb result for SGA-GBP-01 exists and passed.
 
 **Grouping and status.** All 15 results share one root, so there is one exception: EXC-H202602-01, **Critical** ("Missing bank evidence"), status **OPEN**, review AWAITING_HUMAN_REVIEW, 15 affected results, no flags, no group, and one missing-evidence item MISS-01. The pack totals are 1,788 results: 1,690 PASS, 83 NOT_APPLICABLE, 15 INSUFFICIENT_EVIDENCE, 0 FAIL (synthetic). Case status is **EVIDENCE_INCOMPLETE**, with evidence completeness INCOMPLETE and control outcomes NOT_FULLY_ASSESSED. IN-18 and IN-19 were not provided and are optional, so both C16 results and both V00-FILE results are NOT_APPLICABLE. Policy: IN-17 v1.1, effective 2025-10-01 (HD-1).
@@ -1222,13 +1222,13 @@ Source: `packs/PACK-S05-PER-2026-09-ddd0fdc8b731/pack.json` (dataset `scn_S05_un
 | Ledger (IN-10, 73 entries to 17:00) | 341484.46 | 341484.46 | RC2 PASS |
 | Difference = Bank − Ledger | 340672.06 − 341484.46 = **−812.40** | −812.40 | **C08 FAIL** |
 
-The firm's reported figures agree with the recomputed ones, so the failure is **not** a reporting mismatch. It is the last row of the C08 outcome table: computed = reported ≠ 0. `timing_difference_claimed` = false. The timing assessment found no cross-day items (`explained_by_timing` 0.00, `residual_unexplained` −812.40), so the evidence status is NOT_EVIDENCED. On 16 Sep the difference was 0.00 (NOT_APPLICABLE).
+The firm's reported figures agree with the recomputed ones, so the failure is **not** a reporting mismatch. It is the last row of the C08 outcome table: computed = reported ≠ 0. `timing_difference_claimed` = false. The timing assessment found no cross-day items (`explained_by_timing` 0.00, `residual_unexplained` −812.40), so the evidence status is NOT_EVIDENCED. On 16 Sep the difference was 0.00 (PASS under the approved rule; NOT_APPLICABLE in the pack as published before 17 Nov 2026).
 
 **Grouping.** The same −812.40 appears on all 10 consecutive reconciliation days from 17 Sep to 30 Sep. On 30 Sep, for example, bank 395032.46 and ledger 395844.86 (123 entries) give −812.40 (synthetic). These form one root cause, `BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-09-17|-812.40`. IN-14 has a header only, with no entry for any `ERL-SGA-GBP-01-202609xx`, so DISC-LOG is FAIL. **EXC-S05-01** is therefore Critical, with 11 affected results (10 C08 + 1 DISC-LOG). It carries the flags `OWN_FUNDS_REQUIRED` (the amount is negative) and `NO_INVESTIGATION_LOGGED`, and the related record `BE-GBP-0917-X01`.
 
 **The related bank entry.** IN-09 L152, `BE-GBP-0917-X01`, is a debit of 812.40 booked 17 Sep 15:20 (+01:00), reference "SETTLE 0417". It has no cash-book counterpart (BANK-CASH-LINK FAIL) and no batch, transaction, top-up or register counterpart (C11-BANK-ENTRY FAIL). This is **EXC-S05-02**, severity High (UNMATCHED_BANK_ENTRY), amount −812.40. Correlation links the two exceptions in **GRP-S05-01** by **L3 LINEAGE**, because the entry falls inside the 17 Sep 17:00 balance where the difference begins. The group does not state that the entry *is* the cause.
 
-**Internal side the same day:** GBP requirement 341484.46 (8 client balances) = Item A 341484.46, so C06 0.00 is NOT_APPLICABLE (synthetic). The internal reconciliation is ledger-based, so a debit that appears only at the bank is caught by the external reconciliation, not the internal one. The pack totals are 1,887 results: 1,796 PASS, 13 FAIL, 78 NOT_APPLICABLE (synthetic). Evidence is COMPLETE, so case status is **EXCEPTIONS_OPEN**.
+**Internal side the same day:** GBP requirement 341484.46 (8 client balances) = Item A 341484.46, so C06 0.00 is PASS under the approved rule (NOT_APPLICABLE in the pack as published; synthetic). The internal reconciliation is ledger-based, so a debit that appears only at the bank is caught by the external reconciliation, not the internal one. The pack totals as published (before 17 Nov 2026) are 1,887 results: 1,796 PASS, 13 FAIL, 78 NOT_APPLICABLE (synthetic); rebuilt under the approved rule the 78 zero-difference results are PASS. Evidence is COMPLETE, so case status is **EXCEPTIONS_OPEN**.
 
 ## J.3 September 2026 scenario SC2 — settlement timing, evidenced but still open
 

@@ -1,0 +1,94 @@
+test_every_telemetry_entry_states_the_sdk_retry_allowance (tests.test_stage5_telemetry.DR08SdkRetries.test_every_telemetry_entry_states_the_sdk_retry_allowance) ... ok
+test_retry_behaviour_unchanged_and_documented (tests.test_stage5_telemetry.DR08SdkRetries.test_retry_behaviour_unchanged_and_documented) ... ok
+test_no_telemetry_when_no_request_was_made (tests.test_stage5_telemetry.DR09SummaryTelemetry.test_no_telemetry_when_no_request_was_made) ... ok
+test_provider_failure_keeps_telemetry (tests.test_stage5_telemetry.DR09SummaryTelemetry.test_provider_failure_keeps_telemetry) ... ok
+test_stale_telemetry_is_never_reused (tests.test_stage5_telemetry.DR09SummaryTelemetry.test_stale_telemetry_is_never_reused)
+The investigator's last request is used only for a refused OUTPUT (invalid_summary), never for a failure that ... ok
+test_success_records_the_last_structured_request (tests.test_stage5_telemetry.DR09SummaryTelemetry.test_success_records_the_last_structured_request) ... ok
+test_transport_failure_without_a_response_body (tests.test_stage5_telemetry.DR09SummaryTelemetry.test_transport_failure_without_a_response_body) ... ok
+test_validation_failure_keeps_the_billed_usage (tests.test_stage5_telemetry.DR09SummaryTelemetry.test_validation_failure_keeps_the_billed_usage)
+The call succeeded and was billed; the output was refused by validation (no LLMCallError to carry telemetry). ... ok
+test_failed_summary_preview_stores_telemetry (tests.test_stage5_telemetry.DR09ThroughThePreviewJob.test_failed_summary_preview_stores_telemetry) ... ok
+test_successful_summary_preview_unchanged (tests.test_stage5_telemetry.DR09ThroughThePreviewJob.test_successful_summary_preview_unchanged) ... ok
+test_concurrent_generate_publishes_exactly_one_pack (tests.test_api_reviews.Decisions.test_concurrent_generate_publishes_exactly_one_pack) ... ok
+test_duplicate_generate_never_creates_a_second_pack (tests.test_api_reviews.Decisions.test_duplicate_generate_never_creates_a_second_pack) ... ok
+test_generate_requires_acknowledgement_and_current_snapshot (tests.test_api_reviews.Decisions.test_generate_requires_acknowledgement_and_current_snapshot) ... ok
+test_generation_failure_publishes_nothing_and_can_be_retried (tests.test_api_reviews.Decisions.test_generation_failure_publishes_nothing_and_can_be_retried) ... ok
+test_hold_then_resume_then_generate (tests.test_api_reviews.Decisions.test_hold_then_resume_then_generate) ... ok
+test_new_investigation_after_preview_makes_it_stale (tests.test_api_reviews.Decisions.test_new_investigation_after_preview_makes_it_stale) ... ok
+test_running_investigation_blocks_generate_and_preview (tests.test_api_reviews.Decisions.test_running_investigation_blocks_generate_and_preview) ... ok
+test_clean_pack_end_to_end (tests.test_api_reviews.FinalPacks.test_clean_pack_end_to_end) ... ok
+test_published_pack_retrieval_verification_and_immutability (tests.test_api_reviews.FinalPacks.test_published_pack_retrieval_verification_and_immutability) ... ok
+test_restart_recovers_interrupted_generation (tests.test_api_reviews.FinalPacks.test_restart_recovers_interrupted_generation) ... ok
+test_second_session_produces_the_next_version (tests.test_api_reviews.FinalPacks.test_second_session_produces_the_next_version) ... ok
+test_preview_with_generated_closing_summary_and_renderings (tests.test_api_reviews.Preview.test_preview_with_generated_closing_summary_and_renderings) ... ok
+test_selection_change_invalidates_summary_and_preview (tests.test_api_reviews.Preview.test_selection_change_invalidates_summary_and_preview) ... ok
+test_summary_failure_is_recorded_never_fabricated_and_needs_acknowledgement (tests.test_api_reviews.Preview.test_summary_failure_is_recorded_never_fabricated_and_needs_acknowledgement) ... ok
+test_backend_tests_leave_controlled_folders_unchanged (tests.test_api_reviews.ProtectedArtefacts.test_backend_tests_leave_controlled_folders_unchanged)
+The backend suites write only to temporary folders; the project never gains a final_packs/ directory. ... ok
+test_primary_final_pack_storage_is_outside_the_repository (tests.test_api_reviews.ProtectedArtefacts.test_primary_final_pack_storage_is_outside_the_repository)
+Published final packs are runtime output, never part of the source tree (B6). ... ok
+test_open_defaults_and_single_active_session (tests.test_api_reviews.Sessions.test_open_defaults_and_single_active_session) ... ok
+test_selection_validation (tests.test_api_reviews.Sessions.test_selection_validation) ... ok
+test_sessions_persist_across_restart (tests.test_api_reviews.Sessions.test_sessions_persist_across_restart) ... ok
+test_changed_selection_changes_the_fingerprint (tests.test_closing_summary.ControlledInput.test_changed_selection_changes_the_fingerprint) ... ok
+test_input_is_controlled_and_traceable (tests.test_closing_summary.ControlledInput.test_input_is_controlled_and_traceable) ... ok
+test_generated_summary_record (tests.test_closing_summary.GenerationAndFailures.test_generated_summary_record) ... ok
+test_provider_failures_raise_and_never_fabricate (tests.test_closing_summary.GenerationAndFailures.test_provider_failures_raise_and_never_fabricate) ... ok
+test_stale_summary_is_rejected_by_the_assembler (tests.test_closing_summary.GenerationAndFailures.test_stale_summary_is_rejected_by_the_assembler) ... ok
+test_clean_pack_rules (tests.test_closing_summary.OutputValidation.test_clean_pack_rules) ... ok
+test_correct_disclaimers_are_accepted (tests.test_closing_summary.OutputValidation.test_correct_disclaimers_are_accepted) ... ok
+test_prompt_states_the_negation_scope_the_validation_applies (tests.test_closing_summary.OutputValidation.test_prompt_states_the_negation_scope_the_validation_applies)
+12 Nov 2026 live run: gpt-6-luna wrote a limitation negating a long list ("... opinion or certification") and the ... ok
+test_structured_output_schema (tests.test_closing_summary.OutputValidation.test_structured_output_schema) ... ok
+test_unsupported_claims_are_rejected (tests.test_closing_summary.OutputValidation.test_unsupported_claims_are_rejected) ... ok
+test_valid_summary (tests.test_closing_summary.OutputValidation.test_valid_summary) ... ok
+test_request_ids_and_usage_of_each_attempt (tests.test_phase3_telemetry.ClosingSummaryTelemetry.test_request_ids_and_usage_of_each_attempt) ... ok
+test_corrective_retry_records_both_attempts (tests.test_phase3_telemetry.FixedModeTelemetry.test_corrective_retry_records_both_attempts) ... ok
+test_fixed_mode_failure_keeps_usage_and_records (tests.test_phase3_telemetry.FixedModeTelemetry.test_fixed_mode_failure_keeps_usage_and_records) ... ok
+test_single_request (tests.test_phase3_telemetry.FixedModeTelemetry.test_single_request) ... ok
+test_identity_is_unaffected_by_telemetry (tests.test_phase3_telemetry.ToolsModeTelemetry.test_identity_is_unaffected_by_telemetry) ... ok
+test_multi_request_records_each_turn_and_the_aggregate_is_their_sum (tests.test_phase3_telemetry.ToolsModeTelemetry.test_multi_request_records_each_turn_and_the_aggregate_is_their_sum) ... ok
+test_truncated_turn_is_recorded_with_its_reason_and_usage (tests.test_phase3_telemetry.ToolsModeTelemetry.test_truncated_turn_is_recorded_with_its_reason_and_usage) ... ok
+test_full_graph_publishes_a_live_labelled_artefact (tests.test_openai_provider.GraphWithMockedOpenAI.test_full_graph_publishes_a_live_labelled_artefact) ... ok
+test_provider_failure_is_a_failed_unpublished_investigation (tests.test_openai_provider.GraphWithMockedOpenAI.test_provider_failure_is_a_failed_unpublished_investigation) ... ok
+test_client_construction (tests.test_openai_provider.ProviderSelectionAndConfig.test_client_construction) ... ok
+test_env_example_template_has_no_secret_and_parses (tests.test_openai_provider.ProviderSelectionAndConfig.test_env_example_template_has_no_secret_and_parses) ... ok
+test_explicit_provider_selection (tests.test_openai_provider.ProviderSelectionAndConfig.test_explicit_provider_selection) ... ok
+test_local_env_file_loading_never_overrides_the_process_environment (tests.test_openai_provider.ProviderSelectionAndConfig.test_local_env_file_loading_never_overrides_the_process_environment) ... ok
+test_malformed_settings_are_configuration_errors (tests.test_openai_provider.ProviderSelectionAndConfig.test_malformed_settings_are_configuration_errors) ... ok
+test_missing_or_blank_api_key (tests.test_openai_provider.ProviderSelectionAndConfig.test_missing_or_blank_api_key) ... ok
+test_openai_is_the_default_provider (tests.test_openai_provider.ProviderSelectionAndConfig.test_openai_is_the_default_provider) ... ok
+test_absent_parsed_output_is_retried_once_then_fails (tests.test_openai_provider.ResponseFailures.test_absent_parsed_output_is_retried_once_then_fails) ... ok
+test_authentication_failure_is_mapped_and_redacted (tests.test_openai_provider.ResponseFailures.test_authentication_failure_is_mapped_and_redacted) ... ok
+test_availability_check (tests.test_openai_provider.ResponseFailures.test_availability_check) ... ok
+test_bad_request_keeps_the_provider_detail (tests.test_openai_provider.ResponseFailures.test_bad_request_keeps_the_provider_detail) ... ok
+test_failed_response_status (tests.test_openai_provider.ResponseFailures.test_failed_response_status) ... ok
+test_invalid_model (tests.test_openai_provider.ResponseFailures.test_invalid_model) ... ok
+test_malformed_structured_output_retried_then_success (tests.test_openai_provider.ResponseFailures.test_malformed_structured_output_retried_then_success) ... ok
+test_max_output_tokens_is_not_reported_as_invalid_json (tests.test_openai_provider.ResponseFailures.test_max_output_tokens_is_not_reported_as_invalid_json) ... ok
+test_other_incomplete_response (tests.test_openai_provider.ResponseFailures.test_other_incomplete_response) ... ok
+test_overall_time_budget (tests.test_openai_provider.ResponseFailures.test_overall_time_budget) ... ok
+test_per_request_timeout_never_exceeds_remaining_budget (tests.test_openai_provider.ResponseFailures.test_per_request_timeout_never_exceeds_remaining_budget) ... ok
+test_rate_limit (tests.test_openai_provider.ResponseFailures.test_rate_limit) ... ok
+test_redact (tests.test_openai_provider.ResponseFailures.test_redact) ... ok
+test_refusal (tests.test_openai_provider.ResponseFailures.test_refusal) ... ok
+test_timeout_and_connection (tests.test_openai_provider.ResponseFailures.test_timeout_and_connection) ... ok
+test_unexpected_sdk_exception (tests.test_openai_provider.ResponseFailures.test_unexpected_sdk_exception) ... ok
+test_reasoning_effort_sent_only_when_configured (tests.test_openai_provider.ResponsesRequest.test_reasoning_effort_sent_only_when_configured) ... ok
+test_token_usage_and_provider_metadata_captured (tests.test_openai_provider.ResponsesRequest.test_token_usage_and_provider_metadata_captured) ... ok
+test_valid_parsed_response_and_request_shape (tests.test_openai_provider.ResponsesRequest.test_valid_parsed_response_and_request_shape) ... ok
+test_configuration_has_no_fallback_and_a_stale_fallback_confirmation_is_refused (tests.test_openai_only_provider.ApiConfigurationAndAuthorisation.test_configuration_has_no_fallback_and_a_stale_fallback_confirmation_is_refused) ... ok
+test_summary_fails_with_the_openai_error (tests.test_openai_only_provider.ClosingSummaryHasNoFallback.test_summary_fails_with_the_openai_error) ... ok
+test_factory_builds_only_openai_even_with_legacy_fallback_variables (tests.test_openai_only_provider.Configuration.test_factory_builds_only_openai_even_with_legacy_fallback_variables) ... ok
+test_groq_is_not_an_accepted_provider (tests.test_openai_only_provider.Configuration.test_groq_is_not_an_accepted_provider) ... ok
+test_no_fallback_api_remains (tests.test_openai_only_provider.Configuration.test_no_fallback_api_remains) ... ok
+test_each_availability_failure_is_reported_after_one_request (tests.test_openai_only_provider.FailuresAreReportedNotRerouted.test_each_availability_failure_is_reported_after_one_request) ... ok
+test_credit_exhaustion_fails_the_investigation_without_another_provider (tests.test_openai_only_provider.InvestigationFailsVisibly.test_credit_exhaustion_fails_the_investigation_without_another_provider) ... ok
+test_accept_reject_failed_excluded_through_to_the_final_pack (tests.test_end_to_end_workflow.MixedPackWorkflow.test_accept_reject_failed_excluded_through_to_the_final_pack) ... ok
+test_validation_refuses_rejected_ai_text_anywhere_in_a_pack (tests.test_end_to_end_workflow.RejectedTextGuard.test_validation_refuses_rejected_ai_text_anywhere_in_a_pack) ... ok
+
+----------------------------------------------------------------------
+Ran 84 tests in 69.683s
+
+OK

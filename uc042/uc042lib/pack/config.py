@@ -20,6 +20,9 @@ LIMITATIONS = [
 ]
 # Engine modules whose content defines the processing behaviour (engine fingerprint).
 ENGINE_MODULES = ["schema.py", "period.py", "structure.py", "money.py", "validate.py"]
+# Added to the engine fingerprint only for runs with EngineRules.enrichment_v1 (I-2), so the fingerprint, run ID and pack
+# ID of every pack built with enrichment off are unchanged.
+ENRICHMENT_MODULES = ["enrichment.py"]
 
 # Engine checks that emit a result only when they find a problem (no explicit PASS row). The pack lists them with
 # check_outcome NO_FINDINGS when the engine's evidence gate shows the check ran; it never presents them as PASS.

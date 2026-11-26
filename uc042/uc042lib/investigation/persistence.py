@@ -35,7 +35,9 @@ def investigation_id(result, packet):
 def investigation_id_from_findings(findings, packet_sha256):
     """Identity over the findings exactly as stored, so artefacts written under an earlier findings schema remain
     verifiable after fields are added. Per-call metadata (usage, provider response IDs) is excluded; in tools mode the
-    findings include evidence_ledger_sha256, so the accumulated evidence is part of the identity."""
+    findings include evidence_ledger_sha256, so the accumulated evidence is part of the identity. The originating execution
+    (findings["execution"]: submission, run, authorisation, job; stored only for audit-run investigations) is part of the
+    identity too, so each execution publishes its own artefact and is never compared with another execution's."""
     core = {k: v for k, v in findings.items() if k not in ("investigation_id", "investigated_at", "model_metadata")}
     meta = {k: v for k, v in (findings.get("model_metadata") or {}).items() if k not in ("usage", "provider_response")}
     basis = canonical({"findings": core, "model": meta, "packet": packet_sha256})
