@@ -8,7 +8,8 @@
 #>
 param(
     [Parameter(Mandatory = $true, Position = 0)][string]$Username,
-    [string]$AuthFile = ""
+    [string]$AuthFile = "",
+    [string]$PasswordEnv = ""     # scripted setups: name of an environment variable holding the password (no prompt)
 )
 $ErrorActionPreference = "Stop"
 $Repo = Split-Path -Parent $PSScriptRoot
@@ -19,7 +20,9 @@ New-Item -ItemType Directory -Force (Split-Path -Parent $AuthFile) | Out-Null
 
 Push-Location (Join-Path $Repo "app")
 try {
-    & $Py -m smartparser.webapp.auth set-password --file $AuthFile --username $Username
+    $AuthArgs = @("-m", "smartparser.webapp.auth", "set-password", "--file", $AuthFile, "--username", $Username)
+    if ($PasswordEnv) { $AuthArgs += @("--password-env", $PasswordEnv) }
+    & $Py @AuthArgs
     if ($LASTEXITCODE -ne 0) { throw "set-password failed (exit $LASTEXITCODE)" }
 } finally { Pop-Location }
 Write-Host "Account $Username saved in $AuthFile"

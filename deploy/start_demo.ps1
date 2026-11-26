@@ -43,9 +43,12 @@ $ServerArgs = @(
     "--mapping-ai", "off",
     "--default-theme", $Theme
 )
-if (Test-Path $EnvFile) {
+$HasKey = (Test-Path $EnvFile) -and (Select-String -Path $EnvFile -Pattern '^\s*OPENAI_API_KEY\s*=\s*\S' -Quiet)
+if ($HasKey) {
     $ServerArgs += @("--ai-env-file", $EnvFile)
     Write-Host "AI investigations: ON (key read from $EnvFile; evidence for each exception is sent to OpenAI with store:false)"
+} elseif (Test-Path $EnvFile) {
+    Write-Host "AI investigations: OFF ($EnvFile has no OPENAI_API_KEY value). Reconciliation, review and audit packs work without AI."
 } else {
     Write-Host "AI investigations: OFF (no $EnvFile). Reconciliation, review and audit packs work without AI."
 }

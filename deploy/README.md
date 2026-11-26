@@ -19,6 +19,10 @@ Options:
 - `-Python <path>` uses a specific Python 3.11.
 - `-BuildUi` rebuilds the analyst UI from `app/ringfence-analyst-app` into `app/smartparser/webapp/analyst` with `npm ci` and `npm run build:backend`. A built copy is already committed, so this is only needed after UI changes.
 
+No database is needed. The analyst application keeps its state (cases, uploads, runs, packs, audit log) as files in
+its workspace folder, `.runtime\ws` by default. PostgreSQL and its migrations (`uc042\uc042app`, `python -m uc042app.admin
+db-upgrade`) belong only to the engine's earlier FastAPI backend, which the analyst demo does not use; see `uc042\README.md`.
+
 ## 2. Create a sign-in account
 
 ```bat
