@@ -1,0 +1,15 @@
+.git
+.env
+**/.env
+**/node_modules
+**/dist
+**/__pycache__
+**/.pytest_cache
+**/.venv
+.runtime
+uc042/app_state
+uc042/document_store
+# not needed at run time (test suites, research corpus)
+uc042/test_data
+app/corpus
+app/experiments

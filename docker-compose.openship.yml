@@ -1,0 +1,41 @@
+# Openship deploy: the consolidated UC-042 analyst application (nginx :80 + application server) in one container.
+# The application keeps its state as files in the /data volume (workspace, sign-in hash, AI env file); it does not use
+# a database. The PostgreSQL service and its uc042-pg volume are kept exactly as before (unchanged, unused by `app`)
+# so the existing database and its data stay untouched.
+# Optional AI settings (UC042_LLM_*) are passed only when set; unset means the application's validated defaults.
+services:
+  app:
+    build: .
+    ports:
+      - "80"
+    environment:
+      ANALYST_USERNAME: ${ANALYST_USERNAME}
+      ANALYST_PASSWORD: ${ANALYST_PASSWORD}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      UC042_LLM_MODEL: ${UC042_LLM_MODEL:-}
+      UC042_LLM_TIMEOUT_SECONDS: ${UC042_LLM_TIMEOUT_SECONDS:-}
+      UC042_LLM_MAX_TOKENS: ${UC042_LLM_MAX_TOKENS:-}
+      UC042_OPENAI_REASONING_EFFORT: ${UC042_OPENAI_REASONING_EFFORT:-}
+      AI_MAX_REQUESTS_PER_OPERATION: ${AI_MAX_REQUESTS_PER_OPERATION:-5}
+      DEFAULT_THEME: ${DEFAULT_THEME:-light}
+      COOKIE_SECURE: ${COOKIE_SECURE:-on}
+    volumes:
+      - uc042-data:/data
+    restart: unless-stopped
+  db:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_USER: uc042
+      POSTGRES_PASSWORD: ${UC042_DB_PASSWORD}
+      POSTGRES_DB: uc042
+    volumes:
+      - uc042-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U uc042 -d uc042"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+volumes:
+  uc042-data:
+  uc042-pg:
