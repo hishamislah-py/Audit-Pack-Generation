@@ -20,3 +20,4 @@ document_store/
 
 # PostgreSQL backups taken before migrations (never commit)
 db_backups/
+docs/token_optimisation/test_db.url

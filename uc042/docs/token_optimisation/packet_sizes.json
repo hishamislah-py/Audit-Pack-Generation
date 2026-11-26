@@ -1,0 +1,772 @@
+{
+ "rule_version": "uc042-det-retrieval/1.2",
+ "rows": [
+  {
+   "packet": "scenario:S02/EXC-S02-01",
+   "route": "missing_bank_evidence",
+   "supported": true,
+   "records": 14,
+   "raw_packet_chars": 21974,
+   "view_chars": 15583,
+   "det_records": 27,
+   "det_view_chars": 25844,
+   "register": 2
+  },
+  {
+   "packet": "scenario:S05/EXC-S05-01",
+   "route": "bank_ledger_mismatch",
+   "supported": true,
+   "records": 47,
+   "raw_packet_chars": 55840,
+   "view_chars": 33562,
+   "det_records": 73,
+   "det_view_chars": 51476,
+   "register": 0
+  },
+  {
+   "packet": "scenario:S05/EXC-S05-02",
+   "route": "unmatched_bank_entry",
+   "supported": true,
+   "records": 47,
+   "raw_packet_chars": 55805,
+   "view_chars": 34649,
+   "det_records": 73,
+   "det_view_chars": 52514,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC2/EXC-SC2-01",
+   "route": "bank_ledger_mismatch",
+   "supported": true,
+   "records": 30,
+   "raw_packet_chars": 30809,
+   "view_chars": 23758,
+   "det_records": 44,
+   "det_view_chars": 34436,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC3B/EXC-SC3B-01",
+   "route": "settlement_discrepancy",
+   "supported": true,
+   "records": 14,
+   "raw_packet_chars": 16378,
+   "view_chars": 14320,
+   "det_records": 18,
+   "det_view_chars": 19965,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC3C/EXC-SC3C-01",
+   "route": "bank_ledger_mismatch",
+   "supported": true,
+   "records": 70,
+   "raw_packet_chars": 84495,
+   "view_chars": 49807,
+   "det_records": 74,
+   "det_view_chars": 55129,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC3C/EXC-SC3C-02",
+   "route": "settlement_discrepancy",
+   "supported": true,
+   "records": 70,
+   "raw_packet_chars": 84396,
+   "view_chars": 49672,
+   "det_records": 74,
+   "det_view_chars": 54994,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC3C/EXC-SC3C-03",
+   "route": "settlement_discrepancy",
+   "supported": true,
+   "records": 70,
+   "raw_packet_chars": 84435,
+   "view_chars": 49699,
+   "det_records": 74,
+   "det_view_chars": 55021,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5A/EXC-SC5A-01",
+   "route": "unverified_relationship",
+   "supported": true,
+   "records": 20,
+   "raw_packet_chars": 24926,
+   "view_chars": 21030,
+   "det_records": 23,
+   "det_view_chars": 25242,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5A/EXC-SC5A-02",
+   "route": "unverified_relationship",
+   "supported": true,
+   "records": 20,
+   "raw_packet_chars": 24917,
+   "view_chars": 21484,
+   "det_records": 23,
+   "det_view_chars": 25576,
+   "register": 1
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-01",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 9,
+   "raw_packet_chars": 30889,
+   "view_chars": 26249,
+   "det_records": 12,
+   "det_view_chars": 30263,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-02",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32527,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-03",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32527,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-04",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32527,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-05",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32523,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-06",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32527,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-07",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32523,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-08",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32527,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-09",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32523,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-10",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32527,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-11",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32523,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-12",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32527,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-13",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32523,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-14",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32527,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-15",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32523,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-16",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 10,
+   "raw_packet_chars": 32121,
+   "view_chars": 26636,
+   "det_records": 16,
+   "det_view_chars": 32527,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5C/EXC-SC5C-17",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 9,
+   "raw_packet_chars": 30883,
+   "view_chars": 26475,
+   "det_records": 12,
+   "det_view_chars": 30489,
+   "register": 0
+  },
+  {
+   "packet": "scenario:SC5D/EXC-SC5D-01",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 14,
+   "raw_packet_chars": 19749,
+   "view_chars": 14063,
+   "det_records": 17,
+   "det_view_chars": 17970,
+   "register": 1
+  },
+  {
+   "packet": "scenario:SC5D/EXC-SC5D-02",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 14,
+   "raw_packet_chars": 19743,
+   "view_chars": 14526,
+   "det_records": 17,
+   "det_view_chars": 18433,
+   "register": 1
+  },
+  {
+   "packet": "scenario:SC5D/EXC-SC5D-03",
+   "route": "customer_balance_discrepancy",
+   "supported": true,
+   "records": 14,
+   "raw_packet_chars": 19717,
+   "view_chars": 14031,
+   "det_records": 17,
+   "det_view_chars": 17938,
+   "register": 1
+  },
+  {
+   "packet": "history:H202602/EXC-H202602-01",
+   "route": "missing_bank_evidence",
+   "supported": true,
+   "records": 16,
+   "raw_packet_chars": 24484,
+   "view_chars": 16419,
+   "det_records": 29,
+   "det_view_chars": 26963,
+   "register": 2
+  },
+  {
+   "packet": "history:H202603/EXC-H202603-01",
+   "route": "bank_ledger_mismatch",
+   "supported": true,
+   "records": 38,
+   "raw_packet_chars": 42932,
+   "view_chars": 29712,
+   "det_records": 64,
+   "det_view_chars": 47621,
+   "register": 0
+  },
+  {
+   "packet": "history:H202603/EXC-H202603-02",
+   "route": "unmatched_bank_entry",
+   "supported": true,
+   "records": 38,
+   "raw_packet_chars": 42914,
+   "view_chars": 30542,
+   "det_records": 64,
+   "det_view_chars": 48402,
+   "register": 0
+  },
+  {
+   "packet": "history:H202603/EXC-H202603-03",
+   "route": "unmatched_bank_entry",
+   "supported": true,
+   "records": 48,
+   "raw_packet_chars": 50229,
+   "view_chars": 32282,
+   "det_records": 75,
+   "det_view_chars": 51417,
+   "register": 0
+  },
+  {
+   "packet": "history:H202605/EXC-H202605-01",
+   "route": "missing_bank_evidence",
+   "supported": true,
+   "records": 16,
+   "raw_packet_chars": 24481,
+   "view_chars": 16419,
+   "det_records": 31,
+   "det_view_chars": 28093,
+   "register": 2
+  },
+  {
+   "packet": "history:H202605/EXC-H202605-02",
+   "route": "bank_ledger_mismatch",
+   "supported": true,
+   "records": 38,
+   "raw_packet_chars": 42954,
+   "view_chars": 29734,
+   "det_records": 64,
+   "det_view_chars": 47648,
+   "register": 0
+  },
+  {
+   "packet": "history:H202605/EXC-H202605-03",
+   "route": "unmatched_bank_entry",
+   "supported": true,
+   "records": 38,
+   "raw_packet_chars": 42935,
+   "view_chars": 30563,
+   "det_records": 64,
+   "det_view_chars": 48428,
+   "register": 0
+  },
+  {
+   "packet": "history:H202605/EXC-H202605-04",
+   "route": "unmatched_bank_entry",
+   "supported": true,
+   "records": 48,
+   "raw_packet_chars": 50250,
+   "view_chars": 32305,
+   "det_records": 75,
+   "det_view_chars": 51431,
+   "register": 0
+  },
+  {
+   "packet": "history:H202606/EXC-H202606-01",
+   "route": "settlement_discrepancy",
+   "supported": true,
+   "records": 16,
+   "raw_packet_chars": 19181,
+   "view_chars": 16513,
+   "det_records": 24,
+   "det_view_chars": 24264,
+   "register": 0
+  },
+  {
+   "packet": "history:H202606/EXC-H202606-02",
+   "route": "settlement_discrepancy",
+   "supported": true,
+   "records": 14,
+   "raw_packet_chars": 16060,
+   "view_chars": 13765,
+   "det_records": 18,
+   "det_view_chars": 19086,
+   "register": 0
+  },
+  {
+   "packet": "history:H202606/EXC-H202606-03",
+   "route": "settlement_discrepancy",
+   "supported": true,
+   "records": 16,
+   "raw_packet_chars": 19221,
+   "view_chars": 16540,
+   "det_records": 24,
+   "det_view_chars": 24291,
+   "register": 0
+  },
+  {
+   "packet": "history:H202606/EXC-H202606-04",
+   "route": "generic",
+   "supported": false,
+   "records": 14,
+   "raw_packet_chars": 16048,
+   "view_chars": 13534
+  },
+  {
+   "packet": "history:H202607/EXC-H202607-01",
+   "route": "missing_bank_evidence",
+   "supported": true,
+   "records": 16,
+   "raw_packet_chars": 24481,
+   "view_chars": 16416,
+   "det_records": 29,
+   "det_view_chars": 26964,
+   "register": 2
+  },
+  {
+   "packet": "history:H202607/EXC-H202607-02",
+   "route": "settlement_discrepancy",
+   "supported": true,
+   "records": 16,
+   "raw_packet_chars": 19181,
+   "view_chars": 16513,
+   "det_records": 24,
+   "det_view_chars": 24268,
+   "register": 0
+  },
+  {
+   "packet": "history:H202607/EXC-H202607-03",
+   "route": "settlement_discrepancy",
+   "supported": true,
+   "records": 14,
+   "raw_packet_chars": 16062,
+   "view_chars": 13769,
+   "det_records": 18,
+   "det_view_chars": 19090,
+   "register": 0
+  },
+  {
+   "packet": "history:H202607/EXC-H202607-04",
+   "route": "settlement_discrepancy",
+   "supported": true,
+   "records": 16,
+   "raw_packet_chars": 19221,
+   "view_chars": 16540,
+   "det_records": 24,
+   "det_view_chars": 24295,
+   "register": 0
+  },
+  {
+   "packet": "history:H202607/EXC-H202607-05",
+   "route": "generic",
+   "supported": false,
+   "records": 14,
+   "raw_packet_chars": 16050,
+   "view_chars": 13538
+  },
+  {
+   "packet": "history:H202608/EXC-H202608-01",
+   "route": "bank_ledger_mismatch",
+   "supported": true,
+   "records": 40,
+   "raw_packet_chars": 44625,
+   "view_chars": 30639,
+   "det_records": 66,
+   "det_view_chars": 48552,
+   "register": 0
+  },
+  {
+   "packet": "history:H202608/EXC-H202608-02",
+   "route": "missing_bank_evidence",
+   "supported": true,
+   "records": 16,
+   "raw_packet_chars": 24482,
+   "view_chars": 16409,
+   "det_records": 29,
+   "det_view_chars": 26965,
+   "register": 2
+  },
+  {
+   "packet": "history:H202608/EXC-H202608-03",
+   "route": "settlement_discrepancy",
+   "supported": true,
+   "records": 16,
+   "raw_packet_chars": 19178,
+   "view_chars": 16508,
+   "det_records": 24,
+   "det_view_chars": 24259,
+   "register": 0
+  },
+  {
+   "packet": "history:H202608/EXC-H202608-04",
+   "route": "settlement_discrepancy",
+   "supported": true,
+   "records": 14,
+   "raw_packet_chars": 16062,
+   "view_chars": 13769,
+   "det_records": 18,
+   "det_view_chars": 19090,
+   "register": 0
+  },
+  {
+   "packet": "history:H202608/EXC-H202608-05",
+   "route": "settlement_discrepancy",
+   "supported": true,
+   "records": 16,
+   "raw_packet_chars": 19218,
+   "view_chars": 16535,
+   "det_records": 24,
+   "det_view_chars": 24286,
+   "register": 0
+  },
+  {
+   "packet": "history:H202608/EXC-H202608-06",
+   "route": "generic",
+   "supported": false,
+   "records": 14,
+   "raw_packet_chars": 16050,
+   "view_chars": 13538
+  },
+  {
+   "packet": "history:H202608/EXC-H202608-07",
+   "route": "unmatched_bank_entry",
+   "supported": true,
+   "records": 40,
+   "raw_packet_chars": 44607,
+   "view_chars": 31508,
+   "det_records": 66,
+   "det_view_chars": 49372,
+   "register": 0
+  },
+  {
+   "packet": "history:H202608/EXC-H202608-08",
+   "route": "unmatched_bank_entry",
+   "supported": true,
+   "records": 50,
+   "raw_packet_chars": 51922,
+   "view_chars": 33248,
+   "det_records": 77,
+   "det_view_chars": 52374,
+   "register": 0
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-01",
+   "route": "bank_ledger_mismatch",
+   "supported": true,
+   "records": 36,
+   "raw_packet_chars": 43310,
+   "view_chars": 25721,
+   "det_records": 41,
+   "det_view_chars": 31527,
+   "register": 0
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-02",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4511,
+   "view_chars": 5309
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-03",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4511,
+   "view_chars": 5309
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-04",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4511,
+   "view_chars": 5309
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-05",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4511,
+   "view_chars": 5309
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-06",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4511,
+   "view_chars": 5309
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-07",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4511,
+   "view_chars": 5309
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-08",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4511,
+   "view_chars": 5309
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-09",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4511,
+   "view_chars": 5309
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-10",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4511,
+   "view_chars": 5309
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-11",
+   "route": "generic",
+   "supported": false,
+   "records": 6,
+   "raw_packet_chars": 8764,
+   "view_chars": 7235
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-12",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4601,
+   "view_chars": 5677
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-13",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4601,
+   "view_chars": 5677
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-14",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4601,
+   "view_chars": 5677
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-15",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4601,
+   "view_chars": 5677
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-16",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4601,
+   "view_chars": 5677
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-17",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4601,
+   "view_chars": 5677
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-18",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4601,
+   "view_chars": 5677
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-19",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4601,
+   "view_chars": 5677
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-20",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4601,
+   "view_chars": 5677
+  },
+  {
+   "packet": "case:CASE/EXC-CASE-21",
+   "route": "generic",
+   "supported": false,
+   "records": 2,
+   "raw_packet_chars": 4601,
+   "view_chars": 5677
+  }
+ ]
+}

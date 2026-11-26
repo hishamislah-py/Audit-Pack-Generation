@@ -1,0 +1,207 @@
+{
+ "source": "live test A, 23 Nov 2026, investigator prompt 1.9, gpt-6-luna, response resp_0a464105fdfc7729016b03f97ef79487d087861181fade378b (raw body preserved at Downloads/UC042_PROMPT_1_9_UI_ZERO_LLM_20261123/live_test_A_prompt_1_9/raw/10_response_body.json); TC06 EXC-TC06-06, refused by the pre-fix resolution rule (F-05 does_not_establish)",
+ "evidence_packet_sha256": "deaf9ff914783d2e",
+ "output": {
+  "investigation_summary": "The engine reports that transaction TX-0917-00002 is GBP 90.00 higher than the bank entry linked by its end-to-end reference, and its confirmed relationship connects that record to the GBP 90.00 client-balance roll-forward difference for C0007. The available evidence does not provide the corrected transaction amount or posting-level client ledger.",
+  "confirmed_findings": [
+   {
+    "finding_id": "F-01",
+    "claim": "The engine reports TX-0917-00002 at GBP 1,480.07 against a reported GBP 1,390.07 bank entry, a GBP 90.00 difference.",
+    "explanation": "RC4-DIRECT reports computed 1,480.07 and reported 1,390.07, identifies TX-0917-00002 as the outlier, and compares it with bank entry BE-GBP-0917-L02. The transaction and bank entry share reference E2E-GBP-0917-L02.",
+    "evidence_ids": [
+     "RC4-DIRECT|TX-0917-00002",
+     "IN-11:TX-0917-00002",
+     "IN-09:BE-GBP-0917-L02"
+    ],
+    "supporting_records": [
+     "IN-11:TX-0917-00002",
+     "IN-09:BE-GBP-0917-L02"
+    ],
+    "title": "Transaction and linked bank-entry amounts differ",
+    "audit_relevance": "The amount recorded for the client load does not match the amount on the linked bank entry.",
+    "establishes": "The transaction record reports GBP 1,480.07 and the linked bank-entry record reports GBP 1,390.07. The engine reports a GBP 90.00 difference and identifies the transaction record as out of line.",
+    "does_not_establish": "It does not establish why the transaction record is out of line or what its corrected amount should be.",
+    "evidence_basis": "CONTROL_RESULT"
+   },
+   {
+    "finding_id": "F-02",
+    "claim": "The engine confirms TX-0917-00002 connects EXC-TC06-06 to EXC-TC06-05, with its GBP 90.00 discrepancy equal to C0007's GBP 90.00 roll-forward difference.",
+    "explanation": "The transaction was executed within C0007's 2026-09-16 17:00 to 2026-09-17 17:00 roll-forward window. The engine reports the roll-forward as 36,731.11 against the 36,641.11 snapshot and identifies TX-0917-00002 as the record behind both exceptions and out of line; the direct comparison also links it to bank entry BE-GBP-0917-L02.",
+    "evidence_ids": [
+     "IN-11:TX-0917-00002",
+     "IN-03:CBS-20260916-C0007-GBP",
+     "IN-03:CBS-20260917-C0007-GBP",
+     "CBAL-ROLLFWD|GBP/C0007 2026-09-17",
+     "RC4-DIRECT|TX-0917-00002",
+     "IN-09:BE-GBP-0917-L02",
+     "EXC-TC06-05"
+    ],
+    "supporting_records": [
+     "IN-11:TX-0917-00002",
+     "IN-03:CBS-20260916-C0007-GBP",
+     "IN-03:CBS-20260917-C0007-GBP",
+     "IN-09:BE-GBP-0917-L02"
+    ],
+    "title": "Confirmed transaction lineage connects the two exceptions",
+    "audit_relevance": "The same out-of-line transaction record is identified in both the direct transaction-to-bank comparison and the client balance roll-forward exception.",
+    "establishes": "The engine reports a roll-forward of 36,731.11 against a reported snapshot of 36,641.11, a difference of 90.00, and confirms that this equals the transaction-side discrepancy of 90.00. It identifies TX-0917-00002 as the record behind both exceptions and the record out of line.",
+    "does_not_establish": "It does not establish why the transaction record is wrong; the underlying data-entry, system or process reason is not established.",
+    "evidence_basis": "CONTROL_RESULT"
+   },
+   {
+    "finding_id": "F-03",
+    "claim": "The internal reconciliation record reports a GBP 341,574.46 requirement, GBP 341,484.46 resource and GBP -90.00 difference, while its action text says there was no difference.",
+    "explanation": "These are fields and narrative in the firm's 2026-09-17 internal reconciliation record.",
+    "evidence_ids": [
+     "IN-05:IRR-EMONEY-GBP-20260917"
+    ],
+    "supporting_records": [
+     "IN-05:IRR-EMONEY-GBP-20260917"
+    ],
+    "title": "Internal reconciliation fields and narrative differ",
+    "audit_relevance": "The internal reconciliation record contains inconsistent reporting that should be checked when assessing the firm's reconciliation evidence.",
+    "establishes": "The record contains the stated requirement, resource and reported difference, and its action text states that there was no difference.",
+    "does_not_establish": "It does not establish the correct internal reconciliation result or explain the inconsistency. These pool-level reconciliation fields are not the same measure as the individual transaction-to-bank amount comparison.",
+    "evidence_basis": "SOURCE_EVIDENCE"
+   },
+   {
+    "finding_id": "F-04",
+    "claim": "The supplied-data search for posting-level client ledger records for C0007 returned NOT_FOUND.",
+    "explanation": "SEARCH-03 records a search for the client ledger postings and returned no records.",
+    "evidence_ids": [
+     "SEARCH-03"
+    ],
+    "supporting_records": [],
+    "title": "Client ledger postings were not found in the supplied-data search",
+    "audit_relevance": "Without posting-level ledger evidence, the client balance movement cannot be independently traced from the supplied postings.",
+    "establishes": "The documented search of the supplied data for posting-level client ledger records returned NOT_FOUND.",
+    "does_not_establish": "It does not establish that such postings do not exist outside the supplied data.",
+    "evidence_basis": "EVIDENCE_ABSENCE"
+   },
+   {
+    "finding_id": "F-05",
+    "claim": "The transaction record for the GBP 662.59 spend matches its linked GBP 662.59 settlement line.",
+    "explanation": "The records share transaction ID TX-0917-00010, and the verified link reports their signed amounts as agreeing.",
+    "evidence_ids": [
+     "IN-11:TX-0917-00010",
+     "IN-13:SL-SB-GBP-20260917-0004"
+    ],
+    "supporting_records": [
+     "IN-11:TX-0917-00010",
+     "IN-13:SL-SB-GBP-20260917-0004"
+    ],
+    "title": "Spend transaction and settlement line agree",
+    "audit_relevance": "This provides a transaction-to-settlement cross-check for another transaction in the C0007 roll-forward window.",
+    "establishes": "The spend transaction and its linked settlement line each record GBP 662.59.",
+    "does_not_establish": "It does not establish bank movement for this settlement line or resolve the discrepancy involving TX-0917-00002.",
+    "evidence_basis": "SOURCE_EVIDENCE"
+   }
+  ],
+  "hypotheses": [
+   {
+    "hypothesis_id": "H-01",
+    "possible_explanation": "The amount in TX-0917-00002 may be inaccurate due to a data-entry, system or process error.",
+    "supporting_evidence": [
+     "RC4-DIRECT|TX-0917-00002",
+     "IN-11:TX-0917-00002",
+     "IN-09:BE-GBP-0917-L02"
+    ],
+    "contradictory_evidence": [],
+    "limitations": "The records identify the transaction amount as out of line but do not establish why or provide its corrected amount.",
+    "status": "HYPOTHESIS",
+    "rationale": "The transaction record differs from the linked bank entry by GBP 90.00, and the engine identifies the transaction record as out of line; the underlying reason is not established."
+   }
+  ],
+  "contradictory_evidence": [
+   {
+    "item_id": "C-01",
+    "description": "The linked transaction record reports GBP 1,480.07, while the bank-entry record reports GBP 1,390.07.",
+    "evidence_ids": [
+     "IN-11:TX-0917-00002",
+     "IN-09:BE-GBP-0917-L02"
+    ],
+    "compared_evidence": [
+     "IN-11:TX-0917-00002",
+     "IN-09:BE-GBP-0917-L02"
+    ],
+    "same_measure_and_scope": "Both records concern the GBP amount for the same load/payment identified by TX-0917-00002 and the shared end-to-end reference E2E-GBP-0917-L02; the amounts materially disagree."
+   }
+  ],
+  "missing_evidence": [
+   {
+    "item_id": "M-01",
+    "description": "The corrected transaction amount from the transaction system is not available in the supplied evidence.",
+    "expected_source": "Transaction system record or audit trail for TX-0917-00002.",
+    "impact": "The amount that should replace or explain the recorded GBP 1,480.07 cannot be established.",
+    "related_ids": [
+     "RC4-DIRECT|TX-0917-00002",
+     "IN-11:TX-0917-00002"
+    ]
+   },
+   {
+    "item_id": "M-02",
+    "description": "The search for all C0007 GBP REFUND transactions in the period returned NOT_FOUND.",
+    "expected_source": "Transaction records or other source evidence for C0007 GBP refunds during the period.",
+    "impact": "The supplied search does not provide refund records to include in a complete review of the client balance movement.",
+    "related_ids": [
+     "SEARCH-02"
+    ]
+   },
+   {
+    "item_id": "M-03",
+    "description": "The search for posting-level client ledger records for C0007 returned NOT_FOUND.",
+    "expected_source": "Posting-level client ledger for C0007.",
+    "impact": "The balance movement cannot be independently traced to ledger postings from the supplied evidence.",
+    "related_ids": [
+     "SEARCH-03"
+    ]
+   }
+  ],
+  "open_questions": [
+   "What amount does the transaction system's corrected record or audit trail show for TX-0917-00002?",
+   "Why does the internal reconciliation record's narrative say there was no difference while its reported difference field is GBP -90.00?",
+   "Are there client ledger postings or refund records outside the supplied data that would complete the C0007 balance movement?"
+  ],
+  "recommended_next_steps": [
+   {
+    "step_id": "S-01",
+    "action": "Obtain the transaction-system record and audit trail for TX-0917-00002, including any corrected amount and change history.",
+    "rationale": "The engine identifies this transaction record as out of line, while the corrected transaction amount is not available.",
+    "evidence_needed": "Authoritative transaction-system record, amendment history and audit trail for TX-0917-00002."
+   },
+   {
+    "step_id": "S-02",
+    "action": "Obtain the posting-level client ledger for C0007 covering the 2026-09-16 to 2026-09-17 reconciliation window.",
+    "rationale": "SEARCH-03 returned NOT_FOUND, so the supplied evidence does not permit a posting-level trace of the balance movement.",
+    "evidence_needed": "Client ledger postings with transaction identifiers, amounts, directions and posting timestamps for the window."
+   },
+   {
+    "step_id": "S-03",
+    "action": "Confirm the completeness of the supplied transaction data for C0007 GBP refunds during the period.",
+    "rationale": "SEARCH-02 returned NOT_FOUND; verify whether refund records exist in another source or whether the search scope is complete.",
+    "evidence_needed": "Authoritative refund transaction records or confirmation of transaction-source completeness for the period."
+   },
+   {
+    "step_id": "S-04",
+    "action": "Ask the preparer to substantiate the internal reconciliation's reported fields and narrative against its underlying calculation.",
+    "rationale": "The same internal reconciliation record reports a GBP -90.00 difference and says there was no difference.",
+    "evidence_needed": "Underlying reconciliation calculation, source extracts and any review or correction record for the 2026-09-17 GBP reconciliation."
+   }
+  ],
+  "overall_evidence_assessment": "PARTIALLY_SUFFICIENT",
+  "evidence_references": [
+   "RC4-DIRECT|TX-0917-00002",
+   "IN-11:TX-0917-00002",
+   "IN-09:BE-GBP-0917-L02",
+   "IN-03:CBS-20260916-C0007-GBP",
+   "IN-03:CBS-20260917-C0007-GBP",
+   "CBAL-ROLLFWD|GBP/C0007 2026-09-17",
+   "EXC-TC06-05",
+   "IN-05:IRR-EMONEY-GBP-20260917",
+   "SEARCH-03",
+   "IN-11:TX-0917-00010",
+   "IN-13:SL-SB-GBP-20260917-0004",
+   "SEARCH-02"
+  ]
+ }
+}

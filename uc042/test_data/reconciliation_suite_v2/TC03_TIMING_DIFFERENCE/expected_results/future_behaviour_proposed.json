@@ -1,0 +1,15 @@
+{
+  "label": "FUTURE (PROPOSED; not implemented; category names PENDING)",
+  "scenario_id": "TC03",
+  "root": "PENDING:TIMING_ITEM",
+  "gaps": [
+    "G-10",
+    "G-13",
+    "G-19"
+  ],
+  "expected": [
+    "Timing item AQ-GBP-20260925 traced end to end: transaction 25 Sep, posting 25 Sep 14:00, settlement date 25 Sep, bank credit 26 Sep 08:00",
+    "Evidence status TIMING_EVIDENCED as today; the exception stays OPEN until a human confirms; never auto-resolved",
+    "The informational C11-BATCH-BANK lag and the C08 timing item presented as one traceable item"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "scenario_id": "TC05",
+  "baseline": "set_01_clean_baseline",
+  "operations": [
+    {
+      "op": "delete_record",
+      "file_id": "IN-11",
+      "key": "TX-0924-00018",
+      "why": "export omitted the batch's spends (C0104, 222.18)"
+    },
+    {
+      "op": "delete_record",
+      "file_id": "IN-11",
+      "key": "TX-0924-00019",
+      "why": "export omitted the batch's spends (C0101, 431.57)"
+    },
+    {
+      "op": "delete_record",
+      "file_id": "IN-11",
+      "key": "TX-0924-00020",
+      "why": "export omitted the batch's spends (C0101, 193.70)"
+    }
+  ]
+}

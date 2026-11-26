@@ -1,0 +1,342 @@
+{
+ "scenario_id": "RF-DEMO-01",
+ "source_scenario": "scenario_01_intelligent_mapping",
+ "customer_name": "Halden Pay Ltd",
+ "reporting_period": "2026-06",
+ "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA - UC-042 RINGFENCE DEMONSTRATION - NOT REAL FINANCIAL RECORDS",
+ "zip": {
+  "file": "Halden_Pay_Ltd_2026-06.zip",
+  "sha256": "aef7e2c7948c40c98cf087c9f3260ebd6c8ccd561300f94a81001dad1cea8a8b",
+  "bytes": 42778,
+  "entries": [
+   {
+    "entry": "calendar/hp_recon_days_jun2026.csv",
+    "bytes": 3793,
+    "sha256": "93d897febf14bb273313b5327f33266e475dc190bb444f54cfb186ecf0cd1905",
+    "category": "IN-01",
+    "readable": true
+   },
+   {
+    "entry": "master/hp_safeguarding_accounts.csv",
+    "bytes": 1196,
+    "sha256": "64873133e3b98e24228845f929d6b8e69a21f9a6752e90d34b9433918d22a09c",
+    "category": "IN-02",
+    "readable": true
+   },
+   {
+    "entry": "ledger/hp_client_balances_1700_jun2026.csv",
+    "bytes": 25189,
+    "sha256": "7161b9fe6f338e48facf7f24cfe8274359c2a950d6ae0fffa5c3f074aecaf520",
+    "category": "IN-03",
+    "readable": true
+   },
+   {
+    "entry": "ledger/hp_unallocated_receipts_jun2026.csv",
+    "bytes": 270,
+    "sha256": "7a1b7c3a121df65746d51baca74038205a06142e6f0266c9b935b086e733c053",
+    "category": "IN-04",
+    "readable": true
+   },
+   {
+    "entry": "recon/hp_internal_recon_jun2026.csv",
+    "bytes": 15805,
+    "sha256": "886b5fdbb9d7752146458d2cc3913e819a37865fd394504a7ff21ce1e668d901",
+    "category": "IN-05",
+    "readable": true
+   },
+   {
+    "entry": "recon/hp_external_recon_jun2026.csv",
+    "bytes": 6298,
+    "sha256": "4c953450543c1138dc44090ebe3d8ad93c8aaf7428fb47eef7f3e85e1262a15d",
+    "category": "IN-06",
+    "readable": true
+   },
+   {
+    "entry": "bank/hp_bank_1700_balances_jun2026.csv",
+    "bytes": 4651,
+    "sha256": "f0261de27fe965a8bd9186b920ea5b740a0c3ad7745c32ea1d33231c275d5697",
+    "category": "IN-07",
+    "readable": true
+   },
+   {
+    "entry": "bank/hp_bank_eod_statements_jun2026.csv",
+    "bytes": 11480,
+    "sha256": "57e2050defc8ae74e845471adfa21e817e1412f2bf8605752785c46bfdfc848e",
+    "category": "IN-08",
+    "readable": true
+   },
+   {
+    "entry": "bank/hp_bank_statement_lines_jun2026.csv",
+    "bytes": 55437,
+    "sha256": "421c2a7974c65240f729419220c6054e69dea1b5f21e97d6f6fde28a9045b5b2",
+    "category": "IN-09",
+    "readable": true
+   },
+   {
+    "entry": "ledger/hp_safeguarding_cashbook_jun2026.csv",
+    "bytes": 26148,
+    "sha256": "039865edb8860d5520b5759ebbcd6d9cc56816fe84ffd21a8f8378f84f27442c",
+    "category": "IN-10",
+    "readable": true
+   },
+   {
+    "entry": "processor/hp_card_processor_transactions_jun2026.csv",
+    "bytes": 56705,
+    "sha256": "8f1b011c10949296e3b9ba64f5d73527b4086ff67d005dfa52a1baf641910011",
+    "category": "IN-11",
+    "readable": true
+   },
+   {
+    "entry": "processor/hp_settlement_batches_jun2026.csv",
+    "bytes": 10015,
+    "sha256": "4eae4862e183fc6e71dcc6b2cbb608b68384fc34719afa981e38811b3b45385b",
+    "category": "IN-12",
+    "readable": true
+   },
+   {
+    "entry": "processor/hp_settlement_lines_jun2026.csv",
+    "bytes": 29829,
+    "sha256": "67cea1f18159748c1d2c73480ac6142f778093544c3cdf3c7d0688349767901a",
+    "category": "IN-13",
+    "readable": true
+   },
+   {
+    "entry": "recon/hp_breaks_and_actions_log_jun2026.csv",
+    "bytes": 157,
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "category": "IN-14",
+    "readable": true
+   },
+   {
+    "entry": "documents/Northbridge_acknowledgement_GBP_5204.pdf",
+    "bytes": 2248,
+    "sha256": "330706a9cea95decc129e9196880ff6f1e5af332ec59e5808141af7206037f24",
+    "category": "IN-15",
+    "readable": true
+   },
+   {
+    "entry": "documents/Northbridge_acknowledgement_EUR_5297.pdf",
+    "bytes": 2248,
+    "sha256": "8db25578d771be77cd10d5150d7d3ccc412407ca033c928abba69a4c72132c54",
+    "category": "IN-16",
+    "readable": true
+   },
+   {
+    "entry": "documents/HaldenPay_safeguarding_recon_policy_v1.2.pdf",
+    "bytes": 2335,
+    "sha256": "6f56d1be67b26451a0c6354b4ca7a948c8ee1be50b0c83dda17d54bbab48056d",
+    "category": "IN-17",
+    "readable": true
+   },
+   {
+    "entry": "documents/HaldenPay_governance_register_jun2026.pdf",
+    "bytes": 2073,
+    "sha256": "b5648532f817bd458446f566d18c318b6d2e9b8f5a6457c3bee40041c145c9b1",
+    "category": "IN-18",
+    "readable": true
+   },
+   {
+    "entry": "documents/HaldenPay_REP027_receipt_may2026.pdf",
+    "bytes": 2124,
+    "sha256": "0ef58bb4aa75c48c736ff8356c2aa96c75a2941dac0e799dd2c83eb1ebc56882",
+    "category": "IN-19",
+    "readable": true
+   }
+  ]
+ },
+ "source_seed": 2026061901,
+ "generator": "build_scenarios.Gen (original bundle, imported read-only) via tools/build_demo_zips.py",
+ "record_counts": {
+  "IN-01": 30,
+  "IN-02": 4,
+  "IN-03": 276,
+  "IN-04": 1,
+  "IN-05": 44,
+  "IN-06": 44,
+  "IN-07": 44,
+  "IN-08": 88,
+  "IN-09": 306,
+  "IN-10": 264,
+  "IN-11": 462,
+  "IN-12": 88,
+  "IN-13": 420,
+  "IN-14": 0
+ },
+ "all_csv_canonical_layout": true,
+ "planted_discrepancies": [],
+ "mutation_operations": 0,
+ "expected_outcome": {
+  "case_status": "CLEAN",
+  "fail": 0,
+  "insufficient_evidence": 0,
+  "exceptions": 0,
+  "investigation_groups": 0
+ },
+ "byte_comparison_with_original": {
+  "members": [
+   {
+    "entry": "calendar/hp_recon_days_jun2026.csv",
+    "category": "IN-01",
+    "identical_to_original_member": true,
+    "original_sha256": "93d897febf14bb273313b5327f33266e475dc190bb444f54cfb186ecf0cd1905",
+    "new_sha256": "93d897febf14bb273313b5327f33266e475dc190bb444f54cfb186ecf0cd1905",
+    "note": ""
+   },
+   {
+    "entry": "master/hp_safeguarding_accounts.csv",
+    "category": "IN-02",
+    "identical_to_original_member": true,
+    "original_sha256": "64873133e3b98e24228845f929d6b8e69a21f9a6752e90d34b9433918d22a09c",
+    "new_sha256": "64873133e3b98e24228845f929d6b8e69a21f9a6752e90d34b9433918d22a09c",
+    "note": ""
+   },
+   {
+    "entry": "ledger/hp_client_balances_1700_jun2026.csv",
+    "category": "IN-03",
+    "identical_to_original_member": true,
+    "original_sha256": "7161b9fe6f338e48facf7f24cfe8274359c2a950d6ae0fffa5c3f074aecaf520",
+    "new_sha256": "7161b9fe6f338e48facf7f24cfe8274359c2a950d6ae0fffa5c3f074aecaf520",
+    "note": ""
+   },
+   {
+    "entry": "ledger/hp_unallocated_receipts_jun2026.csv",
+    "category": "IN-04",
+    "identical_to_original_member": true,
+    "original_sha256": "7a1b7c3a121df65746d51baca74038205a06142e6f0266c9b935b086e733c053",
+    "new_sha256": "7a1b7c3a121df65746d51baca74038205a06142e6f0266c9b935b086e733c053",
+    "note": ""
+   },
+   {
+    "entry": "recon/hp_internal_recon_jun2026.csv",
+    "category": "IN-05",
+    "identical_to_original_member": true,
+    "original_sha256": "886b5fdbb9d7752146458d2cc3913e819a37865fd394504a7ff21ce1e668d901",
+    "new_sha256": "886b5fdbb9d7752146458d2cc3913e819a37865fd394504a7ff21ce1e668d901",
+    "note": ""
+   },
+   {
+    "entry": "recon/hp_external_recon_jun2026.csv",
+    "category": "IN-06",
+    "identical_to_original_member": true,
+    "original_sha256": "4c953450543c1138dc44090ebe3d8ad93c8aaf7428fb47eef7f3e85e1262a15d",
+    "new_sha256": "4c953450543c1138dc44090ebe3d8ad93c8aaf7428fb47eef7f3e85e1262a15d",
+    "note": ""
+   },
+   {
+    "entry": "bank/hp_bank_1700_balances_jun2026.csv",
+    "category": "IN-07",
+    "identical_to_original_member": true,
+    "original_sha256": "f0261de27fe965a8bd9186b920ea5b740a0c3ad7745c32ea1d33231c275d5697",
+    "new_sha256": "f0261de27fe965a8bd9186b920ea5b740a0c3ad7745c32ea1d33231c275d5697",
+    "note": ""
+   },
+   {
+    "entry": "bank/hp_bank_eod_statements_jun2026.csv",
+    "category": "IN-08",
+    "identical_to_original_member": true,
+    "original_sha256": "57e2050defc8ae74e845471adfa21e817e1412f2bf8605752785c46bfdfc848e",
+    "new_sha256": "57e2050defc8ae74e845471adfa21e817e1412f2bf8605752785c46bfdfc848e",
+    "note": ""
+   },
+   {
+    "entry": "bank/hp_bank_statement_lines_jun2026.csv",
+    "category": "IN-09",
+    "identical_to_original_member": true,
+    "original_sha256": "421c2a7974c65240f729419220c6054e69dea1b5f21e97d6f6fde28a9045b5b2",
+    "new_sha256": "421c2a7974c65240f729419220c6054e69dea1b5f21e97d6f6fde28a9045b5b2",
+    "note": ""
+   },
+   {
+    "entry": "ledger/hp_safeguarding_cashbook_jun2026.csv",
+    "category": "IN-10",
+    "identical_to_original_member": true,
+    "original_sha256": "039865edb8860d5520b5759ebbcd6d9cc56816fe84ffd21a8f8378f84f27442c",
+    "new_sha256": "039865edb8860d5520b5759ebbcd6d9cc56816fe84ffd21a8f8378f84f27442c",
+    "note": ""
+   },
+   {
+    "entry": "processor/hp_card_processor_transactions_jun2026.csv",
+    "category": "IN-11",
+    "identical_to_original_member": false,
+    "original_sha256": "79a1258867e7cba1d3d5c564849e4095daa6b7dc9f742a22394eefee3bfbada9",
+    "new_sha256": "8f1b011c10949296e3b9ba64f5d73527b4086ff67d005dfa52a1baf641910011",
+    "note": "layout changed to canonical (expected difference)"
+   },
+   {
+    "entry": "processor/hp_settlement_batches_jun2026.csv",
+    "category": "IN-12",
+    "identical_to_original_member": true,
+    "original_sha256": "4eae4862e183fc6e71dcc6b2cbb608b68384fc34719afa981e38811b3b45385b",
+    "new_sha256": "4eae4862e183fc6e71dcc6b2cbb608b68384fc34719afa981e38811b3b45385b",
+    "note": ""
+   },
+   {
+    "entry": "processor/hp_settlement_lines_jun2026.csv",
+    "category": "IN-13",
+    "identical_to_original_member": true,
+    "original_sha256": "67cea1f18159748c1d2c73480ac6142f778093544c3cdf3c7d0688349767901a",
+    "new_sha256": "67cea1f18159748c1d2c73480ac6142f778093544c3cdf3c7d0688349767901a",
+    "note": ""
+   },
+   {
+    "entry": "recon/hp_breaks_and_actions_log_jun2026.csv",
+    "category": "IN-14",
+    "identical_to_original_member": true,
+    "original_sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "new_sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "note": ""
+   },
+   {
+    "entry": "documents/Northbridge_acknowledgement_GBP_5204.pdf",
+    "category": "IN-15",
+    "identical_to_original_member": true,
+    "original_sha256": "330706a9cea95decc129e9196880ff6f1e5af332ec59e5808141af7206037f24",
+    "new_sha256": "330706a9cea95decc129e9196880ff6f1e5af332ec59e5808141af7206037f24",
+    "note": ""
+   },
+   {
+    "entry": "documents/Northbridge_acknowledgement_EUR_5297.pdf",
+    "category": "IN-16",
+    "identical_to_original_member": true,
+    "original_sha256": "8db25578d771be77cd10d5150d7d3ccc412407ca033c928abba69a4c72132c54",
+    "new_sha256": "8db25578d771be77cd10d5150d7d3ccc412407ca033c928abba69a4c72132c54",
+    "note": ""
+   },
+   {
+    "entry": "documents/HaldenPay_safeguarding_recon_policy_v1.2.pdf",
+    "category": "IN-17",
+    "identical_to_original_member": true,
+    "original_sha256": "6f56d1be67b26451a0c6354b4ca7a948c8ee1be50b0c83dda17d54bbab48056d",
+    "new_sha256": "6f56d1be67b26451a0c6354b4ca7a948c8ee1be50b0c83dda17d54bbab48056d",
+    "note": ""
+   },
+   {
+    "entry": "documents/HaldenPay_governance_register_jun2026.pdf",
+    "category": "IN-18",
+    "identical_to_original_member": true,
+    "original_sha256": "b5648532f817bd458446f566d18c318b6d2e9b8f5a6457c3bee40041c145c9b1",
+    "new_sha256": "b5648532f817bd458446f566d18c318b6d2e9b8f5a6457c3bee40041c145c9b1",
+    "note": ""
+   },
+   {
+    "entry": "documents/HaldenPay_REP027_receipt_may2026.pdf",
+    "category": "IN-19",
+    "identical_to_original_member": true,
+    "original_sha256": "0ef58bb4aa75c48c736ff8356c2aa96c75a2941dac0e799dd2c83eb1ebc56882",
+    "new_sha256": "0ef58bb4aa75c48c736ff8356c2aa96c75a2941dac0e799dd2c83eb1ebc56882",
+    "note": ""
+   },
+   {
+    "entry": "processor/hp_card_processor_transactions_jun2026.csv",
+    "category": "IN-11",
+    "original_layout_bytes_equal_regenerated_layout": true,
+    "note": "proves the regenerated records equal the original records for this file"
+   }
+  ],
+  "unchanged_members": 18,
+  "unchanged_byte_identical": 18,
+  "all_unchanged_identical": true,
+  "original_members_not_in_demo_zip": []
+ },
+ "technical_corruption": null
+}

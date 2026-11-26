@@ -1,0 +1,45 @@
+{
+  "label": "FIN (deterministic; independent of the engine)",
+  "scenario_id": "TC05",
+  "submission": "initial",
+  "expected_anomalies": [
+    "ROLLFWD EUR/C0101 2026-09-24 625.27",
+    "ROLLFWD EUR/C0104 2026-09-24 222.18",
+    "LINE_TXN SL-SB-EUR-20260924-0001 TX-0924-00018 missing",
+    "LINE_TXN SL-SB-EUR-20260924-0002 TX-0924-00019 missing",
+    "LINE_TXN SL-SB-EUR-20260924-0003 TX-0924-00020 missing"
+  ],
+  "figures": {
+    "rollforward|EUR/C0101 2026-09-24": "30615.68",
+    "snapshot|EUR/C0101 2026-09-24": "29990.41",
+    "rollforward|EUR/C0104 2026-09-24": "28055.28",
+    "snapshot|EUR/C0104 2026-09-24": "27833.10",
+    "rollforward|EUR/C0102 2026-09-24": "31235.11",
+    "snapshot|EUR/C0102 2026-09-24": "31235.11"
+  },
+  "summary": {
+    "missing_transactions": [
+      {
+        "txn_id": "TX-0924-00018",
+        "client_per_baseline": "C0104",
+        "amount": "222.18"
+      },
+      {
+        "txn_id": "TX-0924-00019",
+        "client_per_baseline": "C0101",
+        "amount": "431.57"
+      },
+      {
+        "txn_id": "TX-0924-00020",
+        "client_per_baseline": "C0101",
+        "amount": "193.70"
+      }
+    ],
+    "total": "847.45 (= batch gross = net = bank debit BE-EUR-0924-SB1)",
+    "client_effects": {
+      "C0101": "+625.27 (431.57 + 193.70)",
+      "C0104": "+222.18"
+    },
+    "financial_impact": "none on bank, ledger or requirement"
+  }
+}

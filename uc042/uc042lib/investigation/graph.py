@@ -7,6 +7,7 @@ with their traceback. Only an immutability violation on an existing published ar
 import functools
 import logging
 import time
+from . import det_retrieval
 from datetime import datetime, timezone
 from typing import TypedDict
 
@@ -22,7 +23,7 @@ from .retrieval import EvidenceStore, RetrievalError, load_pack
 from .routing import ROUTES, route_for
 from .tool_loop import run_tool_loop
 from .tools import TOOL_REGISTRY_VERSION
-from .validation import classification_summary, validate_output
+from .validation import classification_summary, normalise_supporting_records, validate_output
 
 log = logging.getLogger("uc042.investigation")
 
@@ -50,6 +51,7 @@ class InvestigationState(TypedDict, total=False):
     ledger: dict          # accumulated evidence: initial packet + tool results, with allowed_citation_ids and ledger_sha256
     tool_calls: list      # tool execution transcript
     tool_summary: dict    # calls, rounds, stop reason, status, tools used, token usage
+    execution: dict       # the originating audit-run execution (submission, run, authorisation, job); empty otherwise
 
 
 def _cfg(config_, key, default=None):
@@ -110,6 +112,11 @@ def route_investigation(state, config=None):
     route = route_for(case["exception"], case["candidates"], case["results"])
     if route not in ROUTES:
         raise ValueError(f"router returned unknown route {route!r}")
+    if state.get("investigation_mode") == "deterministic" and not det_retrieval.supported(route):
+        # phase 6: no deterministic retrieval plan for this route yet -> the bounded fallback is today's tools mode
+        return {"route": route, "investigation_mode": "tools",
+                "trace": _trace(state, "route_investigation", t, route=route,
+                                fallback=f"route {route} has no deterministic retrieval plan; tools mode used")}
     return {"route": route, "trace": _trace(state, "route_investigation", t, route=route)}
 
 
@@ -119,8 +126,11 @@ def make_retrieval_node(route):
         try:
             store = EvidenceStore(state["pack"], _cfg(config, "datasets_root"))
             col = retrieve(route, state["case"], store)
+            register = None
+            if state.get("investigation_mode") == "deterministic":  # phase 6: Python expands with the tool functions
+                register = det_retrieval.expand(col, state["case"], route, store)
             return {"retrieval": {"records": list(col.records.values()), "relationships": col.relationships,
-                                  "searches": col.searches, "truncated": col.truncated},
+                                  "searches": col.searches, "truncated": col.truncated, "pruning_register": register},
                     "trace": _trace(state, f"retrieve_relevant_evidence[{route}]", t, records=len(col.records))}
         except RetrievalError as e:
             return {"error": str(e), "error_stage": "retrieve_relevant_evidence",
@@ -138,6 +148,8 @@ def build_evidence_packet(state, config=None):
         col.records[item["evidence_id"]] = item
     col.relationships, col.searches, col.truncated = r["relationships"], r["searches"], r["truncated"]
     packet = build_packet(state["case"], state["scope"], state["route"], col)
+    if r.get("pruning_register") is not None:  # deterministic packet: rule version + pruning register in the hash
+        packet = det_retrieval.finalise_packet(packet, r["pruning_register"])
     return {"packet": packet, "trace": _trace(state, "build_evidence_packet", t, records=len(packet["source_records"]),
                                               citable_ids=len(packet["allowed_citation_ids"]))}
 
@@ -145,6 +157,26 @@ def build_evidence_packet(state, config=None):
 def _investigator_meta(investigator):
     return {"provider": getattr(investigator, "provider", "none"), "model": getattr(investigator, "model", "none"),
             "simulated": getattr(investigator, "simulated", False)}
+
+
+def _single_request_guard(investigator, packet):
+    """Estimated input of a single-request investigation (instructions + first message), checked before sending."""
+    if not getattr(investigator, "uses_model_view", False):
+        return None
+    from .prompts import SYSTEM_PROMPT, model_user_message
+    estimate = (len(SYSTEM_PROMPT) + len(model_user_message(packet))) // 3
+    limit = settings.single_request_max_input_tokens()
+    if estimate > limit:
+        return f"input_token_budget: estimated request input of {estimate} tokens exceeds the limit of {limit}; no request was sent"
+    return None
+
+
+def _view_meta(investigator, packet):
+    """Phase 4: the model view's version and SHA-256 when the adapter sends it (OpenAI); nothing otherwise."""
+    if not getattr(investigator, "uses_model_view", False) or not packet:
+        return {}
+    from .packet_view import MODEL_VIEW_VERSION, model_view_sha256
+    return {"model_view_version": MODEL_VIEW_VERSION, "model_view_sha256": model_view_sha256(packet)}
 
 
 def _tools_investigation(state, config, investigator, t):
@@ -165,7 +197,7 @@ def _tools_investigation(state, config, investigator, t):
                "tools_used": [c["tool"] for c in calls],
                "records_initial": len(state["packet"]["source_records"]), "records_final": len(loop["ledger"]["source_records"]),
                "limits": limits}
-    meta = dict(_investigator_meta(investigator), attempts=loop.get("llm_calls", 0),
+    meta = dict(_investigator_meta(investigator), **_view_meta(investigator, state["packet"]), attempts=loop.get("llm_calls", 0),
                 usage=dict(loop.get("usage", {}), latency_seconds=round(time.monotonic() - t, 2)),
                 provider_response={"responses": loop.get("provider_responses", [])})
     upd = {"ledger": loop["ledger"], "tool_calls": calls, "tool_summary": summary, "llm_meta": meta,
@@ -186,8 +218,12 @@ def ai_investigation(state, config=None):
             raise LLMConfigurationError("no investigator configured")
         if state.get("investigation_mode") == "tools":
             return _tools_investigation(state, config, investigator, t)
+        guard = _single_request_guard(investigator, state["packet"])
+        if guard:  # phase 6: no request is sent when the evidence would exceed the input budget
+            return {"error": guard, "error_stage": "ai_investigation", "llm_meta": _investigator_meta(investigator),
+                    "trace": _trace(state, "ai_investigation", t, ok=False, kind="input_token_budget")}
         out, meta = investigator.investigate(state["packet"])
-        meta = dict(meta, **_investigator_meta(investigator))
+        meta = dict(meta, **_investigator_meta(investigator), **_view_meta(investigator, state["packet"]))
         return {"llm_output": out.model_dump(), "llm_meta": meta, "trace": _trace(state, "ai_investigation", t, ok=True)}
     except RetrievalError as e:
         return {"error": f"RetrievalError: {e}", "error_stage": "ai_investigation", "llm_meta": _investigator_meta(investigator),
@@ -195,7 +231,8 @@ def ai_investigation(state, config=None):
     except (LLMConfigurationError, LLMCallError) as e:
         log.warning("investigation model call failed for %s: %s", state.get("exception_id"), e)
         return {"error": f"{e.__class__.__name__}: {e}", "error_stage": "ai_investigation",
-                "llm_meta": _investigator_meta(investigator),
+                # phase 3: a failed fixed-mode request keeps its billed usage and per-request records
+                "llm_meta": dict(getattr(e, "telemetry", None) or {}, **_investigator_meta(investigator)),
                 "trace": _trace(state, "ai_investigation", t, ok=False, kind=getattr(e, "kind", "configuration"))}
 
 
@@ -209,11 +246,17 @@ def _base_fields(state):
                 evidence_packet_sha256=packet.get("packet_sha256", ""), investigation_mode=_mode(state),
                 evidence_ledger_sha256=(state.get("ledger") or {}).get("ledger_sha256", ""),
                 tool_summary={k: v for k, v in (state.get("tool_summary") or {}).items()},
-                investigated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"))
+                investigated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                execution=dict(state.get("execution") or {}))
 
 
 def _mode(state):
-    return "tools" if state.get("investigation_mode") == "tools" else "fixed"
+    m = state.get("investigation_mode")
+    return m if m in ("tools", "deterministic") else "fixed"
+
+
+def _workflow_version(mode):
+    return {"tools": settings.TOOLS_WORKFLOW_VERSION, "deterministic": settings.DET_WORKFLOW_VERSION}.get(mode, settings.WORKFLOW_VERSION)
 
 
 def _model_metadata(state):
@@ -223,10 +266,12 @@ def _model_metadata(state):
     tools_mode = _mode(state) == "tools"
     return ModelMetadata(provider=meta.get("provider", ""), model=meta.get("model", ""), simulated=meta.get("simulated", False),
                          prompt_version=settings.TOOLS_PROMPT_VERSION if tools_mode else settings.PROMPT_VERSION,
-                         workflow_version=settings.TOOLS_WORKFLOW_VERSION if tools_mode else settings.WORKFLOW_VERSION,
+                         workflow_version=_workflow_version(_mode(state)),
                          findings_schema_version=settings.FINDINGS_SCHEMA_VERSION, attempts=meta.get("attempts", 0),
                          usage=meta.get("usage", {}), provider_response=meta.get("provider_response", {}),
-                         investigation_mode=_mode(state), tool_registry_version=TOOL_REGISTRY_VERSION if tools_mode else "")
+                         investigation_mode=_mode(state), tool_registry_version=TOOL_REGISTRY_VERSION if tools_mode else "",
+                         model_view_version=meta.get("model_view_version", ""), model_view_sha256=meta.get("model_view_sha256", ""),
+                         retrieval_rule_version=(state.get("packet") or {}).get("retrieval_rule_version", ""))
 
 
 def validate_findings(state, config=None):
@@ -241,7 +286,9 @@ def validate_findings(state, config=None):
         packet = state["packet"]
         evidence = state.get("ledger") or packet  # tools mode: citations are checked against the accumulated ledger
         out = LLMInvestigationOutput.model_validate(state["llm_output"])
+        out, norm_notes = normalise_supporting_records(out, evidence)   # recorded; never widens support (validation.py)
         errors, notes, refs = validate_output(out, evidence, state["case"])
+        notes = norm_notes + notes
         body = out.model_dump()
         body["evidence_references"] = refs
         res = InvestigationResult(**base, **body, investigation_status="COMPLETED",
@@ -266,7 +313,7 @@ def persist_findings(state, config=None):
     res = InvestigationResult.model_validate(state["result"])
     tools_mode = _mode(state) == "tools"
     run = {"investigation_mode": _mode(state),
-           "workflow_version": settings.TOOLS_WORKFLOW_VERSION if tools_mode else settings.WORKFLOW_VERSION,
+           "workflow_version": _workflow_version(_mode(state)),
            "prompt_version": settings.TOOLS_PROMPT_VERSION if tools_mode else settings.PROMPT_VERSION,
            "trace": state.get("trace", []), "route": state.get("route", "")}
     extra = None
@@ -329,11 +376,12 @@ GRAPH = None
 
 
 def run_investigation(pack_id, exception_id, investigator, packs_root=None, datasets_root=None, investigations_root=None,
-                      mode="fixed", tool_limits=None, profile=None, period_id=None):
+                      mode="fixed", tool_limits=None, profile=None, period_id=None, execution=None):
     """Invoke the graph for one exception. mode 'fixed' (V1, default) or 'tools' (V2 nested tool-calling subgraph); the
     CLI passes the UC042_INVESTIGATION_MODE setting explicitly. Input roots: explicit packs and datasets roots, or a
     profile / period (uc042lib.investigation.roots); they are validated before anything is read, and a pack outside the
-    profile's periods is refused (InvestigationRootsError). Returns the final state."""
+    profile's periods is refused (InvestigationRootsError). execution: the originating audit-run execution (submission,
+    run, authorisation, job); it is stored with the result and makes that execution's artefact its own. Returns the final state."""
     global GRAPH
     if mode not in settings.MODES:
         raise ValueError(f"unknown investigation mode {mode!r}")
@@ -342,4 +390,5 @@ def run_investigation(pack_id, exception_id, investigator, packs_root=None, data
     if GRAPH is None:
         GRAPH = build_graph()
     cfg = {"configurable": {"investigator": investigator, **approved.as_kwargs(), "tool_limits": tool_limits}}
-    return GRAPH.invoke({"pack_id": pack_id, "exception_id": exception_id, "trace": [], "investigation_mode": mode}, config=cfg)
+    return GRAPH.invoke({"pack_id": pack_id, "exception_id": exception_id, "trace": [], "investigation_mode": mode,
+                         "execution": dict(execution or {})}, config=cfg)

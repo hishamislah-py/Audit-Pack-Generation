@@ -1,0 +1,62 @@
+{
+ "source_builder": "C:\\Users\\artlptp263user\\Downloads\\UC042_RINGFENCE_DEMO_SCENARIOS\\tools\\build_scenarios.py",
+ "source_builder_sha256": "3a24fb208005ae43774601b952912581367eaa87e746aaccd90e089b2a75ca42",
+ "scenarios": {
+  "scenario_01_intelligent_mapping": {
+   "folder": "scenario_1_clean",
+   "zip": "Halden_Pay_Ltd_2026-06.zip",
+   "sha256": "aef7e2c7948c40c98cf087c9f3260ebd6c8ccd561300f94a81001dad1cea8a8b",
+   "entries": 19,
+   "comparison": {
+    "unchanged_members": 18,
+    "unchanged_byte_identical": 18,
+    "all_unchanged_identical": true,
+    "original_members_not_in_demo_zip": []
+   },
+   "corruption": null
+  },
+  "scenario_02_rejection_correction": {
+   "folder": "scenario_2_exceptions",
+   "zip": "Marlow_Street_Payments_Ltd_2026-07.zip",
+   "sha256": "52efcab2b1dde2c8236a4853e3be2a0987aba46ef118c07227b00f166d9b85b3",
+   "entries": 19,
+   "comparison": {
+    "unchanged_members": 18,
+    "unchanged_byte_identical": 18,
+    "all_unchanged_identical": true,
+    "original_members_not_in_demo_zip": []
+   },
+   "corruption": null
+  },
+  "scenario_03_human_in_the_loop": {
+   "folder": "scenario_3_evidence_incomplete",
+   "zip": "Corvane_Money_Ltd_2026-10.zip",
+   "sha256": "10e73917f2a6d64983d0d2289bd568f4489ee6126f4ef8f5e09aea271c7d897c",
+   "entries": 18,
+   "comparison": {
+    "unchanged_members": 17,
+    "unchanged_byte_identical": 17,
+    "all_unchanged_identical": true,
+    "original_members_not_in_demo_zip": []
+   },
+   "corruption": null
+  },
+  "scenario_04_technical_failure": {
+   "folder": "scenario_4_technical_failure",
+   "zip": "Thornbury_Wallet_Ltd_2026-11.zip",
+   "sha256": "a7352a7698cfb6eebc42127b34eb71be5be096c53be1c8998a754aa95c59d3d7",
+   "entries": 19,
+   "comparison": null,
+   "corruption": {
+    "member": "Thornbury_Nov2026/09_bank_statement_lines.csv",
+    "category": "IN-09",
+    "method": "CRC-32 field XOR 0xA5A5A5A5 in the local header and the central directory; compressed data untouched",
+    "read_error": "Bad CRC-32 for file 'Thornbury_Nov2026/09_bank_statement_lines.csv'",
+    "zip_opens": true,
+    "testzip_first_bad": "Thornbury_Nov2026/09_bank_statement_lines.csv",
+    "uncorrupted_zip_sha256": "a7707f11f16cd0e2d50f62d119c5b43eb64356a047e9f9c53ecf19d9182fefad",
+    "starts_with_PK0304": true
+   }
+  }
+ }
+}

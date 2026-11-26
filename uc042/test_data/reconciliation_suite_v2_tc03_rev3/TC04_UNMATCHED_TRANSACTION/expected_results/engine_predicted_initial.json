@@ -1,0 +1,56 @@
+{
+  "label": "ENGINE-PREDICTED (source reading of the reference engine; NOT EXECUTED; unverified)",
+  "scenario_id": "TC04",
+  "expected_case_status": "EXCEPTIONS_OPEN",
+  "non_passing_results": [
+    [
+      "BANK-CASH-LINK",
+      "BE-EUR-0930-U01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-30/SGA-EUR-01",
+      "FAIL"
+    ],
+    [
+      "C11-BANK-ENTRY",
+      "BE-EUR-0930-U01",
+      "FAIL"
+    ],
+    [
+      "DISC-LOG",
+      "SGA-EUR-01 from 2026-09-30",
+      "FAIL"
+    ]
+  ],
+  "exceptions": [
+    {
+      "exception_id": "EXC-TC04-01",
+      "severity": "Critical",
+      "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-EUR-01|2026-09-30|650.00",
+      "affected_results": 2
+    },
+    {
+      "exception_id": "EXC-TC04-02",
+      "severity": "High",
+      "root_cause": "UNMATCHED_BANK_ENTRY|BE-EUR-0930-U01",
+      "affected_results": 2
+    }
+  ],
+  "evidence_statuses": {
+    "EXC-TC04-01": "NOT_EVIDENCED"
+  },
+  "investigation_groups": [
+    [
+      "EXC-TC04-01",
+      "EXC-TC04-02"
+    ]
+  ],
+  "candidate_relationships": [],
+  "must_hold": [
+    "C04, C05, C06 EUR 30 Sep PASS (the engine cannot see the requirement understatement, gap G-15)",
+    "EXC-TC04-01 flag NO_INVESTIGATION_LOGGED; related record BE-EUR-0930-U01"
+  ],
+  "notes": []
+}

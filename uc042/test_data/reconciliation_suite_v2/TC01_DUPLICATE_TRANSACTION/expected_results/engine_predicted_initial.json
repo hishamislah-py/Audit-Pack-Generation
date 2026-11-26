@@ -1,0 +1,153 @@
+{
+  "label": "ENGINE-PREDICTED (source reading of the reference engine; NOT EXECUTED; unverified)",
+  "scenario_id": "TC01",
+  "expected_case_status": "EXCEPTIONS_OPEN",
+  "non_passing_results": [
+    [
+      "C05-RESOURCE",
+      "2026-09-28/GBP",
+      "FAIL"
+    ],
+    [
+      "C05-RESOURCE",
+      "2026-09-29/GBP",
+      "FAIL"
+    ],
+    [
+      "C05-RESOURCE",
+      "2026-09-30/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-28/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-29/GBP",
+      "FAIL"
+    ],
+    [
+      "C06-DIFFERENCE",
+      "2026-09-30/GBP",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-28/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-29/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "C08-DIFFERENCE",
+      "2026-09-30/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "DISC-LOG",
+      "SGA-GBP-01 from 2026-09-28",
+      "FAIL"
+    ],
+    [
+      "RC2-LEDGER",
+      "2026-09-28/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "RC2-LEDGER",
+      "2026-09-29/SGA-GBP-01",
+      "FAIL"
+    ],
+    [
+      "RC2-LEDGER",
+      "2026-09-30/SGA-GBP-01",
+      "FAIL"
+    ]
+  ],
+  "exceptions": [
+    {
+      "exception_id": "EXC-TC01-01",
+      "severity": "Critical",
+      "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-09-28|-1246.80",
+      "affected_results": 4
+    },
+    {
+      "exception_id": "EXC-TC01-02",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-28/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC01-03",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-29/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC01-04",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-30/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC01-05",
+      "severity": "High",
+      "root_cause": "C05-RESOURCE|2026-09-28/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC01-06",
+      "severity": "High",
+      "root_cause": "RC2-LEDGER|2026-09-28/SGA-GBP-01",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC01-07",
+      "severity": "High",
+      "root_cause": "C05-RESOURCE|2026-09-29/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC01-08",
+      "severity": "High",
+      "root_cause": "RC2-LEDGER|2026-09-29/SGA-GBP-01",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC01-09",
+      "severity": "High",
+      "root_cause": "C05-RESOURCE|2026-09-30/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC01-10",
+      "severity": "High",
+      "root_cause": "RC2-LEDGER|2026-09-30/SGA-GBP-01",
+      "affected_results": 1
+    }
+  ],
+  "evidence_statuses": {
+    "EXC-TC01-01": "NOT_EVIDENCED"
+  },
+  "investigation_groups": [
+    [
+      "EXC-TC01-02",
+      "EXC-TC01-03",
+      "EXC-TC01-04"
+    ]
+  ],
+  "candidate_relationships": [],
+  "must_hold": [
+    "CASH-BANK-LINK PASS for both LE-GBP-0928-0001 and LE-GBP-0928-0007 (no one-to-one matching, gap G-04)",
+    "RC4-DIRECT TX-0928-00001 PASS",
+    "C04-REQUIREMENT PASS 28-30 Sep GBP",
+    "CBAL-ROLLFWD PASS for C0008",
+    "EXC-TC01-01 flags OWN_FUNDS_REQUIRED and NO_INVESTIGATION_LOGGED"
+  ],
+  "notes": []
+}

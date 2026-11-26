@@ -1,0 +1,79 @@
+F.F.FE.F.E.E.
+======================================================================
+ERROR: test_failed_investigations_are_retried_within_their_submission (tests.test_zip_only_workflow.SubmissionRetryAndRecovery.test_failed_investigations_are_retried_within_their_submission)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 283, in test_failed_investigations_are_retried_within_their_submission
+    self.assertEqual((r.status_code, r.json()["code"]), (409, "SUBMISSION_PACK_USE_SUBMISSION_RETRY"))
+                                     ~~~~~~~~^^^^^^^^
+KeyError: 'code'
+
+======================================================================
+ERROR: test_exception_history_is_scoped_by_investigation_and_submission (tests.test_zip_only_workflow.DecisionAndHistoryIsolation.test_exception_history_is_scoped_by_investigation_and_submission)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 370, in test_exception_history_is_scoped_by_investigation_and_submission
+    self.assertEqual(sorted((x["details"]["submission_id"] or "", x["details"]["active"]) for x in decisions),
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 370, in <genexpr>
+    self.assertEqual(sorted((x["details"]["submission_id"] or "", x["details"]["active"]) for x in decisions),
+                             ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'submission_id'
+
+======================================================================
+ERROR: test_submission_investigations_need_submission_scoped_decisions_and_reviews (tests.test_zip_only_workflow.DecisionAndHistoryIsolation.test_submission_investigations_need_submission_scoped_decisions_and_reviews)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 344, in test_submission_investigations_need_submission_scoped_decisions_and_reviews
+    self.assertEqual((rows[pa[e]]["submission_id"], rows[pb[e]]["submission_id"]), (self.sub(a), self.sub(b)))
+                      ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'submission_id'
+
+======================================================================
+FAIL: test_another_submissions_progress_never_makes_a_preview_stale (tests.test_zip_only_workflow.SubmissionIsolation.test_another_submissions_progress_never_makes_a_preview_stale)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 249, in test_another_submissions_progress_never_makes_a_preview_stale
+    self.generate(self.get(f"/api/v1/reviews/{ra['review_id']}").json())  # before the fix: 409 PREVIEW_STALE
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 195, in generate
+    self.assertEqual(g.status_code, 201, g.text)
+AssertionError: 409 != 201 : {"type":"about:blank","title":"Conflict","status":409,"detail":"the investigations changed since the preview; generate a new preview","code":"PREVIEW_STALE"}
+
+======================================================================
+FAIL: test_identical_submissions_share_content_identity_only (tests.test_zip_only_workflow.SubmissionIsolation.test_identical_submissions_share_content_identity_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 220, in test_identical_submissions_share_content_identity_only
+    rb = self.open_review(b)  # before the fix: 409 REVIEW_OTHER_SUBMISSION
+         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 175, in open_review
+    self.assertEqual(r.status_code, expect, r.text)
+AssertionError: 409 != 201 : {"type":"about:blank","title":"Conflict","status":409,"detail":"an active review of this pack exists for SUB-2558179f3e464230fc3a9ebf; finish it (HOLD is not finished: GENERATE) before opening a review for another submission","code":"REVIEW_OTHER_SUBMISSION","review_id":"RS-1b57cdb7d574963eb420d58d"}
+
+======================================================================
+FAIL: test_a_run_whose_investigations_were_never_enqueued_is_recovered (tests.test_zip_only_workflow.SubmissionRetryAndRecovery.test_a_run_whose_investigations_were_never_enqueued_is_recovered)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 329, in test_a_run_whose_investigations_were_never_enqueued_is_recovered
+    res = self.retry(run)
+          ^^^^^^^^^^^^^^^
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 269, in retry
+    self.assertEqual(r.status_code, expect, r.text)
+AssertionError: 404 != 202 : {"type":"about:blank","title":"Not found","status":404,"detail":"not found","code":"NOT_FOUND"}
+
+======================================================================
+FAIL: test_interrupted_investigations_are_recovered_within_their_submission (tests.test_zip_only_workflow.SubmissionRetryAndRecovery.test_interrupted_investigations_are_recovered_within_their_submission)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 316, in test_interrupted_investigations_are_recovered_within_their_submission
+    res = self.retry(run)
+          ^^^^^^^^^^^^^^^
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 269, in retry
+    self.assertEqual(r.status_code, expect, r.text)
+AssertionError: 404 != 202 : {"type":"about:blank","title":"Not found","status":404,"detail":"not found","code":"NOT_FOUND"}
+
+----------------------------------------------------------------------
+Ran 13 tests in 126.324s
+
+FAILED (failures=4, errors=3)

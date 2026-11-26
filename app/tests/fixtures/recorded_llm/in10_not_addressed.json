@@ -1,0 +1,14 @@
+{
+ "fixture": "in10_not_addressed",
+ "note": "RECORDED TEST RESPONSE - not produced by a live model",
+ "match": {
+  "category": "IN-10",
+  "unresolved_headers": [
+   "entry_ref",
+   "acct_no",
+   "posting_dt",
+   "txn_amt"
+  ]
+ },
+ "response_text": "{\n \"response_schema\": \"smartparser-mapping-proposal/1.0\",\n \"category\": \"IN-10\",\n \"columns\": [\n  {\n   \"source_index\": 0,\n   \"source_header\": \"entry_ref\",\n   \"canonical_field\": \"ledger_entry_id\",\n   \"assessment\": \"CLEAR\",\n   \"alternatives\": [],\n   \"explanation\": \"recorded test response\",\n   \"evidence\": [\n    \"header token\",\n    \"value shape\"\n   ]\n  }\n ],\n \"notes\": \"\"\n}"
+}

@@ -4,6 +4,7 @@ starting V2 tools-mode investigations as background jobs through the existing gr
 Eligibility for a final pack = the library's check (verify_published, same pack and hash, COMPLETED/VALID, not simulated,
 current validation rules) AND the backend's publication registry (the files are the ones registered)."""
 import copy
+import json
 from pathlib import Path
 
 from uc042lib.final_pack.sources import check_eligibility, list_investigations, load_bundle
@@ -33,6 +34,8 @@ class InvestigationService:
         self.investigator_factory = investigator_factory or investigator_from_env
         self.authorizations = authorizations  # decisions about PUBLISHED investigations (None without a database)
         self.ai_authorizations = ai_authorizations  # pre-execution authorisations of AI runs (AiAuthorizationService)
+        self.analyst_reviews = None  # InvestigationReviewService (set by Services): the analyst's ACCEPT / REJECT decisions
+        self.submission_pack_check = None  # set by Services: is a pack produced only by ZIP submission runs?
         self._eligibility_cache = {}
 
     def root_for(self, pack_id):
@@ -107,8 +110,25 @@ class InvestigationService:
             reasons = self.reasons(pack, info)
             rows.append(dict({k: info.get(k) for k in PUBLISHED_FIELDS}, eligible=not reasons, ineligible_reasons=reasons,
                              library_eligible=info["eligible"], registry=self._registry_row(info["investigation_id"]),
-                             authorization=self._authorization_view(info["investigation_id"])))
+                             authorization=self._authorization_view(info["investigation_id"]),
+                             submission_id=self._submission_of(info)))
         return {"published": rows, "not_published": found["not_published"]}
+
+    @staticmethod
+    def _submission_of(info):
+        """The ZIP submission whose audit run produced the artefact (findings.execution), or None (pack-level / legacy)."""
+        try:
+            findings = json.loads((Path(info["path"]) / "findings.json").read_text(encoding="utf-8"))
+        except (KeyError, OSError, ValueError, TypeError):
+            return None
+        return (findings.get("execution") or {}).get("submission_id") or None
+
+    def refuse_pack_wide(self, pack_id):
+        """A pack produced only by ZIP submission runs is investigated only within a submission (its run's own jobs and the
+        submission-scoped retry): a pack-wide / manual investigation would belong to no submission."""
+        if self.submission_pack_check is not None and self.submission_pack_check(pack_id):
+            raise Conflict("this pack was produced by ZIP submissions: investigate within the submission (retry its failed "
+                           "investigations from the submission's review)", code="SUBMISSION_PACK_USE_SUBMISSION_RETRY")
 
     def _authorization_view(self, investigation_id):
         a = self.authorization(investigation_id)
@@ -120,25 +140,62 @@ class InvestigationService:
         except IntegrityFailure:
             return None
 
-    def for_exception(self, pack_id, exception_id, pack=None):
+    submission_scope = None  # set by Services (AutoInvestigationService.submission_scope): one ZIP submission's own artefacts
+
+    def _scope(self, submission_id, pack_id=None):
+        """The submission's own execution scope (format 422 INVALID_ID, unknown 404, a pack it did not produce 409)."""
+        if self.submission_scope is None:
+            raise NotFound("submission not found")
+        return self.submission_scope(submission_id, pack_id)
+
+    @staticmethod
+    def _in_scope(row, scope):
+        return row.get("submission_id") == scope["submission_id"] or row["investigation_id"] in scope["published"]
+
+    def for_exception(self, pack_id, exception_id, pack=None, submission_id=None, scope=None):
+        """submission_id (optional): only that ZIP submission's own published investigations (findings.execution), its own
+        not-published attempt records and active jobs, each with that submission's active decision. Without it the
+        response is exactly as before (legacy decision scope)."""
+        if submission_id is not None and scope is None:
+            scope = self._scope(submission_id, pack_id)
         pack = pack if pack is not None else self.packs.load(pack_id)
         self.packs.exception(pack, exception_id)
         out = self.published(pack, exception_id)
-        out["active_jobs"] = [self.job_view(j) for j in self.runner.active(pack_id, exception_id, "INVESTIGATION")]
-        return dict(out, pack_id=pack_id, exception_id=exception_id)
+        jobs = self.runner.active(pack_id, exception_id, "INVESTIGATION")
+        if scope is not None:
+            out["published"] = [r for r in out["published"] if self._in_scope(r, scope)]
+            out["not_published"] = [a for a in out["not_published"] if a.get("record") in scope["not_published"]]
+            jobs = [j for j in jobs if j["job_id"] in scope["job_ids"]]
+        out["active_jobs"] = [self.job_view(j) for j in jobs]
+        if self.analyst_reviews is not None:  # the active decision per investigation (None: pending analyst review)
+            active = self.analyst_reviews.active_for_pack(pack_id, scope["submission_id"] if scope is not None else None)
+            for row in out["published"]:
+                row["analyst_review"] = active.get(row["investigation_id"])
+        return dict(out, pack_id=pack_id, exception_id=exception_id,
+                    **({"submission_id": scope["submission_id"]} if scope is not None else {}))
 
-    def for_pack(self, pack_id, pack=None):
+    def for_pack(self, pack_id, pack=None, submission_id=None):
         """Every exception's investigations. The pack is loaded (verified and copied) once, not once per exception: the
-        period list and archive call this for every pack of every month. A caller may pass the pack it already loaded."""
+        period list and archive call this for every pack of every month. A caller may pass the pack it already loaded.
+        submission_id: scoped to one ZIP submission (see for_exception); the scope is resolved once."""
+        scope = self._scope(submission_id, pack_id) if submission_id is not None else None
         pack = pack if pack is not None else self.packs.load(pack_id)
-        return [self.for_exception(pack_id, e, pack) for e in self.packs.exception_ids(pack)]
+        return [self.for_exception(pack_id, e, pack, scope=scope) for e in self.packs.exception_ids(pack)]
 
     # ---------------------------------------------------------------- reads
-    def detail(self, investigation_id):
+    def detail(self, investigation_id, submission_id=None):
+        """submission_id (optional): analyst_review is that submission's active decision; the investigation must have been
+        produced for that submission (422 INVESTIGATION_NOT_IN_SUBMISSION otherwise). Without it: unchanged (legacy scope)."""
         d = self.locate(investigation_id)
         pack = self._pack_for(d)
         bundle = load_bundle(d)
         f = bundle["findings"]
+        owner = (f.get("execution") or {}).get("submission_id") or None
+        if submission_id is not None:
+            scope = self._scope(submission_id)
+            if owner != submission_id and investigation_id not in scope["published"]:
+                raise InvalidInput(f"{investigation_id} was not produced for submission {submission_id}",
+                                   code="INVESTIGATION_NOT_IN_SUBMISSION")
         library = check_eligibility(bundle, pack)
         registry = [f"publication registry: {p}" for p in self.registry.check(d, pack)]
         registry += self.authorization_reasons(investigation_id)
@@ -148,12 +205,17 @@ class InvestigationService:
                 "investigation_status": f.get("investigation_status"), "validation_status": f.get("validation_status"),
                 "overall_evidence_assessment": f.get("overall_evidence_assessment"),
                 "investigation_summary": f.get("investigation_summary"), "exception_resolution": f.get("exception_resolution"),
-                "model": {k: m.get(k) for k in ("provider", "model", "prompt_version", "findings_schema_version",
-                                                "workflow_version", "simulated")},
+                "model": dict({k: m.get(k) for k in ("provider", "model", "prompt_version", "findings_schema_version",
+                                                     "workflow_version", "simulated")},
+                              # a historical automatic provider switch recorded before Groq was removed (read-only; shown in the UI)
+                              **({"fallback": (m.get("provider_response") or {})["fallback"]}
+                                 if (m.get("provider_response") or {}).get("fallback") else {})),
                 "tool_summary": f.get("tool_summary"), "classification_summary": f.get("classification_summary"),
                 "findings_sha256": bundle["findings_sha256"], "eligible": not (library or registry),
                 "ineligible_reasons": library + registry, "registry": self._registry_row(investigation_id),
-                "authorization": self._authorization_view(investigation_id)}
+                "authorization": self._authorization_view(investigation_id),
+                "analyst_review": self.analyst_reviews.latest(investigation_id, submission_id) if self.analyst_reviews is not None else None,
+                "submission_id": owner}
 
     def findings(self, investigation_id):
         """The findings exactly as stored (a read; nothing is recomputed)."""
@@ -242,6 +304,7 @@ class InvestigationService:
         authorisation (ai_authorization). The authorisation is recorded before the job is submitted, so no model call can
         start without it; a refused request is recorded with its reason."""
         auth = self.ai_authorizations
+        self.refuse_pack_wide(pack_id)
         with self.locks.hold(pack_id):
             pack = self.packs.load(pack_id)
             self.packs.exception(pack, exception_id)
@@ -265,7 +328,7 @@ class InvestigationService:
             authorization_id = ids.new_id("AIA")
             job = self.runner.create("INVESTIGATION", pack_id, self.settings.analyst_id, exception_id,
                                      {"mode": "tools", "workflow_version": inv_config.TOOLS_WORKFLOW_VERSION,
-                                      "authorization_id": authorization_id}, retry_of)
+                                      "authorization_id": authorization_id, "trigger": "CASE" if case_id else "MANUAL"}, retry_of)
             try:
                 auth.record(INVESTIGATION, AUTHORIZED, pack_id, config, job_id=job["job_id"], authorization_id=authorization_id,
                             provider=getattr(investigator, "provider", None), model=getattr(investigator, "model", None),
@@ -274,8 +337,31 @@ class InvestigationService:
                 self.runner.repo.update(job["job_id"], {"status": "FAILED", "completed_at": now_iso(),
                                                         "error_summary": "the authorisation could not be recorded; nothing was run"})
                 raise
-            self.runner.submit(job, lambda j: self._execute(j, investigator))
+            self.runner.submit(job, lambda j: self._execute(j, investigator), lane="ai")
         return job
+
+    def enqueue_authorized(self, pack_id, exception_id, authorization_id, trigger, retry_of=None, execution=None):
+        """Queue one investigation under an AUTO_INVESTIGATION authorisation that is already recorded (the run- or pack-
+        level authorisation of AutoInvestigationService). The same job, graph, tools, validation, persistence and registry
+        as start(); one active job per exception (idempotent: an active job is returned, never duplicated). Returns
+        (job, created).
+
+        execution: the audit run this investigation belongs to ({submission_id, run_id, authorization_id}; independent ZIP
+        submissions). The audit run is then the execution scope: a NEW job is always created for it (another run's active
+        or finished job is never reused) and its result is stored as that execution's own artefact."""
+        with self.locks.hold(pack_id):
+            pack = self.packs.load(pack_id)
+            self.packs.exception(pack, exception_id)
+            active = self.runner.active(pack_id, exception_id, "INVESTIGATION")
+            if active and execution is None:
+                return active[0], False
+            investigator = self._investigator()  # a fresh investigator per job: the provider switch is per operation
+            job = self.runner.create("INVESTIGATION", pack_id, self.settings.analyst_id, exception_id,
+                                     {"mode": "tools", "workflow_version": inv_config.TOOLS_WORKFLOW_VERSION,
+                                      "authorization_id": authorization_id, "trigger": trigger,
+                                      **({"execution": dict(execution)} if execution else {})}, retry_of)
+            self.runner.submit(job, lambda j: self._execute(j, investigator), lane="ai")
+        return job, True
 
     def datasets_root_for(self, pack_id):
         """Where the pack's source rows are: the POC scenario datasets, or (for a pack produced by a monthly processing
@@ -287,16 +373,25 @@ class InvestigationService:
             return Path(store) / "cases"
         return datasets_root
 
+    @staticmethod
+    def _execution_of(job):
+        """The execution scope stored with the result: the job's audit run plus the job itself (None outside a run)."""
+        execution = (job.get("inputs") or {}).get("execution")
+        return dict(execution, job_id=job["job_id"]) if execution else None
+
     def _execute(self, job, investigator):
         roots = self.packs.root_set(job["pack_id"])
         state = run_investigation(job["pack_id"], job["exception_id"], investigator, packs_root=roots.packs_root,
                                   datasets_root=self.datasets_root_for(job["pack_id"]),
                                   investigations_root=Path(roots.investigations_root), mode="tools",
-                                  tool_limits=inv_config.tool_limits())
+                                  tool_limits=inv_config.tool_limits(), execution=self._execution_of(job))
         outcome, res = state.get("persist_outcome"), state.get("result") or {}
         result = {"persist_outcome": outcome, "investigation_status": res.get("investigation_status"),
                   "validation_status": res.get("validation_status"), "investigation_id": None, "registered": False,
                   "tool_summary": res.get("tool_summary")}
+        if outcome == "NOT_PUBLISHED" and state.get("artefact_path"):
+            # DR-10: the stored record of this attempt, by name, so the review history links job and record exactly
+            result["not_published_record"] = Path(state["artefact_path"]).name
         if outcome not in ("PUBLISHED", "ALREADY_PUBLISHED_IDENTICAL"):
             reason = res.get("failure_reason") or "; ".join((res.get("validation_findings") or [])[:3]) or str(outcome)
             return "FAILED", result, redact(reason)[:500]

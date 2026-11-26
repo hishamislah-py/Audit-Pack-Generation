@@ -11,7 +11,7 @@ Status: **design for review.** Every expected value below is taken from the **ex
 | AC1 | Reporting period | `PER-2026-09`, 2026-09-01 to 2026-09-30; **22** reconciliation days | Equals `schema` and IN-01 |
 | AC2 | Currency and account context | Currency scope GBP, EUR. Safeguarding accounts `SGA-GBP-01` (GBP), `SGA-EUR-01` (EUR); own-funds `OWN-GBP-01`, `OWN-EUR-01`. Pool `POOL-EMONEY`. Entity `SYN-EMI-001` (synthetic configuration, D2). | Equals IN-02 rows (cited) |
 | AC3 | All applicable control results | **32** check types, **1,886** results, every one present exactly once (`result_id` = `check_id\|scope`) | Count and set equality with the engine run |
-| AC4 | Outcomes shown | **1,798 PASS**, **88 NOT_APPLICABLE** (C06 × 44 and C08 × 44: "no difference to resolve" / "bank equals ledger"), **0 FAIL**, **0 INSUFFICIENT_EVIDENCE**. Per check (see list below). | Per-check counts equal the engine |
+| AC4 | Outcomes shown | **1,886 PASS** (including C06 × 44 and C08 × 44: "no difference to resolve" / "bank equals ledger"), **0 NOT_APPLICABLE**, **0 FAIL**, **0 INSUFFICIENT_EVIDENCE**. Per check (see list below). Approved 17 Nov 2026: a reconciled zero difference is **PASS**; packs published before that date record it as NOT_APPLICABLE and are kept unchanged. (Before then: 1,798 PASS and 88 NOT_APPLICABLE.) | Per-check counts equal the engine |
 | AC5 | Reconciliation summaries | 44 currency-days (requirement, item A, resource, difference) and 44 account-days (bank, ledger, difference). **30 Sep:** GBP requirement **395844.86**, item A **395844.86**, bank **395844.86**, ledger **395844.86**, difference **0.00**; EUR requirement **118555.00**, bank and ledger **118555.00**, difference **0.00**. Opening positions (cited source rows): `LE-GBP-0831-0000` 250000.00; `LE-EUR-0831-0000` 80000.00; 12 `CBS-20260831-*` client rows. | Value fidelity: each figure equals its engine field or source field exactly |
 | AC6 | Evidence references | All 19 input files in the file register (SHA-256 from the manifest, availability PRESENT). **1,920** cited source rows in the record register, each resolving to `file#line` and its primary key. | Reference resolution (04, V2) |
 | AC7 | Provenance | Manifest hashes; dataset `set_01_clean_baseline` (scenario ID `S01`); engine and configuration fingerprints; processing-output hashes of the same run | Audit-trail completeness (04, V8) |
@@ -31,7 +31,7 @@ Status: **design for review.** Every expected value below is taken from the **ex
 | Policy and point | C03-POLICY 1 · C03-POINT 3 |
 | Coverage | C01-COVER 44 · C14-COVER 484 · C07-COVER 44 |
 | Bank statements | DQ23-STATEMENT 88 · DQ22-CONTINUITY 86 · BC-VS-EOD 44 · CASH-BANK-LINK 222 |
-| Internal and external reconciliation | C04-REQUIREMENT 44 · C05-RESOURCE 44 · **C06-DIFFERENCE 44 NOT_APPLICABLE** · C07-BANK-EVIDENCE 44 · RC2-LEDGER 44 · **C08-DIFFERENCE 44 NOT_APPLICABLE** |
+| Internal and external reconciliation | C04-REQUIREMENT 44 · C05-RESOURCE 44 · **C06-DIFFERENCE 44 PASS** · C07-BANK-EVIDENCE 44 · RC2-LEDGER 44 · **C08-DIFFERENCE 44 PASS** (zero differences; NOT_APPLICABLE in packs published before 17 Nov 2026) |
 | Settlement | C11-BATCH-ARITH 88 · C11-BATCH-BANK 88 · C11-TXN-LINE 1 · C11-BANK-ENTRY 1 · FUND-TOPUP 44 |
 | Allocation and refunds | RC4-DIRECT 90 · C09-ALLOCATION 2 · C12-REFUND 2 |
 | Client balances and currency | CBAL-NONNEG 1 · CBAL-ROLLFWD 264 · C13-CURRENCY 1 |

@@ -1,0 +1,26 @@
+{
+  "label": "AI (expectations for the investigation layer; separate from FIN)",
+  "scenario_id": "TC01",
+  "findings": [
+    "Two IN-10 rows share E2E-GBP-0928-L01 while IN-09 and IN-11 hold one each: a duplicate posting, not two receipts",
+    "The -1,246.80 bank-ledger and +1,246.80 internal differences from 28 Sep equal the duplicate exactly",
+    "The firm's reported figures exclude the duplicate: the defect is in the supplied extract, not the firm's reconciliation"
+  ],
+  "evidence": [
+    "IN-10 LE-GBP-0928-0001",
+    "IN-10 LE-GBP-0928-0007",
+    "IN-09 BE-GBP-0928-L01",
+    "IN-11 TX-0928-00001",
+    "IN-05 IRR-EMONEY-GBP-20260928..30",
+    "IN-06 ERL-SGA-GBP-01-20260928..30"
+  ],
+  "missing_evidence": [
+    "interface run log / posting audit trail"
+  ],
+  "confidence": "high for the duplicate; medium for extract defect versus ledger defect",
+  "must_not": [
+    "treat the two rows as two genuine receipts",
+    "recommend an own-funds top-up (real position unaffected)"
+  ],
+  "analyst_action": "Reject the submitted cash-book extract and request a corrected extract; no own-funds top-up required."
+}

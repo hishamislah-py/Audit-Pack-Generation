@@ -1,0 +1,34 @@
+{
+  "label": "AI (expectations for the investigation layer; separate from FIN)",
+  "scenario_id": "TC05",
+  "group_level": true,
+  "findings": [
+    "Batch lines reference 3 transaction IDs absent from the export",
+    "C0101 roll-forward exceeds its snapshot by 625.27; C0104 by 222.18",
+    "Possible common cause: the export is incomplete for SB-EUR-20260924"
+  ],
+  "connecting_evidence": [
+    "all 3 missing IDs belong to one batch",
+    "222.18 equals one line exactly",
+    "625.27 equals the sum of the other two lines",
+    "no other batch or day affected",
+    "header, lines and bank debit agree with each other"
+  ],
+  "evidence": [
+    "IN-12 SB-EUR-20260924",
+    "IN-13 SL-SB-EUR-20260924-0001..0003",
+    "IN-09 BE-EUR-0924-SB1",
+    "IN-03 CBS-20260923/24-C0101-EUR",
+    "IN-03 CBS-20260923/24-C0104-EUR"
+  ],
+  "missing_evidence": [
+    "client of each missing transaction (settlement lines carry no client_id)",
+    "export job log or a complete export"
+  ],
+  "confidence": "medium-high that the export is incomplete; low-medium for client attribution (amount-based only)",
+  "must_not": [
+    "state the client attribution as confirmed",
+    "cite the UNVERIFIED candidate as evidence"
+  ],
+  "analyst_action": "Request a complete transaction export."
+}

@@ -1,6 +1,15 @@
 """Model adapters. Live: OpenAI Responses API (default) and Anthropic Messages API (legacy); credentials come from the
 environment. Offline: deterministic simulated investigator, for automated tests only, always labelled simulated.
-There is no silent fallback from live to offline. Provider-specific parameters stay inside each adapter."""
+There is no silent fallback from live to offline. Provider-specific parameters stay inside each adapter.
+
+Telemetry and SDK retries (review DR-08). The OpenAI client is created with max_retries=SDK_MAX_RETRIES (2), unchanged:
+the SDK itself retries a request that fails with a connection error, a timeout, 408/409/429 or a 5xx status, with backoff,
+before returning or raising. Those SDK-internal HTTP retries are not separate application telemetry entries: each entry in
+provider_response.responses is one application-level request (one client call), which may stand for up to
+1 + SDK_MAX_RETRIES HTTP attempts. Every entry therefore records sdk_max_retries. Implications: request counts in
+telemetry are a lower bound on HTTP requests; usage comes from the final response only (a failed HTTP attempt returns
+no usage); latency_seconds includes any SDK backoff. Application-level retries (the corrective retry for invalid output)
+ARE separate entries."""
 import json
 import os
 import re
@@ -8,9 +17,11 @@ import time
 
 from pydantic import ValidationError
 
+SDK_MAX_RETRIES = 2  # OpenAI SDK-internal HTTP retries per client call (unchanged); see the module docstring (DR-08)
+
 from . import config
 from .models import LLMInvestigationOutput
-from .prompts import SYSTEM_PROMPT, user_message
+from .prompts import SYSTEM_PROMPT, model_user_message, user_message
 
 
 class LLMConfigurationError(Exception):
@@ -27,7 +38,7 @@ class LLMCallError(Exception):
 
 
 # Anything that looks like a credential is masked before it can reach a message, log or persisted artefact.
-_SECRET_RE = re.compile(r"(sk-[A-Za-z0-9_\-*]{4,}|sk_[A-Za-z0-9_\-*]{4,}|Bearer\s+[A-Za-z0-9._\-]+)")
+_SECRET_RE = re.compile(r"(sk-[A-Za-z0-9_\-*]{4,}|sk_[A-Za-z0-9_\-*]{4,}|gsk_[A-Za-z0-9_\-*]{4,}|Bearer\s+[A-Za-z0-9._\-]+)")
 
 
 def redact(text):
@@ -69,6 +80,10 @@ def _status_error(e, provider):
     kind = {"AuthenticationError": "authentication", "PermissionDeniedError": "permission_denied",
             "NotFoundError": "model_unavailable", "RateLimitError": "rate_limit",
             "BadRequestError": "bad_request"}.get(name, "api_error")
+    if kind == "api_error" and isinstance(status, int) and status >= 500:
+        kind = "provider_unavailable"  # 5xx: a temporary provider failure (reported; never routed to another provider)
+    if status == 413:
+        kind = "request_too_large"  # the request exceeds the model's / plan's token limit
     if kind == "bad_request" and re.search(r"model", detail, re.I) and re.search(r"not exist|not found|does not have access|unsupported", detail, re.I):
         kind = "model_unavailable"
     code = getattr(e, "code", None)
@@ -78,15 +93,21 @@ def _status_error(e, provider):
 class OpenAIInvestigator:
     """OpenAI Responses API with Pydantic structured output (`responses.parse(text_format=LLMInvestigationOutput)`)."""
     provider = "openai"
+    PROVIDER_LABEL = "OpenAI"
     simulated = False
+    uses_model_view = True  # phase 4: requests carry the lossless model view (model_view_version / sha256 recorded)
+    last_structured_request = None  # telemetry of the latest structured_request (DR-09)
     RETRYABLE_KINDS = ("invalid_output", "missing_output")  # deterministic failures (refusal, truncation) are not retried
 
-    def __init__(self, model=None, timeout=None, max_tokens=None, reasoning_effort=None, total_timeout=None):
+    def __init__(self, model=None, timeout=None, max_tokens=None, reasoning_effort=None, total_timeout=None,
+                 investigation_max_tokens=None):
         s = _settings()
         self.model = model or (s["model"] if s["provider"] == "openai" else config.DEFAULT_MODELS["openai"])
         self.timeout = timeout or s["timeout"]
         self.total_timeout = total_timeout or s["total_timeout"]
-        self.max_tokens = max_tokens or s["max_tokens"]
+        self.max_tokens = max_tokens or s["max_tokens"]  # closing summary / structured_request only
+        # investigations (investigate() and every tool_turn()) use their own budget (UC042_INVESTIGATION_MAX_OUTPUT_TOKENS)
+        self.investigation_max_tokens = investigation_max_tokens or s["investigation_max_tokens"]
         self.reasoning_effort = reasoning_effort if reasoning_effort is not None else s["reasoning_effort"]
         if self.reasoning_effort and self.reasoning_effort not in config.OPENAI_REASONING_EFFORTS:
             raise LLMConfigurationError(f"{config.ENV_REASONING_EFFORT} must be one of {config.OPENAI_REASONING_EFFORTS}")
@@ -98,7 +119,43 @@ class OpenAIInvestigator:
         except ImportError as e:
             raise LLMConfigurationError("the 'openai' package is not installed") from e
         self._openai = openai
-        self._client = openai.OpenAI(api_key=key, timeout=self.timeout, max_retries=2)
+        self._client = openai.OpenAI(api_key=key, timeout=self.timeout, max_retries=SDK_MAX_RETRIES)  # DR-08: see module doc
+
+    def _request(self, kwargs):
+        """Provider-specific request adjustments (none for OpenAI)."""
+        return kwargs
+
+    def _meta(self, body, raw):
+        return {"response_id": body.get("id"), "resolved_model": body.get("model"), "status": body.get("status"),
+                "request_id": raw.http_response.headers.get("x-request-id")}
+
+    def _telemetry(self, body, raw, kwargs, started, turn):
+        """Per-request record (phase 3): IDs, status, incomplete reason, this request's own usage and latency, and the size
+        of what was sent (item count and characters; never the content). Kept in provider_response, which is excluded
+        from the investigation identity. Fields the provider does not supply stay None."""
+        items = kwargs.get("input") or []
+        return dict(self._meta(body, raw), turn=turn, model=kwargs.get("model"),
+                    incomplete_reason=(body.get("incomplete_details") or {}).get("reason"),
+                    usage=self._usage(body), latency_seconds=round(time.perf_counter() - started, 3),
+                    max_output_tokens=kwargs.get("max_output_tokens"), input_items=len(items),
+                    input_chars=sum(len(json.dumps(i, ensure_ascii=False, default=str)) for i in items),
+                    instructions_chars=len(kwargs.get("instructions") or ""), sdk_max_retries=SDK_MAX_RETRIES)
+
+    @staticmethod
+    def _failed_request(kwargs, started, turn, error):
+        """A request that produced no response body (provider/transport error): what was sent, how long it took, why."""
+        items = kwargs.get("input") or []
+        return {"turn": turn, "model": kwargs.get("model"), "status": "error", "error_kind": getattr(error, "kind", "unexpected"),
+                "usage": {}, "latency_seconds": round(time.perf_counter() - started, 3), "max_output_tokens": kwargs.get("max_output_tokens"),
+                "input_items": len(items), "input_chars": sum(len(json.dumps(i, ensure_ascii=False, default=str)) for i in items),
+                "instructions_chars": len(kwargs.get("instructions") or ""), "sdk_max_retries": SDK_MAX_RETRIES}
+
+    @staticmethod
+    def _attach(error, usage_total, responses, attempts):
+        """Keep the billed usage and per-request records on a failure (the fixed mode and summary used to lose them)."""
+        error.telemetry = {"usage": dict(usage_total), "attempts": attempts,
+                           "provider_response": dict(responses[-1] if responses else {}, responses=list(responses))}
+        return error
 
     def _map_error(self, e):
         o = self._openai
@@ -107,15 +164,15 @@ class OpenAIInvestigator:
         if isinstance(e, o.APIConnectionError):
             return LLMCallError(f"could not connect to the provider: {e.__class__.__name__}", "connection")
         if isinstance(e, o.APIStatusError):
-            return _status_error(e, "OpenAI")
+            return _status_error(e, self.PROVIDER_LABEL)  # the provider that actually answered
         if isinstance(e, o.APIError):
             return LLMCallError(f"provider API error: {e.__class__.__name__}: {str(e)[:300]}", "api_error")
         return LLMCallError(f"unexpected provider error: {e.__class__.__name__}: {str(e)[:200]}", "unexpected")
 
     def _request_kwargs(self, packet, timeout):
         kwargs = {"model": self.model, "instructions": SYSTEM_PROMPT,
-                  "input": [{"role": "user", "content": user_message(packet)}],
-                  "text_format": LLMInvestigationOutput, "max_output_tokens": self.max_tokens,
+                  "input": [{"role": "user", "content": model_user_message(packet)}],  # phase 4: lossless model view
+                  "text_format": LLMInvestigationOutput, "max_output_tokens": self.investigation_max_tokens,
                   "store": False,  # no Responses API application-state storage; abuse-monitoring retention is separate (see report 02 §12)
                   "timeout": timeout}
         if self.reasoning_effort:
@@ -153,21 +210,25 @@ class OpenAIInvestigator:
         """Return (LLMInvestigationOutput, metadata). Invalid structured output is retried once within the time budget;
         refusals, truncation and provider errors fail immediately. Never fabricates output."""
         deadline = time.monotonic() + self.total_timeout
-        usage_total, last_error, response_meta = {}, None, {}
+        usage_total, last_error, response_meta, responses = {}, None, {}, []
         for attempt in (1, 2):
             remaining = deadline - time.monotonic()
             if remaining <= 1:
-                raise LLMCallError(f"overall time budget of {self.total_timeout:.0f}s exhausted", "timeout_budget")
-            started = time.monotonic()
+                raise self._attach(LLMCallError(f"overall time budget of {self.total_timeout:.0f}s exhausted", "timeout_budget"),
+                                   usage_total, responses, attempt - 1)
+            started, req_t0 = time.monotonic(), time.perf_counter()
+            kwargs = self._request(self._request_kwargs(packet, min(self.timeout, remaining)))
             try:
-                raw = self._client.responses.with_raw_response.parse(**self._request_kwargs(packet, min(self.timeout, remaining)))
+                raw = self._client.responses.with_raw_response.parse(**kwargs)
                 body = raw.http_response.json()
             except Exception as e:  # mapped, never masked or fabricated
-                raise self._map_error(e) from e
+                err = self._map_error(e)
+                responses.append(self._failed_request(kwargs, req_t0, attempt, err))
+                raise self._attach(err, usage_total, responses, attempt) from e
             for k, v in self._usage(body).items():
                 usage_total[k] = (usage_total.get(k) or 0) + v if v is not None else usage_total.get(k)
-            response_meta = {"response_id": body.get("id"), "resolved_model": body.get("model"), "status": body.get("status"),
-                             "request_id": raw.http_response.headers.get("x-request-id")}
+            responses.append(self._telemetry(body, raw, kwargs, req_t0, attempt))
+            response_meta = dict(self._meta(body, raw), responses=list(responses))
             try:
                 self._check_body(body)
                 try:
@@ -181,9 +242,10 @@ class OpenAIInvestigator:
                              "usage": dict(usage_total, latency_seconds=round(time.monotonic() - started, 2))}
             except LLMCallError as e:
                 if e.kind not in self.RETRYABLE_KINDS:
-                    raise
+                    raise self._attach(e, usage_total, responses, attempt)
                 last_error = e
-        raise LLMCallError(f"model output invalid after 2 attempts: {str(last_error)[:500]}", "invalid_output")
+        raise self._attach(LLMCallError(f"model output invalid after 2 attempts: {str(last_error)[:500]}", "invalid_output"),
+                           usage_total, responses, 2)
 
     # -- V2 tools mode --------------------------------------------------------------------------------------------
     supports_tools = True
@@ -206,18 +268,22 @@ class OpenAIInvestigator:
         from .prompts import TOOLS_SYSTEM_PROMPT
         kwargs = {"model": self.model, "instructions": TOOLS_SYSTEM_PROMPT, "input": input_items, "tools": tools,
                   "tool_choice": "auto", "parallel_tool_calls": True, "text_format": LLMInvestigationOutput,
-                  "max_output_tokens": self.max_tokens, "store": False,
+                  "max_output_tokens": self.investigation_max_tokens, "store": False,
                   "include": ["reasoning.encrypted_content"],  # stateless (store=False) reasoning replay across rounds
                   "timeout": timeout}
         if self.reasoning_effort:
             kwargs["reasoning"] = {"effort": self.reasoning_effort}
+        kwargs["input"] = self._history(input_items)
+        req_t0 = time.perf_counter()
+        kwargs = self._request(kwargs)
         try:
             raw = self._client.responses.with_raw_response.parse(**kwargs)
             body = raw.http_response.json()
         except Exception as e:
-            raise self._map_error(e) from e
-        meta = {"response_id": body.get("id"), "resolved_model": body.get("model"), "status": body.get("status"),
-                "request_id": raw.http_response.headers.get("x-request-id")}
+            err = self._map_error(e)
+            err.turn = {"usage": {}, "provider_response": self._failed_request(kwargs, req_t0, None, err)}
+            raise err from e
+        meta = self._telemetry(body, raw, kwargs, req_t0, None)
         turn = {"output_items": list(body.get("output") or []), "usage": self._usage(body), "provider_response": meta}
         try:
             self._check_body(body)
@@ -225,41 +291,68 @@ class OpenAIInvestigator:
                      for o in turn["output_items"] if o.get("type") == "function_call"]
             if calls:  # arguments are validated by our own Pydantic models, not by the SDK parser
                 return dict(turn, kind="tool_calls", function_calls=calls)
-            try:
-                parsed = raw.parse().output_parsed
-            except ValidationError as e:
-                raise LLMCallError(f"structured output failed schema validation: {str(e)[:500]}", "invalid_output") from e
-            if parsed is None:
-                raise LLMCallError("response contained neither tool calls nor parsed structured output", "missing_output")
-            return dict(turn, kind="final", parsed=LLMInvestigationOutput.model_validate(parsed.model_dump()))
+            return dict(turn, kind="final", parsed=self._final_output(raw, body))
         except LLMCallError as e:  # the request was billed: keep its usage and the output for the transcript
             e.turn = turn
             raise
 
+    @staticmethod
+    def _history(input_items):
+        """The tool-loop history as sent (OpenAI: unchanged, including its own reasoning items)."""
+        return input_items
+
+    @staticmethod
+    def _final_output(raw, body):
+        """The final answer of a tool-loop response: the SDK's parsed structured output (OpenAI: text_format)."""
+        try:
+            parsed = raw.parse().output_parsed
+        except ValidationError as e:
+            raise LLMCallError(f"structured output failed schema validation: {str(e)[:500]}", "invalid_output") from e
+        if parsed is None:
+            raise LLMCallError("response contained neither tool calls nor parsed structured output", "missing_output")
+        return LLMInvestigationOutput.model_validate(parsed.model_dump())
+
     def structured_request(self, instructions, user_content, text_format):
+        """One structured request (closing summary). Also keeps the request's telemetry on the investigator as
+        last_structured_request (metadata on success, the error's telemetry on failure; reset at the start of every call),
+        so a caller can store the billed usage of a call whose OUTPUT is later refused (review DR-09)."""
+        self.last_structured_request = None
+        try:
+            out, meta = self._structured_request(instructions, user_content, text_format)
+        except LLMCallError as e:
+            self.last_structured_request = getattr(e, "telemetry", None)
+            raise
+        self.last_structured_request = meta
+        return out, meta
+
+    def _structured_request(self, instructions, user_content, text_format):
         """One structured-output request outside the investigation flow (used by the final-pack closing summary). Same
         client, configuration, error mapping and response checks as investigate(); one retry only for invalid output."""
         deadline = time.monotonic() + self.total_timeout
-        usage_total, last_error = {}, None
+        usage_total, last_error, responses = {}, None, []
         for attempt in (1, 2):
             remaining = deadline - time.monotonic()
             if remaining <= 1:
-                raise LLMCallError(f"overall time budget of {self.total_timeout:.0f}s exhausted", "timeout_budget")
-            started = time.monotonic()
+                raise self._attach(LLMCallError(f"overall time budget of {self.total_timeout:.0f}s exhausted", "timeout_budget"),
+                                   usage_total, responses, attempt - 1)
+            started, req_t0 = time.monotonic(), time.perf_counter()
             kwargs = {"model": self.model, "instructions": instructions, "input": [{"role": "user", "content": user_content}],
                       "text_format": text_format, "max_output_tokens": self.max_tokens, "store": False,
                       "timeout": min(self.timeout, remaining)}
             if self.reasoning_effort:
                 kwargs["reasoning"] = {"effort": self.reasoning_effort}
+            kwargs = self._request(kwargs)
             try:
                 raw = self._client.responses.with_raw_response.parse(**kwargs)
                 body = raw.http_response.json()
             except Exception as e:
-                raise self._map_error(e) from e
+                err = self._map_error(e)
+                responses.append(self._failed_request(kwargs, req_t0, attempt, err))
+                raise self._attach(err, usage_total, responses, attempt) from e
             for k, v in self._usage(body).items():
                 usage_total[k] = (usage_total.get(k) or 0) + v if v is not None else usage_total.get(k)
-            meta = {"response_id": body.get("id"), "resolved_model": body.get("model"), "status": body.get("status"),
-                    "request_id": raw.http_response.headers.get("x-request-id")}
+            responses.append(self._telemetry(body, raw, kwargs, req_t0, attempt))
+            meta = dict(self._meta(body, raw), responses=list(responses))
             try:
                 self._check_body(body)
                 try:
@@ -273,9 +366,10 @@ class OpenAIInvestigator:
                     "usage": dict(usage_total, latency_seconds=round(time.monotonic() - started, 2))}
             except LLMCallError as e:
                 if e.kind not in self.RETRYABLE_KINDS:
-                    raise
+                    raise self._attach(e, usage_total, responses, attempt)
                 last_error = e
-        raise LLMCallError(f"structured output invalid after 2 attempts: {str(last_error)[:500]}", "invalid_output")
+        raise self._attach(LLMCallError(f"structured output invalid after 2 attempts: {str(last_error)[:500]}", "invalid_output"),
+                           usage_total, responses, 2)
 
     def check_availability(self):
         """Smoke test without generating tokens: authenticate and look the configured model up."""
@@ -443,6 +537,8 @@ class ScriptedInvestigator:
 
 
 def investigator_from_env():
+    """The configured investigator. OpenAI is the only live provider of the application; there is no automatic fallback
+    provider, so a failed OpenAI request is reported as it failed and never routed elsewhere."""
     s = _settings()
     if s["provider"] == "openai":
         return OpenAIInvestigator()

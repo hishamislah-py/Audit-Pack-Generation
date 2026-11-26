@@ -1,0 +1,5 @@
+ Test Files  13 passed | 1 skipped (14)
+      Tests  81 passed | 2 skipped (83)
+vitest exit=0
+[32m✓ built in 333ms[39m
+build exit=0

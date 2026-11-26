@@ -1,0 +1,14 @@
+{
+  "label": "FUTURE (PROPOSED; not implemented; category names PENDING)",
+  "scenario_id": "TC04",
+  "root": "PENDING:UNMATCHED_TRANSACTION",
+  "gaps": [
+    "G-14",
+    "G-15",
+    "G-19"
+  ],
+  "expected": [
+    "Bank-side unmatched credit classified as a potential unidentified receipt",
+    "Possible requirement understatement of 650.00 reported (G-15)"
+  ]
+}

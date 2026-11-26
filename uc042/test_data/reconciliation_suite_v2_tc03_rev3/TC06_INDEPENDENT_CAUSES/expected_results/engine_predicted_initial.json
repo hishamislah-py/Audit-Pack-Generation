@@ -1,0 +1,91 @@
+{
+  "label": "ENGINE-PREDICTED (source reading of the reference engine; NOT EXECUTED; unverified)",
+  "scenario_id": "TC06",
+  "expected_case_status": "EXCEPTIONS_OPEN",
+  "non_passing_results": [
+    [
+      "C06-DIFFERENCE",
+      "2026-09-17/GBP",
+      "FAIL"
+    ],
+    [
+      "C11-BATCH-ARITH",
+      "AQ-EUR-20260922",
+      "FAIL"
+    ],
+    [
+      "CBAL-ROLLFWD",
+      "GBP/C0004 2026-09-17",
+      "FAIL"
+    ],
+    [
+      "CBAL-ROLLFWD",
+      "GBP/C0004 2026-09-18",
+      "FAIL"
+    ],
+    [
+      "CBAL-ROLLFWD",
+      "GBP/C0007 2026-09-17",
+      "FAIL"
+    ],
+    [
+      "RC4-DIRECT",
+      "TX-0917-00002",
+      "FAIL"
+    ]
+  ],
+  "exceptions": [
+    {
+      "exception_id": "EXC-TC06-01",
+      "severity": "Critical",
+      "root_cause": "INTERNAL_DIFFERENCE|2026-09-17/GBP",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC06-02",
+      "severity": "High",
+      "root_cause": "C11-BATCH-ARITH|AQ-EUR-20260922",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC06-03",
+      "severity": "High",
+      "root_cause": "CBAL-ROLLFWD|GBP/C0004 2026-09-17",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC06-04",
+      "severity": "High",
+      "root_cause": "CBAL-ROLLFWD|GBP/C0004 2026-09-18",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC06-05",
+      "severity": "High",
+      "root_cause": "CBAL-ROLLFWD|GBP/C0007 2026-09-17",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC06-06",
+      "severity": "High",
+      "root_cause": "RC4-DIRECT|TX-0917-00002",
+      "affected_results": 1
+    }
+  ],
+  "evidence_statuses": {},
+  "investigation_groups": [
+    [
+      "EXC-TC06-01",
+      "EXC-TC06-03",
+      "EXC-TC06-05"
+    ]
+  ],
+  "candidate_relationships": [],
+  "must_hold": [
+    "C04-REQUIREMENT 2026-09-17/GBP PASS (firm reported the overstated requirement)",
+    "No candidates"
+  ],
+  "notes": [
+    "PREDICTED OVER-GROUPING, UNVERIFIED (gap G-18): L3 lineage (b) is predicted to link the 17 Sep internal difference to EVERY same-day GBP roll-forward failure, including EXC-TC06-05 (C0007, cause A, whose snapshot is correct). EXC-TC06-04 (C0004 next day) and EXC-TC06-06 (C0007 RC4) are predicted ungrouped. This must be confirmed by an engine run before it is reported as engine behaviour."
+  ]
+}

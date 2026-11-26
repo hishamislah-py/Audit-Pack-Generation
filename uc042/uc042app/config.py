@@ -7,17 +7,18 @@ import os
 from dataclasses import dataclass, replace
 from pathlib import Path
 
-from uc042lib.final_pack.model import FINAL_PACKS_ROOT
 from uc042lib.investigation import config as inv_config
+from uc042lib.runtime_paths import default_final_packs_root, inside_project
 
 ENV_STATE_DIR = "UC042_APP_STATE_DIR"            # application state (jobs, reviews, decisions, registry)
 ENV_ANALYST_ID = "UC042_ANALYST_ID"              # reviewer reference written into decisions and final packs
 ENV_ANALYST_NAME = "UC042_ANALYST_NAME"
 ENV_CORS_ORIGINS = "UC042_CORS_ORIGINS"          # comma-separated; default: the local React dev server
 ENV_JOB_WORKERS = "UC042_JOB_WORKERS"
+ENV_AI_JOB_WORKERS = "UC042_AI_JOB_WORKERS"      # concurrent AI investigations (bounded lane; default 1)
 ENV_PACKS_ROOT = "UC042_PACKS_ROOT"
 ENV_INVESTIGATIONS_ROOT = "UC042_INVESTIGATIONS_ROOT"
-ENV_FINAL_PACKS_ROOT = "UC042_FINAL_PACKS_ROOT"
+ENV_FINAL_PACKS_ROOT = "UC042_FINAL_PACKS_ROOT"  # primary final packs; must be outside the repository (default: user data dir)
 ENV_DATASETS_ROOT = "UC042_DATASETS_ROOT"        # source datasets of the packs in UC042_PACKS_ROOT (default: September)
 ENV_DATABASE_URL = "UC042_DATABASE_URL"        # PostgreSQL (postgresql+pg8000://...); unset = file-backed state only
 ENV_DOCUMENT_STORE = "UC042_DOCUMENT_STORE"    # uploaded originals (content-addressed) and processing case folders
@@ -42,6 +43,13 @@ def _workers():
     return int(raw)
 
 
+def _ai_workers():
+    raw = os.environ.get(ENV_AI_JOB_WORKERS, "").strip() or "1"
+    if not raw.isdigit() or not 1 <= int(raw) <= 4:
+        raise ConfigurationError(f"{ENV_AI_JOB_WORKERS} must be an integer from 1 to 4")
+    return int(raw)
+
+
 @dataclass(frozen=True)
 class Settings:
     state_dir: Path
@@ -57,6 +65,12 @@ class Settings:
     document_store: Path | None = None
     environment_label: str = ""
     storage_profiles: tuple = ()
+    ai_job_workers: int = 1
+    # ZIP-only operation (17 Nov 2026): the individual-document upload / confirm / process / reconcile / document-review
+    # workflow is retired from active use. This switch is deliberately NOT read from the environment (from_env never sets
+    # it): a running application cannot re-enable the retired entry points. Only code (the regression tests that keep
+    # covering the retired workflow's shared engine path on historical-style data) can pass legacy_entry_points=True.
+    legacy_entry_points: bool = False
 
     @classmethod
     def from_env(cls, **overrides):
@@ -65,9 +79,9 @@ class Settings:
         origins = tuple(o.strip() for o in os.environ.get(ENV_CORS_ORIGINS, "").split(",") if o.strip()) or DEFAULT_CORS_ORIGINS
         values = dict(state_dir=path(ENV_STATE_DIR, DEFAULT_STATE_DIR), packs_root=path(ENV_PACKS_ROOT, inv_config.PACKS_ROOT),
                       investigations_root=path(ENV_INVESTIGATIONS_ROOT, inv_config.INVESTIGATIONS_ROOT),
-                      final_packs_root=path(ENV_FINAL_PACKS_ROOT, FINAL_PACKS_ROOT),
+                      final_packs_root=path(ENV_FINAL_PACKS_ROOT, default_final_packs_root()),
                       datasets_root=path(ENV_DATASETS_ROOT, inv_config.DATASETS_ROOT),
-                      cors_origins=origins, job_workers=_workers(),
+                      cors_origins=origins, job_workers=_workers(), ai_job_workers=_ai_workers(),
                       analyst_id=os.environ.get(ENV_ANALYST_ID, "").strip() or "local-analyst",
                       analyst_name=os.environ.get(ENV_ANALYST_NAME, "").strip() or "Local Analyst",
                       database_url=os.environ.get(ENV_DATABASE_URL, "").strip() or None,
@@ -105,6 +119,11 @@ class Settings:
                 root = Path(root).resolve()
                 if own == root or root in own.parents or own in root.parents:
                     raise ConfigurationError(f"the {label} directory must be separate from the {name} folder")
+        # Published final packs are runtime output: never inside the source repository (they would mix with the source
+        # tree and the historical artefacts it protects). The historical-demo profile keeps its own fixed location.
+        if inside_project(self.final_packs_root):
+            raise ConfigurationError(f"{ENV_FINAL_PACKS_ROOT} must be outside the source repository ({self.final_packs_root}); "
+                                     "set it to an absolute directory for published final packs")
         if "*" in self.cors_origins:
             raise ConfigurationError("a wildcard CORS origin is not allowed; list the frontend origin explicitly")
         if not (self.analyst_id and self.analyst_name):

@@ -1,0 +1,14 @@
+{
+ "fixture": "in10_malformed",
+ "note": "RECORDED TEST RESPONSE - not produced by a live model",
+ "match": {
+  "category": "IN-10",
+  "unresolved_headers": [
+   "entry_ref",
+   "acct_no",
+   "posting_dt",
+   "txn_amt"
+  ]
+ },
+ "response_text": "this is not JSON {\"columns\": ["
+}

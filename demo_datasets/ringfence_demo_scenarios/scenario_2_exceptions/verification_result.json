@@ -1,0 +1,1085 @@
+{
+ "scenario": "scenario_2_exceptions",
+ "customer_name": "Marlow Street Payments Ltd",
+ "reporting_period": "2026-07",
+ "zip_sha256": "52efcab2b1dde2c8236a4853e3be2a0987aba46ef118c07227b00f166d9b85b3",
+ "verdict": "PASS",
+ "checks_passed": 19,
+ "checks_total": 19,
+ "error": null,
+ "seconds": 3.0,
+ "checks": [
+  {
+   "id": "S2.CASE.registered",
+   "check": "case registered WAITING with the ZIP's SHA-256, no run yet",
+   "passed": true,
+   "observed": [
+    "WAITING",
+    "52efcab2b1dde2c8236a4853e3be2a0987aba46ef118c07227b00f166d9b85b3",
+    []
+   ],
+   "expected": [
+    "WAITING",
+    "52efcab2b1dde2c8236a4853e3be2a0987aba46ef118c07227b00f166d9b85b3",
+    []
+   ]
+  },
+  {
+   "id": "S2.RUN.completed",
+   "check": "Smart Parser run COMPLETED",
+   "passed": true,
+   "observed": "COMPLETED",
+   "expected": "COMPLETED"
+  },
+  {
+   "id": "S2.RUN.nothing_missing",
+   "check": "no missing category, no file requiring replacement, no refused upload",
+   "passed": true,
+   "observed": [
+    [],
+    [],
+    []
+   ],
+   "expected": [
+    [],
+    [],
+    []
+   ]
+  },
+  {
+   "id": "S2.REVIEW.none",
+   "check": "no mapping review needed (all CSVs canonical, AI disabled)",
+   "passed": true,
+   "observed": [],
+   "expected": []
+  },
+  {
+   "id": "S2.VAL.passed",
+   "check": "automatic package validation PASSED",
+   "passed": true,
+   "observed": "PASSED",
+   "expected": "PASSED"
+  },
+  {
+   "id": "S2.ACT.enabled",
+   "check": "Activate action enabled",
+   "passed": true,
+   "observed": true,
+   "expected": true
+  },
+  {
+   "id": "S2.ACT.snapshot",
+   "check": "activation created a snapshot",
+   "passed": true,
+   "observed": [
+    true,
+    true
+   ],
+   "expected": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "S2.REC.completed",
+   "check": "reconciliation finished and the case is COMPLETED",
+   "passed": true,
+   "observed": "COMPLETED",
+   "expected": "COMPLETED"
+  },
+  {
+   "id": "S2.KEY.case_status",
+   "check": "case_status equals the frozen key",
+   "passed": true,
+   "observed": [
+    "EXCEPTIONS_OPEN",
+    "EXCEPTIONS_OPEN"
+   ],
+   "expected": [
+    "EXCEPTIONS_OPEN",
+    "EXCEPTIONS_OPEN"
+   ]
+  },
+  {
+   "id": "S2.KEY.counts",
+   "check": "FAIL / INSUFFICIENT_EVIDENCE counts",
+   "passed": true,
+   "observed": {
+    "FAIL": 12,
+    "INSUFFICIENT_EVIDENCE": 0
+   },
+   "expected": {
+    "FAIL": 12,
+    "INSUFFICIENT_EVIDENCE": 0
+   }
+  },
+  {
+   "id": "S2.KEY.non_passing",
+   "check": "non-passing (check_id, scope, outcome) set equals the key",
+   "passed": true,
+   "observed": [
+    [
+     "BANK-CASH-LINK",
+     "BE-GBP-0717-X01",
+     "FAIL"
+    ],
+    [
+     "BANK-CASH-LINK",
+     "BE-GBP-0722-X02",
+     "FAIL"
+    ],
+    [
+     "C08-DIFFERENCE",
+     "2026-07-17/SGA-GBP-01",
+     "FAIL"
+    ],
+    [
+     "C08-DIFFERENCE",
+     "2026-07-20/SGA-GBP-01",
+     "FAIL"
+    ],
+    [
+     "C08-DIFFERENCE",
+     "2026-07-21/SGA-GBP-01",
+     "FAIL"
+    ],
+    [
+     "C11-BANK-ENTRY",
+     "BE-GBP-0717-X01",
+     "FAIL"
+    ],
+    [
+     "C11-BANK-ENTRY",
+     "BE-GBP-0722-X02",
+     "FAIL"
+    ],
+    [
+     "C11-BATCH-BANK",
+     "SB-GBP-20260701",
+     "FAIL"
+    ],
+    [
+     "C11-BATCH-BANK",
+     "SB-GBP-20260710",
+     "FAIL"
+    ],
+    [
+     "CASH-BANK-LINK",
+     "LE-GBP-0701-0005",
+     "FAIL"
+    ],
+    [
+     "CASH-BANK-LINK",
+     "LE-GBP-0710-0005",
+     "FAIL"
+    ],
+    [
+     "DISC-LOG",
+     "SGA-GBP-01 from 2026-07-17",
+     "FAIL"
+    ]
+   ],
+   "expected": [
+    [
+     "BANK-CASH-LINK",
+     "BE-GBP-0717-X01",
+     "FAIL"
+    ],
+    [
+     "BANK-CASH-LINK",
+     "BE-GBP-0722-X02",
+     "FAIL"
+    ],
+    [
+     "C08-DIFFERENCE",
+     "2026-07-17/SGA-GBP-01",
+     "FAIL"
+    ],
+    [
+     "C08-DIFFERENCE",
+     "2026-07-20/SGA-GBP-01",
+     "FAIL"
+    ],
+    [
+     "C08-DIFFERENCE",
+     "2026-07-21/SGA-GBP-01",
+     "FAIL"
+    ],
+    [
+     "C11-BANK-ENTRY",
+     "BE-GBP-0717-X01",
+     "FAIL"
+    ],
+    [
+     "C11-BANK-ENTRY",
+     "BE-GBP-0722-X02",
+     "FAIL"
+    ],
+    [
+     "C11-BATCH-BANK",
+     "SB-GBP-20260701",
+     "FAIL"
+    ],
+    [
+     "C11-BATCH-BANK",
+     "SB-GBP-20260710",
+     "FAIL"
+    ],
+    [
+     "CASH-BANK-LINK",
+     "LE-GBP-0701-0005",
+     "FAIL"
+    ],
+    [
+     "CASH-BANK-LINK",
+     "LE-GBP-0710-0005",
+     "FAIL"
+    ],
+    [
+     "DISC-LOG",
+     "SGA-GBP-01 from 2026-07-17",
+     "FAIL"
+    ]
+   ]
+  },
+  {
+   "id": "S2.KEY.result_root_causes",
+   "check": "root cause of every non-passing result equals the key",
+   "passed": true,
+   "observed": [
+    [
+     "BANK-CASH-LINK",
+     "BE-GBP-0717-X01",
+     "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01"
+    ],
+    [
+     "BANK-CASH-LINK",
+     "BE-GBP-0722-X02",
+     "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02"
+    ],
+    [
+     "C08-DIFFERENCE",
+     "2026-07-17/SGA-GBP-01",
+     "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60"
+    ],
+    [
+     "C08-DIFFERENCE",
+     "2026-07-20/SGA-GBP-01",
+     "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60"
+    ],
+    [
+     "C08-DIFFERENCE",
+     "2026-07-21/SGA-GBP-01",
+     "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60"
+    ],
+    [
+     "C11-BANK-ENTRY",
+     "BE-GBP-0717-X01",
+     "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01"
+    ],
+    [
+     "C11-BANK-ENTRY",
+     "BE-GBP-0722-X02",
+     "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02"
+    ],
+    [
+     "C11-BATCH-BANK",
+     "SB-GBP-20260701",
+     "C11-BATCH-BANK|SB-GBP-20260701"
+    ],
+    [
+     "C11-BATCH-BANK",
+     "SB-GBP-20260710",
+     "C11-BATCH-BANK|SB-GBP-20260710"
+    ],
+    [
+     "CASH-BANK-LINK",
+     "LE-GBP-0701-0005",
+     "CASH-BANK-LINK|LE-GBP-0701-0005"
+    ],
+    [
+     "CASH-BANK-LINK",
+     "LE-GBP-0710-0005",
+     "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005"
+    ],
+    [
+     "DISC-LOG",
+     "SGA-GBP-01 from 2026-07-17",
+     "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60"
+    ]
+   ],
+   "expected": [
+    [
+     "BANK-CASH-LINK",
+     "BE-GBP-0717-X01",
+     "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01"
+    ],
+    [
+     "BANK-CASH-LINK",
+     "BE-GBP-0722-X02",
+     "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02"
+    ],
+    [
+     "C08-DIFFERENCE",
+     "2026-07-17/SGA-GBP-01",
+     "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60"
+    ],
+    [
+     "C08-DIFFERENCE",
+     "2026-07-20/SGA-GBP-01",
+     "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60"
+    ],
+    [
+     "C08-DIFFERENCE",
+     "2026-07-21/SGA-GBP-01",
+     "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60"
+    ],
+    [
+     "C11-BANK-ENTRY",
+     "BE-GBP-0717-X01",
+     "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01"
+    ],
+    [
+     "C11-BANK-ENTRY",
+     "BE-GBP-0722-X02",
+     "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02"
+    ],
+    [
+     "C11-BATCH-BANK",
+     "SB-GBP-20260701",
+     "C11-BATCH-BANK|SB-GBP-20260701"
+    ],
+    [
+     "C11-BATCH-BANK",
+     "SB-GBP-20260710",
+     "C11-BATCH-BANK|SB-GBP-20260710"
+    ],
+    [
+     "CASH-BANK-LINK",
+     "LE-GBP-0701-0005",
+     "CASH-BANK-LINK|LE-GBP-0701-0005"
+    ],
+    [
+     "CASH-BANK-LINK",
+     "LE-GBP-0710-0005",
+     "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005"
+    ],
+    [
+     "DISC-LOG",
+     "SGA-GBP-01 from 2026-07-17",
+     "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60"
+    ]
+   ]
+  },
+  {
+   "id": "S2.KEY.evidence_refs",
+   "check": "evidence references (category:file#line) equal the key",
+   "passed": true,
+   "observed": [],
+   "expected": []
+  },
+  {
+   "id": "S2.KEY.exception_count",
+   "check": "exception count",
+   "passed": true,
+   "observed": [
+    7,
+    7
+   ],
+   "expected": [
+    7,
+    7
+   ]
+  },
+  {
+   "id": "S2.KEY.exception_root_causes",
+   "check": "exception root causes",
+   "passed": true,
+   "observed": [
+    "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+    "C11-BATCH-BANK|SB-GBP-20260701",
+    "C11-BATCH-BANK|SB-GBP-20260710",
+    "CASH-BANK-LINK|LE-GBP-0701-0005",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02",
+    "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005"
+   ],
+   "expected": [
+    "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+    "C11-BATCH-BANK|SB-GBP-20260701",
+    "C11-BATCH-BANK|SB-GBP-20260710",
+    "CASH-BANK-LINK|LE-GBP-0701-0005",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02",
+    "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005"
+   ]
+  },
+  {
+   "id": "S2.KEY.exception_fields",
+   "check": "exception severity / affected results / amount / dates / evidence status",
+   "passed": true,
+   "observed": [
+    {
+     "severity": "Critical",
+     "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+     "affected_results": "4",
+     "amount": "-1284.60",
+     "first_date": "2026-07-17",
+     "last_date": "2026-07-21",
+     "evidence_status": "NOT_EVIDENCED"
+    },
+    {
+     "severity": "High",
+     "root_cause": "C11-BATCH-BANK|SB-GBP-20260701",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "",
+     "last_date": "",
+     "evidence_status": ""
+    },
+    {
+     "severity": "High",
+     "root_cause": "C11-BATCH-BANK|SB-GBP-20260710",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "",
+     "last_date": "",
+     "evidence_status": ""
+    },
+    {
+     "severity": "High",
+     "root_cause": "CASH-BANK-LINK|LE-GBP-0701-0005",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "",
+     "last_date": "",
+     "evidence_status": ""
+    },
+    {
+     "severity": "High",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01",
+     "affected_results": "2",
+     "amount": "-1284.60",
+     "first_date": "2026-07-17",
+     "last_date": "2026-07-17",
+     "evidence_status": ""
+    },
+    {
+     "severity": "High",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02",
+     "affected_results": "2",
+     "amount": "1284.60",
+     "first_date": "2026-07-22",
+     "last_date": "2026-07-22",
+     "evidence_status": ""
+    },
+    {
+     "severity": "High",
+     "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "",
+     "last_date": "",
+     "evidence_status": ""
+    }
+   ],
+   "expected": [
+    {
+     "severity": "Critical",
+     "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+     "affected_results": "4",
+     "amount": "-1284.60",
+     "first_date": "2026-07-17",
+     "last_date": "2026-07-21",
+     "evidence_status": "NOT_EVIDENCED"
+    },
+    {
+     "severity": "High",
+     "root_cause": "C11-BATCH-BANK|SB-GBP-20260701",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "",
+     "last_date": "",
+     "evidence_status": ""
+    },
+    {
+     "severity": "High",
+     "root_cause": "C11-BATCH-BANK|SB-GBP-20260710",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "",
+     "last_date": "",
+     "evidence_status": ""
+    },
+    {
+     "severity": "High",
+     "root_cause": "CASH-BANK-LINK|LE-GBP-0701-0005",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "",
+     "last_date": "",
+     "evidence_status": ""
+    },
+    {
+     "severity": "High",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01",
+     "affected_results": "2",
+     "amount": "-1284.60",
+     "first_date": "2026-07-17",
+     "last_date": "2026-07-17",
+     "evidence_status": ""
+    },
+    {
+     "severity": "High",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02",
+     "affected_results": "2",
+     "amount": "1284.60",
+     "first_date": "2026-07-22",
+     "last_date": "2026-07-22",
+     "evidence_status": ""
+    },
+    {
+     "severity": "High",
+     "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "",
+     "last_date": "",
+     "evidence_status": ""
+    }
+   ]
+  },
+  {
+   "id": "S2.KEY.groups",
+   "check": "investigation groups (root-cause sets of multi-exception groups) and their count",
+   "passed": true,
+   "observed": [
+    3,
+    [
+     [
+      "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+      "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01",
+      "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02"
+     ],
+     [
+      "C11-BATCH-BANK|SB-GBP-20260701",
+      "CASH-BANK-LINK|LE-GBP-0701-0005"
+     ],
+     [
+      "C11-BATCH-BANK|SB-GBP-20260710",
+      "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005"
+     ]
+    ]
+   ],
+   "expected": [
+    3,
+    [
+     [
+      "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+      "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01",
+      "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02"
+     ],
+     [
+      "C11-BATCH-BANK|SB-GBP-20260701",
+      "CASH-BANK-LINK|LE-GBP-0701-0005"
+     ],
+     [
+      "C11-BATCH-BANK|SB-GBP-20260710",
+      "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005"
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "S2.API.exception_detail",
+   "check": "every exception detail resolves with evidence rows",
+   "passed": true,
+   "observed": true,
+   "expected": true
+  },
+  {
+   "id": "S2.API.actions_after",
+   "check": "completed case offers no enabled action",
+   "passed": true,
+   "observed": [],
+   "expected": []
+  }
+ ],
+ "observed": {
+  "server": {
+   "port": 8792,
+   "root": "C:\\u42v\\rfdata_ws_2",
+   "llm": {
+    "mode": "DISABLED",
+    "label": "AI proposals disabled",
+    "fixtures": []
+   },
+   "engine_configured": true,
+   "reviewer": {
+    "reviewer_id": "analyst-1",
+    "role": "analyst",
+    "kind": "TEST"
+   }
+  },
+  "case_ref": "RF-2026-07-001",
+  "smart_parser_run": {
+   "run_id": "RUN-2026-07-001-01-d9ecc1",
+   "status": "COMPLETED",
+   "failure": null
+  },
+  "run_stages": [
+   {
+    "key": "init",
+    "status": "completed"
+   },
+   {
+    "key": "read",
+    "status": "completed"
+   },
+   {
+    "key": "identify",
+    "status": "completed"
+   },
+   {
+    "key": "structure",
+    "status": "completed"
+   },
+   {
+    "key": "mapping",
+    "status": "completed"
+   },
+   {
+    "key": "proposals",
+    "status": "not_required"
+   },
+   {
+    "key": "review",
+    "status": "not_required"
+   },
+   {
+    "key": "previews",
+    "status": "completed"
+   },
+   {
+    "key": "validation",
+    "status": "completed"
+   }
+  ],
+  "llm_mode": {
+   "mode": "DISABLED",
+   "label": "AI proposals disabled",
+   "fixtures": []
+  },
+  "outstanding_after_run": {
+   "mapping_decisions": [],
+   "missing_categories": [],
+   "files_requiring_replacement": [],
+   "refused_uploads": [],
+   "other": [
+    {
+     "kind": "ACTIVATE",
+     "detail": "validation passed: the package can be activated"
+    }
+   ]
+  },
+  "slots_after_run": [
+   {
+    "category": "IN-01",
+    "status": "VALIDATED",
+    "file": "MSP_Jul26_01_calendar.csv"
+   },
+   {
+    "category": "IN-02",
+    "status": "VALIDATED",
+    "file": "MSP_Jul26_02_account_register.csv"
+   },
+   {
+    "category": "IN-03",
+    "status": "VALIDATED",
+    "file": "MSP_Jul26_03_client_positions.csv"
+   },
+   {
+    "category": "IN-04",
+    "status": "VALIDATED",
+    "file": "MSP_Jul26_04_suspense_receipts.csv"
+   },
+   {
+    "category": "IN-05",
+    "status": "VALIDATED",
+    "file": "MSP_Jul26_05_internal_reconciliations.csv"
+   },
+   {
+    "category": "IN-06",
+    "status": "VALIDATED",
+    "file": "MSP_Jul26_06_external_reconciliations.csv"
+   },
+   {
+    "category": "IN-07",
+    "status": "VALIDATED",
+    "file": "MSP_Jul26_07_bank_balance_confirmations_1700.csv"
+   },
+   {
+    "category": "IN-08",
+    "status": "VALIDATED",
+    "file": "MSP_Jul26_08_bank_eod_statements.csv"
+   },
+   {
+    "category": "IN-09",
+    "status": "VALIDATED",
+    "file": "MSP_Jul26_09_bank_statement_entries.csv"
+   },
+   {
+    "category": "IN-10",
+    "status": "VALIDATED",
+    "file": "MSP_Jul26_10_cashbook.csv"
+   },
+   {
+    "category": "IN-11",
+    "status": "VALIDATED",
+    "file": "MSP_Jul26_11_customer_transactions.csv"
+   },
+   {
+    "category": "IN-12",
+    "status": "VALIDATED",
+    "file": "MSP_Jul26_12_settlement_batches.csv"
+   },
+   {
+    "category": "IN-13",
+    "status": "VALIDATED",
+    "file": "MSP_Jul26_13_settlement_batch_lines.csv"
+   },
+   {
+    "category": "IN-14",
+    "status": "VALIDATED",
+    "file": "MSP_Jul26_14_discrepancy_register.csv"
+   },
+   {
+    "category": "IN-15",
+    "status": "VALIDATED",
+    "file": "MSP_Calder_safeguarding_letter_GBP.pdf"
+   },
+   {
+    "category": "IN-16",
+    "status": "VALIDATED",
+    "file": "MSP_Calder_safeguarding_letter_EUR.pdf"
+   },
+   {
+    "category": "IN-17",
+    "status": "VALIDATED",
+    "file": "MSP_reconciliation_policy_v1.2.pdf"
+   },
+   {
+    "category": "IN-18",
+    "status": "VALIDATED",
+    "file": "MSP_governance_register_2026-07.pdf"
+   },
+   {
+    "category": "IN-19",
+    "status": "VALIDATED",
+    "file": "MSP_REP027_submission_receipt_2026-06.pdf"
+   }
+  ],
+  "review_steps": [],
+  "validation": {
+   "at": "2026-11-19T12:03:52+00:00",
+   "passed": true,
+   "checks": [
+    {
+     "check_id": "PV-01",
+     "name": "every required evidence category is present",
+     "passed": true,
+     "detail": "17 required categories"
+    },
+    {
+     "check_id": "PV-02",
+     "name": "exactly one selected version per category",
+     "passed": true,
+     "detail": "unselected: []; multiple active: {}"
+    },
+    {
+     "check_id": "PV-03",
+     "name": "no file awaits resubmission",
+     "passed": true,
+     "detail": "awaiting a corrected file: []"
+    },
+    {
+     "check_id": "PV-04",
+     "name": "no selected / required file is under review",
+     "passed": true,
+     "detail": "under review: []"
+    },
+    {
+     "check_id": "PV-05",
+     "name": "every selected file passes its file-level checks (re-run now)",
+     "passed": true,
+     "detail": "{}"
+    },
+    {
+     "check_id": "PV-06",
+     "name": "reporting periods consistent with the package",
+     "passed": true,
+     "detail": "2026-07; inconsistent: []"
+    },
+    {
+     "check_id": "PV-07",
+     "name": "package membership valid (same package, own category slot)",
+     "passed": true,
+     "detail": "[]"
+    },
+    {
+     "check_id": "PV-08",
+     "name": "every selected file has a valid intake and SHA-256 (stored bytes re-hashed)",
+     "passed": true,
+     "detail": "[]"
+    },
+    {
+     "check_id": "PV-09",
+     "name": "the selection references exactly the validated file versions",
+     "passed": true,
+     "detail": "[]"
+    }
+   ]
+  },
+  "snapshot_id": "SNAP-001-df21eb01",
+  "reconciliation": {
+   "run_id": "RECON-20261119T120352Z-df21eb01",
+   "case_status": "EXCEPTIONS_OPEN",
+   "outcomes": {
+    "PASS": 2056,
+    "FAIL": 12
+   },
+   "total_results": 2068,
+   "controls_endpoint_total": 2068,
+   "exception_count": 7,
+   "by_severity": {
+    "Critical": 1,
+    "High": 6
+   },
+   "integrity_checks": {
+    "all_selected_categories_accepted_by_engine": true,
+    "engine_received_exact_bytes": true,
+    "engine_category_agrees": true,
+    "no_superseded_version_staged": true
+   },
+   "investigation_groups": {
+    "GRP-CASE-01": [
+     "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+     "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01",
+     "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02"
+    ],
+    "GRP-CASE-02": [
+     "C11-BATCH-BANK|SB-GBP-20260701",
+     "CASH-BANK-LINK|LE-GBP-0701-0005"
+    ],
+    "GRP-CASE-03": [
+     "C11-BATCH-BANK|SB-GBP-20260710",
+     "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005"
+    ]
+   },
+   "investigation_group_ids_total": 3,
+   "exceptions": [
+    {
+     "exception_id": "EXC-CASE-01",
+     "severity": "Critical",
+     "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+     "affected_results": "4",
+     "amount": "-1284.60",
+     "first_date": "2026-07-17",
+     "last_date": "2026-07-21",
+     "evidence_status": "NOT_EVIDENCED",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-02",
+     "severity": "High",
+     "root_cause": "C11-BATCH-BANK|SB-GBP-20260701",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "",
+     "last_date": "",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-02"
+    },
+    {
+     "exception_id": "EXC-CASE-03",
+     "severity": "High",
+     "root_cause": "C11-BATCH-BANK|SB-GBP-20260710",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "",
+     "last_date": "",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-03"
+    },
+    {
+     "exception_id": "EXC-CASE-04",
+     "severity": "High",
+     "root_cause": "CASH-BANK-LINK|LE-GBP-0701-0005",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "",
+     "last_date": "",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-02"
+    },
+    {
+     "exception_id": "EXC-CASE-05",
+     "severity": "High",
+     "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "",
+     "last_date": "",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-03"
+    },
+    {
+     "exception_id": "EXC-CASE-06",
+     "severity": "High",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01",
+     "affected_results": "2",
+     "amount": "-1284.60",
+     "first_date": "2026-07-17",
+     "last_date": "2026-07-17",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-07",
+     "severity": "High",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02",
+     "affected_results": "2",
+     "amount": "1284.60",
+     "first_date": "2026-07-22",
+     "last_date": "2026-07-22",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    }
+   ],
+   "exception_evidence_rows": {
+    "EXC-CASE-01": 7,
+    "EXC-CASE-02": 3,
+    "EXC-CASE-03": 1,
+    "EXC-CASE-04": 3,
+    "EXC-CASE-05": 1,
+    "EXC-CASE-06": 1,
+    "EXC-CASE-07": 1
+   },
+   "non_passing": [
+    {
+     "check_id": "CASH-BANK-LINK",
+     "scope": "LE-GBP-0701-0005",
+     "outcome": "FAIL",
+     "root_cause": "CASH-BANK-LINK|LE-GBP-0701-0005"
+    },
+    {
+     "check_id": "CASH-BANK-LINK",
+     "scope": "LE-GBP-0710-0005",
+     "outcome": "FAIL",
+     "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005"
+    },
+    {
+     "check_id": "BANK-CASH-LINK",
+     "scope": "BE-GBP-0717-X01",
+     "outcome": "FAIL",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01"
+    },
+    {
+     "check_id": "BANK-CASH-LINK",
+     "scope": "BE-GBP-0722-X02",
+     "outcome": "FAIL",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02"
+    },
+    {
+     "check_id": "C08-DIFFERENCE",
+     "scope": "2026-07-17/SGA-GBP-01",
+     "outcome": "FAIL",
+     "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60"
+    },
+    {
+     "check_id": "C08-DIFFERENCE",
+     "scope": "2026-07-20/SGA-GBP-01",
+     "outcome": "FAIL",
+     "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60"
+    },
+    {
+     "check_id": "C08-DIFFERENCE",
+     "scope": "2026-07-21/SGA-GBP-01",
+     "outcome": "FAIL",
+     "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60"
+    },
+    {
+     "check_id": "C11-BATCH-BANK",
+     "scope": "SB-GBP-20260701",
+     "outcome": "FAIL",
+     "root_cause": "C11-BATCH-BANK|SB-GBP-20260701"
+    },
+    {
+     "check_id": "C11-BATCH-BANK",
+     "scope": "SB-GBP-20260710",
+     "outcome": "FAIL",
+     "root_cause": "C11-BATCH-BANK|SB-GBP-20260710"
+    },
+    {
+     "check_id": "C11-BANK-ENTRY",
+     "scope": "BE-GBP-0717-X01",
+     "outcome": "FAIL",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01"
+    },
+    {
+     "check_id": "C11-BANK-ENTRY",
+     "scope": "BE-GBP-0722-X02",
+     "outcome": "FAIL",
+     "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02"
+    },
+    {
+     "check_id": "DISC-LOG",
+     "scope": "SGA-GBP-01 from 2026-07-17",
+     "outcome": "FAIL",
+     "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60"
+    }
+   ]
+  }
+ },
+ "post_transcript": [
+  {
+   "method": "POST",
+   "path": "/api/cases",
+   "status": 200,
+   "request": {
+    "customer_name": "Marlow Street Payments Ltd",
+    "reporting_period": "2026-07",
+    "zip_name": "Marlow_Street_Payments_Ltd_2026-07.zip"
+   },
+   "error": null
+  },
+  {
+   "method": "POST",
+   "path": "/api/cases/RF-2026-07-001/start",
+   "status": 200,
+   "request": {
+    "expected_revision": 1
+   },
+   "error": null
+  },
+  {
+   "method": "POST",
+   "path": "/api/cases/RF-2026-07-001/activate",
+   "status": 200,
+   "request": {
+    "confirm": true,
+    "expected_revision": 6
+   },
+   "error": null
+  },
+  {
+   "method": "POST",
+   "path": "/api/cases/RF-2026-07-001/reconcile",
+   "status": 200,
+   "request": {
+    "expected_revision": 7
+   },
+   "error": null
+  }
+ ]
+}

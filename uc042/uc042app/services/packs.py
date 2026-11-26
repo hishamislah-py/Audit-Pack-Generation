@@ -79,6 +79,26 @@ class PackService:
                 for c in pack["control_register"] for r in c["results"] if r["result_id"] in wanted]
 
     @staticmethod
+    def controls(pack):
+        """Phase B: the control register as the engine recorded it, one row per check (counts per outcome, never
+        recalculated), plus the exceptions whose affected results include a FAIL of that check."""
+        owners = {}
+        for x in pack["exception_register"]["exceptions"]:
+            for rid in x.get("affected_result_ids") or []:
+                owners.setdefault(rid, set()).add(x["exception_id"])
+        out = []
+        for c in pack["control_register"]:
+            counts = {}
+            failed_in = set()
+            for r in c["results"]:
+                counts[r["outcome"]] = counts.get(r["outcome"], 0) + 1
+                if r["outcome"] == "FAIL":
+                    failed_in |= owners.get(r["result_id"], set())
+            out.append({"check_id": c["check_id"], "control_code": c["control_code"], "control_name": c["control_name"],
+                        "check_outcome": c.get("check_outcome"), "result_counts": counts, "exception_ids": sorted(failed_in)})
+        return {"pack_id": pack["metadata"]["pack_id"], "checks": out}
+
+    @staticmethod
     def reconciliation(pack):
         """The pack's reconciliation tables, copied as reported (the pack computes no totals and nothing is recalculated)."""
         r, m = pack["reconciliation_summary"], pack["metadata"]

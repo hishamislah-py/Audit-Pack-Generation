@@ -49,6 +49,26 @@ class RepositoryContract:
                     date_to="2026-10-31", record_count=3, validation_status="VALID", checks={"messages": []},
                     storage_ref=f"object:{sha}", created_at=NOW, **kw)
 
+    def review_rec(self, n, submission_id=None, inv="INV-EXC-1-000000000001"):
+        return {"analyst_review_id": f"AR-{n:024d}", "period_id": "PER-2026-09", "pack_id": "PACK-X", "exception_id": "EXC-1",
+                "investigation_id": inv, "findings_sha256": "a" * 64, "findings_schema_version": "uc042-investigation-findings/1.4",
+                "decision": "ACCEPT", "comment": "", "rejection_reason": "", "reviewer_id": "analyst-1", "reviewer_name": "Test Analyst",
+                "decided_at": NOW, "revision": 1, "supersedes_review_id": None, "submission_id": submission_id}
+
+    def test_analyst_review_revisions_are_numbered_per_submission_scope(self):
+        """Migration 0006: legacy decisions (submission_id NULL) and each submission's decisions have their own revisions."""
+        r = self.repos.investigation_reviews
+        sub_a, sub_b = "SUB-" + "a" * 24, "SUB-" + "b" * 24
+        self.assertEqual(r.append(self.review_rec(1), 0)["revision"], 1)
+        self.assertEqual(r.append(self.review_rec(2, sub_a), 0)["revision"], 1)  # same investigation, other scope: revision 1
+        self.assertEqual(r.append(self.review_rec(3, sub_b), 0)["revision"], 1)
+        self.assertEqual(r.append(self.review_rec(4, sub_a), 1)["revision"], 2)
+        for rec, rev in ((self.review_rec(5, sub_a), 1), (self.review_rec(6), 0), (self.review_rec(7, sub_b), 0)):
+            with self.assertRaises(ConcurrentUpdate):  # an out-of-date revision in its own scope is refused
+                r.append(rec, rev)
+        rows = r.list(investigation_id="INV-EXC-1-000000000001")
+        self.assertEqual(sorted((x["submission_id"] or "", x["revision"]) for x in rows), [("", 1), (sub_a, 1), (sub_a, 2), (sub_b, 1)])
+
     # ------------------------------------------------------------------ application state
     def test_jobs_round_trip_and_filter(self):
         job = {"job_id": "JOB-1", "operation": "INVESTIGATION", "pack_id": "P1", "exception_id": "E1", "status": "QUEUED",
@@ -179,6 +199,23 @@ class PostgresMigrations(unittest.TestCase):
             check_schema(self.engine)
         upgrade(TEST_DATABASE_URL)
         self.assertEqual(self.tables(), TABLES)
+
+    def test_0006_downgrade_refuses_while_submission_decisions_exist(self):
+        from alembic import command
+        from uc042app.db import alembic_config
+        upgrade(TEST_DATABASE_URL)
+        repos = SqlRepositories(make_sessions(self.engine))
+        repos.investigation_reviews.append(RepositoryContract.review_rec(None, 1, "SUB-" + "a" * 24), 0)
+        with self.assertRaises(RuntimeError) as e:
+            command.downgrade(alembic_config(TEST_DATABASE_URL), "0005_investigation_reviews")
+        self.assertIn("submission-scoped", str(e.exception))
+        reset_test_database(TEST_DATABASE_URL)  # without submission rows the downgrade and the upgrade both apply
+        upgrade(TEST_DATABASE_URL)
+        command.downgrade(alembic_config(TEST_DATABASE_URL), "0005_investigation_reviews")
+        cols = {c["name"] for c in inspect(self.engine).get_columns("investigation_reviews", schema="audit")}
+        self.assertNotIn("submission_id", cols)
+        upgrade(TEST_DATABASE_URL)
+        check_schema(self.engine)
 
     def test_backend_refuses_an_unmigrated_database(self):
         from alembic import command

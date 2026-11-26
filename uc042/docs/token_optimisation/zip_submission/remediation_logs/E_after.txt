@@ -1,0 +1,14 @@
+...F.
+======================================================================
+FAIL: test_submission_run_lookup_is_indexed_and_correct (tests.test_zip_only_workflow.ApiAndStatus.test_submission_run_lookup_is_indexed_and_correct)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 419, in test_submission_run_lookup_is_indexed_and_correct
+    self.assertEqual(scans.call_count, 0)  # no scan of every run per lookup
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 5 tests in 24.885s
+
+FAILED (failures=1)

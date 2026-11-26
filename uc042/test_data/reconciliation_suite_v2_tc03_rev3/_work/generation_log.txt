@@ -1,0 +1,2 @@
+Generated 2026-11-23 by tools/generate_suite.py
+TC03: 11 op(s) on IN-06, IN-07, IN-08, IN-09, IN-14

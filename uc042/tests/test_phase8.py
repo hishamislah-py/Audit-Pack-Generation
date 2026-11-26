@@ -4,6 +4,8 @@ lineage-aware final-pack versions, investigation visibility, dashboard counts an
 Disposable state only (temporary roots with COPIES of real packs, datasets, investigations and the February final pack;
 a temporary SQLite database or the disposable PostgreSQL test database). Offline: the provider is the test mock and a
 live provider is refused (api_support guards). No live AI call is made. ILLUSTRATIVE SYNTHETIC DATA."""
+import json
+import os
 import threading
 from unittest import mock
 import unittest
@@ -21,8 +23,21 @@ SC5A_URL = f"/api/v1/packs/{SC5A_PACK}/exceptions/{SC5A_EXC}/investigations"
 
 
 def generate_final_pack(case, pack_id):
-    """Open a review explicitly, preview (authorised; mock summary), GENERATE. Returns the final pack record."""
+    """Open a review explicitly, preview (authorised; mock summary), GENERATE. Returns the final pack record.
+
+    A processed pack's exceptions are investigated automatically (mandatory): the helper first lets those jobs finish, and
+    gives each exception whose investigation failed the documented disposition (excluded by the analyst, with a reason)."""
+    for j in case.svc.runner.repo.list(pack_id=pack_id):
+        if j["operation"] == "INVESTIGATION" and j["status"] in ("QUEUED", "RUNNING"):
+            case.wait_job(j["job_id"])
     s = case.post(f"/api/v1/packs/{pack_id}/reviews").json()
+    failed = {b["detail"].split(":")[0] for b in s["readiness"]["blockers"] if b["code"] == "INVESTIGATION_FAILED_NO_DISPOSITION"}
+    if failed:
+        sel = [{"exception_id": x["exception_id"], "inclusion": "EXCLUDED_BY_ANALYST", "reason": "AI investigation failed (test provider)"}
+               if x["exception_id"] in failed else x for x in s["selections"]]
+        r = case.patch(f"/api/v1/reviews/{s['review_id']}/selections", {"selections": sel, "expected_revision": s["revision"]})
+        case.assertEqual(r.status_code, 200, r.text)
+        s = r.json()
     j = case.post(f"/api/v1/reviews/{s['review_id']}/preview", {"authorization": AI_OK})
     case.assertEqual(j.status_code, 202, j.text)
     case.assertEqual(case.wait_job(j.json()["job_id"])["status"], "COMPLETED")
@@ -94,7 +109,7 @@ class AiAuthorization(ApiCase):
 
     def test_an_interrupted_job_stays_traceable_to_its_authorisation(self):
         # The process "dies" right after the authorised job was submitted: the job never runs.
-        with mock.patch.object(self.svc.runner, "submit", side_effect=lambda job, fn: job):
+        with mock.patch.object(self.svc.runner, "submit", side_effect=lambda job, fn, **lane: job):  # AI jobs pass lane="ai"
             job = self.post(SC5A_URL, {"mode": "tools", "authorization": AI_OK}).json()
         self.restart()  # start-up recovery: the job is interrupted, never re-run
         job = self.get(f"/api/v1/jobs/{job['job_id']}").json()
@@ -129,8 +144,18 @@ class AiAuthorization(ApiCase):
 
     def test_configuration_endpoint_shows_what_is_authorised(self):
         c = self.get("/api/v1/ai/configuration").json()
-        self.assertEqual(set(c["statements"]), {"INVESTIGATION", "CLOSING_SUMMARY"})
+        self.assertEqual(set(c["statements"]), {"INVESTIGATION", "CLOSING_SUMMARY", "AUTO_INVESTIGATION"})
         self.assertIn("charges", c["charges_notice"])
+
+    def test_configuration_names_the_missing_key_without_any_value(self):
+        with mock.patch.dict(os.environ, {"OPENAI_API_KEY": "", "UC042_LLM_PROVIDER": "openai"}):
+            c = self.get("/api/v1/ai/configuration").json()
+        self.assertFalse(c["provider_configured"])
+        self.assertEqual(c["configuration_problem"], "OPENAI_API_KEY is not set in the backend environment")
+        with mock.patch.dict(os.environ, {"OPENAI_API_KEY": "sk-test-not-a-real-key", "UC042_LLM_PROVIDER": "openai"}):
+            c = self.get("/api/v1/ai/configuration").json()
+        self.assertEqual((c["provider_configured"], c["configuration_problem"]), (True, None))
+        self.assertNotIn("sk-test", json.dumps(c))
 
 
 @unittest.skipUnless(TEST_DATABASE_URL, "UC042_TEST_DATABASE_URL is not set")
@@ -294,6 +319,7 @@ class HistoricalReassessment(UnifiedBackendCase):
         calls = self.get(f"/api/v1/investigations/{FEB_INV_REGISTERED}/tool-calls").json()
         self.assertEqual(len(calls["tool_calls"]), 8)
         self.assertTrue(all({"tool", "status", "evidence_ids"} <= set(c) for c in calls["tool_calls"]))
+        self.accept_investigation(FEB_INV_REGISTERED)  # the analyst's ACCEPT before the final review
         s = self.post(f"/api/v1/packs/{FEB_PACK}/reviews").json()
         job = self.post(f"/api/v1/reviews/{s['review_id']}/preview", {"authorization": AI_OK}).json()
         self.assertEqual(self.wait_job(job["job_id"])["status"], "COMPLETED")

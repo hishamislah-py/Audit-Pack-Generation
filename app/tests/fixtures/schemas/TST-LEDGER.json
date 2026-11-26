@@ -1,0 +1,23 @@
+{
+  "category": "TST-LEDGER",
+  "title": "Synthetic ledger (test only)",
+  "evidence_format": "csv",
+  "schema_version": "1.0.0",
+  "verification_status": "provisional",
+  "definition_source": "synthetic test fixture",
+  "fields": [
+    {"name": "entry_id", "type": "string", "required": true, "nullable": false, "aliases": ["Entry Ref", "Ref"]},
+    {"name": "entry_date", "type": "date", "required": true, "nullable": false, "aliases": ["Posting Date", "Date"]},
+    {"name": "amount", "type": "decimal", "required": true, "nullable": false, "aliases": ["AMT", "Value"],
+     "constraints": {"max_decimal_places": 2}},
+    {"name": "currency", "type": "currency_code", "required": true, "nullable": false, "aliases": ["CCY", "Currency Code"]},
+    {"name": "description", "type": "string", "required": false, "nullable": true, "aliases": ["Narrative"]},
+    {"name": "settled", "type": "boolean", "required": false, "nullable": true},
+    {"name": "line_count", "type": "integer", "required": false, "nullable": true,
+     "constraints": {"min_value": 0}},
+    {"name": "status", "type": "string", "required": false, "nullable": true,
+     "constraints": {"allowed_values": ["OPEN", "CLOSED"]}}
+  ],
+  "unique_key": ["entry_id"],
+  "classification": {"signature_fields": ["entry_id"]}
+}

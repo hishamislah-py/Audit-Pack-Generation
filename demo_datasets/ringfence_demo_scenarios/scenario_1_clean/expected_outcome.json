@@ -1,0 +1,33 @@
+{
+ "source": "answer_keys/scenario_01_intelligent_mapping/expected_reconciliation.json (frozen, copied unchanged below)",
+ "source_sha256": "42960ff3680dbe1ed8decd07d573bcd20020571e04a74b43457c094ab19e0143",
+ "expected_case_status": "CLEAN",
+ "expected_counts": {
+  "FAIL": 0,
+  "INSUFFICIENT_EVIDENCE": 0
+ },
+ "expected_non_passing_set": [],
+ "expected_exception_count": 0,
+ "expected_exception_root_causes": [],
+ "expected_investigation_group_count": 0,
+ "expected_review_steps": "none (all CSV headers canonical; AI disabled)",
+ "frozen_key": {
+  "scenario": "RF-DEMO-01",
+  "customer": "Halden Pay Ltd",
+  "reporting_period": "2026-06",
+  "requested_outcome": "CLEAN",
+  "expected_case_status": "CLEAN",
+  "terminology": "UC-042 case statuses are CLEAN / EXCEPTIONS_OPEN / EVIDENCE_INCOMPLETE. INSUFFICIENT_EVIDENCE is a per-control outcome; any INSUFFICIENT_EVIDENCE result makes the case EVIDENCE_INCOMPLETE (uc042lib.validate.case_status).",
+  "expected_non_passing_results": [],
+  "expected_non_passing_counts": {
+   "FAIL": 0,
+   "INSUFFICIENT_EVIDENCE": 0
+  },
+  "expected_exceptions": [],
+  "expected_investigation_groups": [],
+  "not_predicted": "PASS and NOT_APPLICABLE totals and engine-assigned exception / group IDs are recorded from the run, not predicted (they depend on engine internals, not on the scenario design).",
+  "basis": "Derived by tools/build_scenarios.py from the scenario design (planted record operations) and the generated records, using the UC-042 control semantics already verified on the Jan-Aug 2026 packs (same discrepancy kinds). Written before any engine run; no engine output was read.",
+  "planted_discrepancies": [],
+  "mutation_operations": 0
+ }
+}

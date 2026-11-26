@@ -22,6 +22,7 @@ class ReviewCase(ApiCase):
         job = self.run_investigation_job("SC5A", "EXC-SC5A-01")
         self.assertEqual(job["status"], "COMPLETED", job)
         self.inv_id = job["result"]["investigation_id"]
+        self.accept_investigation(self.inv_id)  # the analyst's ACCEPT (Exception Workspace) before any final review
 
     def open(self, pack=SC5A):
         r = self.post(f"/api/v1/packs/{pack}/reviews")
@@ -305,6 +306,13 @@ class ProtectedArtefacts(unittest.TestCase):
         """The backend suites write only to temporary folders; the project never gains a final_packs/ directory."""
         self.assertFalse((ROOT / "final_packs").exists())
         self.assertFalse((ROOT / "app_state").exists())
+
+    def test_primary_final_pack_storage_is_outside_the_repository(self):
+        """Published final packs are runtime output, never part of the source tree (B6)."""
+        from tests import TEST_FINAL_PACKS_ROOT
+        from uc042lib.runtime_paths import default_final_packs_root, inside_project
+        self.assertFalse(inside_project(default_final_packs_root()))
+        self.assertEqual(default_final_packs_root(), __import__("pathlib").Path(TEST_FINAL_PACKS_ROOT).resolve())  # tests: a temp dir
 
 
 if __name__ == "__main__":

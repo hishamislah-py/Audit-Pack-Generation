@@ -1,0 +1,36 @@
+C:\Users\artlptp263user\AppData\Local\Programs\Python\Python311\Lib\site-packages\langgraph\cache\base\__init__.py:8: LangChainPendingDeprecationWarning: The default value of `allowed_objects` will change in a future version. Pass an explicit value (e.g., allowed_objects='messages' or allowed_objects='core') to suppress this warning.
+  from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
+......F.....s..........................s...............F................................................
+======================================================================
+FAIL: test_rejection_reason_is_exact_in_json_html_and_pdf (tests.test_pdf_unicode.EndToEnd.test_rejection_reason_is_exact_in_json_html_and_pdf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_pdf_unicode.py", line 68, in test_rejection_reason_is_exact_in_json_html_and_pdf
+    self.assertEqual(final["metadata"]["report_renderer"], UNICODE_RENDERER_VERSION)
+AssertionError: 'uc042-final-report-renderer/2.1-unicode' != 'uc042-final-report-renderer/2.0-unicode'
+- uc042-final-report-renderer/2.1-unicode
+?                               ^
++ uc042-final-report-renderer/2.0-unicode
+?                               ^
+
+
+======================================================================
+FAIL: test_protected_trees_unchanged (tests.test_demo_history.Immutability.test_protected_trees_unchanged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_demo_history.py", line 1028, in test_protected_trees_unchanged
+    self.assertEqual(tree_digest(ROOT / rel), want, rel)
+AssertionError: Tuples differ: ('58abb4a44903687c4479f0af67ccbe7d864d2afb7ebb50074939c1b40fdc64d4', 18) != ('bf2dc23bbc516b50bd19393fbbd9e5bfa00907b2115a04455d210b3e8c709cae', 18)
+
+First differing element 0:
+'58abb4a44903687c4479f0af67ccbe7d864d2afb7ebb50074939c1b40fdc64d4'
+'bf2dc23bbc516b50bd19393fbbd9e5bfa00907b2115a04455d210b3e8c709cae'
+
+- ('58abb4a44903687c4479f0af67ccbe7d864d2afb7ebb50074939c1b40fdc64d4', 18)
++ ('bf2dc23bbc516b50bd19393fbbd9e5bfa00907b2115a04455d210b3e8c709cae', 18) : uc042lib/final_pack
+
+----------------------------------------------------------------------
+Ran 104 tests in 86.893s
+
+FAILED (failures=2, skipped=2)
+EXIT 1

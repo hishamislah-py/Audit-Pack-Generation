@@ -1,0 +1,30 @@
+{
+  "label": "AI (expectations for the investigation layer; separate from FIN)",
+  "scenario_id": "TC06",
+  "findings": [
+    "Three separate causes",
+    "A is transaction-side: IN-11 is the outlier against IN-09, IN-10, IN-03",
+    "B is snapshot-side: C0004's 17 Sep snapshot fails the roll-forward in both directions and drives the reported shortfall",
+    "C is internal to the acquirer report: header, transaction and bank agree on 1,283.12",
+    "Equal date and amount of A and B is coincidence, explicitly rejected as a link"
+  ],
+  "evidence": [
+    "IN-11 TX-0917-00002",
+    "IN-09 BE-GBP-0917-L02",
+    "IN-03 CBS-20260916/17/18-C0004-GBP",
+    "IN-05 IRR-EMONEY-GBP-20260917",
+    "IN-13 SL-AQ-EUR-20260922-0002",
+    "IN-12 AQ-EUR-20260922",
+    "IN-11 TX-0922-00016"
+  ],
+  "missing_evidence": [
+    "A: export audit trail",
+    "B: client-ledger postings behind C0004's 17 Sep balance",
+    "C: corrected acquirer report"
+  ],
+  "confidence": "high for the separation",
+  "must_not": [
+    "group A with B on date and amount"
+  ],
+  "analyst_action": "A: request corrected export. B: investigate the client-ledger posting; the reported 17 Sep shortfall is not supported by transactions. C: request corrected acquirer report."
+}

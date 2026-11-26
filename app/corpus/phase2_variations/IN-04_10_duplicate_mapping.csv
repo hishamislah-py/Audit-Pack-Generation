@@ -1,0 +1,3 @@
+receipt_id,bank_reference,receipt_date,receipt_ts,amount,currency,classification,identified_date,allocated_date,allocated_ts,client_id,RECEIPT_ID
+UR-0001,E2E-GBP-0911-U01,2026-09-11,2026-09-11T16:30:00+01:00,750.00,GBP,UNALLOCATED,,2026-09-14,2026-09-14T09:30:00+01:00,C0007,UR-0001
+UR-0002,E2E-EUR-0923-U01,2026-09-23,2026-09-23T16:10:00+01:00,400.00,EUR,UNALLOCATED,,2026-09-24,2026-09-24T09:15:00+01:00,C0102,UR-0002

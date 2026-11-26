@@ -1,0 +1,434 @@
+{
+ "scenario_id": "RF-DEMO-05",
+ "source_scenario": "scn_SC5C_refund_double_posted",
+ "customer_name": "Pellworth Card Services Ltd",
+ "reporting_period": "2026-09",
+ "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA - UC-042 RINGFENCE DEMONSTRATION - NOT REAL FINANCIAL RECORDS (canonical dataset scn_SC5C_refund_double_posted; fictional customer name)",
+ "zip": {
+  "file": "Pellworth_Card_Services_Ltd_2026-09.zip",
+  "sha256": "8d2bd002be448648554e73e3f96264cdb617791275526e9bfc5cdcb88c7c385f",
+  "bytes": 41499,
+  "entries": [
+   {
+    "entry": "Pellworth_Sep2026/01_reconciliation_calendar.csv",
+    "bytes": 3313,
+    "sha256": "e9ef76e28ab7582f348a4917ae45e0e565194a1e4c51dff2bb2d3898f81a6589",
+    "category": "IN-01",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/02_safeguarding_accounts.csv",
+    "bytes": 1184,
+    "sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d",
+    "category": "IN-02",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/03_client_balances_1700.csv",
+    "bytes": 25189,
+    "sha256": "f7f34b3216bb74632bd25da9a2c9a8f6865a01e41a1e8a80182b9facde4970b8",
+    "category": "IN-03",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/04_unallocated_receipts.csv",
+    "bytes": 393,
+    "sha256": "cd04ee276180d35e21710f5f161dafab33c564ba567291cd83ab79add7fdf0bb",
+    "category": "IN-04",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/05_internal_reconciliations.csv",
+    "bytes": 15870,
+    "sha256": "87cefc0eccb8f849a0aa2853ed412c555b6d05f8215066e5635ce409dbf102eb",
+    "category": "IN-05",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/06_external_reconciliations.csv",
+    "bytes": 6320,
+    "sha256": "b18dd5df473a66580b9b75747aebbf2b0b51e8bcac01816a0b1a219154e7ebf5",
+    "category": "IN-06",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/07_bank_balances_1700.csv",
+    "bytes": 4662,
+    "sha256": "1d9e3ba50d2ec73d0925e7d045466cd24b04b00a075f9c0c6409deec3c60f73c",
+    "category": "IN-07",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/08_bank_eod_statements.csv",
+    "bytes": 11501,
+    "sha256": "40de6ca1894c81636ca01d843cfebe51e1498db2af3e3fd582e6582efb3b8f67",
+    "category": "IN-08",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/09_bank_statement_lines.csv",
+    "bytes": 48630,
+    "sha256": "28df3e2a115a2d8b88115cd8c6dae39c8a3d71124b99641ee4846a68c18f54b0",
+    "category": "IN-09",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/10_safeguarding_cashbook.csv",
+    "bytes": 22320,
+    "sha256": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7",
+    "category": "IN-10",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/11_card_transactions.csv",
+    "bytes": 52618,
+    "sha256": "1ea8c46db298c13b4e531827ec32279045f4aeb7b20cbd95afbbc6e74c0d2938",
+    "category": "IN-11",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/12_settlement_batches.csv",
+    "bytes": 10017,
+    "sha256": "2e25a4fdee7179e965f9c2ec48f56331dac31ce6aaae1840002bc54178caef87",
+    "category": "IN-12",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/13_settlement_lines.csv",
+    "bytes": 29820,
+    "sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+    "category": "IN-13",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/14_breaks_log.csv",
+    "bytes": 157,
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "category": "IN-14",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/docs/bank_acknowledgement_GBP.pdf",
+    "bytes": 2277,
+    "sha256": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742",
+    "category": "IN-15",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/docs/bank_acknowledgement_EUR.pdf",
+    "bytes": 2278,
+    "sha256": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4",
+    "category": "IN-16",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/docs/Pellworth_safeguarding_recon_policy_v1.2.pdf",
+    "bytes": 2325,
+    "sha256": "b136586f843384284da370cedfe17637338e5e9d0bbc485d79b9e82c7de5c561",
+    "category": "IN-17",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/docs/Pellworth_governance_register_Sep2026.pdf",
+    "bytes": 2074,
+    "sha256": "6c87f85feddcc31e60af000ccc782749ca6c105a986420d80510e1fd58c7acb4",
+    "category": "IN-18",
+    "readable": true,
+    "identical_to_canonical_file": true
+   },
+   {
+    "entry": "Pellworth_Sep2026/docs/Pellworth_REP027_receipt_Aug2026.pdf",
+    "bytes": 2167,
+    "sha256": "91743fd3f1c8b8d681fda739dcaf566bd330e0f4eb19a54bce954d80392b550d",
+    "category": "IN-19",
+    "readable": true,
+    "identical_to_canonical_file": true
+   }
+  ]
+ },
+ "name_mapping": [
+  {
+   "category": "IN-01",
+   "zip_entry": "Pellworth_Sep2026/01_reconciliation_calendar.csv",
+   "canonical_file": "recon_calendar_2026-09.csv",
+   "canonical_relative_path": "source_data/recon_calendar_2026-09.csv",
+   "requirement": "REQUIRED",
+   "bytes": 3313,
+   "sha256": "e9ef76e28ab7582f348a4917ae45e0e565194a1e4c51dff2bb2d3898f81a6589"
+  },
+  {
+   "category": "IN-02",
+   "zip_entry": "Pellworth_Sep2026/02_safeguarding_accounts.csv",
+   "canonical_file": "account_inventory.csv",
+   "canonical_relative_path": "source_data/account_inventory.csv",
+   "requirement": "REQUIRED",
+   "bytes": 1184,
+   "sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d"
+  },
+  {
+   "category": "IN-03",
+   "zip_entry": "Pellworth_Sep2026/03_client_balances_1700.csv",
+   "canonical_file": "client_balance_snapshots_2026-09.csv",
+   "canonical_relative_path": "source_data/client_balance_snapshots_2026-09.csv",
+   "requirement": "REQUIRED",
+   "bytes": 25189,
+   "sha256": "f7f34b3216bb74632bd25da9a2c9a8f6865a01e41a1e8a80182b9facde4970b8"
+  },
+  {
+   "category": "IN-04",
+   "zip_entry": "Pellworth_Sep2026/04_unallocated_receipts.csv",
+   "canonical_file": "unallocated_register_2026-09.csv",
+   "canonical_relative_path": "source_data/unallocated_register_2026-09.csv",
+   "requirement": "REQUIRED",
+   "bytes": 393,
+   "sha256": "cd04ee276180d35e21710f5f161dafab33c564ba567291cd83ab79add7fdf0bb"
+  },
+  {
+   "category": "IN-05",
+   "zip_entry": "Pellworth_Sep2026/05_internal_reconciliations.csv",
+   "canonical_file": "internal_recon_records_2026-09.csv",
+   "canonical_relative_path": "source_data/internal_recon_records_2026-09.csv",
+   "requirement": "REQUIRED",
+   "bytes": 15870,
+   "sha256": "87cefc0eccb8f849a0aa2853ed412c555b6d05f8215066e5635ce409dbf102eb"
+  },
+  {
+   "category": "IN-06",
+   "zip_entry": "Pellworth_Sep2026/06_external_reconciliations.csv",
+   "canonical_file": "external_recon_records_2026-09.csv",
+   "canonical_relative_path": "source_data/external_recon_records_2026-09.csv",
+   "requirement": "REQUIRED",
+   "bytes": 6320,
+   "sha256": "b18dd5df473a66580b9b75747aebbf2b0b51e8bcac01816a0b1a219154e7ebf5"
+  },
+  {
+   "category": "IN-07",
+   "zip_entry": "Pellworth_Sep2026/07_bank_balances_1700.csv",
+   "canonical_file": "bank_balance_confirmations_2026-09.csv",
+   "canonical_relative_path": "source_data/bank_balance_confirmations_2026-09.csv",
+   "requirement": "REQUIRED",
+   "bytes": 4662,
+   "sha256": "1d9e3ba50d2ec73d0925e7d045466cd24b04b00a075f9c0c6409deec3c60f73c"
+  },
+  {
+   "category": "IN-08",
+   "zip_entry": "Pellworth_Sep2026/08_bank_eod_statements.csv",
+   "canonical_file": "bank_statements_eod_2026-09.csv",
+   "canonical_relative_path": "source_data/bank_statements_eod_2026-09.csv",
+   "requirement": "REQUIRED",
+   "bytes": 11501,
+   "sha256": "40de6ca1894c81636ca01d843cfebe51e1498db2af3e3fd582e6582efb3b8f67"
+  },
+  {
+   "category": "IN-09",
+   "zip_entry": "Pellworth_Sep2026/09_bank_statement_lines.csv",
+   "canonical_file": "bank_statement_entries_2026-09.csv",
+   "canonical_relative_path": "source_data/bank_statement_entries_2026-09.csv",
+   "requirement": "REQUIRED",
+   "bytes": 48630,
+   "sha256": "28df3e2a115a2d8b88115cd8c6dae39c8a3d71124b99641ee4846a68c18f54b0"
+  },
+  {
+   "category": "IN-10",
+   "zip_entry": "Pellworth_Sep2026/10_safeguarding_cashbook.csv",
+   "canonical_file": "sga_cashbook_entries_2026-09.csv",
+   "canonical_relative_path": "source_data/sga_cashbook_entries_2026-09.csv",
+   "requirement": "REQUIRED",
+   "bytes": 22320,
+   "sha256": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7"
+  },
+  {
+   "category": "IN-11",
+   "zip_entry": "Pellworth_Sep2026/11_card_transactions.csv",
+   "canonical_file": "transactions_2026-09.csv",
+   "canonical_relative_path": "source_data/transactions_2026-09.csv",
+   "requirement": "REQUIRED",
+   "bytes": 52618,
+   "sha256": "1ea8c46db298c13b4e531827ec32279045f4aeb7b20cbd95afbbc6e74c0d2938"
+  },
+  {
+   "category": "IN-12",
+   "zip_entry": "Pellworth_Sep2026/12_settlement_batches.csv",
+   "canonical_file": "settlement_batches_2026-09.csv",
+   "canonical_relative_path": "source_data/settlement_batches_2026-09.csv",
+   "requirement": "REQUIRED",
+   "bytes": 10017,
+   "sha256": "2e25a4fdee7179e965f9c2ec48f56331dac31ce6aaae1840002bc54178caef87"
+  },
+  {
+   "category": "IN-13",
+   "zip_entry": "Pellworth_Sep2026/13_settlement_lines.csv",
+   "canonical_file": "settlement_lines_2026-09.csv",
+   "canonical_relative_path": "source_data/settlement_lines_2026-09.csv",
+   "requirement": "REQUIRED",
+   "bytes": 29820,
+   "sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b"
+  },
+  {
+   "category": "IN-14",
+   "zip_entry": "Pellworth_Sep2026/14_breaks_log.csv",
+   "canonical_file": "discrepancy_log_2026-09.csv",
+   "canonical_relative_path": "source_data/discrepancy_log_2026-09.csv",
+   "requirement": "REQUIRED",
+   "bytes": 157,
+   "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06"
+  },
+  {
+   "category": "IN-15",
+   "zip_entry": "Pellworth_Sep2026/docs/bank_acknowledgement_GBP.pdf",
+   "canonical_file": "ack_letter_SGA-GBP-01.pdf",
+   "canonical_relative_path": "supporting_documents/ack_letter_SGA-GBP-01.pdf",
+   "requirement": "REQUIRED",
+   "bytes": 2277,
+   "sha256": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742"
+  },
+  {
+   "category": "IN-16",
+   "zip_entry": "Pellworth_Sep2026/docs/bank_acknowledgement_EUR.pdf",
+   "canonical_file": "ack_letter_SGA-EUR-01.pdf",
+   "canonical_relative_path": "supporting_documents/ack_letter_SGA-EUR-01.pdf",
+   "requirement": "REQUIRED",
+   "bytes": 2278,
+   "sha256": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4"
+  },
+  {
+   "category": "IN-17",
+   "zip_entry": "Pellworth_Sep2026/docs/Pellworth_safeguarding_recon_policy_v1.2.pdf",
+   "canonical_file": "safeguarding_reconciliation_policy_v1.2.pdf",
+   "canonical_relative_path": "supporting_documents/safeguarding_reconciliation_policy_v1.2.pdf",
+   "requirement": "REQUIRED",
+   "bytes": 2325,
+   "sha256": "b136586f843384284da370cedfe17637338e5e9d0bbc485d79b9e82c7de5c561"
+  },
+  {
+   "category": "IN-18",
+   "zip_entry": "Pellworth_Sep2026/docs/Pellworth_governance_register_Sep2026.pdf",
+   "canonical_file": "governance_register_2026-09.pdf",
+   "canonical_relative_path": "supporting_documents/governance_register_2026-09.pdf",
+   "requirement": "OPTIONAL",
+   "bytes": 2074,
+   "sha256": "6c87f85feddcc31e60af000ccc782749ca6c105a986420d80510e1fd58c7acb4"
+  },
+  {
+   "category": "IN-19",
+   "zip_entry": "Pellworth_Sep2026/docs/Pellworth_REP027_receipt_Aug2026.pdf",
+   "canonical_file": "rep027_submission_receipt_2026-08.pdf",
+   "canonical_relative_path": "supporting_documents/rep027_submission_receipt_2026-08.pdf",
+   "requirement": "OPTIONAL",
+   "bytes": 2167,
+   "sha256": "91743fd3f1c8b8d681fda739dcaf566bd330e0f4eb19a54bce954d80392b550d"
+  }
+ ],
+ "source_dataset": {
+  "path": "C:\\u42x\\UC042_SMART_PARSER_E2E_TEST_BUNDLE\\src\\uc042\\uc042_dataset\\scn_SC5C_refund_double_posted",
+  "scenario": {
+   "scenario_id": "SC5C",
+   "name": "Refund counted twice (C0002, TX-0909-0R001, 60.00)",
+   "assessment_scenario": "5c",
+   "baseline": "set_01_clean_baseline",
+   "baseline_manifest_sha256": "0360b4055aa6812f063b411c7ceacdb2f4f153df73fd76c2acc7da3df565b69e",
+   "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA (decision D6): all records, timings, references and fee treatments are illustrative conventions for the UC-042 POC, not confirmed Moorwand practice."
+  },
+  "manifest_sha256": "18d2202308c3d8e6bf93bd0f2174775484b31110e0a71ec1b84edd76903d3ad4",
+  "files_sha256": {
+   "answer_key.json": "15c0a3f4f8654aa2c0f6c55d75bf041bb1f2509c625b171a92d662085978192d",
+   "DATA_DICTIONARY.md": "a0de7fb05959846c555aab19e7c88c4e9ef6213cc792e3910f98ec565cda06e5",
+   "GENERATION_NOTES.md": "184e3f8c88463bad11e87280ab698115f0fd5f1aad8c45905394a84e8c5d179c",
+   "manifest.csv": "18d2202308c3d8e6bf93bd0f2174775484b31110e0a71ec1b84edd76903d3ad4",
+   "mutations.json": "7c95365feb67b41f068ca46d9cbe20e902f7bce72b8ad11ac831e7ce352e20a4",
+   "scenario.json": "20dcb4901efd37ac48bfabf2cfd2c3b34cd7ba80716448cdc15e0a56bd90e6ce",
+   "SCENARIO_NOTES.md": "afce736be4d40c3a6dd2e2a17b863254e47d54e4fddbbcd7ccb1a43ed4e07793",
+   "source_data/account_inventory.csv": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d",
+   "source_data/bank_balance_confirmations_2026-09.csv": "1d9e3ba50d2ec73d0925e7d045466cd24b04b00a075f9c0c6409deec3c60f73c",
+   "source_data/bank_statement_entries_2026-09.csv": "28df3e2a115a2d8b88115cd8c6dae39c8a3d71124b99641ee4846a68c18f54b0",
+   "source_data/bank_statements_eod_2026-09.csv": "40de6ca1894c81636ca01d843cfebe51e1498db2af3e3fd582e6582efb3b8f67",
+   "source_data/client_balance_snapshots_2026-09.csv": "f7f34b3216bb74632bd25da9a2c9a8f6865a01e41a1e8a80182b9facde4970b8",
+   "source_data/discrepancy_log_2026-09.csv": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+   "source_data/external_recon_records_2026-09.csv": "b18dd5df473a66580b9b75747aebbf2b0b51e8bcac01816a0b1a219154e7ebf5",
+   "source_data/internal_recon_records_2026-09.csv": "87cefc0eccb8f849a0aa2853ed412c555b6d05f8215066e5635ce409dbf102eb",
+   "source_data/recon_calendar_2026-09.csv": "e9ef76e28ab7582f348a4917ae45e0e565194a1e4c51dff2bb2d3898f81a6589",
+   "source_data/settlement_batches_2026-09.csv": "2e25a4fdee7179e965f9c2ec48f56331dac31ce6aaae1840002bc54178caef87",
+   "source_data/settlement_lines_2026-09.csv": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+   "source_data/sga_cashbook_entries_2026-09.csv": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7",
+   "source_data/transactions_2026-09.csv": "1ea8c46db298c13b4e531827ec32279045f4aeb7b20cbd95afbbc6e74c0d2938",
+   "source_data/unallocated_register_2026-09.csv": "cd04ee276180d35e21710f5f161dafab33c564ba567291cd83ab79add7fdf0bb",
+   "supporting_documents/ack_letter_SGA-EUR-01.pdf": "4a0772d60c552d9d770c54f44aa7370bb75dac45b649a2a718f61ac45c2135f4",
+   "supporting_documents/ack_letter_SGA-GBP-01.pdf": "4b13a0f1db2d18bbb39e8cb0a22cb13786f24e8781b979afcb24cb4973936742",
+   "supporting_documents/governance_register_2026-09.pdf": "6c87f85feddcc31e60af000ccc782749ca6c105a986420d80510e1fd58c7acb4",
+   "supporting_documents/rep027_submission_receipt_2026-08.pdf": "91743fd3f1c8b8d681fda739dcaf566bd330e0f4eb19a54bce954d80392b550d",
+   "supporting_documents/safeguarding_reconciliation_policy_v1.2.pdf": "b136586f843384284da370cedfe17637338e5e9d0bbc485d79b9e82c7de5c561",
+   "validation/candidate_relationships.csv": "b0d5d29354f9f593569acf65294b6ebe9c2d3d8721e0ce1687b6919f624e7e30",
+   "validation/control_results.csv": "e0a30b1ce8d4ed6f1fd11e9bebe0c1ad9eb21ecd92323d2cd40f706e741dae7b",
+   "validation/document_details.csv": "8b3b8e7bfe009b2eb2f2d0d68a6af402bce5af71b7ed95157006132c7ff1cfed",
+   "validation/exceptions.csv": "911915fb133aa014a5b956589ee0b98056d044e025c5bccd8511ac0a8bcabd9d",
+   "validation/investigation_groups.csv": "5ba08eeb62a4272508bc1f6dd6e4f2c8890d6ae87072df5617ce5d74aefa6117",
+   "VALIDATION_REPORT.md": "32e7a07c0b3dba95a79dafd7982680a80e9cd8b033aa85851da4752ab097ea5f"
+  },
+  "mirrors": {
+   "token_optimisation_dataset": {
+    "path": "C:\\Users\\artlptp263user\\p10\\uc042_token_optimisation\\uc042_dataset\\scn_SC5C_refund_double_posted",
+    "present": true,
+    "files": 32,
+    "common_files": 32,
+    "all_common_identical": true,
+    "identical_tree": true
+   },
+   "e2e_bundle_ground_truth": {
+    "path": "C:\\u42x\\UC042_SMART_PARSER_E2E_TEST_BUNDLE\\ground_truth\\uc042_scenarios\\scn_SC5C_refund_double_posted",
+    "present": true,
+    "files": 4,
+    "common_files": 4,
+    "all_common_identical": true,
+    "identical_tree": false
+   }
+  },
+  "excluded_from_zip": [
+   "answer_key.json",
+   "mutations.json",
+   "manifest.csv",
+   "scenario.json",
+   "*.md",
+   "validation/* (a previous engine run)"
+  ]
+ },
+ "frozen_key": {
+  "path": "C:\\u42x\\UC042_SMART_PARSER_E2E_TEST_BUNDLE\\src\\uc042\\uc042_dataset\\scn_SC5C_refund_double_posted\\answer_key.json",
+  "sha256": "15c0a3f4f8654aa2c0f6c55d75bf041bb1f2509c625b171a92d662085978192d",
+  "mirror_paths": [
+   "C:\\Users\\artlptp263user\\p10\\uc042_token_optimisation\\uc042_dataset\\scn_SC5C_refund_double_posted\\answer_key.json",
+   "C:\\u42x\\UC042_SMART_PARSER_E2E_TEST_BUNDLE\\ground_truth\\uc042_scenarios\\scn_SC5C_refund_double_posted\\answer_key.json"
+  ]
+ },
+ "planted_discrepancy": {
+  "description": "Refund TX-0909-0R001 (60.00) counted twice in C0002's balance from 9 Sep; reported shortfall -60.00 on 16 days",
+  "mutations": "C:\\u42x\\UC042_SMART_PARSER_E2E_TEST_BUNDLE\\src\\uc042\\uc042_dataset\\scn_SC5C_refund_double_posted\\mutations.json",
+  "mutations_sha256": "7c95365feb67b41f068ca46d9cbe20e902f7bce72b8ad11ac831e7ce352e20a4",
+  "mutation_operations": 48
+ },
+ "generator": "tools/build_duplicate_scenario.py (byte copy of the canonical files; nothing generated)",
+ "all_csv_canonical_layout": true,
+ "expected_outcome": {
+  "case_status": "EXCEPTIONS_OPEN",
+  "fail": 17,
+  "insufficient_evidence": 0,
+  "exceptions": 17,
+  "investigation_groups": 1
+ }
+}

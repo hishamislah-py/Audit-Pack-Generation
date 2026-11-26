@@ -1,0 +1,28 @@
+/* Ringfence analyst app · top-level screens (S01 sign-in, S02 work queue, S03/S04 customers, register).
+   Uses the design tokens (tokens.css) and the design-system classes (ringfence.css). */
+.as-slot { display: grid; grid-template-columns: 300px minmax(0, 1fr) 150px auto; gap: 20px; align-items: center; }
+.as-slot__case { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.as-slot__run { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.as-slot__meta { font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+.as-slot__meta b { display: block; font-weight: 500; color: var(--ink-secondary); }
+.as-slot-empty { display: flex; align-items: center; gap: 16px; padding: 14px 16px; flex-wrap: wrap; }
+.as-slot-empty__ring { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1px dashed var(--line-strong); border-radius: 50%; color: var(--ink-muted); flex: none; }
+.as-received b { display: block; font-weight: 400; color: var(--ink); white-space: nowrap; }
+.as-received span { font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+.as-zip { display: block; max-width: 240px; font-family: var(--font-mono); font-size: 12px; line-height: 16px; color: var(--ink-secondary); overflow-wrap: anywhere; }
+.as-pills { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.as-order { max-width: 420px; font-size: 12px; line-height: 16px; color: var(--ink-muted); text-align: right; }
+.as-periods { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.as-period { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 12px; border: 1px solid var(--line-subtle); border-radius: var(--radius-lg); background: var(--surface); }
+.as-period__head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.as-period__name { font-size: 13px; font-weight: 600; }
+.as-period__case { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; width: 100%; padding: 6px 8px; border: 1px solid transparent; border-radius: var(--radius-md); background: var(--surface-muted); text-align: left; font-size: 12px; cursor: pointer; }
+.as-period__case:hover { border-color: var(--line-strong); background: var(--surface-hover); }
+.as-period__case:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+.as-period__case .as-pills { flex-direction: row; flex-wrap: wrap; }
+.as-form { display: flex; flex-direction: column; gap: var(--space-4); }
+.as-file { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line-subtle); border-radius: var(--radius-lg); background: var(--surface-muted); }
+.as-file > .rf-icon { color: var(--ink-secondary); flex: none; }
+.as-file.is-error { border-color: var(--danger-fg); background: var(--danger-bg); }
+.as-file__name { overflow-wrap: anywhere; font-family: var(--font-mono); font-size: 13px; }
+select.rf-input { padding-right: 8px; }

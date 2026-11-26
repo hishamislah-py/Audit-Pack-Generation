@@ -1,0 +1,17 @@
+{
+  "policy": {
+    "allow_reorder": true,
+    "trim_whitespace": true,
+    "case_insensitive": true,
+    "unexpected_columns": "reject"
+  },
+  "aliases": [
+    {
+      "alias_id": "AA-X",
+      "category": "IN-07",
+      "canonical_field": "balance_amount",
+      "alias": "Balance",
+      "proposal_id": "AP-IN-07-BALANCE"
+    }
+  ]
+}

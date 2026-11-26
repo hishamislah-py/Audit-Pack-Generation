@@ -1,0 +1,22 @@
+{
+  "scenario_id": "TC01",
+  "baseline": "set_01_clean_baseline",
+  "operations": [
+    {
+      "op": "add_record",
+      "file_id": "IN-10",
+      "record": {
+        "ledger_entry_id": "LE-GBP-0928-0007",
+        "account_id": "SGA-GBP-01",
+        "posted_ts": "2026-09-28T09:25:00+01:00",
+        "entry_type": "BANK_LOAD",
+        "amount": "1246.80",
+        "dc_indicator": "D",
+        "currency": "GBP",
+        "payment_reference": "E2E-GBP-0928-L01"
+      },
+      "why": "interface re-run re-posted the 09:10 receipt E2E-GBP-0928-L01",
+      "insert_after": "LE-GBP-0928-0001"
+    }
+  ]
+}

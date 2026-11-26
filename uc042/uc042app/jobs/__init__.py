@@ -27,9 +27,14 @@ def safe_error(e):
 
 
 class JobRunner:
-    def __init__(self, repo, workers=2):
-        self.repo, self.workers = repo, workers
+    """Two lanes: the general pool (processing, previews, generation) and a separate, bounded lane for AI investigations
+    (UC042_AI_JOB_WORKERS, default 1), so a queue of investigations never blocks processing and the provider's rate and
+    token limits are respected. A job waiting in the AI lane stays QUEUED until it really starts."""
+
+    def __init__(self, repo, workers=2, ai_workers=1):
+        self.repo, self.workers, self.ai_workers = repo, workers, ai_workers
         self._executor = None
+        self._ai_executor = None
         self._futures = {}
         self._lock = threading.Lock()
 
@@ -45,11 +50,14 @@ class JobRunner:
 
     def start(self):
         self._executor = ThreadPoolExecutor(max_workers=self.workers, thread_name_prefix="uc042-job")
+        self._ai_executor = ThreadPoolExecutor(max_workers=self.ai_workers, thread_name_prefix="uc042-ai")
 
     def shutdown(self, wait=True):
-        if self._executor is not None:
-            self._executor.shutdown(wait=wait, cancel_futures=True)
-            self._executor = None
+        for name in ("_executor", "_ai_executor"):
+            ex = getattr(self, name)
+            if ex is not None:
+                ex.shutdown(wait=wait, cancel_futures=True)
+                setattr(self, name, None)
         for job in self.repo.list(statuses=("QUEUED",)):  # cancelled before running
             self.repo.update(job["job_id"], {"status": "INTERRUPTED", "completed_at": now_iso(),
                                              "error_summary": "the backend stopped before this job started"})
@@ -60,12 +68,14 @@ class JobRunner:
                "submitted_by": submitted_by, "retry_of": retry_of, "error_summary": "", "result": None}
         return self.repo.create(job)
 
-    def submit(self, job, fn):
-        """Run fn(job) in the pool. fn returns (status, result, error_summary) with status COMPLETED or FAILED."""
-        if self._executor is None:
+    def submit(self, job, fn, lane="general"):
+        """Run fn(job) in the pool (lane "ai": the bounded AI lane). fn returns (status, result, error_summary) with status
+        COMPLETED or FAILED."""
+        executor = self._ai_executor if lane == "ai" else self._executor
+        if executor is None:
             raise RuntimeError("the job runner is not started")
         with self._lock:
-            self._futures[job["job_id"]] = self._executor.submit(self._run, job["job_id"], fn)
+            self._futures[job["job_id"]] = executor.submit(self._run, job["job_id"], fn)
         return job
 
     def _run(self, job_id, fn):

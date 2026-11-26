@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 
 from ...errors import AppError
 from ..deps import services
-from ..schemas import ExceptionDetail, ExceptionView, PackDetail, PackListItem, PackReconciliation, PackSources
+from ..schemas import ExceptionDetail, ExceptionView, PackControls, PackDetail, PackListItem, PackReconciliation, PackSources
 
 router = APIRouter(prefix="/api/v1/packs", tags=["packs"])
 
@@ -24,6 +24,8 @@ def get_pack(pack_id: str, svc=Depends(services)):
     pack = svc.packs.load(pack_id)
     return {"summary": svc.packs.summary(pack), "metadata": pack["metadata"], "executive_summary": pack["executive_summary"],
             "statements": pack["statements"],
+            # DEF-06: the engine's unverified candidate relationships, shown on the pack page (read-only; never evidence)
+            "candidate_relationships": pack["investigation_group_register"]["candidate_relationships"],
             "verification": {"verified": True, "pack_content_sha256": pack["audit_trail"]["pack_content_sha256"]}}
 
 
@@ -31,6 +33,12 @@ def get_pack(pack_id: str, svc=Depends(services)):
             summary="Internal (by currency and day) and external (by account and day) reconciliation results, as reported")
 def get_reconciliation(pack_id: str, svc=Depends(services)):
     return svc.packs.reconciliation(svc.packs.load(pack_id))
+
+
+@router.get("/{pack_id}/controls", response_model=PackControls,
+            summary="The control register as recorded: per check, its result counts and the exceptions its failures belong to")
+def get_controls(pack_id: str, svc=Depends(services)):
+    return svc.packs.controls(svc.packs.load(pack_id))
 
 
 @router.get("/{pack_id}/sources", response_model=PackSources, summary="Source-file register (SHA-256) and missing evidence")

@@ -1,0 +1,406 @@
+{
+ "legacy_refused": {
+  "upload": 410,
+  "reconcile": 410
+ },
+ "rejected": {
+  "batch": "UPL-960c168479768aa74e7abbfb",
+  "gate": {
+   "passed": false,
+   "reason": "the package contains unsafe entries, files outside the approved UC-042 schema, or duplicates; no document was analysed",
+   "unsafe": [
+    {
+     "name": "../evil.csv",
+     "reason": "path traversal ('..')"
+    }
+   ],
+   "unusable": [],
+   "mismatches": [],
+   "unexpected": [
+    {
+     "name": "notes.txt",
+     "reason": "not a file of the approved UC-042 schema (IN-01 to IN-19) for this period"
+    }
+   ],
+   "duplicate_names": [],
+   "duplicate_types": {},
+   "ignored_metadata": [],
+   "missing_required": [],
+   "present_optional": [],
+   "present_required": []
+  },
+  "submit_http": 409
+ },
+ "incomplete": {
+  "batch": "UPL-abd01681637ffffad6e64ab8",
+  "missing": [
+   "IN-11"
+  ]
+ },
+ "submission_2_refused_investigations": [
+  [
+   "EXC-CASE-02",
+   "F-04: supporting_records must be source record IDs from the packet"
+  ]
+ ],
+ "submission_2_executions": {
+  "INV-EXC-CASE-01-35fd72c6c5ea": {
+   "execution": {
+    "authorization_id": "AIA-8f0bdd8c6648a3a73b78d249",
+    "job_id": "JOB-7a61a24b2a316a1e8d5de687",
+    "run_id": "RUN-59fb50567c91763766f89844",
+    "submission_id": "SUB-bda1bf96ae133cf1f1844081"
+   },
+   "usage": {
+    "cached_input_tokens": 37232,
+    "input_tokens": 38859,
+    "latency_seconds": 72.38,
+    "output_tokens": 6330,
+    "reasoning_tokens": 2520,
+    "total_tokens": 45189
+   },
+   "investigated_at": "2026-11-18T03:16:54+00:00"
+  }
+ },
+ "submission_1_investigations_unchanged_at_end": true,
+ "final_pack_isolation": {
+  "version_supersedes": {
+   "FAP-CASE-PER-2026-09-v1-709febad4a68": [
+    1,
+    null
+   ],
+   "FAP-CASE-PER-2026-09-v1-bde40b0a4607": [
+    1,
+    null
+   ]
+  },
+  "cross_references": {
+   "FAP-CASE-PER-2026-09-v1-709febad4a68": [],
+   "FAP-CASE-PER-2026-09-v1-bde40b0a4607": []
+  }
+ },
+ "submission_1": {
+  "batch": "UPL-aabf56baa6009645c881ce96",
+  "submission_id": "SUB-37122ac83558002286e1ef34",
+  "run_id": "RUN-2b3e0176d58104513a0fec9e",
+  "pack_id": "PACK-CASE-PER-2026-09-0baf0532fbea",
+  "outcome": "PUBLISHED",
+  "review_id": "RS-1d856ae9ab3d8a840ea115bb",
+  "final_pack": "FAP-CASE-PER-2026-09-v1-709febad4a68"
+ },
+ "submission_2": {
+  "batch": "UPL-55ea1d76ea8bae51f6a256fe",
+  "submission_id": "SUB-bda1bf96ae133cf1f1844081",
+  "run_id": "RUN-59fb50567c91763766f89844",
+  "pack_id": "PACK-CASE-PER-2026-09-0baf0532fbea",
+  "outcome": "ALREADY_EXISTS",
+  "review_id": "RS-16962ff40926feb8eed50ec9",
+  "final_pack": "FAP-CASE-PER-2026-09-v1-bde40b0a4607"
+ },
+ "jobs_1": [
+  [
+   "EXC-CASE-01",
+   "COMPLETED",
+   "PUBLISHED",
+   "INV-EXC-CASE-01-c08986b88a58"
+  ],
+  [
+   "EXC-CASE-02",
+   "COMPLETED",
+   "PUBLISHED",
+   "INV-EXC-CASE-02-2db316645482"
+  ]
+ ],
+ "jobs_2": [
+  [
+   "EXC-CASE-01",
+   "COMPLETED",
+   "PUBLISHED",
+   "INV-EXC-CASE-01-35fd72c6c5ea",
+   ""
+  ],
+  [
+   "EXC-CASE-02",
+   "FAILED",
+   "NOT_PUBLISHED",
+   null,
+   "F-04: supporting_records must be source record IDs from the packet"
+  ]
+ ],
+ "final_pack_listing": {
+  "FAP-CASE-PER-2026-09-v1-709febad4a68": {
+   "final_pack_id": "FAP-CASE-PER-2026-09-v1-709febad4a68",
+   "pack_id": "PACK-CASE-PER-2026-09-0baf0532fbea",
+   "version": 1,
+   "supersedes_final_pack_id": null,
+   "generated_at": "2026-11-18T03:15:31+00:00",
+   "review_decision_id": "RD-3060e2a98d5072f8a1312b74",
+   "final_content_sha256": "709febad4a6873158a6cd1336bf3e33991c6938d090816d968e295afff7a0bf6",
+   "submission_id": "SUB-37122ac83558002286e1ef34",
+   "run_id": "RUN-2b3e0176d58104513a0fec9e",
+   "batch_id": "UPL-aabf56baa6009645c881ce96"
+  },
+  "FAP-CASE-PER-2026-09-v1-bde40b0a4607": {
+   "final_pack_id": "FAP-CASE-PER-2026-09-v1-bde40b0a4607",
+   "pack_id": "PACK-CASE-PER-2026-09-0baf0532fbea",
+   "version": 1,
+   "supersedes_final_pack_id": null,
+   "generated_at": "2026-11-18T03:18:13+00:00",
+   "review_decision_id": "RD-9fcd75b7eb86e7550f898e36",
+   "final_content_sha256": "bde40b0a46078d14efe5362b60ac9cde2f85a404e8a93c42d2a18245fa9c3f4a",
+   "submission_id": "SUB-bda1bf96ae133cf1f1844081",
+   "run_id": "RUN-59fb50567c91763766f89844",
+   "batch_id": "UPL-55ea1d76ea8bae51f6a256fe"
+  }
+ },
+ "fp1_unchanged_after_second": true,
+ "verify": {
+  "FAP-CASE-PER-2026-09-v1-709febad4a68": {
+   "final_pack_id": "FAP-CASE-PER-2026-09-v1-709febad4a68",
+   "verified": true,
+   "problems": []
+  },
+  "FAP-CASE-PER-2026-09-v1-bde40b0a4607": {
+   "final_pack_id": "FAP-CASE-PER-2026-09-v1-bde40b0a4607",
+   "verified": true,
+   "problems": []
+  }
+ },
+ "history": [
+  {
+   "batch_id": "UPL-55ea1d76ea8bae51f6a256fe",
+   "created_at": "2026-11-18T08:45:37+05:30",
+   "status": "PROCESSED",
+   "zip_name": "september.zip",
+   "zip_sha256": "6070d99c2b8b82c41df9f083a38ebbffea924a9cfa0fea39d9525f3ef8ac109f",
+   "gate": {
+    "passed": true,
+    "unsafe": [],
+    "unusable": [],
+    "mismatches": [],
+    "unexpected": [],
+    "required_total": 17,
+    "duplicate_names": [],
+    "duplicate_types": {},
+    "ignored_metadata": [],
+    "missing_required": [],
+    "present_optional": [
+     "IN-18",
+     "IN-19"
+    ],
+    "present_required": [
+     "IN-01",
+     "IN-02",
+     "IN-03",
+     "IN-04",
+     "IN-05",
+     "IN-06",
+     "IN-07",
+     "IN-08",
+     "IN-09",
+     "IN-10",
+     "IN-11",
+     "IN-12",
+     "IN-13",
+     "IN-14",
+     "IN-15",
+     "IN-16",
+     "IN-17"
+    ],
+    "optional_not_usable": []
+   },
+   "file_count": 19,
+   "submissions": [
+    {
+     "submission_id": "SUB-bda1bf96ae133cf1f1844081",
+     "run_id": "RUN-59fb50567c91763766f89844",
+     "submitted_at": "2026-11-18T03:15:38+00:00",
+     "submitted_by": "e2e-analyst",
+     "status": "SUCCEEDED",
+     "pack_id": "PACK-CASE-PER-2026-09-0baf0532fbea",
+     "outcome": "ALREADY_EXISTS",
+     "completed_at": "2026-11-18T08:45:40+05:30",
+     "error": "",
+     "auto_investigation": "ENQUEUED",
+     "final_packs": [
+      {
+       "final_pack_id": "FAP-CASE-PER-2026-09-v1-bde40b0a4607",
+       "generated_at": "2026-11-18T03:18:13+00:00",
+       "final_content_sha256": "bde40b0a46078d14efe5362b60ac9cde2f85a404e8a93c42d2a18245fa9c3f4a"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "batch_id": "UPL-aabf56baa6009645c881ce96",
+   "created_at": "2026-11-18T08:42:57+05:30",
+   "status": "PROCESSED",
+   "zip_name": "september.zip",
+   "zip_sha256": "6070d99c2b8b82c41df9f083a38ebbffea924a9cfa0fea39d9525f3ef8ac109f",
+   "gate": {
+    "passed": true,
+    "unsafe": [],
+    "unusable": [],
+    "mismatches": [],
+    "unexpected": [],
+    "required_total": 17,
+    "duplicate_names": [],
+    "duplicate_types": {},
+    "ignored_metadata": [],
+    "missing_required": [],
+    "present_optional": [
+     "IN-18",
+     "IN-19"
+    ],
+    "present_required": [
+     "IN-01",
+     "IN-02",
+     "IN-03",
+     "IN-04",
+     "IN-05",
+     "IN-06",
+     "IN-07",
+     "IN-08",
+     "IN-09",
+     "IN-10",
+     "IN-11",
+     "IN-12",
+     "IN-13",
+     "IN-14",
+     "IN-15",
+     "IN-16",
+     "IN-17"
+    ],
+    "optional_not_usable": []
+   },
+   "file_count": 19,
+   "submissions": [
+    {
+     "submission_id": "SUB-37122ac83558002286e1ef34",
+     "run_id": "RUN-2b3e0176d58104513a0fec9e",
+     "submitted_at": "2026-11-18T03:12:58+00:00",
+     "submitted_by": "e2e-analyst",
+     "status": "SUCCEEDED",
+     "pack_id": "PACK-CASE-PER-2026-09-0baf0532fbea",
+     "outcome": "PUBLISHED",
+     "completed_at": "2026-11-18T08:43:03+05:30",
+     "error": "",
+     "auto_investigation": "ENQUEUED",
+     "final_packs": [
+      {
+       "final_pack_id": "FAP-CASE-PER-2026-09-v1-709febad4a68",
+       "generated_at": "2026-11-18T03:15:31+00:00",
+       "final_content_sha256": "709febad4a6873158a6cd1336bf3e33991c6938d090816d968e295afff7a0bf6"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "batch_id": "UPL-abd01681637ffffad6e64ab8",
+   "created_at": "2026-11-18T08:42:56+05:30",
+   "status": "PACKAGE_INCOMPLETE",
+   "zip_name": "september_missing_in11.zip",
+   "zip_sha256": "6ccd87f869c1437b75ae286dd414c94eb93975172a210b424659b2ede9f785c5",
+   "gate": {
+    "passed": false,
+    "unsafe": [],
+    "unusable": [],
+    "mismatches": [],
+    "unexpected": [],
+    "required_total": 17,
+    "duplicate_names": [],
+    "duplicate_types": {},
+    "ignored_metadata": [],
+    "missing_required": [
+     "IN-11"
+    ],
+    "present_optional": [
+     "IN-18",
+     "IN-19"
+    ],
+    "present_required": [
+     "IN-01",
+     "IN-02",
+     "IN-03",
+     "IN-04",
+     "IN-05",
+     "IN-06",
+     "IN-07",
+     "IN-08",
+     "IN-09",
+     "IN-10",
+     "IN-12",
+     "IN-13",
+     "IN-14",
+     "IN-15",
+     "IN-16",
+     "IN-17"
+    ],
+    "optional_not_usable": []
+   },
+   "file_count": 18,
+   "submissions": []
+  },
+  {
+   "batch_id": "UPL-960c168479768aa74e7abbfb",
+   "created_at": "2026-11-18T08:42:55+05:30",
+   "status": "PACKAGE_REJECTED",
+   "zip_name": "september_bad.zip",
+   "zip_sha256": "0dd8c44ca2f6e476fc594a5482712bac46ddf91831047325555952b0eaa25a49",
+   "gate": {
+    "passed": false,
+    "reason": "the package contains unsafe entries, files outside the approved UC-042 schema, or duplicates; no document was analysed",
+    "unsafe": [
+     {
+      "name": "../evil.csv",
+      "reason": "path traversal ('..')"
+     }
+    ],
+    "unusable": [],
+    "mismatches": [],
+    "unexpected": [
+     {
+      "name": "notes.txt",
+      "reason": "not a file of the approved UC-042 schema (IN-01 to IN-19) for this period"
+     }
+    ],
+    "duplicate_names": [],
+    "duplicate_types": {},
+    "ignored_metadata": [],
+    "missing_required": [],
+    "present_optional": [],
+    "present_required": []
+   },
+   "file_count": 0,
+   "submissions": []
+  }
+ ],
+ "log": [
+  "[08:42:53] health {\"status\": \"ok\", \"database\": true, \"provider\": \"openai\", \"model\": \"gpt-6-luna\"}",
+  "[08:42:54] retired legacy entry points {\"upload\": [410, \"LEGACY_WORKFLOW_RETIRED\"], \"reconcile\": [410, \"LEGACY_WORKFLOW_RETIRED\"]}",
+  "[08:42:55] rejected package {\"batch\": \"UPL-960c168479768aa74e7abbfb\", \"status\": \"PACKAGE_REJECTED\", \"unsafe\": [{\"name\": \"../evil.csv\", \"reason\": \"path traversal ('..')\"}], \"unexpected\": [{\"name\": \"notes.txt\", \"reason\": \"not a file of the approved UC-042 schema (IN-01 to IN-19) for this period\"}], \"submit_http\": 409, \"submit_code\": \"PACKAGE_NOT_COMPLETE\", \"runs_before\": 0, \"runs_after\": 0}",
+  "[08:42:57] incomplete package {\"batch\": \"UPL-abd01681637ffffad6e64ab8\", \"status\": \"PACKAGE_INCOMPLETE\", \"missing\": [\"IN-11\"]}",
+  "[08:42:57] upload + validate {\"batch\": \"UPL-aabf56baa6009645c881ce96\", \"status\": \"VALIDATED\", \"passed\": true, \"present_required\": 17, \"present_optional\": [\"IN-18\", \"IN-19\"], \"zip_sha256\": \"6070d99c2b8b82c4\"}",
+  "[08:43:00] submit for audit {\"submission\": \"SUB-37122ac83558002286e1ef34\", \"run\": \"RUN-2b3e0176d58104513a0fec9e\"}",
+  "[08:45:12] audit result {\"status\": \"SUCCEEDED\", \"pack\": \"PACK-CASE-PER-2026-09-0baf0532fbea\", \"outcome\": \"PUBLISHED\", \"investigations\": [[\"EXC-CASE-01\", \"COMPLETED\", \"PUBLISHED\", \"INV-EXC-CASE-01-c08986b88a58\", \"\"], [\"EXC-CASE-02\", \"COMPLETED\", \"PUBLISHED\", \"INV-EXC-CASE-02-2db316645482\", \"\"]]}",
+  "[08:45:12] review opened {\"review\": \"RS-1d856ae9ab3d8a840ea115bb\", \"submission\": \"SUB-37122ac83558002286e1ef34\", \"run\": \"RUN-2b3e0176d58104513a0fec9e\", \"batch\": \"UPL-aabf56baa6009645c881ce96\", \"selections\": [[\"EXC-CASE-01\", \"INCLUDED\", \"INV-EXC-CASE-01-c08986b88a58\"], [\"EXC-CASE-02\", \"INCLUDED\", \"INV-EXC-CASE-02-2db316645482\"]], \"blockers\": [\"AI_REVIEW_PENDING\", \"AI_REVIEW_PENDING\", \"PREVIEW_REQUIRED\"]}",
+  "[08:45:13] analyst ACCEPT (submission-scoped) {\"investigation\": \"INV-EXC-CASE-01-c08986b88a58\", \"revision\": 1, \"submission\": \"SUB-37122ac83558002286e1ef34\"}",
+  "[08:45:13] analyst ACCEPT (submission-scoped) {\"investigation\": \"INV-EXC-CASE-02-2db316645482\", \"revision\": 1, \"submission\": \"SUB-37122ac83558002286e1ef34\"}",
+  "[08:45:30] preview {\"ready\": true, \"blockers\": [], \"closing_summary\": \"GENERATED\"}",
+  "[08:45:37] GENERATE {\"final_pack\": \"FAP-CASE-PER-2026-09-v1-709febad4a68\"}",
+  "[08:45:37] upload + validate {\"batch\": \"UPL-55ea1d76ea8bae51f6a256fe\", \"status\": \"VALIDATED\", \"passed\": true, \"present_required\": 17, \"present_optional\": [\"IN-18\", \"IN-19\"], \"zip_sha256\": \"6070d99c2b8b82c4\"}",
+  "[08:45:38] submit for audit {\"submission\": \"SUB-bda1bf96ae133cf1f1844081\", \"run\": \"RUN-59fb50567c91763766f89844\"}",
+  "[08:47:56] audit result {\"status\": \"SUCCEEDED\", \"pack\": \"PACK-CASE-PER-2026-09-0baf0532fbea\", \"outcome\": \"ALREADY_EXISTS\", \"investigations\": [[\"EXC-CASE-01\", \"COMPLETED\", \"PUBLISHED\", \"INV-EXC-CASE-01-35fd72c6c5ea\", \"\"], [\"EXC-CASE-02\", \"FAILED\", \"NOT_PUBLISHED\", null, \"F-04: supporting_records must be source record IDs from the packet\"]]}",
+  "[08:47:56] submission 2 investigations persisted independently {\"all_published\": false, \"disjoint_from_submission_1\": true, \"executions\": {\"INV-EXC-CASE-01-35fd72c6c5ea\": {\"authorization_id\": \"AIA-8f0bdd8c6648a3a73b78d249\", \"job_id\": \"JOB-7a61a24b2a316a1e8d5de687\", \"run_id\": \"RUN-59fb50567c91763766f89844\", \"submission_id\": \"SUB-bda1bf96ae133cf1f1844081\"}}, \"submission_1_artefacts_unchanged\": true}",
+  "[08:47:56] review opened {\"review\": \"RS-16962ff40926feb8eed50ec9\", \"submission\": \"SUB-bda1bf96ae133cf1f1844081\", \"run\": \"RUN-59fb50567c91763766f89844\", \"batch\": \"UPL-55ea1d76ea8bae51f6a256fe\", \"selections\": [[\"EXC-CASE-01\", \"INCLUDED\", \"INV-EXC-CASE-01-35fd72c6c5ea\"], [\"EXC-CASE-02\", \"NOT_INVESTIGATED\", null]], \"blockers\": [\"AI_REVIEW_PENDING\", \"INVESTIGATION_FAILED_NO_DISPOSITION\", \"PREVIEW_REQUIRED\"]}",
+  "[08:47:56] analyst ACCEPT (submission-scoped) {\"investigation\": \"INV-EXC-CASE-01-35fd72c6c5ea\", \"revision\": 1, \"submission\": \"SUB-bda1bf96ae133cf1f1844081\"}",
+  "[08:47:57] excluded with reason {\"exceptions\": [\"EXC-CASE-02\"]}",
+  "[08:48:12] preview {\"ready\": true, \"blockers\": [], \"closing_summary\": \"GENERATED\"}",
+  "[08:48:14] GENERATE {\"final_pack\": \"FAP-CASE-PER-2026-09-v1-bde40b0a4607\"}",
+  "[08:48:16] final packs {\"fp1\": {\"submission_id\": \"SUB-37122ac83558002286e1ef34\", \"run_id\": \"RUN-2b3e0176d58104513a0fec9e\", \"batch_id\": \"UPL-aabf56baa6009645c881ce96\", \"generated_at\": \"2026-11-18T03:15:31+00:00\"}, \"fp2\": {\"submission_id\": \"SUB-bda1bf96ae133cf1f1844081\", \"run_id\": \"RUN-59fb50567c91763766f89844\", \"batch_id\": \"UPL-55ea1d76ea8bae51f6a256fe\", \"generated_at\": \"2026-11-18T03:18:13+00:00\"}, \"fp1_unchanged\": true, \"verified\": {\"FAP-CASE-PER-2026-09-v1-709febad4a68\": true, \"FAP-CASE-PER-2026-09-v1-bde40b0a4607\": true}}",
+  "[08:48:16] history {\"packages\": [[\"UPL-55ea1d76ea8bae51f6a256fe\", \"PROCESSED\", [[\"SUB-bda1bf96ae133cf1f1844081\", \"SUCCEEDED\", \"PACK-CASE-PER-2026-09-0baf0532fbea\", [\"FAP-CASE-PER-2026-09-v1-bde40b0a4607\"]]]], [\"UPL-aabf56baa6009645c881ce96\", \"PROCESSED\", [[\"SUB-37122ac83558002286e1ef34\", \"SUCCEEDED\", \"PACK-CASE-PER-2026-09-0baf0532fbea\", [\"FAP-CASE-PER-2026-09-v1-709febad4a68\"]]]], [\"UPL-abd01681637ffffad6e64ab8\", \"PACKAGE_INCOMPLETE\", []], [\"UPL-960c168479768aa74e7abbfb\", \"PACKAGE_REJECTED\", []]]}",
+  "[08:48:16] final-pack isolation {\"version_supersedes\": {\"FAP-CASE-PER-2026-09-v1-709febad4a68\": [1, null], \"FAP-CASE-PER-2026-09-v1-bde40b0a4607\": [1, null]}, \"other_submission_investigations_referenced\": {\"FAP-CASE-PER-2026-09-v1-709febad4a68\": [], \"FAP-CASE-PER-2026-09-v1-bde40b0a4607\": []}}"
+ ]
+}

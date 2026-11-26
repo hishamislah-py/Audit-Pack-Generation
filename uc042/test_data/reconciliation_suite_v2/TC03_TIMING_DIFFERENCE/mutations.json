@@ -1,0 +1,141 @@
+{
+  "scenario_id": "TC03",
+  "baseline": "set_01_clean_baseline",
+  "operations": [
+    {
+      "op": "delete_record",
+      "file_id": "IN-09",
+      "key": "BE-GBP-0925-AQ1",
+      "why": "the bank did not credit the acquirer settlement on 25 Sep"
+    },
+    {
+      "op": "add_record",
+      "file_id": "IN-09",
+      "record": {
+        "bank_entry_id": "BE-GBP-0926-T01",
+        "statement_id": "ST-SGA-GBP-01-20260926-EOD",
+        "account_id": "SGA-GBP-01",
+        "booking_date": "2026-09-26",
+        "booking_ts": "2026-09-26T08:00:00+01:00",
+        "value_date": "2026-09-26",
+        "amount": "4647.75",
+        "dc_indicator": "C",
+        "currency": "GBP",
+        "bank_reference": "AQ-GBP-20260925",
+        "end_to_end_ref": "",
+        "counterparty_name": "Synthetic Acquirer Ltd",
+        "narrative_text": "CARD LOAD SETTLEMENT AQ-GBP-20260925"
+      },
+      "why": "clearing entry: the bank credited AQ-GBP-20260925 on Sat 26 Sep 08:00, same reference and amount",
+      "insert_after": "BE-GBP-0925-SB1"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-08",
+      "key": "ST-SGA-GBP-01-20260925-EOD",
+      "field": "closing_balance_amount",
+      "old": "375461.46",
+      "new": "370813.71",
+      "why": "25 Sep statement without the acquirer credit"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-08",
+      "key": "ST-SGA-GBP-01-20260925-EOD",
+      "field": "entry_count",
+      "old": "5",
+      "new": "4",
+      "why": "one entry fewer on 25 Sep"
+    },
+    {
+      "op": "add_record",
+      "file_id": "IN-08",
+      "record": {
+        "statement_id": "ST-SGA-GBP-01-20260926-EOD",
+        "account_id": "SGA-GBP-01",
+        "statement_date": "2026-09-26",
+        "as_at_ts": "2026-09-26T23:59:59+01:00",
+        "currency": "GBP",
+        "opening_balance_amount": "370813.71",
+        "opening_balance_dc": "C",
+        "closing_balance_amount": "375461.46",
+        "closing_balance_dc": "C",
+        "entry_count": "1",
+        "bank_statement_ref": "EOD/SGA-GBP-01/20260926"
+      },
+      "why": "Saturday 26 Sep statement carrying the clearing entry (subsequent clearing evidence)",
+      "insert_after": "ST-SGA-GBP-01-20260925-EOD"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-07",
+      "key": "ST-SGA-GBP-01-20260925-1700",
+      "field": "balance_amount",
+      "old": "375461.46",
+      "new": "370813.71",
+      "why": "17:00 balance without the acquirer credit"
+    },
+    {
+      "op": "add_record",
+      "file_id": "IN-07",
+      "record": {
+        "statement_id": "ST-SGA-GBP-01-20260926-1700",
+        "account_id": "SGA-GBP-01",
+        "as_at_ts": "2026-09-26T17:00:00+01:00",
+        "currency": "GBP",
+        "balance_amount": "375461.46",
+        "balance_dc_indicator": "C",
+        "bank_statement_ref": "BC/SGA-GBP-01/20260926"
+      },
+      "why": "Saturday 26 Sep 17:00 confirmation (makes the clearing day's bank evidence complete)",
+      "insert_after": "ST-SGA-EUR-01-20260925-1700"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-06",
+      "key": "ERL-SGA-GBP-01-20260925",
+      "field": "bank_balance_reported",
+      "old": "375461.46",
+      "new": "370813.71",
+      "why": "firm reports the bank balance per the 17:00 confirmation"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-06",
+      "key": "ERL-SGA-GBP-01-20260925",
+      "field": "difference_reported",
+      "old": "0.00",
+      "new": "-4647.75",
+      "why": "firm reports bank minus ledger"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-06",
+      "key": "ERL-SGA-GBP-01-20260925",
+      "field": "timing_difference_claimed",
+      "old": "false",
+      "new": "true",
+      "why": "preparer claims timing"
+    },
+    {
+      "op": "add_record",
+      "file_id": "IN-14",
+      "record": {
+        "discrepancy_id": "DL-0001",
+        "logged_ts": "2026-09-25T18:05:00+01:00",
+        "recon_ref": "ERL-SGA-GBP-01-20260925",
+        "account_id": "SGA-GBP-01",
+        "currency": "GBP",
+        "amount": "-4647.75",
+        "description": "Acquirer settlement AQ-GBP-20260925 not credited by the bank by 17:00; expected next banking day",
+        "cause_category": "TIMING",
+        "cause_evidence_ref": "BE-GBP-0926-T01",
+        "funding_reference": "",
+        "status": "RESOLVED",
+        "resolved_ts": "2026-09-28T09:00:00+01:00",
+        "approver_id": "U-04"
+      },
+      "why": "the firm's own investigation record (follows SC2 precedent: cause_category TIMING)"
+    }
+  ]
+}

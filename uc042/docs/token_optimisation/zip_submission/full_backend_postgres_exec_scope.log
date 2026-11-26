@@ -1,0 +1,62 @@
+.........................C:\Users\artlptp263user\Downloads\UC042_CLAUDE_CODE_HANDOFF\uc042\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:812: ResourceWarning: unclosed <socket.socket fd=444, family=2, type=1, proto=0, laddr=('127.0.0.1', 49396), raddr=('127.0.0.1', 5433)>
+  self._tasks: set[asyncio.Task] = set()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..........................EOF marker not found
+.............EE......E.....................................................................................................................................................................................................................................................................................................................................................................................................................................................................s................................................................................................................EOF marker not found
+...........................................................................................C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage4_dr06_dr07.py:124: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\artlptp263user\\p10\\uc042_token_optimisation\\uc042lib\\investigation\\packet_view.py' mode='r' encoding='utf-8'>
+  self.assertNotIn("no such edge", open(packet_view.__file__, encoding="utf-8").read())
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...............................................s................................EOF marker not found
+..............................EOF marker not found
+.......................
+======================================================================
+ERROR: test_changed_registry_entry_no_longer_matches_the_files (tests.test_api_registry.Registry.test_changed_registry_entry_no_longer_matches_the_files)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_api_registry.py", line 142, in test_changed_registry_entry_no_longer_matches_the_files
+    data = json.loads(self.registry_file().read_text(encoding="utf-8"))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\artlptp263user\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\artlptp263user\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\ARTLPT~1\\AppData\\Local\\Temp\\tmpimzx3agu\\state\\registry\\investigation_registry.json'
+
+======================================================================
+ERROR: test_damaged_registry_fails_closed (tests.test_api_registry.Registry.test_damaged_registry_fails_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_api_registry.py", line 149, in test_damaged_registry_fails_closed
+    self.registry_file().write_text("{not json", encoding="utf-8")
+  File "C:\Users\artlptp263user\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1078, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\artlptp263user\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\ARTLPT~1\\AppData\\Local\\Temp\\tmp5a59miu5\\state\\registry\\investigation_registry.json'
+
+======================================================================
+ERROR: test_registry_writes_are_atomic_whole_files (tests.test_api_registry.Registry.test_registry_writes_are_atomic_whole_files)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_api_registry.py", line 160, in test_registry_writes_are_atomic_whole_files
+    data = json.loads(self.registry_file().read_text(encoding="utf-8"))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\artlptp263user\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\artlptp263user\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\ARTLPT~1\\AppData\\Local\\Temp\\tmp9dkpdowa\\state\\registry\\investigation_registry.json'
+
+----------------------------------------------------------------------
+Ran 863 tests in 1512.264s
+
+FAILED (errors=3, skipped=2)
+
+[phase 4] 76 packets: 1948282 -> 1510682 characters (22.5% smaller)
+EXIT 1

@@ -1,0 +1,17 @@
+{
+  "label": "ENGINE-PREDICTED (source reading of the reference engine; NOT EXECUTED; unverified)",
+  "scenario_id": "TC04",
+  "expected_case_status": "CLEAN",
+  "non_passing_results": [],
+  "exceptions": [],
+  "evidence_statuses": {},
+  "investigation_groups": [],
+  "candidate_relationships": [],
+  "must_hold": [
+    "C04 includes UR-0003 (open at 17:00)",
+    "CASH-BANK-LINK LE-EUR-0930-0006 PASS",
+    "C11-BANK-ENTRY passes (register reference)",
+    "C09-ALLOCATION UR-0003 PASS: open at the period end; allocation due 2026-10-01, after the period"
+  ],
+  "notes": []
+}
