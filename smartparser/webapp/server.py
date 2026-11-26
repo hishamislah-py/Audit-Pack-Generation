@@ -7,7 +7,7 @@
 
 Binds to 127.0.0.1 only. Authentication (auth.py): username/password checked server-side against a local credentials
 file of PBKDF2 hashes; a server-side session is held in an HttpOnly SameSite=Strict cookie. Every /api route except
-/api/auth/login and /api/auth/session answers 401 UNAUTHENTICATED without a valid session. The server refuses to
+/api/auth/login, /api/auth/session and /api/ui/config answers 401 UNAUTHENTICATED without a valid session. The server refuses to
 start without credentials unless --insecure-no-auth is given. Identity (Fix8 D6, identity.py): every authenticated
 request runs as the SIGNED-IN user, who is the actor recorded on its actions; case mutations are limited to the case
 owner or a supervisor (authz.py). The server reviewer (--reviewer-id/--reviewer-role/--reviewer-kind) acts only for
@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import traceback
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -50,13 +51,20 @@ RF_FILES = _build_files(RF_DIR)
 ANALYST_DIR = Path(__file__).parent / "analyst"
 ANALYST_FILES = _build_files(ANALYST_DIR)
 BUILDS = {"rf": (RF_DIR, RF_FILES), "analyst": (ANALYST_DIR, ANALYST_FILES)}
+# Colour themes the analyst app offers. The server decides the default (--default-theme / $SMARTPARSER_DEFAULT_THEME);
+# a user's own Light/Dark choice is kept in their browser and overrides it.
+THEMES = ("light", "dark")
+DEFAULT_THEME = "light"
 
 
 class App:
-    def __init__(self, ctx: AppContext, auth: "auth_mod.Authenticator | None" = None):
+    def __init__(self, ctx: AppContext, auth: "auth_mod.Authenticator | None" = None, default_theme: str = DEFAULT_THEME):
         # auth=None means no authentication (unit tests that drive App directly, or --insecure-no-auth).
+        if default_theme not in THEMES:
+            raise ValueError(f"default_theme must be one of {THEMES}, not {default_theme!r}")
         self.ctx = ctx
         self.auth = auth
+        self.default_theme = default_theme
         # Fix8 D6/D7: user roles (api.user_profile) come from THIS authenticator instance, not a module registry
         ctx.authenticator = auth
 
@@ -69,6 +77,11 @@ class App:
         parts = [unquote(p) for p in u.path.strip("/").split("/") if p]
         if parts[:2] == ["api", "auth"]:
             return self._auth_route(method, parts[2:], headers, body)
+        if parts[:2] == ["api", "ui"]:
+            # Public (the sign-in screen needs it before a session exists); carries no case or user data.
+            if method == "GET" and parts[2:] == ["config"]:
+                return (*self._json({"default_theme": self.default_theme, "themes": list(THEMES)}), [])
+            return (*self._json({"error": "NOT_FOUND", "message": u.path}, 404), [])
         sess = None
         if parts[:1] == ["api"] and self.auth is not None:
             sess = self.auth.session(self.auth.token_from(headers))      # validated once (refreshes the idle timer)
@@ -213,8 +226,9 @@ def make_handler(app: App):
     return Handler
 
 
-def serve(ctx: AppContext, port: int = 8780, auth: "auth_mod.Authenticator | None" = None) -> ThreadingHTTPServer:
-    httpd = ThreadingHTTPServer(("127.0.0.1", port), make_handler(App(ctx, auth)))
+def serve(ctx: AppContext, port: int = 8780, auth: "auth_mod.Authenticator | None" = None,
+          default_theme: str = DEFAULT_THEME) -> ThreadingHTTPServer:
+    httpd = ThreadingHTTPServer(("127.0.0.1", port), make_handler(App(ctx, auth, default_theme)))
     httpd.daemon_threads = True
     return httpd
 
@@ -241,6 +255,10 @@ def main():
     ap.add_argument("--reviewer-role", default="analyst")
     ap.add_argument("--reviewer-kind", default="TEST", choices=["TEST", "BUSINESS"])
     ap.add_argument("--port", type=int, default=8780)
+    ap.add_argument("--default-theme", choices=THEMES,
+                    default=os.environ.get("SMARTPARSER_DEFAULT_THEME", DEFAULT_THEME).strip().lower(),
+                    help="colour theme the analyst app opens in until a user picks Light or Dark "
+                         "(default: $SMARTPARSER_DEFAULT_THEME, else light)")
     ap.add_argument("--demo-scenarios", default=None, help="folder of Ringfence demo scenarios (p10/RINGFENCE_DEMO_TEST_DATA); "
                                                            "enables /api/demo/... Use a dedicated demo workspace (--root)")
     ap.add_argument("--auth-file", default=None, help="credentials JSON of PBKDF2 hashes (default: $SMARTPARSER_AUTH_FILE); "
@@ -273,6 +291,8 @@ def main():
     ap.add_argument("--mapping-ai-send-value-shapes", action="store_true",
                     help="also send character-class value shapes (never values); owner default: off")
     a = ap.parse_args()
+    if a.default_theme not in THEMES:
+        ap.error(f"SMARTPARSER_DEFAULT_THEME must be one of {', '.join(THEMES)}")
     if a.mapping_ai == "on" and a.recorded_llm:
         ap.error("--mapping-ai on and --recorded-llm are mutually exclusive")
     for n in ("mapping_ai_max_calls_per_day", "mapping_ai_max_output_tokens"):
@@ -300,7 +320,7 @@ def main():
     from .closure import ClosureService
     ctx.closure = ClosureService(ctx, ClosureRunner(ctx.uc042_root, a.closure_python, a.ai_env_file, a.ai_pricing_file,
                                                     a.ai_max_requests_per_operation))
-    httpd = serve(ctx, a.port, auth)
+    httpd = serve(ctx, a.port, auth, a.default_theme)
     print(f"UC-042 Smart Parser application on http://127.0.0.1:{a.port}/  (workspace {ctx.root}; "
           f"{'sign-in required' if auth else 'AUTHENTICATION DISABLED (--insecure-no-auth)'})", flush=True)
     httpd.serve_forever()
