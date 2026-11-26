@@ -1,0 +1,3 @@
+# Keep every file byte-for-byte as committed on all platforms (no CRLF/LF conversion). The engine (uc042/) and the
+# application (app/) already use this rule; it matters for hashed evidence files, golden outputs and test data.
+* -text

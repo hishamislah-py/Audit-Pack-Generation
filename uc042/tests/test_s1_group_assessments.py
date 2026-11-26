@@ -32,7 +32,8 @@ from uc042lib.investigation.retrieval import EvidenceStore, load_pack
 from uc042lib.investigation.routing import route_for
 from uc042lib.pack.generate import generate
 
-SUITE = Path(os.environ.get("UC042_TC_SUITE", r"C:\Users\artlptp263user\Downloads\UC042_RECONCILIATION_TEST_SUITE_V2"))
+SUITE = Path(os.environ.get("UC042_TC_SUITE",
+                            Path(__file__).resolve().parents[1] / "test_data" / "reconciliation_suite_v2"))
 TCS = {"TC01": "TC01_DUPLICATE_TRANSACTION", "TC02": "TC02_AMOUNT_MISMATCH", "TC03": "TC03_TIMING_DIFFERENCE",
        "TC04": "TC04_UNMATCHED_TRANSACTION", "TC05": "TC05_COMMON_CAUSE", "TC06": "TC06_INDEPENDENT_CAUSES"}
 REVIEWER = {"user_id": "analyst-tc", "display_name": "TC Analyst"}

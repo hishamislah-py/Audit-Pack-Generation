@@ -18,7 +18,7 @@ from uc042lib.pack.generate import generate
 from uc042lib.validate import ENRICHED_RULES
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "tc06_06_live_prompt19_output_20261123.json"
-SUITE = Path(r"C:\Users\artlptp263user\Downloads\UC042_RECONCILIATION_TEST_SUITE_V2")
+SUITE = Path(__file__).resolve().parents[1] / "test_data" / "reconciliation_suite_v2"
 
 NEGATED = [
     "It does not establish bank movement for this settlement line or resolve the discrepancy.",   # the live TC06-06 text

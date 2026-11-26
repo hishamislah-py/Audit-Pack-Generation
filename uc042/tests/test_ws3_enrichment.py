@@ -20,7 +20,7 @@ DATASETS = DEFAULT_SET.parent
 FROZEN = ["set_01_clean_baseline", "scn_S02_missing_eur_statement", "scn_S05_unexplained_gbp_difference",
           "scn_SC2_settlement_timing", "scn_SC3B_fee_not_itemised", "scn_SC3C_short_settlement",
           "scn_SC5A_missing_transaction", "scn_SC5C_refund_double_posted", "scn_SC5D_closing_snapshot_mismatch"]
-TC_SNAPSHOT = Path(r"C:\u42v\enrich_20261123\outputs\tc_snapshot_0205")
+TC_SNAPSHOT = Path(__file__).resolve().parents[1] / "test_data" / "ws3_tc_snapshot_0205"
 # TC03 in that snapshot is the superseded Saturday 25->26 Sep version; Session 2 is replacing it (Thu 24 -> Fri 25 Sep,
 # AQ-GBP-20260924). It is excluded until the revised, validated dataset is delivered.
 SUPERSEDED_TCS = {"TC03"}

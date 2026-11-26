@@ -26,7 +26,8 @@ from uc042lib.investigation.routing import route_for
 from uc042lib.pack.generate import generate
 from uc042lib.validate import ENRICHED_RULES
 
-SUITE = Path(os.environ.get("UC042_TC_SUITE", r"C:\Users\artlptp263user\Downloads\UC042_RECONCILIATION_TEST_SUITE_V2"))
+SUITE = Path(os.environ.get("UC042_TC_SUITE",
+                            Path(__file__).resolve().parents[1] / "test_data" / "reconciliation_suite_v2"))
 TMP, BUILT = None, {}
 
 

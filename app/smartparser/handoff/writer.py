@@ -21,7 +21,8 @@ from .eligibility import HandoffEligibility, source_rows
 from .reprocess import ReprocessResult
 
 MARKER = "PREVIEW_ONLY_NOT_AUTHORISED_FOR_UC042_SUBMISSION"
-DEFAULT_PROTECTED = [r"C:\Users\artlptp263user\p10\uc042_token_optimisation"]
+# The UC-042 engine tree of this repository (sibling uc042/ folder); UC042_ROOT is added at run time.
+DEFAULT_PROTECTED = [str(Path(__file__).resolve().parents[3] / "uc042")]
 
 
 class HandoffRefused(PermissionError):

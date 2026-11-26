@@ -38,7 +38,7 @@ from uc042lib.validate import ENRICHED_RULES
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 SNAP04 = "IN-03:CBS-20260917-C0004-GBP"
 TC03_REV3 = Path(os.environ.get("UC042_TC03_REV3",
-                                r"C:\Users\artlptp263user\Downloads\UC042_RECONCILIATION_TEST_SUITE_V2_TC03_REV3"))
+                                Path(__file__).resolve().parents[1] / "test_data" / "reconciliation_suite_v2_tc03_rev3"))
 ANALYST = {"user_id": "analyst-7", "display_name": "Dana Analyst"}
 REV3 = {}
 

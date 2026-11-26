@@ -1,12 +1,14 @@
 """Phase 3B-3: deterministic reprocessing, the 14-point handoff checklist and the PREVIEW-only canonical writer."""
 import hashlib
 import json
+from pathlib import Path
 
 import pytest
 
 from smartparser.handoff.eligibility import HandoffPolicy, check_handoff
 from smartparser.handoff.reprocess import ReprocessError, reprocess
-from smartparser.handoff.writer import MARKER, HandoffNotAuthorised, HandoffRefused, submit_to_uc042, write_preview
+from smartparser.handoff.writer import (DEFAULT_PROTECTED, MARKER, HandoffNotAuthorised, HandoffRefused, submit_to_uc042,
+                                        write_preview)
 from smartparser.mapping.templates import TemplateRegistry, TemplateStatus
 from smartparser.review.approvals import approve_file_mapping, confirm_category, revoke_rule
 from smartparser.review.session import approve_proposal, decide_column, open_review
@@ -176,7 +178,7 @@ def test_writer_refuses_the_uc042_tree_and_submission_is_disabled(env, monkeypat
     with pytest.raises(HandoffRefused, match="protected UC-042 tree"):
         write_preview(rr, e, env.reg, tmp_path / "uc042" / "source_data")
     with pytest.raises(HandoffRefused, match="protected UC-042 tree"):
-        write_preview(rr, e, env.reg, r"C:\Users\artlptp263user\p10\uc042_token_optimisation\out")
+        write_preview(rr, e, env.reg, str(Path(DEFAULT_PROTECTED[0]) / "out"))
     with pytest.raises(HandoffNotAuthorised):
         submit_to_uc042(rr, e)
 

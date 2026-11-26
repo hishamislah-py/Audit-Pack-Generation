@@ -8,6 +8,7 @@ import base64
 import json
 import os
 import shutil
+import sys
 import tempfile
 import time
 from pathlib import Path
@@ -23,9 +24,10 @@ from smartparser.webapp.context import AppContext
 from .test_ringfence_cases import ANALYST, TEST_POLICY, make_zip, settle
 from .uc042_support import UC042_ROOT
 
-CLOSURE_PY = Path(os.environ.get("UC042_CLOSURE_PYTHON",
-                                 r"C:\Users\artlptp263user\Downloads\UC042_CLAUDE_CODE_HANDOFF\uc042\.venv\Scripts\python.exe"))
-DEMO = Path(os.environ.get("RINGFENCE_DEMO_DATA", r"C:\Users\artlptp263user\p10\RINGFENCE_DEMO_TEST_DATA"))
+# Defaults: the interpreter running the tests, and the demo scenarios shipped in this repository.
+CLOSURE_PY = Path(os.environ.get("UC042_CLOSURE_PYTHON", sys.executable))
+DEMO = Path(os.environ.get("RINGFENCE_DEMO_DATA",
+                           Path(__file__).resolve().parents[2] / "demo_datasets" / "ringfence_demo_scenarios"))
 needs_closure = pytest.mark.skipif(not ((UC042_ROOT / "uc042lib" / "final_pack").is_dir() and CLOSURE_PY.is_file()),
                                    reason="UC-042 library tree or closure interpreter not available "
                                           "(set UC042_ROOT / UC042_CLOSURE_PYTHON)")

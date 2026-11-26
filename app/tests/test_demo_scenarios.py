@@ -91,7 +91,7 @@ from pathlib import Path  # noqa: E402
 
 import pytest  # noqa: E402
 
-REAL = Path(r"C:\Users\artlptp263user\p10\RINGFENCE_DEMO_TEST_DATA")
+REAL = Path(__file__).resolve().parents[2] / "demo_datasets" / "ringfence_demo_scenarios"
 S5 = REAL / "scenario_5_duplicate"
 
 

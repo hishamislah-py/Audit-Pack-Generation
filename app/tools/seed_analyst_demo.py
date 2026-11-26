@@ -52,17 +52,18 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from smartparser.webapp import auth as auth_mod  # noqa: E402
 
-DEFAULT_HOME = Path(r"C:\u42v\ringfence_demo_final")
+REPO = ROOT.parent
+DEFAULT_HOME = REPO / ".runtime" / "demo_home"
 DEFAULT_PORT = 8780
-DEFAULT_SCENARIOS = Path(r"C:\Users\artlptp263user\p10\RINGFENCE_DEMO_TEST_DATA")
-DEFAULT_UC042 = Path(r"C:\u42x\UC042_SMART_PARSER_E2E_TEST_BUNDLE\src\uc042")
+DEFAULT_SCENARIOS = REPO / "demo_datasets" / "ringfence_demo_scenarios"
+DEFAULT_UC042 = REPO / "uc042"
 TEST_POLICY = ROOT / "tests" / "fixtures" / "review" / "test_authority_policy.json"
 # Registered in this order (reporting periods Jun, Jul, Oct, Nov, Sep 2026). The Work Queue keeps its existing
 # date-based order (WAITING oldest received first, ties within the same second by case reference). No priority exists.
 SCENARIO_IDS = ("RF-DEMO-01", "RF-DEMO-02", "RF-DEMO-03", "RF-DEMO-04", "RF-DEMO-05")
 # Closure library interpreter and AI credentials file (read-only use; the server reads the key with an exact allowlist)
-DEFAULT_CLOSURE_PYTHON = Path(r"C:\Users\artlptp263user\Downloads\UC042_CLAUDE_CODE_HANDOFF\uc042\.venv\Scripts\python.exe")
-DEFAULT_AI_ENV = Path(r"C:\Users\artlptp263user\Downloads\UC042_CLAUDE_CODE_HANDOFF\uc042\.env")
+DEFAULT_CLOSURE_PYTHON = Path(sys.executable)
+DEFAULT_AI_ENV = REPO / ".runtime" / ".env"
 # Earlier demo workspaces, kept as backups: never used or modified by this tool.
 PROTECTED = [Path(p) for p in (r"C:\u42v\rf_demo_ws", r"C:\u42v\ringfence_demo_ws", r"C:\u42v\ringfence_analyst_demo",
                                r"C:\u42v\analyst_demo", r"C:\u42v\analyst_demo_journey")]

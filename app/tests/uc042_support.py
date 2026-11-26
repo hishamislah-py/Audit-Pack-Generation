@@ -12,8 +12,9 @@ from smartparser.schemas import SchemaRegistry
 FIXTURES = Path(__file__).parent / "fixtures" / "uc042_canonical"
 SEP = FIXTURES / "PER-2026-09_set_01_clean_baseline"
 MAY = FIXTURES / "PER-2026-05_demo_history"
-# The isolated UC-042 working copy the registry was generated from. Tests that need it are skipped when it is absent.
-UC042_ROOT = Path(os.environ.get("UC042_ROOT", r"C:\Users\artlptp263user\p10\uc042_token_optimisation"))
+# The UC-042 engine tree: the sibling uc042/ folder of this repository (override with UC042_ROOT). Tests that need it
+# are skipped when it is absent.
+UC042_ROOT = Path(os.environ.get("UC042_ROOT", Path(__file__).resolve().parents[2] / "uc042"))
 needs_uc042 = pytest.mark.skipif(not (UC042_ROOT / "uc042lib" / "schema.py").is_file(),
                                  reason=f"UC-042 tree not available at {UC042_ROOT} (set UC042_ROOT)")
 
