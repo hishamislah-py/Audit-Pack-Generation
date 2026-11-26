@@ -16,7 +16,7 @@ dependencies = [
 [project.optional-dependencies]
 # Phase 5 (API/UI) dependencies are deliberately not required yet.
 api = ["fastapi>=0.110", "uvicorn>=0.29", "python-multipart>=0.0.9"]
-dev = ["pytest>=8"]
+dev = ["pytest>=8", "websocket-client>=1.8"]   # websocket-client: headless-Edge browser tests (DevTools protocol)
 
 [tool.setuptools.packages.find]
 include = ["smartparser*"]

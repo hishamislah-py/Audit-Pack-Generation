@@ -18,7 +18,7 @@ Assembled 26 Nov 2026 from three sources. GitHub `main` (b132305) and `openship-
   - GitHub's `uc042/frontend/` (205 files), kept.
 - `app/` at the app import commit equals `app_rel@a0a4978` plus the theme commit, file for file.
 - Later commits change only:
-  - the 12 files listed in "Changes after import";
+  - the 14 files listed in "Changes after import";
   - the new `deploy/`, `docs/consolidation/` and `uc042/test_data/` folders and `demo_datasets/ringfence_demo_scenarios/`;
   - the root `README.md`, `.gitignore`, `.gitattributes` and `.vscode/settings.json`.
 
@@ -44,6 +44,8 @@ Assembled 26 Nov 2026 from three sources. GitHub `main` (b132305) and `openship-
 | `app/tools/seed_analyst_demo.py` | Defaults point into the repository and `.runtime/` |
 | `uc042/tests/test_evidence_relationships.py`, `test_relationship_register.py`, `test_s1_group_assessments.py`, `test_resolution_negation.py`, `test_ws3_enrichment.py` | Test suites read from `uc042/test_data/`; environment overrides are unchanged where they existed |
 | `uc042/frontend/README.md` | LEGACY note added |
+| `uc042/tests/test_analyst_edition.py` | The statement-copy guard looks for the application at the sibling `app/` (it looked for `app_merge` and was skipped); it now runs and passes |
+| `app/pyproject.toml` | `websocket-client` declared in the `dev` extra. The real-browser test needs it; it was only installed in the original machine's system Python. |
 
 No application behaviour was changed.
 
