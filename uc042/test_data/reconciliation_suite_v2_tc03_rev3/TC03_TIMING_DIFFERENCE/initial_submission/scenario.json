@@ -1,0 +1,10 @@
+{
+  "scenario_id": "TC03",
+  "name": "Timing difference: acquirer settlement AQ-GBP-20260924 (5,495.05) recorded Thu 24 Sep, credited by the bank Fri 25 Sep",
+  "customer_label": "SYNTHETIC TEST Cresswell Money Ltd",
+  "submission": "initial",
+  "reporting_period": "PER-2026-09",
+  "derived_from": "set_01_clean_baseline",
+  "baseline_manifest_sha256": "0360b4055aa6812f063b411c7ceacdb2f4f153df73fd76c2acc7da3df565b69e",
+  "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA - UC-042 RECONCILIATION TEST SUITE V2 - NOT REAL FINANCIAL RECORDS. Derived from set_01_clean_baseline; all names, accounts, references and amounts are fictional."
+}

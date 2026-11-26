@@ -1,0 +1,51 @@
+{
+  "scenario_id": "TC06",
+  "baseline": "set_01_clean_baseline",
+  "operations": [
+    {
+      "op": "set_field",
+      "file_id": "IN-11",
+      "key": "TX-0917-00002",
+      "field": "amount",
+      "old": "1390.07",
+      "new": "1480.07",
+      "why": "cause A: export amount error"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-03",
+      "key": "CBS-20260917-C0004-GBP",
+      "field": "balance",
+      "old": "40592.24",
+      "new": "40682.24",
+      "why": "cause B: client-ledger snapshot overstated"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-05",
+      "key": "IRR-EMONEY-GBP-20260917",
+      "field": "requirement_reported",
+      "old": "341484.46",
+      "new": "341574.46",
+      "why": "cause B: firm's reconciliation used the ledger"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-05",
+      "key": "IRR-EMONEY-GBP-20260917",
+      "field": "difference_reported",
+      "old": "0.00",
+      "new": "-90.00",
+      "why": "cause B: reported shortfall"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-13",
+      "key": "SL-AQ-EUR-20260922-0002",
+      "field": "amount",
+      "old": "1283.12",
+      "new": "1238.12",
+      "why": "cause C: acquirer report line mis-stated"
+    }
+  ]
+}

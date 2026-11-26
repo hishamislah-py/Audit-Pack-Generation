@@ -1,0 +1,22 @@
+{
+ "source": "Derived from the backend code after the 20 Nov 2026 per-member ZIP isolation change (smartparser/webapp/context.py stage(); cases.py _begin_run), and verified on the real ZIP by C:\\u42v\\impl_20261120\\thornbury\\verify_thornbury.py (thornbury_result.json). Supersedes the code-derived expected_outcome.json for runs made after that change; expected_outcome.json is kept unchanged as the record of the earlier behaviour. Not an engine answer key.",
+ "expected_member_isolation": {
+  "registration_status": "WAITING",
+  "run_1_status": "COMPLETED",
+  "unreadable_member": "Thornbury_Nov2026/09_bank_statement_lines.csv",
+  "unreadable_error_kind": "CRC_FAILURE",
+  "staged_entries": 18,
+  "missing_required_before_correction": ["IN-09"],
+  "validation_before_correction": "FAILED",
+  "upload_evidence_enabled": true,
+  "retry_enabled": false
+ },
+ "expected_after_corrected_in09": {
+  "corrected_member_sha256": "016c9c55",
+  "validation": "PASSED",
+  "activation": "snapshot created",
+  "case_status": "CLEAN",
+  "exceptions": 0
+ },
+ "notes": "The corrected IN-09 is the member's original bytes (CRC fields restored in a copy; repaired ZIP sha256 equals scenario.json technical_corruption.uncorrupted_zip_sha256). The original scenario ZIP is never modified."
+}

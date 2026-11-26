@@ -1,0 +1,27 @@
+{
+  "label": "FIN (deterministic; independent of the engine)",
+  "scenario_id": "TC02",
+  "submission": "initial",
+  "expected_anomalies": [
+    "TXN_BANK_AMOUNT TX-0908-00002 ref=E2E-GBP-0908-L02 txn=3053.61 bank=3035.61",
+    "ROLLFWD GBP/C0006 2026-09-08 18.00"
+  ],
+  "figures": {
+    "rollforward|GBP/C0006 2026-09-08": "39126.37",
+    "snapshot|GBP/C0006 2026-09-08": "39108.37",
+    "rollforward|GBP/C0006 2026-09-09": "39850.59",
+    "snapshot|GBP/C0006 2026-09-09": "39850.59"
+  },
+  "summary": {
+    "matching_reference": "E2E-GBP-0908-L02",
+    "source_amounts": {
+      "IN-11 TX-0908-00002": "3053.61",
+      "IN-09 BE-GBP-0908-L02": "3035.61",
+      "IN-10 LE-GBP-0908-0002": "3035.61"
+    },
+    "difference": "+18.00 (transaction minus bank)",
+    "direction": "transaction export overstates the receipt",
+    "outlier_source": "IN-11 (3,035.61 corroborated by IN-09, IN-10, IN-03)",
+    "financial_impact": "none on bank, ledger or requirement; client roll-forward for 8 Sep breaks by 18.00"
+  }
+}

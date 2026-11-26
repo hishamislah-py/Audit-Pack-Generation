@@ -1,0 +1,16 @@
+{
+  "label": "FUTURE (PROPOSED; not implemented; category names PENDING)",
+  "scenario_id": "TC02",
+  "root": "PENDING:AMOUNT_MISMATCH",
+  "gaps": [
+    "G-07",
+    "G-08",
+    "G-09",
+    "G-19"
+  ],
+  "expected": [
+    "One root: amount mismatch on reference E2E-GBP-0908-L02, IN-11 3,053.61 vs IN-09 3,035.61, difference +18.00 (transaction > bank)",
+    "CBAL-ROLLFWD failure linked by txn_id lineage",
+    "Outlier source identified as IN-11"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "label": "FIN (deterministic; independent of the engine)",
+  "scenario_id": "TC03",
+  "submission": "initial",
+  "expected_anomalies": [
+    "BL_DIFF 2026-09-24 SGA-GBP-01 -5495.05",
+    "BL_DIFF_LOGGED 2026-09-24 SGA-GBP-01 DL-0001",
+    "TIMING LE-GBP-0924-0003/BE-GBP-0925-T01 ref=AQ-GBP-20260924 recorded=2026-09-24 bank=2026-09-25 amount=5495.05",
+    "BATCH_LAG AQ-GBP-20260924 settlement=2026-09-24 booked=2026-09-25"
+  ],
+  "figures": {
+    "bank_1700|2026-09-24/SGA-GBP-01": "365108.24",
+    "ledger_1700|2026-09-24/SGA-GBP-01": "370603.29",
+    "bank_1700|2026-09-25/SGA-GBP-01": "375461.46",
+    "ledger_1700|2026-09-25/SGA-GBP-01": "375461.46",
+    "requirement_1700|2026-09-24/GBP": "370603.29",
+    "resource_1700|2026-09-24/GBP": "370603.29",
+    "requirement_1700|2026-09-25/GBP": "375461.46",
+    "resource_1700|2026-09-25/GBP": "375461.46"
+  },
+  "summary": {
+    "transaction_dates": "card loads of AQ-GBP-20260924 authorised and executed 24 Sep (IN-11)",
+    "processing_date": "cash book LE-GBP-0924-0003 posted 2026-09-24T14:00 (ledger D, +5,495.05)",
+    "settlement_date": "2026-09-24 (IN-12 cycle_date and settlement_date)",
+    "bank_clearing": "BE-GBP-0925-T01 booked 2026-09-25T08:00 (Friday, next business day), value date 2026-09-25",
+    "reconciliation_cut_off": "2026-09-24 17:00 Europe/London",
+    "difference_at_cut_off": "bank minus ledger = -5,495.05 (reported correctly by the firm)",
+    "clearing_window": "existing rule D1: cleared no later than the next business day after 24 Sep (Fri 25 Sep); the clearing is on that day",
+    "next_reconciliation_day": "25 Sep 17:00: bank 375,461.46 = ledger 375,461.46",
+    "expected_treatment": "explainable timing item, evidenced by the 25 Sep clearing; under existing rules the 24 Sep difference is still reported as an exception (FAIL) that stays OPEN awaiting human confirmation; it is never auto-resolved",
+    "amount_note": "5,495.05 is the net of AQ-GBP-20260924; the previously stated 4,647.75 is the net of the 25 Sep batch, so the user chose the 24 Sep batch (23 Nov 2026)"
+  }
+}

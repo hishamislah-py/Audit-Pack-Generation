@@ -1,0 +1,185 @@
+{
+ "scenario_id": "RF-DEMO-04",
+ "source_scenario": "scenario_04_technical_failure",
+ "customer_name": "Thornbury Wallet Ltd",
+ "reporting_period": "2026-11",
+ "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA - UC-042 RINGFENCE DEMONSTRATION - NOT REAL FINANCIAL RECORDS",
+ "zip": {
+  "file": "Thornbury_Wallet_Ltd_2026-11.zip",
+  "sha256": "a7352a7698cfb6eebc42127b34eb71be5be096c53be1c8998a754aa95c59d3d7",
+  "bytes": 41782,
+  "entries": [
+   {
+    "entry": "Thornbury_Nov2026/01_reconciliation_calendar.csv",
+    "bytes": 3801,
+    "sha256": "d2f1df37e6d35119689d31f9d31fd0f82e3b35eff8808b6fd98e40452fd94651",
+    "category": "IN-01",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/02_safeguarding_accounts.csv",
+    "bytes": 1206,
+    "sha256": "65d3b9fe318ebc8d2e44779656dda04232fa7a7914ab07b69612d49bbfaebcb6",
+    "category": "IN-02",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/03_client_balances_1700.csv",
+    "bytes": 24097,
+    "sha256": "ef462cf3717110671759531abb4c3c31d04d303fa0d7e4ab524811e6584bf401",
+    "category": "IN-03",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/04_unallocated_receipts.csv",
+    "bytes": 135,
+    "sha256": "6ddf9edda4963f02a8abaeaedf7ef2ce53881d15a1b611e5c6e082fa1f45b9d7",
+    "category": "IN-04",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/05_internal_reconciliations.csv",
+    "bytes": 15098,
+    "sha256": "9c2c3ae8a3af58c54eac3d90ba5485d1d5959adf615c3cc33d79122e0fcae756",
+    "category": "IN-05",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/06_external_reconciliations.csv",
+    "bytes": 6020,
+    "sha256": "8ad51d1a695887560c524ca5184c25a658a12a0addc130bbb77c18a7a3203fd2",
+    "category": "IN-06",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/07_bank_balances_1700.csv",
+    "bytes": 4444,
+    "sha256": "38d45806b1dc5b377af666f53955d1360e966b4253a1681f5dfeb9426b152dcf",
+    "category": "IN-07",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/08_bank_eod_statements.csv",
+    "bytes": 10966,
+    "sha256": "40f518f172ece3a5bf8f19f36f2c51e327ec12f8ec5490cf681b6c517b5af895",
+    "category": "IN-08",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/09_bank_statement_lines.csv",
+    "bytes": 53936,
+    "sha256": null,
+    "category": "IN-09",
+    "readable": "UNREADABLE: Bad CRC-32 for file 'Thornbury_Nov2026/09_bank_statement_lines.csv'"
+   },
+   {
+    "entry": "Thornbury_Nov2026/10_safeguarding_cashbook.csv",
+    "bytes": 25241,
+    "sha256": "51d9b3979303c869c61783f5e64210a5ec303caa0bde46b816cf40a009212c43",
+    "category": "IN-10",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/11_wallet_transactions.csv",
+    "bytes": 54434,
+    "sha256": "4767e96535508755df7f48d89508282e2e0dda8c26330fbc30207d147455d37a",
+    "category": "IN-11",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/12_settlement_batches.csv",
+    "bytes": 9568,
+    "sha256": "ae2acef123f909bc69de994205aee2d9c6bb8de6ff5ebf7682b2a6b2d24460db",
+    "category": "IN-12",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/13_settlement_lines.csv",
+    "bytes": 28476,
+    "sha256": "03fd5d414653df3fdd59fade59f7233a9fc87776131f037e4cc43c52daa7ffa5",
+    "category": "IN-13",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/14_breaks_log.csv",
+    "bytes": 157,
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "category": "IN-14",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/docs/Westerleigh_acknowledgement_GBP_4416.pdf",
+    "bytes": 2252,
+    "sha256": "b30510fa3a1e93ebc130c3a9d27fda8bc234eb86bed4e8e3365e527837758acf",
+    "category": "IN-15",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/docs/Westerleigh_acknowledgement_EUR_4423.pdf",
+    "bytes": 2253,
+    "sha256": "0e3ac0785905d17eefe35e4bef0ec85ac06dee8f5bbb87401287044145476eaf",
+    "category": "IN-16",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/docs/Thornbury_safeguarding_recon_policy_v1.2.pdf",
+    "bytes": 2342,
+    "sha256": "e2e2d4bee61f625bdb957a580fe395dd5db6a58cd574f1899017b2eb3b39d0dc",
+    "category": "IN-17",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/docs/Thornbury_governance_register_Nov2026.pdf",
+    "bytes": 2085,
+    "sha256": "e789e45580734db155ab253125035f6cc9240014c175d6f4fc3626eccb7790cd",
+    "category": "IN-18",
+    "readable": true
+   },
+   {
+    "entry": "Thornbury_Nov2026/docs/Thornbury_REP027_receipt_Oct2026.pdf",
+    "bytes": 2121,
+    "sha256": "544c9c77b7c81347f1190b76bd954f75259161e653fe37a7e32488f6a971c927",
+    "category": "IN-19",
+    "readable": true
+   }
+  ]
+ },
+ "source_seed": 2026111904,
+ "generator": "build_scenarios.Gen (original bundle, imported read-only) via tools/build_demo_zips.py",
+ "record_counts": {
+  "IN-01": 30,
+  "IN-02": 4,
+  "IN-03": 264,
+  "IN-04": 0,
+  "IN-05": 42,
+  "IN-06": 42,
+  "IN-07": 42,
+  "IN-08": 84,
+  "IN-09": 295,
+  "IN-10": 255,
+  "IN-11": 444,
+  "IN-12": 84,
+  "IN-13": 401,
+  "IN-14": 0
+ },
+ "all_csv_canonical_layout": true,
+ "planted_discrepancies": [],
+ "mutation_operations": 0,
+ "expected_outcome": {
+  "smart_parser_run": "FAILED",
+  "retry_run": "FAILED",
+  "runs_kept": 2,
+  "reconciliation": "not reachable"
+ },
+ "byte_comparison_with_original": null,
+ "technical_corruption": {
+  "member": "Thornbury_Nov2026/09_bank_statement_lines.csv",
+  "category": "IN-09",
+  "method": "CRC-32 field XOR 0xA5A5A5A5 in the local header and the central directory; compressed data untouched",
+  "read_error": "Bad CRC-32 for file 'Thornbury_Nov2026/09_bank_statement_lines.csv'",
+  "zip_opens": true,
+  "testzip_first_bad": "Thornbury_Nov2026/09_bank_statement_lines.csv",
+  "uncorrupted_zip_sha256": "a7707f11f16cd0e2d50f62d119c5b43eb64356a047e9f9c53ecf19d9182fefad",
+  "starts_with_PK0304": true
+ }
+}

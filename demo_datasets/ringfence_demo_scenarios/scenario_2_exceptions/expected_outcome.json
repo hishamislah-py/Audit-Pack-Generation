@@ -1,0 +1,323 @@
+{
+ "source": "answer_keys/scenario_02_rejection_correction/expected_reconciliation.json (frozen, copied unchanged below)",
+ "source_sha256": "fb30ccd7e0938aefdadb156279b76da77a78529e6677a95f9543eef23f32b41c",
+ "expected_case_status": "EXCEPTIONS_OPEN",
+ "expected_counts": {
+  "FAIL": 12,
+  "INSUFFICIENT_EVIDENCE": 0
+ },
+ "expected_non_passing_set": [
+  [
+   "BANK-CASH-LINK",
+   "BE-GBP-0717-X01",
+   "FAIL"
+  ],
+  [
+   "BANK-CASH-LINK",
+   "BE-GBP-0722-X02",
+   "FAIL"
+  ],
+  [
+   "C08-DIFFERENCE",
+   "2026-07-17/SGA-GBP-01",
+   "FAIL"
+  ],
+  [
+   "C08-DIFFERENCE",
+   "2026-07-20/SGA-GBP-01",
+   "FAIL"
+  ],
+  [
+   "C08-DIFFERENCE",
+   "2026-07-21/SGA-GBP-01",
+   "FAIL"
+  ],
+  [
+   "C11-BANK-ENTRY",
+   "BE-GBP-0717-X01",
+   "FAIL"
+  ],
+  [
+   "C11-BANK-ENTRY",
+   "BE-GBP-0722-X02",
+   "FAIL"
+  ],
+  [
+   "C11-BATCH-BANK",
+   "SB-GBP-20260701",
+   "FAIL"
+  ],
+  [
+   "C11-BATCH-BANK",
+   "SB-GBP-20260710",
+   "FAIL"
+  ],
+  [
+   "CASH-BANK-LINK",
+   "LE-GBP-0701-0005",
+   "FAIL"
+  ],
+  [
+   "CASH-BANK-LINK",
+   "LE-GBP-0710-0005",
+   "FAIL"
+  ],
+  [
+   "DISC-LOG",
+   "SGA-GBP-01 from 2026-07-17",
+   "FAIL"
+  ]
+ ],
+ "expected_exception_count": 7,
+ "expected_exception_root_causes": [
+  "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+  "C11-BATCH-BANK|SB-GBP-20260701",
+  "C11-BATCH-BANK|SB-GBP-20260710",
+  "CASH-BANK-LINK|LE-GBP-0701-0005",
+  "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01",
+  "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02",
+  "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005"
+ ],
+ "expected_investigation_group_count": 3,
+ "expected_review_steps": "none (all CSV headers canonical; AI disabled)",
+ "frozen_key": {
+  "scenario": "RF-DEMO-02",
+  "customer": "Marlow Street Payments Ltd",
+  "reporting_period": "2026-07",
+  "requested_outcome": "EXCEPTIONS_OPEN",
+  "expected_case_status": "EXCEPTIONS_OPEN",
+  "terminology": "UC-042 case statuses are CLEAN / EXCEPTIONS_OPEN / EVIDENCE_INCOMPLETE. INSUFFICIENT_EVIDENCE is a per-control outcome; any INSUFFICIENT_EVIDENCE result makes the case EVIDENCE_INCOMPLETE (uc042lib.validate.case_status).",
+  "expected_non_passing_results": [
+   {
+    "check_id": "BANK-CASH-LINK",
+    "scope": "BE-GBP-0717-X01",
+    "outcome": "FAIL",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01",
+    "expected_evidence": [
+     "IN-09:bank_statement_entries_2026-07.csv#L186"
+    ]
+   },
+   {
+    "check_id": "BANK-CASH-LINK",
+    "scope": "BE-GBP-0722-X02",
+    "outcome": "FAIL",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02",
+    "expected_evidence": [
+     "IN-09:bank_statement_entries_2026-07.csv#L225"
+    ]
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-07-17/SGA-GBP-01",
+    "outcome": "FAIL",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+    "expected_evidence": [
+     "IN-06:external_recon_records_2026-07.csv#L26",
+     "IN-07:bank_balance_confirmations_2026-07.csv#L26"
+    ]
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-07-20/SGA-GBP-01",
+    "outcome": "FAIL",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+    "expected_evidence": [
+     "IN-06:external_recon_records_2026-07.csv#L28",
+     "IN-07:bank_balance_confirmations_2026-07.csv#L28"
+    ]
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-07-21/SGA-GBP-01",
+    "outcome": "FAIL",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+    "expected_evidence": [
+     "IN-06:external_recon_records_2026-07.csv#L30",
+     "IN-07:bank_balance_confirmations_2026-07.csv#L30"
+    ]
+   },
+   {
+    "check_id": "C11-BANK-ENTRY",
+    "scope": "BE-GBP-0717-X01",
+    "outcome": "FAIL",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01",
+    "expected_evidence": [
+     "IN-09:bank_statement_entries_2026-07.csv#L186"
+    ]
+   },
+   {
+    "check_id": "C11-BANK-ENTRY",
+    "scope": "BE-GBP-0722-X02",
+    "outcome": "FAIL",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02",
+    "expected_evidence": [
+     "IN-09:bank_statement_entries_2026-07.csv#L225"
+    ]
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "SB-GBP-20260701",
+    "outcome": "FAIL",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260701",
+    "expected_evidence": [
+     "IN-12:settlement_batches_2026-07.csv#L3",
+     "IN-09:bank_statement_entries_2026-07.csv#L14",
+     "IN-09:bank_statement_entries_2026-07.csv#L113"
+    ]
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "SB-GBP-20260710",
+    "outcome": "FAIL",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260710",
+    "expected_evidence": [
+     "IN-12:settlement_batches_2026-07.csv#L31"
+    ]
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-GBP-0701-0005",
+    "outcome": "FAIL",
+    "root_cause": "CASH-BANK-LINK|LE-GBP-0701-0005",
+    "expected_evidence": [
+     "IN-10:sga_cashbook_entries_2026-07.csv#L8",
+     "IN-09:bank_statement_entries_2026-07.csv#L14",
+     "IN-09:bank_statement_entries_2026-07.csv#L113"
+    ]
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-GBP-0710-0005",
+    "outcome": "FAIL",
+    "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005",
+    "expected_evidence": [
+     "IN-10:sga_cashbook_entries_2026-07.csv#L94"
+    ]
+   },
+   {
+    "check_id": "DISC-LOG",
+    "scope": "SGA-GBP-01 from 2026-07-17",
+    "outcome": "FAIL",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+    "expected_evidence": [
+     "IN-14:discrepancy_log_2026-07.csv",
+     "IN-06:external_recon_records_2026-07.csv#L26",
+     "IN-06:external_recon_records_2026-07.csv#L28",
+     "IN-06:external_recon_records_2026-07.csv#L30"
+    ]
+   }
+  ],
+  "expected_non_passing_counts": {
+   "FAIL": 12,
+   "INSUFFICIENT_EVIDENCE": 0
+  },
+  "expected_exceptions": [
+   {
+    "severity": "Critical",
+    "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+    "affected_results": 4,
+    "amount": "-1284.60",
+    "first_date": "2026-07-17",
+    "last_date": "2026-07-21",
+    "evidence_status": "NOT_EVIDENCED"
+   },
+   {
+    "severity": "High",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260701",
+    "affected_results": 1,
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "evidence_status": ""
+   },
+   {
+    "severity": "High",
+    "root_cause": "C11-BATCH-BANK|SB-GBP-20260710",
+    "affected_results": 1,
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "evidence_status": ""
+   },
+   {
+    "severity": "High",
+    "root_cause": "CASH-BANK-LINK|LE-GBP-0701-0005",
+    "affected_results": 1,
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "evidence_status": ""
+   },
+   {
+    "severity": "High",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01",
+    "affected_results": 2,
+    "amount": "-1284.60",
+    "first_date": "2026-07-17",
+    "last_date": "2026-07-17",
+    "evidence_status": ""
+   },
+   {
+    "severity": "High",
+    "root_cause": "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02",
+    "affected_results": 2,
+    "amount": "1284.60",
+    "first_date": "2026-07-22",
+    "last_date": "2026-07-22",
+    "evidence_status": ""
+   },
+   {
+    "severity": "High",
+    "root_cause": "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005",
+    "affected_results": 1,
+    "amount": "",
+    "first_date": "",
+    "last_date": "",
+    "evidence_status": ""
+   }
+  ],
+  "expected_investigation_groups": [
+   [
+    "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-07-17|-1284.60",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0717-X01",
+    "UNMATCHED_BANK_ENTRY|BE-GBP-0722-X02"
+   ],
+   [
+    "C11-BATCH-BANK|SB-GBP-20260701",
+    "CASH-BANK-LINK|LE-GBP-0701-0005"
+   ],
+   [
+    "C11-BATCH-BANK|SB-GBP-20260710",
+    "UNMATCHED_CASHBOOK_ENTRY|LE-GBP-0710-0005"
+   ]
+  ],
+  "not_predicted": "PASS and NOT_APPLICABLE totals and engine-assigned exception / group IDs are recorded from the run, not predicted (they depend on engine internals, not on the scenario design).",
+  "basis": "Derived by tools/build_scenarios.py from the scenario design (planted record operations) and the generated records, using the UC-042 control semantics already verified on the Jan-Aug 2026 packs (same discrepancy kinds). Written before any engine run; no engine output was read.",
+  "planted_discrepancies": [
+   {
+    "kind": "UNEXPLAINED_GBP_DIFFERENCE",
+    "account": "SGA-GBP-01",
+    "amount": "-1284.60",
+    "bank_reference": "CHG 77215",
+    "debit_entry": "BE-GBP-0717-X01",
+    "return_entry": "BE-GBP-0722-X02",
+    "difference_days": [
+     "2026-07-17",
+     "2026-07-20",
+     "2026-07-21"
+    ],
+    "financial_impact": "bank balance 1284.60 GBP below the ledger from 2026-07-17 15:20 until the return on 2026-07-22 10:05; nil at month end; no cause is recorded anywhere in the evidence"
+   },
+   {
+    "kind": "INCONSISTENT_SETTLEMENT_REFERENCE",
+    "account": "SGA-GBP-01",
+    "bank_entry": "BE-GBP-0710-SB1",
+    "reference_written": "SB-GBP-20260701",
+    "batch_without_bank_entry": "SB-GBP-20260710",
+    "batch_with_two_bank_entries": "SB-GBP-20260701",
+    "financial_impact": "none on balances: amount unchanged; the bank entry carries the wrong batch reference, so the batch, bank and cash-book links break (no amount-only matching)"
+   }
+  ],
+  "mutation_operations": 20
+ }
+}

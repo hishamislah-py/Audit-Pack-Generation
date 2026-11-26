@@ -1,0 +1,86 @@
+{
+  "scenario_id": "TC04",
+  "applies_to": "initial_submission",
+  "operations": [
+    {
+      "op": "add_record",
+      "file_id": "IN-04",
+      "record": {
+        "receipt_id": "UR-0003",
+        "bank_reference": "E2E-EUR-0930-U01",
+        "receipt_date": "2026-09-30",
+        "receipt_ts": "2026-09-30T16:20:00+01:00",
+        "amount": "650.00",
+        "currency": "EUR",
+        "classification": "UNIDENTIFIED",
+        "identified_date": "",
+        "allocated_date": "",
+        "allocated_ts": "",
+        "client_id": ""
+      },
+      "why": "receipt registered as unidentified",
+      "insert_after": "UR-0002"
+    },
+    {
+      "op": "add_record",
+      "file_id": "IN-10",
+      "record": {
+        "ledger_entry_id": "LE-EUR-0930-0006",
+        "account_id": "SGA-EUR-01",
+        "posted_ts": "2026-09-30T16:20:00+01:00",
+        "entry_type": "UNALLOCATED_RECEIPT",
+        "amount": "650.00",
+        "dc_indicator": "D",
+        "currency": "EUR",
+        "payment_reference": "E2E-EUR-0930-U01"
+      },
+      "why": "receipt posted to the cash book",
+      "insert_after": "LE-EUR-0930-0005"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-05",
+      "key": "IRR-EMONEY-EUR-20260930",
+      "field": "requirement_reported",
+      "old": "118555.00",
+      "new": "119205.00",
+      "why": "requirement includes the open receipt"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-05",
+      "key": "IRR-EMONEY-EUR-20260930",
+      "field": "resource_reported",
+      "old": "118555.00",
+      "new": "119205.00",
+      "why": "resource includes the receipt"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-05",
+      "key": "IRR-EMONEY-EUR-20260930",
+      "field": "item_a",
+      "old": "118555.00",
+      "new": "119205.00",
+      "why": "item A includes the receipt"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-06",
+      "key": "ERL-SGA-EUR-01-20260930",
+      "field": "ledger_balance_reported",
+      "old": "118555.00",
+      "new": "119205.00",
+      "why": "ledger includes the receipt"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-06",
+      "key": "ERL-SGA-EUR-01-20260930",
+      "field": "difference_reported",
+      "old": "650.00",
+      "new": "0.00",
+      "why": "difference cleared"
+    }
+  ]
+}

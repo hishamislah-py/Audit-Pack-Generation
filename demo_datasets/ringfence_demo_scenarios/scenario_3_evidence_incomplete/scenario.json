@@ -1,0 +1,350 @@
+{
+ "scenario_id": "RF-DEMO-03",
+ "source_scenario": "scenario_03_human_in_the_loop",
+ "customer_name": "Corvane Money Ltd",
+ "reporting_period": "2026-10",
+ "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA - UC-042 RINGFENCE DEMONSTRATION - NOT REAL FINANCIAL RECORDS",
+ "zip": {
+  "file": "Corvane_Money_Ltd_2026-10.zip",
+  "sha256": "10e73917f2a6d64983d0d2289bd568f4489ee6126f4ef8f5e09aea271c7d897c",
+  "bytes": 41535,
+  "entries": [
+   {
+    "entry": "Corvane-Oct2026/reference/business_days.csv",
+    "bytes": 3923,
+    "sha256": "5a7294b9adc470635f7a5b30c433dffc56532f59c37a153e535e6b0f1a010429",
+    "category": "IN-01",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/reference/bank_accounts.csv",
+    "bytes": 1200,
+    "sha256": "07aa150671d7438ddc59b5b80d54e506ae7575e30fba7d25e61a06ba964ed79a",
+    "category": "IN-02",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/ledger/customer_balance_snapshots.csv",
+    "bytes": 25189,
+    "sha256": "a2383d030ff23289a27952b04b0e9c46bb681965c51062bd8f7b12022c5fa16c",
+    "category": "IN-03",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/ledger/unidentified_receipts.csv",
+    "bytes": 135,
+    "sha256": "6ddf9edda4963f02a8abaeaedf7ef2ce53881d15a1b611e5c6e082fa1f45b9d7",
+    "category": "IN-04",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/controls/internal_reconciliation_log.csv",
+    "bytes": 15805,
+    "sha256": "30b24777dc71fb8467382a6476c58f2f33be92898eff71f615d7e17166253133",
+    "category": "IN-05",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/controls/external_reconciliation_log.csv",
+    "bytes": 6298,
+    "sha256": "4fef1d7df4dcc2ecf104e2e0927043443bc572fa35fa71511e2d8824dc76a7e3",
+    "category": "IN-06",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/bank/ashgrove_balance_certificates_1700.csv",
+    "bytes": 4548,
+    "sha256": "54bd827a9c95005d8ddb98a5dbcf04e4dcf2eda91aa2e18282af50cbaab4499d",
+    "category": "IN-07",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/bank/ashgrove_daily_statements.csv",
+    "bytes": 11353,
+    "sha256": "2e9fc3a21bcfd2c81ddb34c201dfd2cb1be3943cc98e08e8d672b70906566bd1",
+    "category": "IN-08",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/bank/ashgrove_statement_transactions.csv",
+    "bytes": 54781,
+    "sha256": "5ad5f3bf45e3a83c891af13e63338b8ce142b43e8abde3d3c89f3ffcd735f592",
+    "category": "IN-09",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/ledger/safeguarding_cash_ledger.csv",
+    "bytes": 26137,
+    "sha256": "9c884c28745fe2cd70d85671155f599d2d586403aac1085cee40e036230e0923",
+    "category": "IN-10",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/platform/wallet_transactions.csv",
+    "bytes": 56694,
+    "sha256": "ef2c83789193c2e7f8c1edcfcdd26fd9e0ddc378c597559d0ddd106855e8ef98",
+    "category": "IN-11",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/platform/scheme_and_acquirer_settlements.csv",
+    "bytes": 10019,
+    "sha256": "64852e48d4c2186c741bead2ba061531f4a7b801546125818fd1695b696d01dc",
+    "category": "IN-12",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/platform/settlement_detail_lines.csv",
+    "bytes": 29817,
+    "sha256": "93cc706722c2433fe4f64142781e48b575819c80de9dec3482cb34a45f59b769",
+    "category": "IN-13",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/controls/breach_and_discrepancy_log.csv",
+    "bytes": 157,
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "category": "IN-14",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/docs/Ashgrove_trust_letter_GBP.pdf",
+    "bytes": 2250,
+    "sha256": "d7e7296546db7493d482d1666c23324f24958996907362b9a0a3284be9b345c8",
+    "category": "IN-15",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/docs/Ashgrove_trust_letter_EUR.pdf",
+    "bytes": 2252,
+    "sha256": "90095ef7484faeaac4a3d959e8a9fe888378bedf999195704bab8ced3148fbb3",
+    "category": "IN-16",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/docs/Corvane_safeguarding_reconciliation_policy_v1.2.pdf",
+    "bytes": 2337,
+    "sha256": "d684918924fba238b97f67522a74ac9e1bbe3157fd72e18386501982754c2eba",
+    "category": "IN-17",
+    "readable": true
+   },
+   {
+    "entry": "Corvane-Oct2026/docs/Corvane_governance_register_Oct2026.pdf",
+    "bytes": 2074,
+    "sha256": "3c688cca2550c95398c15f86590ad6e22ebb83b4c10f1c2942343f6abe45d948",
+    "category": "IN-18",
+    "readable": true
+   }
+  ]
+ },
+ "source_seed": 2026101903,
+ "generator": "build_scenarios.Gen (original bundle, imported read-only) via tools/build_demo_zips.py",
+ "record_counts": {
+  "IN-01": 31,
+  "IN-02": 4,
+  "IN-03": 276,
+  "IN-04": 0,
+  "IN-05": 44,
+  "IN-06": 44,
+  "IN-07": 43,
+  "IN-08": 87,
+  "IN-09": 301,
+  "IN-10": 264,
+  "IN-11": 462,
+  "IN-12": 88,
+  "IN-13": 420,
+  "IN-14": 0
+ },
+ "all_csv_canonical_layout": true,
+ "planted_discrepancies": [
+  {
+   "kind": "MISSING_EUR_STATEMENT",
+   "account": "SGA-EUR-01",
+   "date": "2026-10-15",
+   "removed_records": {
+    "IN-07": [
+     "ST-SGA-EUR-01-20261015-1700"
+    ],
+    "IN-08": [
+     "ST-SGA-EUR-01-20261015-EOD"
+    ],
+    "IN-09": [
+     "BE-EUR-1015-L01",
+     "BE-EUR-1015-AQ1",
+     "BE-EUR-1015-TU1",
+     "BE-EUR-1015-SB1",
+     "BE-EUR-1015-R01"
+    ]
+   },
+   "categories_missing": "none - every evidence category is supplied; the bank evidence for one account-day inside IN-07, IN-08 and IN-09 is not",
+   "financial_impact": "none on balances; the external reconciliation for SGA-EUR-01 on that day cannot be evidenced and no bank balance may be substituted"
+  }
+ ],
+ "mutation_operations": 7,
+ "expected_outcome": {
+  "case_status": "EVIDENCE_INCOMPLETE",
+  "fail": 0,
+  "insufficient_evidence": 15,
+  "exceptions": 1,
+  "investigation_groups": 0
+ },
+ "byte_comparison_with_original": {
+  "members": [
+   {
+    "entry": "Corvane-Oct2026/reference/business_days.csv",
+    "category": "IN-01",
+    "identical_to_original_member": true,
+    "original_sha256": "5a7294b9adc470635f7a5b30c433dffc56532f59c37a153e535e6b0f1a010429",
+    "new_sha256": "5a7294b9adc470635f7a5b30c433dffc56532f59c37a153e535e6b0f1a010429",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/reference/bank_accounts.csv",
+    "category": "IN-02",
+    "identical_to_original_member": true,
+    "original_sha256": "07aa150671d7438ddc59b5b80d54e506ae7575e30fba7d25e61a06ba964ed79a",
+    "new_sha256": "07aa150671d7438ddc59b5b80d54e506ae7575e30fba7d25e61a06ba964ed79a",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/ledger/customer_balance_snapshots.csv",
+    "category": "IN-03",
+    "identical_to_original_member": true,
+    "original_sha256": "a2383d030ff23289a27952b04b0e9c46bb681965c51062bd8f7b12022c5fa16c",
+    "new_sha256": "a2383d030ff23289a27952b04b0e9c46bb681965c51062bd8f7b12022c5fa16c",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/ledger/unidentified_receipts.csv",
+    "category": "IN-04",
+    "identical_to_original_member": true,
+    "original_sha256": "6ddf9edda4963f02a8abaeaedf7ef2ce53881d15a1b611e5c6e082fa1f45b9d7",
+    "new_sha256": "6ddf9edda4963f02a8abaeaedf7ef2ce53881d15a1b611e5c6e082fa1f45b9d7",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/controls/internal_reconciliation_log.csv",
+    "category": "IN-05",
+    "identical_to_original_member": true,
+    "original_sha256": "30b24777dc71fb8467382a6476c58f2f33be92898eff71f615d7e17166253133",
+    "new_sha256": "30b24777dc71fb8467382a6476c58f2f33be92898eff71f615d7e17166253133",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/controls/external_reconciliation_log.csv",
+    "category": "IN-06",
+    "identical_to_original_member": true,
+    "original_sha256": "4fef1d7df4dcc2ecf104e2e0927043443bc572fa35fa71511e2d8824dc76a7e3",
+    "new_sha256": "4fef1d7df4dcc2ecf104e2e0927043443bc572fa35fa71511e2d8824dc76a7e3",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/bank/ashgrove_balance_certificates_1700.csv",
+    "category": "IN-07",
+    "identical_to_original_member": true,
+    "original_sha256": "54bd827a9c95005d8ddb98a5dbcf04e4dcf2eda91aa2e18282af50cbaab4499d",
+    "new_sha256": "54bd827a9c95005d8ddb98a5dbcf04e4dcf2eda91aa2e18282af50cbaab4499d",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/bank/ashgrove_daily_statements.csv",
+    "category": "IN-08",
+    "identical_to_original_member": true,
+    "original_sha256": "2e9fc3a21bcfd2c81ddb34c201dfd2cb1be3943cc98e08e8d672b70906566bd1",
+    "new_sha256": "2e9fc3a21bcfd2c81ddb34c201dfd2cb1be3943cc98e08e8d672b70906566bd1",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/bank/ashgrove_statement_transactions.csv",
+    "category": "IN-09",
+    "identical_to_original_member": true,
+    "original_sha256": "5ad5f3bf45e3a83c891af13e63338b8ce142b43e8abde3d3c89f3ffcd735f592",
+    "new_sha256": "5ad5f3bf45e3a83c891af13e63338b8ce142b43e8abde3d3c89f3ffcd735f592",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/ledger/safeguarding_cash_ledger.csv",
+    "category": "IN-10",
+    "identical_to_original_member": true,
+    "original_sha256": "9c884c28745fe2cd70d85671155f599d2d586403aac1085cee40e036230e0923",
+    "new_sha256": "9c884c28745fe2cd70d85671155f599d2d586403aac1085cee40e036230e0923",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/platform/wallet_transactions.csv",
+    "category": "IN-11",
+    "identical_to_original_member": true,
+    "original_sha256": "ef2c83789193c2e7f8c1edcfcdd26fd9e0ddc378c597559d0ddd106855e8ef98",
+    "new_sha256": "ef2c83789193c2e7f8c1edcfcdd26fd9e0ddc378c597559d0ddd106855e8ef98",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/platform/scheme_and_acquirer_settlements.csv",
+    "category": "IN-12",
+    "identical_to_original_member": false,
+    "original_sha256": "677f1b614b9346e4a49621126eb7f2e15f7cd81c0e2d7becf956bbadb7c004db",
+    "new_sha256": "64852e48d4c2186c741bead2ba061531f4a7b801546125818fd1695b696d01dc",
+    "note": "layout changed to canonical (expected difference)"
+   },
+   {
+    "entry": "Corvane-Oct2026/platform/settlement_detail_lines.csv",
+    "category": "IN-13",
+    "identical_to_original_member": true,
+    "original_sha256": "93cc706722c2433fe4f64142781e48b575819c80de9dec3482cb34a45f59b769",
+    "new_sha256": "93cc706722c2433fe4f64142781e48b575819c80de9dec3482cb34a45f59b769",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/controls/breach_and_discrepancy_log.csv",
+    "category": "IN-14",
+    "identical_to_original_member": true,
+    "original_sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "new_sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/docs/Ashgrove_trust_letter_GBP.pdf",
+    "category": "IN-15",
+    "identical_to_original_member": true,
+    "original_sha256": "d7e7296546db7493d482d1666c23324f24958996907362b9a0a3284be9b345c8",
+    "new_sha256": "d7e7296546db7493d482d1666c23324f24958996907362b9a0a3284be9b345c8",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/docs/Ashgrove_trust_letter_EUR.pdf",
+    "category": "IN-16",
+    "identical_to_original_member": true,
+    "original_sha256": "90095ef7484faeaac4a3d959e8a9fe888378bedf999195704bab8ced3148fbb3",
+    "new_sha256": "90095ef7484faeaac4a3d959e8a9fe888378bedf999195704bab8ced3148fbb3",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/docs/Corvane_safeguarding_reconciliation_policy_v1.2.pdf",
+    "category": "IN-17",
+    "identical_to_original_member": true,
+    "original_sha256": "d684918924fba238b97f67522a74ac9e1bbe3157fd72e18386501982754c2eba",
+    "new_sha256": "d684918924fba238b97f67522a74ac9e1bbe3157fd72e18386501982754c2eba",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/docs/Corvane_governance_register_Oct2026.pdf",
+    "category": "IN-18",
+    "identical_to_original_member": true,
+    "original_sha256": "3c688cca2550c95398c15f86590ad6e22ebb83b4c10f1c2942343f6abe45d948",
+    "new_sha256": "3c688cca2550c95398c15f86590ad6e22ebb83b4c10f1c2942343f6abe45d948",
+    "note": ""
+   },
+   {
+    "entry": "Corvane-Oct2026/platform/scheme_and_acquirer_settlements.csv",
+    "category": "IN-12",
+    "original_layout_bytes_equal_regenerated_layout": true,
+    "note": "proves the regenerated records equal the original records for this file"
+   }
+  ],
+  "unchanged_members": 17,
+  "unchanged_byte_identical": 17,
+  "all_unchanged_identical": true,
+  "original_members_not_in_demo_zip": []
+ },
+ "technical_corruption": null
+}

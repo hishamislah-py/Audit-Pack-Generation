@@ -1,0 +1,29 @@
+{
+ "source": "derived from the backend code (smartparser/webapp/cases.py _begin_run/retry, context.stage): zipfile.ZipFile.read raises BadZipFile('Bad CRC-32 ...') on the corrupted member; the exception is caught in _begin_run and the run is recorded FAILED (stage 'read').",
+ "expected_registration": {
+  "http": 200,
+  "status": "WAITING"
+ },
+ "expected_run_1": {
+  "status": "FAILED",
+  "failure_code": "RUN_FAILED",
+  "failure_message_contains": "Bad CRC-32 for file 'Thornbury_Nov2026/09_bank_statement_lines.csv'",
+  "failure_stage": "read"
+ },
+ "expected_retry": {
+  "http": 200,
+  "run_2_status": "FAILED",
+  "run_2_retry_of": "run 1 run_id",
+  "run_2_evidence_source": "ORIGINAL_ZIP",
+  "runs_listed": 2,
+  "failed_runs": 2
+ },
+ "expected_case_status_after_retry": "IN_PROGRESS",
+ "expected_actions_after_failure": {
+  "retry_from_beginning": true,
+  "defer": true,
+  "activate": false,
+  "reconcile": false
+ },
+ "reconciliation": "not reachable (no package is ever produced)"
+}

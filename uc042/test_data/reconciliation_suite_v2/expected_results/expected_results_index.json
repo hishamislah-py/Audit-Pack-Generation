@@ -1,0 +1,47 @@
+{
+  "label": "Index of expected results; per-scenario files hold the content",
+  "scenarios": [
+    {
+      "scenario_id": "TC01",
+      "dir": "TC01_DUPLICATE_TRANSACTION/expected_results",
+      "predicted_status": "EXCEPTIONS_OPEN",
+      "predicted_exceptions": 10,
+      "predicted_after_correction": "CLEAN"
+    },
+    {
+      "scenario_id": "TC02",
+      "dir": "TC02_AMOUNT_MISMATCH/expected_results",
+      "predicted_status": "EXCEPTIONS_OPEN",
+      "predicted_exceptions": 2,
+      "predicted_after_correction": null
+    },
+    {
+      "scenario_id": "TC03",
+      "dir": "TC03_TIMING_DIFFERENCE/expected_results",
+      "predicted_status": "EXCEPTIONS_OPEN",
+      "predicted_exceptions": 1,
+      "predicted_after_correction": null
+    },
+    {
+      "scenario_id": "TC04",
+      "dir": "TC04_UNMATCHED_TRANSACTION/expected_results",
+      "predicted_status": "EXCEPTIONS_OPEN",
+      "predicted_exceptions": 2,
+      "predicted_after_correction": "CLEAN"
+    },
+    {
+      "scenario_id": "TC05",
+      "dir": "TC05_COMMON_CAUSE/expected_results",
+      "predicted_status": "EXCEPTIONS_OPEN",
+      "predicted_exceptions": 3,
+      "predicted_after_correction": "CLEAN"
+    },
+    {
+      "scenario_id": "TC06",
+      "dir": "TC06_INDEPENDENT_CAUSES/expected_results",
+      "predicted_status": "EXCEPTIONS_OPEN",
+      "predicted_exceptions": 6,
+      "predicted_after_correction": null
+    }
+  ]
+}

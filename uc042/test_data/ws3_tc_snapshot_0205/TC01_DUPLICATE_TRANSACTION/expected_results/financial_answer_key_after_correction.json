@@ -1,0 +1,11 @@
+{
+  "label": "FIN (deterministic; independent of the engine)",
+  "scenario_id": "TC01",
+  "submission": "corrected",
+  "expected_anomalies": [],
+  "figures": {
+    "ledger_1700|2026-09-28/SGA-GBP-01": "378706.65",
+    "ledger_1700|2026-09-29/SGA-GBP-01": "388744.47",
+    "ledger_1700|2026-09-30/SGA-GBP-01": "395844.86"
+  }
+}

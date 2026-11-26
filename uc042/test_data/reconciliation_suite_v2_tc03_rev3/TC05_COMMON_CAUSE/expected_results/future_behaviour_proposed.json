@@ -1,0 +1,14 @@
+{
+  "label": "FUTURE (PROPOSED; not implemented; category names PENDING)",
+  "scenario_id": "TC05",
+  "root": "PENDING:SUSPECTED_COMMON_CAUSE (UNVERIFIED)",
+  "gaps": [
+    "G-16",
+    "G-17",
+    "G-19"
+  ],
+  "expected": [
+    "The three exceptions presented together as one suspected common cause: missing transactions of batch SB-EUR-20260924",
+    "Basis: batch scope plus per-client line-sum match; still UNVERIFIED; no cause set deterministically"
+  ]
+}

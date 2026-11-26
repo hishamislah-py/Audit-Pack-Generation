@@ -1,0 +1,10 @@
+{
+  "scenario_id": "TC02",
+  "name": "Amount mismatch: transaction export 3,053.61 vs bank 3,035.61 for E2E-GBP-0908-L02",
+  "customer_label": "SYNTHETIC TEST Brindle Wallet Ltd",
+  "submission": "initial",
+  "reporting_period": "PER-2026-09",
+  "derived_from": "set_01_clean_baseline",
+  "baseline_manifest_sha256": "0360b4055aa6812f063b411c7ceacdb2f4f153df73fd76c2acc7da3df565b69e",
+  "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA - UC-042 RECONCILIATION TEST SUITE V2 - NOT REAL FINANCIAL RECORDS. Derived from set_01_clean_baseline; all names, accounts, references and amounts are fictional."
+}

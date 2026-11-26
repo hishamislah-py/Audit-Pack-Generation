@@ -1,0 +1,12 @@
+{
+  "label": "FIN (deterministic; independent of the engine)",
+  "scenario_id": "TC04",
+  "submission": "corrected",
+  "expected_anomalies": [],
+  "figures": {
+    "bank_1700|2026-09-30/SGA-EUR-01": "119205.00",
+    "ledger_1700|2026-09-30/SGA-EUR-01": "119205.00",
+    "requirement_1700|2026-09-30/EUR": "119205.00",
+    "resource_1700|2026-09-30/EUR": "119205.00"
+  }
+}

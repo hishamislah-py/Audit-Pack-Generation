@@ -1,0 +1,14 @@
+{
+  "label": "ENGINE-PREDICTED (source reading of the reference engine; NOT EXECUTED; unverified)",
+  "scenario_id": "TC05",
+  "expected_case_status": "CLEAN",
+  "non_passing_results": [],
+  "exceptions": [],
+  "evidence_statuses": {},
+  "investigation_groups": [],
+  "candidate_relationships": [],
+  "must_hold": [],
+  "notes": [
+    "Corrected evidence equals the clean baseline (or is internally consistent); no FAIL or INSUFFICIENT_EVIDENCE result expected."
+  ]
+}

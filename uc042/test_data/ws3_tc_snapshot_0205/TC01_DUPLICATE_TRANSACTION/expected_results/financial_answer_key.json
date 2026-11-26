@@ -1,0 +1,73 @@
+{
+  "label": "FIN (deterministic; independent of the engine)",
+  "scenario_id": "TC01",
+  "submission": "initial",
+  "expected_anomalies": [
+    "BL_DIFF 2026-09-28 SGA-GBP-01 -1246.80",
+    "BL_DIFF 2026-09-29 SGA-GBP-01 -1246.80",
+    "BL_DIFF 2026-09-30 SGA-GBP-01 -1246.80",
+    "RR_DIFF 2026-09-28 GBP 1246.80",
+    "RR_DIFF 2026-09-29 GBP 1246.80",
+    "RR_DIFF 2026-09-30 GBP 1246.80",
+    "BL_DIFF_NOT_LOGGED 2026-09-28 SGA-GBP-01",
+    "BL_DIFF_NOT_LOGGED 2026-09-29 SGA-GBP-01",
+    "BL_DIFF_NOT_LOGGED 2026-09-30 SGA-GBP-01",
+    "REPORTED IN-05 IRR-EMONEY-GBP-20260928 item_a reported=378706.65 recomputed=379953.45",
+    "REPORTED IN-05 IRR-EMONEY-GBP-20260928 resource_reported reported=378706.65 recomputed=379953.45",
+    "REPORTED IN-05 IRR-EMONEY-GBP-20260928 difference_reported reported=0.00 recomputed=1246.80",
+    "REPORTED IN-05 IRR-EMONEY-GBP-20260929 item_a reported=388744.47 recomputed=389991.27",
+    "REPORTED IN-05 IRR-EMONEY-GBP-20260929 resource_reported reported=388744.47 recomputed=389991.27",
+    "REPORTED IN-05 IRR-EMONEY-GBP-20260929 difference_reported reported=0.00 recomputed=1246.80",
+    "REPORTED IN-05 IRR-EMONEY-GBP-20260930 item_a reported=395844.86 recomputed=397091.66",
+    "REPORTED IN-05 IRR-EMONEY-GBP-20260930 resource_reported reported=395844.86 recomputed=397091.66",
+    "REPORTED IN-05 IRR-EMONEY-GBP-20260930 difference_reported reported=0.00 recomputed=1246.80",
+    "REPORTED IN-06 ERL-SGA-GBP-01-20260928 ledger_balance_reported reported=378706.65 recomputed=379953.45",
+    "REPORTED IN-06 ERL-SGA-GBP-01-20260928 difference_reported reported=0.00 recomputed=-1246.80",
+    "REPORTED IN-06 ERL-SGA-GBP-01-20260929 ledger_balance_reported reported=388744.47 recomputed=389991.27",
+    "REPORTED IN-06 ERL-SGA-GBP-01-20260929 difference_reported reported=0.00 recomputed=-1246.80",
+    "REPORTED IN-06 ERL-SGA-GBP-01-20260930 ledger_balance_reported reported=395844.86 recomputed=397091.66",
+    "REPORTED IN-06 ERL-SGA-GBP-01-20260930 difference_reported reported=0.00 recomputed=-1246.80",
+    "BANK_MULTI_CLAIM BE-GBP-0928-L01 IN-10=LE-GBP-0928-0001,LE-GBP-0928-0007"
+  ],
+  "figures": {
+    "ledger_1700|2026-09-28/SGA-GBP-01": "379953.45",
+    "ledger_1700|2026-09-29/SGA-GBP-01": "389991.27",
+    "ledger_1700|2026-09-30/SGA-GBP-01": "397091.66",
+    "bank_1700|2026-09-28/SGA-GBP-01": "378706.65",
+    "bank_1700|2026-09-29/SGA-GBP-01": "388744.47",
+    "bank_1700|2026-09-30/SGA-GBP-01": "395844.86",
+    "requirement_1700|2026-09-28/GBP": "378706.65",
+    "requirement_1700|2026-09-29/GBP": "388744.47",
+    "requirement_1700|2026-09-30/GBP": "395844.86",
+    "resource_1700|2026-09-28/GBP": "379953.45",
+    "resource_1700|2026-09-29/GBP": "389991.27",
+    "resource_1700|2026-09-30/GBP": "397091.66"
+  },
+  "summary": {
+    "duplicate": {
+      "original": "IN-10 LE-GBP-0928-0001",
+      "duplicate": "IN-10 LE-GBP-0928-0007",
+      "matching_attributes": [
+        "account_id",
+        "payment_reference",
+        "amount",
+        "entry_type",
+        "dc_indicator",
+        "currency"
+      ],
+      "classification": "EXACT DUPLICATE OF ONE BUSINESS EVENT (distinct ledger key)",
+      "not_legitimate_because": [
+        "end-to-end reference is unique per payment",
+        "one bank credit BE-GBP-0928-L01",
+        "one LOAD_BANK TX-0928-00001",
+        "C0008 snapshot rises by 1,246.80 once"
+      ]
+    },
+    "financial_impact": "cash-book extract overstates item A by 1,246.80 from 28 Sep to period end; real safeguarding position unaffected",
+    "legitimate_repeat_controls_unchanged": [
+      "TX-0908-00003..TX-0908-00006 (4 x 2,500.00 LOAD_CARD, 4 clients)",
+      "TX-0909-0R001 = TX-0902-00044 (60.00)",
+      "TX-0916-0R001 = TX-0903-00016 (284.02)"
+    ]
+  }
+}

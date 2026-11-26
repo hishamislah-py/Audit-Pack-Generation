@@ -1,0 +1,25 @@
+{
+  "label": "AI (expectations for the investigation layer; separate from FIN)",
+  "scenario_id": "TC02",
+  "findings": [
+    "Both exceptions are one mismatch on TX-0908-00002",
+    "Direction: export overstates by 18.00",
+    "IN-11 is the outlier; 3,035.61 corroborated by IN-09, IN-10 and IN-03",
+    "Difference divisible by 9: possible transposition (HYPOTHESIS, not evidence)"
+  ],
+  "evidence": [
+    "IN-11 TX-0908-00002",
+    "IN-09 BE-GBP-0908-L02",
+    "IN-10 LE-GBP-0908-0002",
+    "IN-03 CBS-20260907-C0006-GBP",
+    "IN-03 CBS-20260908-C0006-GBP"
+  ],
+  "missing_evidence": [
+    "platform export audit trail"
+  ],
+  "confidence": "high",
+  "must_not": [
+    "recommend changing the bank or cash-book records"
+  ],
+  "analyst_action": "Accept the finding; request a corrected transaction export. No client-money shortfall."
+}

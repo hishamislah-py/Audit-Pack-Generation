@@ -1,0 +1,283 @@
+{
+ "source": "answer_keys/scenario_03_human_in_the_loop/expected_reconciliation.json (frozen, copied unchanged below)",
+ "source_sha256": "adca7ca1a7f71b85443353330472d8de13f3ebd09527f816f2fb2819b1fb7424",
+ "expected_case_status": "EVIDENCE_INCOMPLETE",
+ "expected_counts": {
+  "FAIL": 0,
+  "INSUFFICIENT_EVIDENCE": 15
+ },
+ "expected_non_passing_set": [
+  [
+   "C07-BANK-EVIDENCE",
+   "2026-10-15/SGA-EUR-01",
+   "INSUFFICIENT_EVIDENCE"
+  ],
+  [
+   "C08-DIFFERENCE",
+   "2026-10-15/SGA-EUR-01",
+   "INSUFFICIENT_EVIDENCE"
+  ],
+  [
+   "C11-BATCH-BANK",
+   "AQ-EUR-20261015",
+   "INSUFFICIENT_EVIDENCE"
+  ],
+  [
+   "C11-BATCH-BANK",
+   "SB-EUR-20261015",
+   "INSUFFICIENT_EVIDENCE"
+  ],
+  [
+   "C14-COVER",
+   "IN-07 2026-10-15/SGA-EUR-01",
+   "INSUFFICIENT_EVIDENCE"
+  ],
+  [
+   "C14-COVER",
+   "IN-08 2026-10-15/SGA-EUR-01",
+   "INSUFFICIENT_EVIDENCE"
+  ],
+  [
+   "CASH-BANK-LINK",
+   "LE-EUR-1015-0001",
+   "INSUFFICIENT_EVIDENCE"
+  ],
+  [
+   "CASH-BANK-LINK",
+   "LE-EUR-1015-0002",
+   "INSUFFICIENT_EVIDENCE"
+  ],
+  [
+   "CASH-BANK-LINK",
+   "LE-EUR-1015-0003",
+   "INSUFFICIENT_EVIDENCE"
+  ],
+  [
+   "CASH-BANK-LINK",
+   "LE-EUR-1015-0004",
+   "INSUFFICIENT_EVIDENCE"
+  ],
+  [
+   "CASH-BANK-LINK",
+   "LE-EUR-1015-0005",
+   "INSUFFICIENT_EVIDENCE"
+  ],
+  [
+   "DQ22-CONTINUITY",
+   "ST-SGA-EUR-01-20261016-EOD",
+   "INSUFFICIENT_EVIDENCE"
+  ],
+  [
+   "FUND-TOPUP",
+   "AQ-EUR-20261015",
+   "INSUFFICIENT_EVIDENCE"
+  ],
+  [
+   "RC4-DIRECT",
+   "TX-1015-00015",
+   "INSUFFICIENT_EVIDENCE"
+  ],
+  [
+   "RC4-DIRECT",
+   "TX-1015-00021",
+   "INSUFFICIENT_EVIDENCE"
+  ]
+ ],
+ "expected_exception_count": 1,
+ "expected_exception_root_causes": [
+  "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15"
+ ],
+ "expected_investigation_group_count": 0,
+ "expected_review_steps": "none (all CSV headers canonical; AI disabled)",
+ "frozen_key": {
+  "scenario": "RF-DEMO-03",
+  "customer": "Corvane Money Ltd",
+  "reporting_period": "2026-10",
+  "requested_outcome": "INSUFFICIENT_EVIDENCE",
+  "expected_case_status": "EVIDENCE_INCOMPLETE",
+  "terminology": "UC-042 case statuses are CLEAN / EXCEPTIONS_OPEN / EVIDENCE_INCOMPLETE. INSUFFICIENT_EVIDENCE is a per-control outcome; any INSUFFICIENT_EVIDENCE result makes the case EVIDENCE_INCOMPLETE (uc042lib.validate.case_status).",
+  "expected_non_passing_results": [
+   {
+    "check_id": "C07-BANK-EVIDENCE",
+    "scope": "2026-10-15/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-06:external_recon_records_2026-10.csv#L23"
+    ]
+   },
+   {
+    "check_id": "C08-DIFFERENCE",
+    "scope": "2026-10-15/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-06:external_recon_records_2026-10.csv#L23"
+    ]
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "AQ-EUR-20261015",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-12:settlement_batches_2026-10.csv#L44"
+    ]
+   },
+   {
+    "check_id": "C11-BATCH-BANK",
+    "scope": "SB-EUR-20261015",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-12:settlement_batches_2026-10.csv#L45"
+    ]
+   },
+   {
+    "check_id": "C14-COVER",
+    "scope": "IN-07 2026-10-15/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-01:recon_calendar_2026-10.csv#L16",
+     "IN-02:account_inventory.csv#L3"
+    ]
+   },
+   {
+    "check_id": "C14-COVER",
+    "scope": "IN-08 2026-10-15/SGA-EUR-01",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-01:recon_calendar_2026-10.csv#L16",
+     "IN-02:account_inventory.csv#L3"
+    ]
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-1015-0001",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-10:sga_cashbook_entries_2026-10.csv#L130"
+    ]
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-1015-0002",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-10:sga_cashbook_entries_2026-10.csv#L131"
+    ]
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-1015-0003",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-10:sga_cashbook_entries_2026-10.csv#L132"
+    ]
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-1015-0004",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-10:sga_cashbook_entries_2026-10.csv#L133"
+    ]
+   },
+   {
+    "check_id": "CASH-BANK-LINK",
+    "scope": "LE-EUR-1015-0005",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-10:sga_cashbook_entries_2026-10.csv#L134"
+    ]
+   },
+   {
+    "check_id": "DQ22-CONTINUITY",
+    "scope": "ST-SGA-EUR-01-20261016-EOD",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-08:bank_statements_eod_2026-10.csv#L39",
+     "IN-08:bank_statements_eod_2026-10.csv#L46"
+    ]
+   },
+   {
+    "check_id": "FUND-TOPUP",
+    "scope": "AQ-EUR-20261015",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-12:settlement_batches_2026-10.csv#L44"
+    ]
+   },
+   {
+    "check_id": "RC4-DIRECT",
+    "scope": "TX-1015-00015",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-11:transactions_2026-10.csv#L220"
+    ]
+   },
+   {
+    "check_id": "RC4-DIRECT",
+    "scope": "TX-1015-00021",
+    "outcome": "INSUFFICIENT_EVIDENCE",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "expected_evidence": [
+     "IN-11:transactions_2026-10.csv#L232"
+    ]
+   }
+  ],
+  "expected_non_passing_counts": {
+   "FAIL": 0,
+   "INSUFFICIENT_EVIDENCE": 15
+  },
+  "expected_exceptions": [
+   {
+    "severity": "Critical",
+    "root_cause": "MISSING_BANK_EVIDENCE|SGA-EUR-01|2026-10-15",
+    "affected_results": 15,
+    "amount": "",
+    "first_date": "2026-10-15",
+    "last_date": "2026-10-15",
+    "evidence_status": ""
+   }
+  ],
+  "expected_investigation_groups": [],
+  "not_predicted": "PASS and NOT_APPLICABLE totals and engine-assigned exception / group IDs are recorded from the run, not predicted (they depend on engine internals, not on the scenario design).",
+  "basis": "Derived by tools/build_scenarios.py from the scenario design (planted record operations) and the generated records, using the UC-042 control semantics already verified on the Jan-Aug 2026 packs (same discrepancy kinds). Written before any engine run; no engine output was read.",
+  "planted_discrepancies": [
+   {
+    "kind": "MISSING_EUR_STATEMENT",
+    "account": "SGA-EUR-01",
+    "date": "2026-10-15",
+    "removed_records": {
+     "IN-07": [
+      "ST-SGA-EUR-01-20261015-1700"
+     ],
+     "IN-08": [
+      "ST-SGA-EUR-01-20261015-EOD"
+     ],
+     "IN-09": [
+      "BE-EUR-1015-L01",
+      "BE-EUR-1015-AQ1",
+      "BE-EUR-1015-TU1",
+      "BE-EUR-1015-SB1",
+      "BE-EUR-1015-R01"
+     ]
+    },
+    "categories_missing": "none - every evidence category is supplied; the bank evidence for one account-day inside IN-07, IN-08 and IN-09 is not",
+    "financial_impact": "none on balances; the external reconciliation for SGA-EUR-01 on that day cannot be evidenced and no bank balance may be substituted"
+   }
+  ],
+  "mutation_operations": 7
+ }
+}

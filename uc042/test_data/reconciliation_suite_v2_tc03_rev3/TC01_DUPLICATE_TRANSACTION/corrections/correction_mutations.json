@@ -1,0 +1,12 @@
+{
+  "scenario_id": "TC01",
+  "applies_to": "initial_submission",
+  "operations": [
+    {
+      "op": "delete_record",
+      "file_id": "IN-10",
+      "key": "LE-GBP-0928-0007",
+      "why": "duplicate interface posting removed"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "label": "FUTURE (PROPOSED; not implemented; category names PENDING)",
+  "scenario_id": "TC01",
+  "root": "PENDING:DUPLICATE_TRANSACTION",
+  "gaps": [
+    "G-04",
+    "G-05",
+    "G-19"
+  ],
+  "expected": [
+    "One root cause: LE-GBP-0928-0007 duplicates LE-GBP-0928-0001 (account, payment_reference, amount, entry_type) against one bank counterpart BE-GBP-0928-L01",
+    "All ledger-derived failures 28-30 Sep (C08, C06, C05, RC2, DISC-LOG) linked to that root as consequences",
+    "Financial impact +1,246.80 ledger overstatement; classification EXACT DUPLICATE",
+    "Legitimate-repeat controls (4 x 2,500.00 card loads; refunds equal to originals) NOT flagged"
+  ]
+}

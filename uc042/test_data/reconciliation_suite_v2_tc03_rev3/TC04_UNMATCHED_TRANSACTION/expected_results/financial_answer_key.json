@@ -1,0 +1,32 @@
+{
+  "label": "FIN (deterministic; independent of the engine)",
+  "scenario_id": "TC04",
+  "submission": "initial",
+  "expected_anomalies": [
+    "BL_DIFF 2026-09-30 SGA-EUR-01 650.00",
+    "BL_DIFF_NOT_LOGGED 2026-09-30 SGA-EUR-01",
+    "BANK_NO_COUNTERPART BE-EUR-0930-U01 ref=E2E-EUR-0930-U01"
+  ],
+  "figures": {
+    "bank_1700|2026-09-30/SGA-EUR-01": "119205.00",
+    "ledger_1700|2026-09-30/SGA-EUR-01": "118555.00",
+    "requirement_1700|2026-09-30/EUR": "118555.00",
+    "resource_1700|2026-09-30/EUR": "118555.00"
+  },
+  "summary": {
+    "source_with_record": "IN-09 BE-EUR-0930-U01 (credit 650.00, 2026-09-30T16:20)",
+    "absent_counterparts": [
+      "IN-10 cash-book entry",
+      "IN-04 register receipt",
+      "IN-11 LOAD_BANK transaction"
+    ],
+    "references_checked": [
+      "IN-10.payment_reference",
+      "IN-11.payment_reference",
+      "IN-04.bank_reference",
+      "IN-12.expected_bank_reference",
+      "TOPUP-EUR-20260930"
+    ],
+    "financial_impact": "bank exceeds ledger by 650.00 at 30 Sep 17:00; recomputed requirement potentially understated by up to 650.00 if the receipt is relevant funds"
+  }
+}
