@@ -1,0 +1,233 @@
+{
+  "catalogue": "UC-042 Smart Parser alias PROPOSALS (not active rules)",
+  "note": "Proposals only. Nothing here is used by the mapper unless the proposal status is 'approved' with decision metadata AND the alias is listed in approved_aliases.json. No proposal has been approved: approval is a business decision.",
+  "statuses": [
+    "proposed",
+    "approved",
+    "rejected"
+  ],
+  "decision_fields": {
+    "decided_by": "name/role of the business approver",
+    "decided_at": "ISO date",
+    "basis": "evidence for the decision"
+  },
+  "proposals": [
+    {
+      "proposal_id": "AP-IN-01-PK-TITLE",
+      "category": "IN-01",
+      "canonical_field": "calendar_date",
+      "proposed_header": "Calendar Date",
+      "reason": "Spaced Title-Case rendering of the canonical key column 'calendar_date', as spreadsheet exports commonly present column names. Same field, different presentation.",
+      "risk": "Low: the rendering is unique within the category. Needs confirmation that source systems which export this label mean exactly this key.",
+      "origin": "Phase 2 proposal generator: spaced Title-Case of the registry primary key (mechanical, not business-sourced)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-02-PK-TITLE",
+      "category": "IN-02",
+      "canonical_field": "account_id",
+      "proposed_header": "Account ID",
+      "reason": "Spaced Title-Case rendering of the canonical key column 'account_id', as spreadsheet exports commonly present column names. Same field, different presentation.",
+      "risk": "Low: the rendering is unique within the category. Needs confirmation that source systems which export this label mean exactly this key.",
+      "origin": "Phase 2 proposal generator: spaced Title-Case of the registry primary key (mechanical, not business-sourced)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-03-PK-TITLE",
+      "category": "IN-03",
+      "canonical_field": "snapshot_id",
+      "proposed_header": "Snapshot ID",
+      "reason": "Spaced Title-Case rendering of the canonical key column 'snapshot_id', as spreadsheet exports commonly present column names. Same field, different presentation.",
+      "risk": "Low: the rendering is unique within the category. Needs confirmation that source systems which export this label mean exactly this key.",
+      "origin": "Phase 2 proposal generator: spaced Title-Case of the registry primary key (mechanical, not business-sourced)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-04-PK-TITLE",
+      "category": "IN-04",
+      "canonical_field": "receipt_id",
+      "proposed_header": "Receipt ID",
+      "reason": "Spaced Title-Case rendering of the canonical key column 'receipt_id', as spreadsheet exports commonly present column names. Same field, different presentation.",
+      "risk": "Low: the rendering is unique within the category. Needs confirmation that source systems which export this label mean exactly this key.",
+      "origin": "Phase 2 proposal generator: spaced Title-Case of the registry primary key (mechanical, not business-sourced)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-05-PK-TITLE",
+      "category": "IN-05",
+      "canonical_field": "recon_run_id",
+      "proposed_header": "Recon Run ID",
+      "reason": "Spaced Title-Case rendering of the canonical key column 'recon_run_id', as spreadsheet exports commonly present column names. Same field, different presentation.",
+      "risk": "Low: the rendering is unique within the category. Needs confirmation that source systems which export this label mean exactly this key.",
+      "origin": "Phase 2 proposal generator: spaced Title-Case of the registry primary key (mechanical, not business-sourced)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-06-PK-TITLE",
+      "category": "IN-06",
+      "canonical_field": "ext_recon_id",
+      "proposed_header": "Ext Recon ID",
+      "reason": "Spaced Title-Case rendering of the canonical key column 'ext_recon_id', as spreadsheet exports commonly present column names. Same field, different presentation.",
+      "risk": "Low: the rendering is unique within the category. Needs confirmation that source systems which export this label mean exactly this key.",
+      "origin": "Phase 2 proposal generator: spaced Title-Case of the registry primary key (mechanical, not business-sourced)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-07-PK-TITLE",
+      "category": "IN-07",
+      "canonical_field": "statement_id",
+      "proposed_header": "Statement ID",
+      "reason": "Spaced Title-Case rendering of the canonical key column 'statement_id', as spreadsheet exports commonly present column names. Same field, different presentation.",
+      "risk": "Low: the rendering is unique within the category. Needs confirmation that source systems which export this label mean exactly this key.",
+      "origin": "Phase 2 proposal generator: spaced Title-Case of the registry primary key (mechanical, not business-sourced)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-08-PK-TITLE",
+      "category": "IN-08",
+      "canonical_field": "statement_id",
+      "proposed_header": "Statement ID",
+      "reason": "Spaced Title-Case rendering of the canonical key column 'statement_id', as spreadsheet exports commonly present column names. Same field, different presentation.",
+      "risk": "Low: the rendering is unique within the category. Needs confirmation that source systems which export this label mean exactly this key.",
+      "origin": "Phase 2 proposal generator: spaced Title-Case of the registry primary key (mechanical, not business-sourced)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-09-PK-TITLE",
+      "category": "IN-09",
+      "canonical_field": "bank_entry_id",
+      "proposed_header": "Bank Entry ID",
+      "reason": "Spaced Title-Case rendering of the canonical key column 'bank_entry_id', as spreadsheet exports commonly present column names. Same field, different presentation.",
+      "risk": "Low: the rendering is unique within the category. Needs confirmation that source systems which export this label mean exactly this key.",
+      "origin": "Phase 2 proposal generator: spaced Title-Case of the registry primary key (mechanical, not business-sourced)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-10-PK-TITLE",
+      "category": "IN-10",
+      "canonical_field": "ledger_entry_id",
+      "proposed_header": "Ledger Entry ID",
+      "reason": "Spaced Title-Case rendering of the canonical key column 'ledger_entry_id', as spreadsheet exports commonly present column names. Same field, different presentation.",
+      "risk": "Low: the rendering is unique within the category. Needs confirmation that source systems which export this label mean exactly this key.",
+      "origin": "Phase 2 proposal generator: spaced Title-Case of the registry primary key (mechanical, not business-sourced)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-11-PK-TITLE",
+      "category": "IN-11",
+      "canonical_field": "txn_id",
+      "proposed_header": "Txn ID",
+      "reason": "Spaced Title-Case rendering of the canonical key column 'txn_id', as spreadsheet exports commonly present column names. Same field, different presentation.",
+      "risk": "Low: the rendering is unique within the category. Needs confirmation that source systems which export this label mean exactly this key.",
+      "origin": "Phase 2 proposal generator: spaced Title-Case of the registry primary key (mechanical, not business-sourced)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-12-PK-TITLE",
+      "category": "IN-12",
+      "canonical_field": "batch_id",
+      "proposed_header": "Batch ID",
+      "reason": "Spaced Title-Case rendering of the canonical key column 'batch_id', as spreadsheet exports commonly present column names. Same field, different presentation.",
+      "risk": "Low: the rendering is unique within the category. Needs confirmation that source systems which export this label mean exactly this key.",
+      "origin": "Phase 2 proposal generator: spaced Title-Case of the registry primary key (mechanical, not business-sourced)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-13-PK-TITLE",
+      "category": "IN-13",
+      "canonical_field": "line_id",
+      "proposed_header": "Line ID",
+      "reason": "Spaced Title-Case rendering of the canonical key column 'line_id', as spreadsheet exports commonly present column names. Same field, different presentation.",
+      "risk": "Low: the rendering is unique within the category. Needs confirmation that source systems which export this label mean exactly this key.",
+      "origin": "Phase 2 proposal generator: spaced Title-Case of the registry primary key (mechanical, not business-sourced)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-14-PK-TITLE",
+      "category": "IN-14",
+      "canonical_field": "discrepancy_id",
+      "proposed_header": "Discrepancy ID",
+      "reason": "Spaced Title-Case rendering of the canonical key column 'discrepancy_id', as spreadsheet exports commonly present column names. Same field, different presentation.",
+      "risk": "Low: the rendering is unique within the category. Needs confirmation that source systems which export this label mean exactly this key.",
+      "origin": "Phase 2 proposal generator: spaced Title-Case of the registry primary key (mechanical, not business-sourced)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-09-REFERENCE-BANKREF",
+      "category": "IN-09",
+      "canonical_field": "bank_reference",
+      "proposed_header": "Reference",
+      "reason": "Bank statement exports often label the bank's own reference simply 'Reference'.",
+      "risk": "HIGH - ambiguous: IN-09 also has end_to_end_ref, and exports use 'Reference' for either. Must not be approved alongside AP-IN-09-REFERENCE-E2E.",
+      "origin": "Phase 2 hand-written proposal (domain reasoning from UC-042 column descriptions)",
+      "status": "approved",
+      "decision": {
+        "decided_by": "TEST FIXTURE - not a business approval",
+        "decided_at": "2026-11-18",
+        "basis": "exercises the approved-alias path in tests only"
+      }
+    },
+    {
+      "proposal_id": "AP-IN-09-REFERENCE-E2E",
+      "category": "IN-09",
+      "canonical_field": "end_to_end_ref",
+      "proposed_header": "Reference",
+      "reason": "Some payment exports use 'Reference' for the end-to-end (payer) reference.",
+      "risk": "HIGH - ambiguous with AP-IN-09-REFERENCE-BANKREF (same header, different field). Both approved together would make 'Reference' ambiguous; the loader rejects that.",
+      "origin": "Phase 2 hand-written proposal (domain reasoning from UC-042 column descriptions)",
+      "status": "approved",
+      "decision": {
+        "decided_by": "TEST FIXTURE - not a business approval",
+        "decided_at": "2026-11-18",
+        "basis": "exercises the approved-alias path in tests only"
+      }
+    },
+    {
+      "proposal_id": "AP-IN-09-DEBITCREDIT",
+      "category": "IN-09",
+      "canonical_field": "dc_indicator",
+      "proposed_header": "Debit/Credit",
+      "reason": "Common bank-export label for the C/D indicator.",
+      "risk": "HIGH - sign perspective: IN-09 is bank perspective (C = money in) while IN-10 cash book is ledger perspective (D = money in) (uc042lib.money). The same label in a cash-book export would invert signs.",
+      "origin": "Phase 2 hand-written proposal (domain reasoning from UC-042 column descriptions)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-07-BALANCE",
+      "category": "IN-07",
+      "canonical_field": "balance_amount",
+      "proposed_header": "Balance",
+      "reason": "Balance confirmations often show a single 'Balance' column.",
+      "risk": "MEDIUM - IN-08 carries opening and closing balances; a single 'Balance' column could be either. The value is unsigned (sign in balance_dc_indicator).",
+      "origin": "Phase 2 hand-written proposal (domain reasoning from UC-042 column descriptions)",
+      "status": "proposed",
+      "decision": null
+    },
+    {
+      "proposal_id": "AP-IN-05-DIFFERENCE",
+      "category": "IN-05",
+      "canonical_field": "difference_reported",
+      "proposed_header": "Difference",
+      "reason": "Internal reconciliation reports usually title the result 'Difference'.",
+      "risk": "MEDIUM - IN-06 also has difference_reported with the opposite definition (bank minus ledger, versus resource minus requirement).",
+      "origin": "Phase 2 hand-written proposal (domain reasoning from UC-042 column descriptions)",
+      "status": "proposed",
+      "decision": null
+    }
+  ]
+}

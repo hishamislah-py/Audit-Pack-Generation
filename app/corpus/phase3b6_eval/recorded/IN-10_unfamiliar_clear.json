@@ -1,0 +1,13 @@
+{
+ "fixture": "in10_auto_clear",
+ "note": "RECORDED TEST RESPONSE - not produced by a live model",
+ "match": {
+  "category": "IN-10",
+  "unresolved_headers": [
+   "entry_ref",
+   "acct_no",
+   "posting_dt"
+  ]
+ },
+ "response_text": "{\n \"response_schema\": \"smartparser-mapping-proposal/1.0\",\n \"category\": \"IN-10\",\n \"columns\": [\n  {\n   \"source_index\": 0,\n   \"source_header\": \"entry_ref\",\n   \"canonical_field\": \"ledger_entry_id\",\n   \"assessment\": \"CLEAR\",\n   \"alternatives\": [],\n   \"explanation\": \"recorded test response\",\n   \"evidence\": [\n    \"header token\"\n   ]\n  },\n  {\n   \"source_index\": 1,\n   \"source_header\": \"acct_no\",\n   \"canonical_field\": \"account_id\",\n   \"assessment\": \"CLEAR\",\n   \"alternatives\": [],\n   \"explanation\": \"recorded test response\",\n   \"evidence\": [\n    \"header token\"\n   ]\n  },\n  {\n   \"source_index\": 2,\n   \"source_header\": \"posting_dt\",\n   \"canonical_field\": \"posted_ts\",\n   \"assessment\": \"CLEAR\",\n   \"alternatives\": [],\n   \"explanation\": \"recorded test response\",\n   \"evidence\": [\n    \"header token\"\n   ]\n  }\n ],\n \"notes\": \"\"\n}"
+}

@@ -1,0 +1,15 @@
+{
+  "policy_id": "TEST-FIXTURE-authority (provisional Phase 3A roles, NOT an owner decision)",
+  "status": "TEST_ONLY",
+  "note": "Test-only policy using the provisional roles from the Phase 3A design. Never a production policy.",
+  "allow_test_identities": true,
+  "allow_sign_sensitive_reusable": false,
+  "scopes": {
+    "FILE_MAPPING": {"roles": ["analyst"], "approvers_required": 1},
+    "ALIAS": {"roles": ["data_owner"], "approvers_required": 1},
+    "LAYOUT": {"roles": ["data_owner", "system_owner"], "approvers_required": 2, "roles_required_together": ["data_owner", "system_owner"]},
+    "CATEGORY_CONFIRMATION": {"roles": ["analyst"], "approvers_required": 1},
+    "CATEGORY_CONFLICT": {"roles": ["data_owner"], "approvers_required": 1},
+    "REVOCATION": {"roles": ["data_owner"], "approvers_required": 1}
+  }
+}

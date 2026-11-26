@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design System · Safeguarding Evidence Processing</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<div class="ds">
+  <div class="page-head">
+    <div class="titles">
+      <div class="eyebrow">UC-042 Smart Parser · implementation reference</div>
+      <h1>Safeguarding Evidence Processing: design system</h1>
+      <p class="lead">The single source for the application's look and behaviour. Every screen uses these tokens and
+        components; the same stylesheet (<code>app.css</code>) styles this page and the application. Values on this page are
+        <b>illustrative</b>. In the application every number, ID and status comes from the package service, the review
+        workflow, the reconciliation adapter or the audit log.</p>
+    </div>
+    <div class="actions"><a class="btn primary" href="/#/overview">Open the application</a></div>
+  </div>
+
+  <div class="callout info"><div class="body"><b>Design principles</b>
+    <p>1. <b>Trust over decoration.</b> Light surfaces, one restrained blue-teal accent, semantic colour only for state.
+       2. <b>Traceable by default.</b> Every figure names its source (file version, SHA-256, audit event, engine output).
+       3. <b>Honest state.</b> Progress is shown only as real counts or as an indeterminate bar while the engine runs. A
+       stage is completed only when a backend result or a recorded event says so.
+       4. <b>Explicit control.</b> Activation and rejection are confirmed in a dialog. Analyst decisions always carry a reason and the TEST-ONLY authority is always visible.
+       5. <b>Readable data.</b> Tabular figures, monospaced identifiers and hashes, right-aligned amounts, negative amounts in red.</p></div></div>
+
+  <h2 class="ds-h">1 · Colour tokens</h2>
+  <p class="ds-lead">Neutral surfaces carry the content. The accent is reserved for primary actions, navigation state and links. Green, amber, red and indigo are used only for status.</p>
+  <div class="swatches">
+    <div class="sw"><div class="sw-bg"></div><div><b>--bg</b><br>#f5f7f9 · canvas</div></div>
+    <div class="sw"><div class="sw-surface"></div><div><b>--surface</b><br>#ffffff · cards</div></div>
+    <div class="sw"><div class="sw-sunken"></div><div><b>--surface-sunken</b><br>#f1f4f7 · wells</div></div>
+    <div class="sw"><div class="sw-border"></div><div><b>--border-strong</b><br>#cfd7e0 · controls</div></div>
+    <div class="sw"><div class="sw-text"></div><div><b>--text</b><br>#0f1c2e · body</div></div>
+    <div class="sw"><div class="sw-muted"></div><div><b>--muted</b><br>#5d6c80 · secondary</div></div>
+    <div class="sw"><div class="sw-primary"></div><div><b>--primary</b><br>#0b6b8f · actions</div></div>
+    <div class="sw"><div class="sw-primary-soft"></div><div><b>--primary-soft</b><br>#e7f2f7 · selection</div></div>
+    <div class="sw"><div class="sw-ok"></div><div><b>--ok</b><br>#157347 · validated, pass, clean</div></div>
+    <div class="sw"><div class="sw-warn"></div><div><b>--warn</b><br>#9a5b00 · review, blocked</div></div>
+    <div class="sw"><div class="sw-bad"></div><div><b>--bad</b><br>#b3261e · failed, exceptions</div></div>
+    <div class="sw"><div class="sw-info"></div><div><b>--info</b><br>#3b55c9 · running, informational</div></div>
+    <div class="sw"><div class="sw-ok-soft"></div><div><b>--ok-soft</b></div></div>
+    <div class="sw"><div class="sw-warn-soft"></div><div><b>--warn-soft</b></div></div>
+    <div class="sw"><div class="sw-bad-soft"></div><div><b>--bad-soft</b></div></div>
+    <div class="sw"><div class="sw-info-soft"></div><div><b>--info-soft</b></div></div>
+  </div>
+
+  <h2 class="ds-h">2 · Typography</h2>
+  <p class="ds-lead">System UI sans (Segoe UI on Windows), so no web-font download and it works offline. Monospace (Cascadia Mono / Consolas) for IDs, hashes, column names and routes. Figures use tabular numerals.</p>
+  <div class="card"><div class="card-body">
+    <div class="type-row"><span class="muted xs">3xl · 28 / 600</span><span class="t-3xl">1,886 controls</span></div>
+    <div class="type-row"><span class="muted xs">2xl · 22 / 600</span><span class="t-2xl">Page title</span></div>
+    <div class="type-row"><span class="muted xs">xl · 18 / 600</span><span class="t-xl">Fact value · dialog title</span></div>
+    <div class="type-row"><span class="muted xs">lg · 15 / 600</span><span class="t-lg">Card title</span></div>
+    <div class="type-row"><span class="muted xs">md · 13.5 / 400</span><span class="t-md">Body text and table cells</span></div>
+    <div class="type-row"><span class="muted xs">sm · 12.5</span><span class="t-sm">Secondary lines, reasons, hints</span></div>
+    <div class="type-row"><span class="muted xs">xs · 11.5 caps</span><span class="t-xs eyebrow">EYEBROW · TABLE HEADERS · LABELS</span></div>
+    <div class="type-row"><span class="muted xs">mono</span><span class="mono">FV-2ab3be2eaa · SNAP-001-aaa8d2e1 · 9dfe5667d091…</span></div>
+    <div class="type-row"><span class="muted xs">amounts</span><span><span class="amount">250,000.00</span> &nbsp; <span class="amount neg">-812.40</span></span></div>
+  </div></div>
+
+  <h2 class="ds-h">3 · Status vocabulary</h2>
+  <p class="ds-lead">One badge style per backend state, used identically on every screen. The label is human-readable and the tooltip carries the backend value.</p>
+  <div class="grid2">
+    <div class="card"><div class="card-head"><h2>File version status</h2></div><div class="card-body"><table class="t">
+      <tr><td><span class="badge info">Received</span></td><td class="small">stored, processing not finished</td></tr>
+      <tr><td><span class="badge warn">Review required</span></td><td class="small">an analyst must decide (column case or proposal review)</td></tr>
+      <tr><td><span class="badge bad">Resubmission required</span></td><td class="small">required source columns missing; corrected file needed</td></tr>
+      <tr><td><span class="badge bad">Failed validation</span></td><td class="small">processed but cannot become eligible; needs a new version</td></tr>
+      <tr><td><span class="badge ok">Validated</span></td><td class="small">every file-level check passed</td></tr>
+      <tr><td><span class="badge ok strong">Active</span></td><td class="small">selected by the active snapshot</td></tr>
+      <tr><td><span class="badge neutral">Superseded</span></td><td class="small">replaced by a newer activated version</td></tr>
+      <tr><td><span class="badge bad outline">Rejected</span></td><td class="small">rejected by a reviewer or wrong category</td></tr>
+      <tr><td><span class="badge dashed">Missing</span></td><td class="small">required slot without any file</td></tr></table></div></div>
+    <div class="stack">
+      <div class="card"><div class="card-head"><h2>Package status</h2></div><div class="card-body row">
+        <span class="badge neutral">No evidence yet</span><span class="badge warn">Incomplete</span><span class="badge warn">Review required</span>
+        <span class="badge bad">Resubmission required</span><span class="badge info">Ready for validation</span><span class="badge ok">Active · reconciliation ready</span></div></div>
+      <div class="card"><div class="card-head"><h2>Reconciliation · severity · outcome</h2></div><div class="card-body stack">
+        <div class="row"><span class="badge ok">Clean</span><span class="badge bad">Exceptions open</span><span class="badge warn">Evidence incomplete</span></div>
+        <div class="row"><span class="badge bad">Critical</span><span class="badge warn">High</span><span class="badge info">Medium</span><span class="badge neutral">Low</span></div>
+        <div class="row"><span class="badge ok">PASS</span><span class="badge bad">FAIL</span><span class="badge warn">INSUFFICIENT_EVIDENCE</span><span class="badge neutral">NOT_APPLICABLE</span></div></div></div>
+      <div class="card"><div class="card-head"><h2>Analyst decisions (one vocabulary)</h2></div><div class="card-body row">
+        <span class="badge ok">Mapped</span><span class="badge ok">Mapped (changed field)</span><span class="badge ok">Chosen as source</span>
+        <span class="badge neutral">Ignored</span><span class="badge warn">Left unresolved</span><span class="badge ok">Deterministic</span><span class="badge warn">Undecided</span>
+        <p class="small muted">The "Map" button and a recorded APPROVE are both shown as <b>Mapped</b>.</p></div></div>
+      <div class="card"><div class="card-head"><h2>Column flags · environment</h2></div><div class="card-body row">
+        <span class="tag fin">Financial</span><span class="tag sign">Sign-sensitive</span><span class="tag req">Required</span>
+        <span class="pill test">TEST-ONLY authority</span><span class="pill">LLM: recorded responses</span><span class="pill off">Submission disabled</span></div></div>
+    </div>
+  </div>
+
+  <h2 class="ds-h">4 · Actions and inputs</h2>
+  <div class="card"><div class="card-body stack">
+    <div class="row"><button class="btn primary">Activate package…</button><button class="btn">Run validation now</button><button class="btn ghost">Details</button>
+      <button class="btn danger">Reject file…</button><button class="btn primary" disabled>Activate package…</button><button class="btn" disabled><span class="spin"></span> Working…</button><button class="btn sm">Small</button></div>
+    <p class="small muted">Rules: one primary action per page area. Destructive or irreversible actions (reject, activate) open a confirmation dialog. A disabled primary action always comes with the reason it is disabled. While a request runs, the button shows a spinner, and a success toast appears only after the server answered successfully.</p>
+    <div class="row"><div class="field"><label for="x1">Reporting period</label><input id="x1" type="month" value="2026-09"><span class="hint">YYYY-MM</span></div>
+      <div class="field"><label for="x2">Evidence category</label><select id="x2"><option>Identify by content</option><option>IN-10 · Safeguarding cash book</option></select></div>
+      <div class="field"><label for="x3">Reason for this decision</label><input id="x3" type="text" placeholder="Reason (required)"></div></div>
+  </div></div>
+
+  <h2 class="ds-h">5 · Feedback: callouts, toasts, dialogs</h2>
+  <div class="grid2">
+    <div class="stack">
+      <div class="callout test"><div class="body"><b>TEST-ONLY analyst authority</b><p class="small">Shown on every review screen: who decides, under which policy, and that it is not a production approval.</p></div></div>
+      <div class="callout warn"><div class="body"><b>Why this file needs a review</b><p class="small">The backend's review reason, verbatim.</p></div></div>
+      <div class="callout bad"><div class="body"><b>Activation is blocked</b><p class="small">PV-01 every required evidence category is present: missing: ['IN-08'] (Add the missing required evidence)</p></div></div>
+      <div class="callout ok"><div class="body"><b>All package checks pass</b><p class="small">The package can be activated.</p></div></div>
+      <div class="callout info"><div class="body"><b>Engine output, not a decision</b><p class="small">Investigation decisions and audit packs are outside this application.</p></div></div>
+    </div>
+    <div class="stack">
+      <div class="toast ok"><b>Package activated</b><div class="small">snapshot SNAP-001-… activated</div></div>
+      <div class="toast bad"><b>NOT_AUTHORISED</b><div class="small">FILE_MAPPING: role 'viewer' is not authorised</div></div>
+      <div class="static-dialog"><div class="dlg-head"><h2>Activate this package?</h2></div>
+        <div class="dlg-body"><div class="kv small"><div class="k">Package</div><div class="v mono">PKG-2026-09-…</div><div class="k">File versions selected</div><div class="v">17</div></div>
+          <div class="callout info"><div class="body"><p class="small">Activation re-runs PV-01 to PV-09 and creates an immutable snapshot and manifest marked NOT submitted. It does not submit anything or publish an audit pack.</p></div></div></div>
+        <div class="dlg-foot"><button class="btn">Cancel</button><button class="btn primary">Activate package</button></div></div>
+    </div>
+  </div>
+
+  <h2 class="ds-h">6 · Data display</h2>
+  <div class="facts">
+    <div class="fact ok"><div class="k">Reconciliation status</div><div class="v">Clean</div></div>
+    <div class="fact"><div class="k">Total controls</div><div class="v">1,886</div></div>
+    <div class="fact ok"><div class="k">Passed</div><div class="v">1,874</div></div>
+    <div class="fact bad"><div class="k">Failed</div><div class="v">13</div></div>
+    <div class="fact bad"><div class="k">Exceptions</div><div class="v">2</div><div class="d">1 Critical · 1 High</div></div>
+  </div>
+  <div class="section card"><div class="toolbar"><select aria-label="sev"><option>All severities</option></select><select aria-label="acc"><option>All accounts</option></select><span class="grow"></span><input type="search" placeholder="Search root cause / ID" aria-label="search"></div>
+    <div class="table-wrap"><table class="t"><thead><tr><th>Exception</th><th>Severity</th><th>Category / root cause</th><th>Account</th><th class="num">Amount</th><th class="num">Results</th></tr></thead>
+      <tbody><tr class="click"><td><b class="mono">EXC-CASE-01</b></td><td><span class="badge bad">Critical</span></td><td>Unexplained bank-ledger difference<div class="sub mono">BANK_LEDGER_DIFFERENCE|SGA-GBP-01|…</div></td><td class="mono">SGA-GBP-01</td><td class="num"><span class="amount neg">-812.40</span></td><td class="num">11</td></tr>
+      <tr class="click sel"><td><b class="mono">EXC-CASE-02</b></td><td><span class="badge warn">High</span></td><td>Bank entry with no counterpart<div class="sub mono">UNMATCHED_BANK_ENTRY|…</div></td><td class="mono">SGA-GBP-01</td><td class="num"><span class="amount neg">-812.40</span></td><td class="num">2</td></tr></tbody></table></div></div>
+  <p class="small muted section">Tables: uppercase 11.5px headers on a light band, sticky headers, 14px cell padding, right-aligned tabular figures, a hover tint for clickable rows (also reachable with the keyboard via Enter), and selected rows in the accent tint. An expandable row (▸) opens the column detail on the review screen.</p>
+
+  <h2 class="ds-h">7 · Processing: pipeline stepper and progress</h2>
+  <p class="ds-lead">Stage states map one-to-one to backend evidence. The bar shows <b>files processed out of files submitted</b>, a real count. An indeterminate bar is used only while the UC-042 engine runs in its own process, which reports no progress.</p>
+  <div class="grid2">
+    <div class="card"><ol class="steps">
+      <li class="step completed"><div class="dot">✓</div><div><div class="t">Identifying evidence categories</div><div class="x">Classifying each file by its content</div><div class="d">19 of 19 processed</div><div class="ev">service result per file</div></div><div class="when">Completed</div></li>
+      <li class="step running"><div class="dot"></div><div><div class="t">Mapping recognised fields</div><div class="x">Deterministic mapping of source columns</div><div class="d">running…</div></div><div class="when">Running</div></li>
+      <li class="step requires_review"><div class="dot">7</div><div><div class="t">Preparing analyst review cases</div><div class="d">2 file(s) waiting for an analyst</div><div class="ev">audit: FILE_VERSION_REVIEW_REQUIRED x2</div></div><div class="when">Requires review</div></li>
+      <li class="step not_required"><div class="dot">6</div><div><div class="t">Generating proposals</div><div class="d">no proposal needed: AI proposals disabled</div></div><div class="when">Not required</div></li>
+      <li class="step blocked"><div class="dot">9</div><div><div class="t">Running package validation</div><div class="d">activation blocked by PV-01, PV-03</div></div><div class="when">Activation blocked</div></li>
+      <li class="step failed"><div class="dot">!</div><div><div class="t">Running the UC-042 engine</div><div class="d">engine exited with an error (shown verbatim)</div></div><div class="when">Failed</div></li>
+      <li class="step pending"><div class="dot">10</div><div><div class="t">Pending stage</div></div><div class="when">Pending</div></li></ol></div>
+    <div class="stack">
+      <div class="card"><div class="card-body stack"><b>12 of 17 files processed</b><div class="bar bar-74"><span></span></div><div class="bar ok bar-100"><span></span></div><div class="bar indet"><span></span></div></div></div>
+      <div class="drop"><div class="big">Drop evidence files or a ZIP package here</div><p class="muted small">CSV and PDF evidence files, or one ZIP containing them.</p></div>
+    </div>
+  </div>
+
+  <h2 class="ds-h">8 · Empty, loading and error states</h2>
+  <div class="grid3">
+    <div class="card"><div class="empty"><h3>No file is waiting for review</h3><p>Files that need an analyst decision appear here after processing.</p></div></div>
+    <div class="card"><div class="card-body"><div class="skel h"></div><div class="skel w80"></div><div class="skel w60"></div><div class="skel block"></div></div></div>
+    <div class="err-box"><h3>Something went wrong</h3><p class="small">PACKAGE_STATE: IN-10 v2 is VALIDATED: an accepted file cannot be voluntarily replaced</p><div class="row section"><button class="btn">Try again</button></div></div>
+  </div>
+  <p class="small muted section">Errors show the backend's code and message verbatim. Empty states explain what will appear and offer the next action. The skeleton loader mirrors the page's layout.</p>
+
+  <h2 class="ds-h">9 · Audit timeline</h2>
+  <div class="card"><ul class="timeline">
+    <li class="day">Thu, 19 November 2026</li>
+    <li class="tl k-package"><div class="tm">11:02:14</div><div class="mk"></div><div><span class="what">Package created</span> <span class="mono xs muted">#1 PACKAGE_CREATED</span><div class="who">analyst</div></div></li>
+    <li class="tl k-review"><div class="tm">11:04:51</div><div class="mk"></div><div><span class="what">Analyst column decision</span> <span class="mono xs muted">#88 COLUMN_DECIDED</span><div class="who">e2e-test-analyst-1 (analyst) · IN-10</div></div></li>
+    <li class="tl k-ok"><div class="tm">11:06:03</div><div class="mk"></div><div><span class="what">Package activated</span> <span class="mono xs muted">#131 PACKAGE_SNAPSHOT_ACTIVATED</span><div class="who">smartparser-package-service (system) · SNAP-001-…</div></div></li>
+    <li class="tl k-recon"><div class="tm">11:06:40</div><div class="mk"></div><div><span class="what">Reconciliation completed</span> <span class="mono xs muted">#134 RECONCILIATION_EXECUTED</span><div class="who">smartparser-reconciliation-adapter (system)</div></div></li></ul></div>
+
+  <h2 class="ds-h">10 · Navigation and screen inventory</h2>
+  <p class="ds-lead">Persistent sidebar in four groups (Workspace · Review &amp; control · Reconciliation · Governance). The top bar holds breadcrumbs, the current-package selector and the environment pills. Screens that act on a package are disabled until a package is selected. Every screen below is implemented and reads live data from the API named.</p>
+  <div class="ds-screens">
+    <div class="ds-screen"><h3>1 · Overview dashboard</h3><div class="route">#/overview</div><p class="small">Current package facts (files received, identified, validated, review, missing / failed, validation, activation, latest reconciliation), next-step callout, recent packages. <span class="muted">GET /api/packages, /api/packages/{id}</span></p></div>
+    <div class="ds-screen"><h3>2 · Evidence intake</h3><div class="route">#/intake</div><p class="small">Reporting period, drag-and-drop of files or a ZIP, a staged file list (name, size, type, SHA-256, optional declared category, remove), then submit. <span class="muted">POST /api/staging, /api/packages, /api/packages/{id}/intake</span></p></div>
+    <div class="ds-screen"><h3>3 · Processing centre</h3><div class="route">#/processing/{job}</div><p class="small">Nine pipeline stages with status, times and evidence; the real file count; per-file results; a live feed of recorded events. <span class="muted">GET /api/jobs/{id} (polled)</span></p></div>
+    <div class="ds-screen"><h3>4 · Evidence classification and file status</h3><div class="route">#/packages/{id}</div><p class="small">One row per evidence slot: category, file, identified by content or declared, route, status, reason, next action; refused uploads. <span class="muted">GET /api/packages/{id}</span></p></div>
+    <div class="ds-screen"><h3>5 · Column mapping and analyst review</h3><div class="route">#/review · #/review/{pkg}/{version}</div><p class="small">Queue with diagnosis. Review grid: position, source column, sample values, proposed field, assessment, validation, financial / sign flags, decision. The expanded row shows statistics, provenance, field definition and the actions Map / Change / Use as source / Ignore / Leave unresolved, each with a reason. Complete or Reject (confirmed). <span class="muted">GET/POST /api/review/…</span></p></div>
+    <div class="ds-screen"><h3>6 · Package validation (PV-01 to PV-09)</h3><div class="route">#/validation/{id}</div><p class="small">The check table (result, evidence, blocks activation, required action), slot summary, status legend, and the selection that would be snapshotted. <span class="muted">GET /validation, POST /validate</span></p></div>
+    <div class="ds-screen"><h3>7 · Activation confirmation</h3><div class="route">dialog on #/validation/{id}</div><p class="small">Enabled only when the last validation passed. The dialog states the package, versions, snapshot effect and that there is no submission or audit pack. Then the result: snapshot, status and next steps. <span class="muted">POST /activate {confirm:true}</span></p></div>
+    <div class="ds-screen"><h3>8 · Package history and file versions</h3><div class="route">#/history/{id} · #/history/{id}/{version} · #/snapshot/{id}/{snap}</div><p class="small">Snapshots, validation runs, every version (intake, SHA-256, status history, previous version, replacement reason), review decisions, handoff checks, recorded events. <span class="muted">GET /history, /versions/{v}, /snapshots/{s}</span></p></div>
+    <div class="ds-screen"><h3>9 · Correction and resubmission</h3><div class="route">#/resubmit/{id}</div><p class="small">Each category awaiting correction (status, reason, missing fields, what to correct), upload of the corrected file with a reason, and upload of missing evidence. <span class="muted">POST /resubmit, /intake</span></p></div>
+    <div class="ds-screen"><h3>10 · Reconciliation execution</h3><div class="route">#/reconciliation/{id}</div><p class="small">Eligibility (active snapshot = current selection, engine configured), a run button, four real run stages, outcome totals and previous runs. <span class="muted">POST /reconcile, GET /jobs/{id}</span></p></div>
+    <div class="ds-screen"><h3>11 · Reconciliation results dashboard</h3><div class="route">#/runs/{run}</div><p class="small">Status, total, PASS, FAIL, insufficient, N/A, exceptions by severity; tabs for exceptions, control results (filterable), the validation report, and inputs with integrity. <span class="muted">GET /api/runs/{run}</span></p></div>
+    <div class="ds-screen"><h3>12 · Exception investigation</h3><div class="route">#/runs/{run}/exceptions/{exc}</div><p class="small">Description, financial impact, account, dates, supporting evidence resolved to file version / line / row, associated control results, investigation group. All values are as written by the engine. <span class="muted">GET /api/runs/{run}/exceptions/{exc}</span></p></div>
+    <div class="ds-screen"><h3>13 · Activity and audit timeline</h3><div class="route">#/activity/{id}</div><p class="small">The hash-chained audit log, verified on load and grouped by day, with type filter, actor, IDs and the recorded details. <span class="muted">GET /api/activity</span></p></div>
+  </div>
+  <p class="small muted section">Meaningful state names used across the application: Initialising · Identifying evidence categories · Mapping recognised fields · Requires review · Package validation · Ready for activation (all PV checks pass) · Active · Reconciliation complete (CLEAN / Exceptions open / Evidence incomplete).</p>
+</div>
+</body>
+</html>

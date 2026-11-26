@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smartparser"
+version = "0.1.0"
+description = "Standalone deterministic evidence parser for UC-042 (POC)"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.6",
+    "charset-normalizer>=3.3",
+    "pypdf>=4.0",              # PDF text (Phase 1 classification); the library UC-042 uses
+]
+
+[project.optional-dependencies]
+# Phase 5 (API/UI) dependencies are deliberately not required yet.
+api = ["fastapi>=0.110", "uvicorn>=0.29", "python-multipart>=0.0.9"]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+include = ["smartparser*"]
+
+[tool.setuptools.package-data]
+"smartparser.schemas" = ["definitions/*.json"]
+"smartparser.mapping" = ["rules/*.json"]
+"smartparser.review" = ["authority_policy.json"]
+"smartparser.ai" = ["prompts/*.md"]
+"smartparser.orchestration" = ["poc_auto_accept_policy.json"]
+"smartparser.review_ui" = ["static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
