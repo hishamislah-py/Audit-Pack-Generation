@@ -11,4 +11,4 @@ if [ -n "$UC042_DATABASE_URL" ]; then
   done
 fi
 nginx
-exec uvicorn --factory uc042app.api.main:create_app --host 127.0.0.1 --port 8000 --workers 1
+exec uvicorn --factory uc042app.api.main:create_app --host 127.0.0.1 --port 8000 --workers 1 --no-proxy-headers
