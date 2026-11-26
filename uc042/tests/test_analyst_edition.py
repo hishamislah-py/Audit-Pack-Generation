@@ -235,7 +235,10 @@ class Statement(unittest.TestCase):
         self.assertIn("2 results failed: ZZ-NEW (ZZ-NEW)", st["lines"][1]["text"])
 
     def test_app_copy_is_identical(self):
-        app = Path(__file__).resolve().parents[2] / "app_merge" / "smartparser" / "webapp" / "statement.py"
+        # The consolidated repository has the application as the sibling app/; app_merge was the earlier worktree name.
+        base = Path(__file__).resolve().parents[2]
+        app = next((p for p in (base / d / "smartparser" / "webapp" / "statement.py" for d in ("app", "app_merge"))
+                    if p.is_file()), base / "app" / "smartparser" / "webapp" / "statement.py")
         if not app.is_file():
             self.skipTest("app worktree not alongside")
         strip = lambda s: s.split('"""', 2)[2]  # noqa: E731 - the docstrings name each other
