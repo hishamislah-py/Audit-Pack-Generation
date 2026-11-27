@@ -1,0 +1,352 @@
+{
+ "scenario": "scenario_4_technical_failure",
+ "customer_name": "Thornbury Wallet Ltd",
+ "reporting_period": "2026-11",
+ "zip_sha256": "a7352a7698cfb6eebc42127b34eb71be5be096c53be1c8998a754aa95c59d3d7",
+ "verdict": "PASS",
+ "checks_passed": 8,
+ "checks_total": 8,
+ "error": null,
+ "seconds": 0.2,
+ "checks": [
+  {
+   "id": "S4.CASE.registered",
+   "check": "case registered WAITING with the ZIP's SHA-256, no run yet",
+   "passed": true,
+   "observed": [
+    "WAITING",
+    "a7352a7698cfb6eebc42127b34eb71be5be096c53be1c8998a754aa95c59d3d7",
+    []
+   ],
+   "expected": [
+    "WAITING",
+    "a7352a7698cfb6eebc42127b34eb71be5be096c53be1c8998a754aa95c59d3d7",
+    []
+   ]
+  },
+  {
+   "id": "S4.RUN1.failed",
+   "check": "run 1 FAILED with a technical failure (code, stage, Bad CRC-32 message)",
+   "passed": true,
+   "observed": [
+    "FAILED",
+    "RUN_FAILED",
+    "read",
+    true
+   ],
+   "expected": [
+    "FAILED",
+    "RUN_FAILED",
+    "read",
+    true
+   ]
+  },
+  {
+   "id": "S4.RUN1.actions",
+   "check": "after failure: Retry and Defer enabled; Activate / Reconcile / Upload disabled",
+   "passed": true,
+   "observed": {
+    "retry_from_beginning": true,
+    "defer": true,
+    "activate": false,
+    "reconcile": false,
+    "upload_evidence": false
+   },
+   "expected": {
+    "retry_from_beginning": true,
+    "defer": true,
+    "activate": false,
+    "reconcile": false,
+    "upload_evidence": false
+   }
+  },
+  {
+   "id": "S4.RETRY.needs_confirm",
+   "check": "retry without confirmation refused (400 CONFIRMATION_REQUIRED), nothing changed",
+   "passed": true,
+   "observed": [
+    400,
+    "CONFIRMATION_REQUIRED",
+    1
+   ],
+   "expected": [
+    400,
+    "CONFIRMATION_REQUIRED",
+    1
+   ]
+  },
+  {
+   "id": "S4.RETRY.failed_again",
+   "check": "retry run 2 used the ORIGINAL ZIP and FAILED again; run 1 kept (O1)",
+   "passed": true,
+   "observed": [
+    2,
+    [
+     "FAILED",
+     "FAILED"
+    ],
+    "RUN-2026-11-001-01-673884",
+    "ORIGINAL_ZIP",
+    "RUN_FAILED",
+    true,
+    2
+   ],
+   "expected": [
+    2,
+    [
+     "FAILED",
+     "FAILED"
+    ],
+    "RUN-2026-11-001-01-673884",
+    "ORIGINAL_ZIP",
+    "RUN_FAILED",
+    true,
+    2
+   ]
+  },
+  {
+   "id": "S4.CASE.status",
+   "check": "case stays IN_PROGRESS with retry offered again",
+   "passed": true,
+   "observed": [
+    "IN_PROGRESS",
+    true
+   ],
+   "expected": [
+    "IN_PROGRESS",
+    true
+   ]
+  },
+  {
+   "id": "S4.ACTIVITY",
+   "check": "activity records CASE_RUN_FAILED x2 and CASE_RETRY_REQUESTED; audit chain verified",
+   "passed": true,
+   "observed": [
+    2,
+    true,
+    true
+   ],
+   "expected": [
+    2,
+    true,
+    true
+   ]
+  },
+  {
+   "id": "S4.APP.healthy",
+   "check": "queue still served; app info still served; this case is the active case",
+   "passed": true,
+   "observed": [
+    "RF-2026-11-001",
+    true
+   ],
+   "expected": [
+    "RF-2026-11-001",
+    true
+   ]
+  }
+ ],
+ "observed": {
+  "server": {
+   "port": 8794,
+   "root": "C:\\u42v\\rfdata_ws_4",
+   "llm": {
+    "mode": "DISABLED",
+    "label": "AI proposals disabled",
+    "fixtures": []
+   },
+   "engine_configured": true,
+   "reviewer": {
+    "reviewer_id": "analyst-1",
+    "role": "analyst",
+    "kind": "TEST"
+   }
+  },
+  "case_ref": "RF-2026-11-001",
+  "run_1": {
+   "run_id": "RUN-2026-11-001-01-673884",
+   "run_no": 1,
+   "package_id": "PKG-2026-11-292fec",
+   "started_at": "2026-11-19T12:04:02+00:00",
+   "started_by": "analyst-1",
+   "intake_job_id": null,
+   "status": "FAILED",
+   "finished_at": "2026-11-19T12:04:02+00:00",
+   "failure": {
+    "code": "RUN_FAILED",
+    "message": "Bad CRC-32 for file 'Thornbury_Nov2026/09_bank_statement_lines.csv'",
+    "at": "2026-11-19T12:04:02+00:00",
+    "stage": "read"
+   },
+   "retry_of": null,
+   "evidence_source": "ORIGINAL_ZIP",
+   "staged_entries": 0,
+   "skipped_entries": [],
+   "intake_job": null
+  },
+  "case_after_run_1": {
+   "status": "IN_PROGRESS",
+   "steps": [
+    {
+     "key": "smart_parser",
+     "state": "failed"
+    },
+    {
+     "key": "review",
+     "state": "todo"
+    },
+    {
+     "key": "validation",
+     "state": "todo"
+    },
+    {
+     "key": "activation",
+     "state": "todo"
+    },
+    {
+     "key": "reconciliation",
+     "state": "todo"
+    }
+   ],
+   "outstanding_other": [
+    {
+     "kind": "RETRY_FROM_BEGINNING",
+     "detail": "the latest Smart Parser run failed"
+    }
+   ],
+   "actions": {
+    "start": {
+     "enabled": false,
+     "reason": "case is IN_PROGRESS"
+    },
+    "defer": {
+     "enabled": true,
+     "reason": null
+    },
+    "resume": {
+     "enabled": false,
+     "reason": "case is IN_PROGRESS"
+    },
+    "retry_from_beginning": {
+     "enabled": true,
+     "reason": null
+    },
+    "upload_evidence": {
+     "enabled": false,
+     "reason": "the latest run failed: retry it from the beginning"
+    },
+    "review": {
+     "enabled": false,
+     "reason": "the latest run failed: retry it from the beginning"
+    },
+    "validate": {
+     "enabled": false,
+     "reason": "the latest run failed: retry it from the beginning"
+    },
+    "activate": {
+     "enabled": false,
+     "reason": "the latest run failed: retry it from the beginning"
+    },
+    "reconcile": {
+     "enabled": false,
+     "reason": "the latest run failed: retry it from the beginning"
+    }
+   }
+  },
+  "run_2": {
+   "run_id": "RUN-2026-11-001-02-201fc8",
+   "run_no": 2,
+   "package_id": "PKG-2026-11-909eed",
+   "started_at": "2026-11-19T12:04:02+00:00",
+   "started_by": "analyst-1",
+   "intake_job_id": null,
+   "status": "FAILED",
+   "finished_at": "2026-11-19T12:04:02+00:00",
+   "failure": {
+    "code": "RUN_FAILED",
+    "message": "Bad CRC-32 for file 'Thornbury_Nov2026/09_bank_statement_lines.csv'",
+    "at": "2026-11-19T12:04:02+00:00",
+    "stage": "read"
+   },
+   "retry_of": "RUN-2026-11-001-01-673884",
+   "evidence_source": "ORIGINAL_ZIP",
+   "staged_entries": 0,
+   "skipped_entries": [],
+   "not_carried_forward": [],
+   "intake_job": null
+  },
+  "runs_detail": [
+   {
+    "run_id": "RUN-2026-11-001-01-673884",
+    "status": "FAILED",
+    "failure": {
+     "code": "RUN_FAILED",
+     "message": "Bad CRC-32 for file 'Thornbury_Nov2026/09_bank_statement_lines.csv'",
+     "at": "2026-11-19T12:04:02+00:00",
+     "stage": "read"
+    },
+    "stages": []
+   },
+   {
+    "run_id": "RUN-2026-11-001-02-201fc8",
+    "status": "FAILED",
+    "failure": {
+     "code": "RUN_FAILED",
+     "message": "Bad CRC-32 for file 'Thornbury_Nov2026/09_bank_statement_lines.csv'",
+     "at": "2026-11-19T12:04:02+00:00",
+     "stage": "read"
+    },
+    "stages": []
+   }
+  ],
+  "activity_event_types": [
+   "CASE_CREATED",
+   "CASE_RETRY_REQUESTED",
+   "CASE_RUN_FAILED",
+   "CASE_RUN_STARTED",
+   "CASE_STARTED",
+   "PACKAGE_CREATED"
+  ]
+ },
+ "post_transcript": [
+  {
+   "method": "POST",
+   "path": "/api/cases",
+   "status": 200,
+   "request": {
+    "customer_name": "Thornbury Wallet Ltd",
+    "reporting_period": "2026-11",
+    "zip_name": "Thornbury_Wallet_Ltd_2026-11.zip"
+   },
+   "error": null
+  },
+  {
+   "method": "POST",
+   "path": "/api/cases/RF-2026-11-001/start",
+   "status": 200,
+   "request": {
+    "expected_revision": 1
+   },
+   "error": null
+  },
+  {
+   "method": "POST",
+   "path": "/api/cases/RF-2026-11-001/retry",
+   "status": 400,
+   "request": {
+    "expected_revision": 4
+   },
+   "error": "CONFIRMATION_REQUIRED"
+  },
+  {
+   "method": "POST",
+   "path": "/api/cases/RF-2026-11-001/retry",
+   "status": 200,
+   "request": {
+    "confirm": true,
+    "expected_revision": 4
+   },
+   "error": null
+  }
+ ]
+}

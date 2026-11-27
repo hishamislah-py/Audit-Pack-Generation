@@ -1,0 +1,19 @@
+test_stage4_dr06_dr07 (unittest.loader._FailedTest.test_stage4_dr06_dr07) ... ERROR
+
+======================================================================
+ERROR: test_stage4_dr06_dr07 (unittest.loader._FailedTest.test_stage4_dr06_dr07)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_stage4_dr06_dr07
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\AppData\Local\Programs\Python\Python311\Lib\unittest\loader.py", line 154, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage4_dr06_dr07.py", line 20, in <module>
+    from uc042lib.investigation.packet_view import (MISSING, ModelViewError, model_view_text, reconstruct_packet,
+ImportError: cannot import name 'MISSING' from 'uc042lib.investigation.packet_view' (C:\Users\artlptp263user\p10\uc042_token_optimisation\uc042lib\investigation\packet_view.py)
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

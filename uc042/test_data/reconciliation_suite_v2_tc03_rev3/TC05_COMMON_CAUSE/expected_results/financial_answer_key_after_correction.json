@@ -1,0 +1,10 @@
+{
+  "label": "FIN (deterministic; independent of the engine)",
+  "scenario_id": "TC05",
+  "submission": "corrected",
+  "expected_anomalies": [],
+  "figures": {
+    "rollforward|EUR/C0101 2026-09-24": "29990.41",
+    "rollforward|EUR/C0104 2026-09-24": "27833.10"
+  }
+}

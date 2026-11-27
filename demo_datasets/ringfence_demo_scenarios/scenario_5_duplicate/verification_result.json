@@ -1,0 +1,1223 @@
+{
+ "scenario": "scenario_5_duplicate",
+ "scenario_id": "RF-DEMO-05",
+ "customer_name": "Pellworth Card Services Ltd",
+ "reporting_period": "2026-09",
+ "zip_sha256": "8d2bd002be448648554e73e3f96264cdb617791275526e9bfc5cdcb88c7c385f",
+ "frozen_key": {
+  "path": "C:\\u42x\\UC042_SMART_PARSER_E2E_TEST_BUNDLE\\src\\uc042\\uc042_dataset\\scn_SC5C_refund_double_posted\\answer_key.json",
+  "sha256": "15c0a3f4f8654aa2c0f6c55d75bf041bb1f2509c625b171a92d662085978192d",
+  "mirror_paths": [
+   "C:\\Users\\artlptp263user\\p10\\uc042_token_optimisation\\uc042_dataset\\scn_SC5C_refund_double_posted\\answer_key.json",
+   "C:\\u42x\\UC042_SMART_PARSER_E2E_TEST_BUNDLE\\ground_truth\\uc042_scenarios\\scn_SC5C_refund_double_posted\\answer_key.json"
+  ]
+ },
+ "verdict": "PASS",
+ "checks_passed": 15,
+ "checks_total": 15,
+ "error": null,
+ "seconds": 10.7,
+ "harness": "real smartparser.webapp.server over HTTP; AI disabled; --insecure-no-auth; TEST authority; uc042-root C:\\u42x\\UC042_SMART_PARSER_E2E_TEST_BUNDLE\\src\\uc042",
+ "server_log": "C:\\u42v\\impl_20261120\\dup\\server_scenario_5_duplicate.log",
+ "checks": [
+  {
+   "id": "S5.CASE.registered",
+   "check": "case registered WAITING with the ZIP's SHA-256, no run yet",
+   "passed": true,
+   "observed": [
+    "WAITING",
+    "8d2bd002be448648554e73e3f96264cdb617791275526e9bfc5cdcb88c7c385f",
+    []
+   ],
+   "expected": [
+    "WAITING",
+    "8d2bd002be448648554e73e3f96264cdb617791275526e9bfc5cdcb88c7c385f",
+    []
+   ]
+  },
+  {
+   "id": "S5.RUN.completed",
+   "check": "Smart Parser run COMPLETED",
+   "passed": true,
+   "observed": "COMPLETED",
+   "expected": "COMPLETED"
+  },
+  {
+   "id": "S5.RUN.classified",
+   "check": "every category is filled by the ZIP member mapped to it (content classification)",
+   "passed": true,
+   "observed": {
+    "IN-01": "01_reconciliation_calendar.csv",
+    "IN-02": "02_safeguarding_accounts.csv",
+    "IN-03": "03_client_balances_1700.csv",
+    "IN-04": "04_unallocated_receipts.csv",
+    "IN-05": "05_internal_reconciliations.csv",
+    "IN-06": "06_external_reconciliations.csv",
+    "IN-07": "07_bank_balances_1700.csv",
+    "IN-08": "08_bank_eod_statements.csv",
+    "IN-09": "09_bank_statement_lines.csv",
+    "IN-10": "10_safeguarding_cashbook.csv",
+    "IN-11": "11_card_transactions.csv",
+    "IN-12": "12_settlement_batches.csv",
+    "IN-13": "13_settlement_lines.csv",
+    "IN-14": "14_breaks_log.csv",
+    "IN-15": "bank_acknowledgement_GBP.pdf",
+    "IN-16": "bank_acknowledgement_EUR.pdf",
+    "IN-17": "Pellworth_safeguarding_recon_policy_v1.2.pdf",
+    "IN-18": "Pellworth_governance_register_Sep2026.pdf",
+    "IN-19": "Pellworth_REP027_receipt_Aug2026.pdf"
+   },
+   "expected": {
+    "IN-01": "01_reconciliation_calendar.csv",
+    "IN-02": "02_safeguarding_accounts.csv",
+    "IN-03": "03_client_balances_1700.csv",
+    "IN-04": "04_unallocated_receipts.csv",
+    "IN-05": "05_internal_reconciliations.csv",
+    "IN-06": "06_external_reconciliations.csv",
+    "IN-07": "07_bank_balances_1700.csv",
+    "IN-08": "08_bank_eod_statements.csv",
+    "IN-09": "09_bank_statement_lines.csv",
+    "IN-10": "10_safeguarding_cashbook.csv",
+    "IN-11": "11_card_transactions.csv",
+    "IN-12": "12_settlement_batches.csv",
+    "IN-13": "13_settlement_lines.csv",
+    "IN-14": "14_breaks_log.csv",
+    "IN-15": "bank_acknowledgement_GBP.pdf",
+    "IN-16": "bank_acknowledgement_EUR.pdf",
+    "IN-17": "Pellworth_safeguarding_recon_policy_v1.2.pdf",
+    "IN-18": "Pellworth_governance_register_Sep2026.pdf",
+    "IN-19": "Pellworth_REP027_receipt_Aug2026.pdf"
+   }
+  },
+  {
+   "id": "S5.RUN.nothing_missing",
+   "check": "no missing category, no file requiring replacement, no refused upload",
+   "passed": true,
+   "observed": [
+    [],
+    [],
+    []
+   ],
+   "expected": [
+    [],
+    [],
+    []
+   ]
+  },
+  {
+   "id": "S5.VAL.passed",
+   "check": "automatic package validation PASSED",
+   "passed": true,
+   "observed": "PASSED",
+   "expected": "PASSED"
+  },
+  {
+   "id": "S5.ACT.snapshot",
+   "check": "activation created a snapshot",
+   "passed": true,
+   "observed": [
+    true,
+    true
+   ],
+   "expected": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "S5.REC.completed",
+   "check": "reconciliation finished and the case is COMPLETED",
+   "passed": true,
+   "observed": "COMPLETED",
+   "expected": "COMPLETED"
+  },
+  {
+   "id": "S5.KEY.case_status",
+   "check": "case_status equals the key-derived status",
+   "passed": true,
+   "observed": [
+    "EXCEPTIONS_OPEN",
+    "EXCEPTIONS_OPEN"
+   ],
+   "expected": [
+    "EXCEPTIONS_OPEN",
+    "EXCEPTIONS_OPEN"
+   ]
+  },
+  {
+   "id": "S5.KEY.counts",
+   "check": "FAIL / INSUFFICIENT_EVIDENCE counts",
+   "passed": true,
+   "observed": {
+    "FAIL": 17,
+    "INSUFFICIENT_EVIDENCE": 0
+   },
+   "expected": {
+    "FAIL": 17,
+    "INSUFFICIENT_EVIDENCE": 0
+   }
+  },
+  {
+   "id": "S5.KEY.non_passing",
+   "check": "non-passing (check_id, scope, outcome) set equals the key exactly",
+   "passed": true,
+   "observed": [
+    [
+     "C06-DIFFERENCE",
+     "2026-09-09/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-10/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-11/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-14/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-15/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-16/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-17/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-18/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-21/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-22/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-23/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-24/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-25/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-28/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-29/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-30/GBP",
+     "FAIL"
+    ],
+    [
+     "CBAL-ROLLFWD",
+     "GBP/C0002 2026-09-09",
+     "FAIL"
+    ]
+   ],
+   "expected": [
+    [
+     "C06-DIFFERENCE",
+     "2026-09-09/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-10/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-11/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-14/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-15/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-16/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-17/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-18/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-21/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-22/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-23/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-24/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-25/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-28/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-29/GBP",
+     "FAIL"
+    ],
+    [
+     "C06-DIFFERENCE",
+     "2026-09-30/GBP",
+     "FAIL"
+    ],
+    [
+     "CBAL-ROLLFWD",
+     "GBP/C0002 2026-09-09",
+     "FAIL"
+    ]
+   ]
+  },
+  {
+   "id": "S5.KEY.exception_count",
+   "check": "exception count",
+   "passed": true,
+   "observed": [
+    17,
+    17
+   ],
+   "expected": [
+    17,
+    17
+   ]
+  },
+  {
+   "id": "S5.KEY.exception_root_causes",
+   "check": "exception root causes",
+   "passed": true,
+   "observed": [
+    "CBAL-ROLLFWD|GBP/C0002 2026-09-09",
+    "INTERNAL_DIFFERENCE|2026-09-09/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-10/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-11/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-14/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-15/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-16/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-17/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-18/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-21/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-22/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-23/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-24/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-25/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-28/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-29/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-30/GBP"
+   ],
+   "expected": [
+    "CBAL-ROLLFWD|GBP/C0002 2026-09-09",
+    "INTERNAL_DIFFERENCE|2026-09-09/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-10/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-11/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-14/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-15/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-16/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-17/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-18/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-21/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-22/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-23/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-24/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-25/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-28/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-29/GBP",
+    "INTERNAL_DIFFERENCE|2026-09-30/GBP"
+   ]
+  },
+  {
+   "id": "S5.KEY.exception_fields",
+   "check": "exception severity / affected results per root cause",
+   "passed": true,
+   "observed": [
+    {
+     "severity": "High",
+     "root_cause": "CBAL-ROLLFWD|GBP/C0002 2026-09-09",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-09/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-10/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-11/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-14/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-15/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-16/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-17/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-18/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-21/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-22/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-23/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-24/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-25/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-28/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-29/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-30/GBP",
+     "affected_results": 1
+    }
+   ],
+   "expected": [
+    {
+     "severity": "High",
+     "root_cause": "CBAL-ROLLFWD|GBP/C0002 2026-09-09",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-09/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-10/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-11/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-14/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-15/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-16/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-17/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-18/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-21/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-22/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-23/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-24/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-25/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-28/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-29/GBP",
+     "affected_results": 1
+    },
+    {
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-30/GBP",
+     "affected_results": 1
+    }
+   ]
+  },
+  {
+   "id": "S5.KEY.groups",
+   "check": "investigation groups (root-cause sets) equal the key",
+   "passed": true,
+   "observed": [
+    [
+     "CBAL-ROLLFWD|GBP/C0002 2026-09-09",
+     "INTERNAL_DIFFERENCE|2026-09-09/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-10/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-11/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-14/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-15/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-16/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-17/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-18/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-21/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-22/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-23/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-24/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-25/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-28/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-29/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-30/GBP"
+    ]
+   ],
+   "expected": [
+    [
+     "CBAL-ROLLFWD|GBP/C0002 2026-09-09",
+     "INTERNAL_DIFFERENCE|2026-09-09/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-10/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-11/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-14/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-15/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-16/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-17/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-18/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-21/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-22/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-23/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-24/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-25/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-28/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-29/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-30/GBP"
+    ]
+   ]
+  },
+  {
+   "id": "S5.API.exception_detail",
+   "check": "every exception detail resolves with evidence rows",
+   "passed": true,
+   "observed": true,
+   "expected": true
+  }
+ ],
+ "observed": {
+  "server": {
+   "port": 64891,
+   "root": "C:\\u42v\\impl_20261120\\dup\\ws",
+   "llm": {
+    "mode": "DISABLED",
+    "label": "AI proposals disabled",
+    "fixtures": []
+   },
+   "engine_configured": true,
+   "reviewer": {
+    "reviewer_id": "analyst-1",
+    "role": "analyst",
+    "kind": "TEST"
+   }
+  },
+  "case_ref": "RF-2026-09-001",
+  "smart_parser_run": {
+   "run_id": "RUN-2026-09-001-01-39398c",
+   "status": "COMPLETED",
+   "failure": null
+  },
+  "outstanding_after_run": {
+   "mapping_decisions": [],
+   "missing_categories": [],
+   "files_requiring_replacement": [],
+   "refused_uploads": [],
+   "other": [
+    {
+     "kind": "ACTIVATE",
+     "detail": "validation passed: the package can be activated"
+    }
+   ]
+  },
+  "slots_after_run": [
+   {
+    "category": "IN-01",
+    "status": "VALIDATED",
+    "file": "01_reconciliation_calendar.csv"
+   },
+   {
+    "category": "IN-02",
+    "status": "VALIDATED",
+    "file": "02_safeguarding_accounts.csv"
+   },
+   {
+    "category": "IN-03",
+    "status": "VALIDATED",
+    "file": "03_client_balances_1700.csv"
+   },
+   {
+    "category": "IN-04",
+    "status": "VALIDATED",
+    "file": "04_unallocated_receipts.csv"
+   },
+   {
+    "category": "IN-05",
+    "status": "VALIDATED",
+    "file": "05_internal_reconciliations.csv"
+   },
+   {
+    "category": "IN-06",
+    "status": "VALIDATED",
+    "file": "06_external_reconciliations.csv"
+   },
+   {
+    "category": "IN-07",
+    "status": "VALIDATED",
+    "file": "07_bank_balances_1700.csv"
+   },
+   {
+    "category": "IN-08",
+    "status": "VALIDATED",
+    "file": "08_bank_eod_statements.csv"
+   },
+   {
+    "category": "IN-09",
+    "status": "VALIDATED",
+    "file": "09_bank_statement_lines.csv"
+   },
+   {
+    "category": "IN-10",
+    "status": "VALIDATED",
+    "file": "10_safeguarding_cashbook.csv"
+   },
+   {
+    "category": "IN-11",
+    "status": "VALIDATED",
+    "file": "11_card_transactions.csv"
+   },
+   {
+    "category": "IN-12",
+    "status": "VALIDATED",
+    "file": "12_settlement_batches.csv"
+   },
+   {
+    "category": "IN-13",
+    "status": "VALIDATED",
+    "file": "13_settlement_lines.csv"
+   },
+   {
+    "category": "IN-14",
+    "status": "VALIDATED",
+    "file": "14_breaks_log.csv"
+   },
+   {
+    "category": "IN-15",
+    "status": "VALIDATED",
+    "file": "bank_acknowledgement_GBP.pdf"
+   },
+   {
+    "category": "IN-16",
+    "status": "VALIDATED",
+    "file": "bank_acknowledgement_EUR.pdf"
+   },
+   {
+    "category": "IN-17",
+    "status": "VALIDATED",
+    "file": "Pellworth_safeguarding_recon_policy_v1.2.pdf"
+   },
+   {
+    "category": "IN-18",
+    "status": "VALIDATED",
+    "file": "Pellworth_governance_register_Sep2026.pdf"
+   },
+   {
+    "category": "IN-19",
+    "status": "VALIDATED",
+    "file": "Pellworth_REP027_receipt_Aug2026.pdf"
+   }
+  ],
+  "review_steps": [],
+  "validation": {
+   "at": "2026-11-20T05:37:56+00:00",
+   "passed": true,
+   "checks": [
+    {
+     "check_id": "PV-01",
+     "name": "every required evidence category is present",
+     "passed": true,
+     "detail": "17 required categories"
+    },
+    {
+     "check_id": "PV-02",
+     "name": "exactly one selected version per category",
+     "passed": true,
+     "detail": "unselected: []; multiple active: {}"
+    },
+    {
+     "check_id": "PV-03",
+     "name": "no file awaits resubmission",
+     "passed": true,
+     "detail": "awaiting a corrected file: []"
+    },
+    {
+     "check_id": "PV-04",
+     "name": "no selected / required file is under review",
+     "passed": true,
+     "detail": "under review: []"
+    },
+    {
+     "check_id": "PV-05",
+     "name": "every selected file passes its file-level checks (re-run now)",
+     "passed": true,
+     "detail": "{}"
+    },
+    {
+     "check_id": "PV-06",
+     "name": "reporting periods consistent with the package",
+     "passed": true,
+     "detail": "2026-09; inconsistent: []"
+    },
+    {
+     "check_id": "PV-07",
+     "name": "package membership valid (same package, own category slot)",
+     "passed": true,
+     "detail": "[]"
+    },
+    {
+     "check_id": "PV-08",
+     "name": "every selected file has a valid intake and SHA-256 (stored bytes re-hashed)",
+     "passed": true,
+     "detail": "[]"
+    },
+    {
+     "check_id": "PV-09",
+     "name": "the selection references exactly the validated file versions",
+     "passed": true,
+     "detail": "[]"
+    }
+   ]
+  },
+  "snapshot_id": "SNAP-001-9dd4a20d",
+  "reconciliation": {
+   "run_id": "RECON-20261120T053757Z-9dd4a20d",
+   "case_status": "EXCEPTIONS_OPEN",
+   "outcomes": {
+    "PASS": 1869,
+    "FAIL": 17
+   },
+   "total_results": 1886,
+   "exception_count": 17,
+   "by_severity": {
+    "Critical": 16,
+    "High": 1
+   },
+   "integrity_checks": {
+    "all_selected_categories_accepted_by_engine": true,
+    "engine_received_exact_bytes": true,
+    "engine_category_agrees": true,
+    "no_superseded_version_staged": true
+   },
+   "investigation_groups": {
+    "GRP-CASE-01": [
+     "CBAL-ROLLFWD|GBP/C0002 2026-09-09",
+     "INTERNAL_DIFFERENCE|2026-09-09/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-10/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-11/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-14/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-15/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-16/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-17/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-18/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-21/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-22/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-23/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-24/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-25/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-28/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-29/GBP",
+     "INTERNAL_DIFFERENCE|2026-09-30/GBP"
+    ]
+   },
+   "exceptions": [
+    {
+     "exception_id": "EXC-CASE-01",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-09/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-09",
+     "last_date": "2026-09-09",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-02",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-10/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-10",
+     "last_date": "2026-09-10",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-03",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-11/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-11",
+     "last_date": "2026-09-11",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-04",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-14/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-14",
+     "last_date": "2026-09-14",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-05",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-15/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-15",
+     "last_date": "2026-09-15",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-06",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-16/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-16",
+     "last_date": "2026-09-16",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-07",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-17/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-17",
+     "last_date": "2026-09-17",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-08",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-18/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-18",
+     "last_date": "2026-09-18",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-09",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-21/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-21",
+     "last_date": "2026-09-21",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-10",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-22/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-22",
+     "last_date": "2026-09-22",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-11",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-23/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-23",
+     "last_date": "2026-09-23",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-12",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-24/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-24",
+     "last_date": "2026-09-24",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-13",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-25/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-25",
+     "last_date": "2026-09-25",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-14",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-28/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-28",
+     "last_date": "2026-09-28",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-15",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-29/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-29",
+     "last_date": "2026-09-29",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-16",
+     "severity": "Critical",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-30/GBP",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "2026-09-30",
+     "last_date": "2026-09-30",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    },
+    {
+     "exception_id": "EXC-CASE-17",
+     "severity": "High",
+     "root_cause": "CBAL-ROLLFWD|GBP/C0002 2026-09-09",
+     "affected_results": "1",
+     "amount": "",
+     "first_date": "",
+     "last_date": "",
+     "evidence_status": "",
+     "investigation_group_id": "GRP-CASE-01"
+    }
+   ],
+   "exception_evidence_rows": {
+    "EXC-CASE-01": 1,
+    "EXC-CASE-02": 1,
+    "EXC-CASE-03": 1,
+    "EXC-CASE-04": 1,
+    "EXC-CASE-05": 1,
+    "EXC-CASE-06": 1,
+    "EXC-CASE-07": 1,
+    "EXC-CASE-08": 1,
+    "EXC-CASE-09": 1,
+    "EXC-CASE-10": 1,
+    "EXC-CASE-11": 1,
+    "EXC-CASE-12": 1,
+    "EXC-CASE-13": 1,
+    "EXC-CASE-14": 1,
+    "EXC-CASE-15": 1,
+    "EXC-CASE-16": 1,
+    "EXC-CASE-17": 5
+   },
+   "non_passing": [
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-09/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-09/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-10/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-10/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-11/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-11/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-14/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-14/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-15/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-15/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-16/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-16/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-17/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-17/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-18/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-18/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-21/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-21/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-22/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-22/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-23/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-23/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-24/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-24/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-25/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-25/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-28/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-28/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-29/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-29/GBP"
+    },
+    {
+     "check_id": "C06-DIFFERENCE",
+     "scope": "2026-09-30/GBP",
+     "outcome": "FAIL",
+     "root_cause": "INTERNAL_DIFFERENCE|2026-09-30/GBP"
+    },
+    {
+     "check_id": "CBAL-ROLLFWD",
+     "scope": "GBP/C0002 2026-09-09",
+     "outcome": "FAIL",
+     "root_cause": "CBAL-ROLLFWD|GBP/C0002 2026-09-09"
+    }
+   ]
+  },
+  "closure_observed": {
+   "http": 404,
+   "state": null,
+   "pack": null,
+   "error": "NOT_FOUND"
+  }
+ },
+ "post_transcript": [
+  {
+   "method": "POST",
+   "path": "/api/cases",
+   "status": 200,
+   "request": {
+    "customer_name": "Pellworth Card Services Ltd",
+    "reporting_period": "2026-09",
+    "zip_name": "Pellworth_Card_Services_Ltd_2026-09.zip"
+   },
+   "error": null
+  },
+  {
+   "method": "POST",
+   "path": "/api/cases/RF-2026-09-001/start",
+   "status": 200,
+   "request": {
+    "expected_revision": 1
+   },
+   "error": null
+  },
+  {
+   "method": "POST",
+   "path": "/api/cases/RF-2026-09-001/activate",
+   "status": 200,
+   "request": {
+    "confirm": true,
+    "expected_revision": 7
+   },
+   "error": null
+  },
+  {
+   "method": "POST",
+   "path": "/api/cases/RF-2026-09-001/reconcile",
+   "status": 200,
+   "request": {
+    "expected_revision": 8
+   },
+   "error": null
+  }
+ ]
+}

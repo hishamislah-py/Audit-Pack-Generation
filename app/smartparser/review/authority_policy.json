@@ -1,0 +1,8 @@
+{
+  "policy_id": "uc042-authority/production-unconfigured",
+  "status": "PRODUCTION_UNCONFIGURED",
+  "note": "No approver role is enabled. Who may approve file mappings, aliases, layouts, category confirmations, category conflicts and revocations are open owner decisions (Phase 3A section 16). Until the owner configures this file and sets status OWNER_APPROVED, every approval is refused.",
+  "allow_test_identities": false,
+  "allow_sign_sensitive_reusable": false,
+  "scopes": {}
+}

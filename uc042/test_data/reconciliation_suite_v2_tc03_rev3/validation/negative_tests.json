@@ -1,0 +1,66 @@
+[
+ {
+  "test": "unrelated amount change (TC02: bank entry BE-GBP-0901-L01)",
+  "rejected": true,
+  "detected_by": [
+   "fin_unexpected_findings"
+  ],
+  "sample": [
+   "CASH_BANK_AMOUNT LE-GBP-0901-0001/BE-GBP-0901-L01 ledger=2926.33 bank=2926.34",
+   "CONFIRMATION ST-SGA-GBP-01-20260901-1700 confirmed=260019.50 derived=260019.51"
+  ]
+ },
+ {
+  "test": "header renamed (TC02: IN-11 amount -> amt)",
+  "rejected": true,
+  "detected_by": [
+   "structure_errors"
+  ],
+  "sample": [
+   "IN-11 header differs from the canonical schema"
+  ]
+ },
+ {
+  "test": "invalid enum (TC04: dc_indicator X)",
+  "rejected": true,
+  "detected_by": [
+   "structure_errors"
+  ],
+  "sample": [
+   "IN-09 L266 dc_indicator='X': not one of ['C', 'D']"
+  ]
+ },
+ {
+  "test": "25 Sep clearing entry removed (TC03)",
+  "rejected": true,
+  "detected_by": [
+   "fin_unexpected_findings",
+   "fin_missing_findings"
+  ],
+  "sample": [
+   "BATCH_BANK AQ-GBP-20260924 matches=0",
+   "CASH_NO_BANK LE-GBP-0924-0003 ref=AQ-GBP-20260924"
+  ]
+ },
+ {
+  "test": "duplicate posting removed (TC01 initial no longer shows the duplicate)",
+  "rejected": true,
+  "detected_by": [
+   "fin_missing_findings"
+  ],
+  "sample": [
+   "BANK_MULTI_CLAIM BE-GBP-0928-L01 IN-10=LE-GBP-0928-0001,LE-GBP-0928-0007",
+   "BL_DIFF 2026-09-28 SGA-GBP-01 -1246.80"
+  ]
+ },
+ {
+  "test": "amount format 1,390.07 (TC06)",
+  "rejected": true,
+  "detected_by": [
+   "structure_errors"
+  ],
+  "sample": [
+   "IN-11 L241 amount='1,480.07': invalid amount"
+  ]
+ }
+]

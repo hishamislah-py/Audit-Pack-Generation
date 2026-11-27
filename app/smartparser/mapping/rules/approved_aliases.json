@@ -1,0 +1,11 @@
+{
+  "rules": "UC-042 Smart Parser ACTIVE controlled-mapping rules",
+  "policy": {
+    "allow_reorder": true,
+    "trim_whitespace": true,
+    "case_insensitive": true,
+    "unexpected_columns": "reject"
+  },
+  "policy_note": "Structural variations only: column order, surrounding whitespace, letter case. Collisions are checked at load time (none exist in the 14 UC-042 schemas).",
+  "aliases": []
+}

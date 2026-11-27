@@ -24,7 +24,7 @@ from . import tools
 from .llm import LLMCallError
 from .models import LLMInvestigationOutput
 from .packet import build_ledger, collector_from_packet
-from .prompts import TOOLS_SYSTEM_PROMPT, tools_user_message
+from .prompts import TOOLS_SYSTEM_PROMPT, model_user_message
 
 log = logging.getLogger("uc042.investigation")
 _clock = time.monotonic  # patchable in tests without affecting LangGraph or other modules
@@ -105,12 +105,12 @@ def llm_step(state, config=None):
     except LLMCallError as e:
         turn = getattr(e, "turn", None) or {}
         upd = {"llm_calls": calls, "usage": _add_usage(state.get("usage"), turn.get("usage")),
-               "provider_responses": [turn["provider_response"]] if turn.get("provider_response") else []}
+               "provider_responses": [dict(turn["provider_response"], turn=calls)] if turn.get("provider_response") else []}
         if e.kind in ("invalid_output", "missing_output") and turn.get("output_items") is not None:
             return dict(upd, messages=turn["output_items"], turn_kind="invalid_final", error=str(e))
         return dict(upd, **_fail(e.kind, str(e)))
     upd = {"llm_calls": calls, "usage": _add_usage(state.get("usage"), turn["usage"]), "messages": turn["output_items"],
-           "provider_responses": [turn["provider_response"]]}
+           "provider_responses": [dict(turn["provider_response"], turn=calls)]}
     if turn["kind"] == "tool_calls":
         return dict(upd, turn_kind="tool_calls", pending=turn["function_calls"])
     return dict(upd, turn_kind="final", candidate=turn["parsed"].model_dump())
@@ -266,7 +266,7 @@ def run_tool_loop(investigator, store, packet, case, limits):
     if TOOL_LOOP is None:
         TOOL_LOOP = build_tool_loop()
     state = {"packet": packet, "case": case, "limits": limits, "started": _clock(),
-             "messages": [{"role": "user", "content": tools_user_message(packet, limits)}],
+             "messages": [{"role": "user", "content": model_user_message(packet, limits)}],  # phase 4: model view
              "ledger": build_ledger(packet, case, collector_from_packet(packet)), "dedup": {}, "usage": {},
              "llm_calls": 0, "tool_call_count": 0, "tool_round": 0, "status": "RUNNING"}
     cfg = {"configurable": {"investigator": investigator, "store": store, "tool_definitions": investigator.tool_definitions()},

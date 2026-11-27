@@ -1,0 +1,10 @@
+Generated 2026-11-23 by tools/generate_suite.py
+TC01: correction with 1 op(s) on IN-10
+TC01: 1 op(s) on IN-10
+TC02: 1 op(s) on IN-11
+TC03: 11 op(s) on IN-06, IN-07, IN-08, IN-09, IN-14
+TC04: correction with 7 op(s) on IN-04, IN-05, IN-06, IN-10
+TC04: 6 op(s) on IN-06, IN-07, IN-08, IN-09
+TC05: correction with 3 op(s) on IN-11
+TC05: 3 op(s) on IN-11
+TC06: 5 op(s) on IN-03, IN-05, IN-11, IN-13

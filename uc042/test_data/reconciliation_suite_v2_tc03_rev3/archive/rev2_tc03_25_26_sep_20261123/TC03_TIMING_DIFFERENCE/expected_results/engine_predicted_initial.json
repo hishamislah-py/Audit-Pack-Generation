@@ -1,0 +1,38 @@
+{
+  "label": "ENGINE-PREDICTED (source reading of the reference engine; NOT EXECUTED; unverified)",
+  "scenario_id": "TC03",
+  "expected_case_status": "EXCEPTIONS_OPEN",
+  "non_passing_results": [
+    [
+      "C08-DIFFERENCE",
+      "2026-09-25/SGA-GBP-01",
+      "FAIL"
+    ]
+  ],
+  "exceptions": [
+    {
+      "exception_id": "EXC-TC03-01",
+      "severity": "Critical",
+      "root_cause": "BANK_LEDGER_DIFFERENCE|SGA-GBP-01|2026-09-25|-4647.75",
+      "affected_results": 1
+    }
+  ],
+  "evidence_statuses": {
+    "EXC-TC03-01": "TIMING_EVIDENCED"
+  },
+  "investigation_groups": [],
+  "candidate_relationships": [],
+  "must_hold": [
+    "C08 FAIL note: 'difference explained by timing: LE-GBP-0925-0003 / BE-GBP-0926-T01 (ref AQ-GBP-20260925, -4647.75, cleared 2026-09-26); cleared within one business day (D1); awaiting human confirmation; not resolved'",
+    "EXC-TC03-01 category 'Bank-ledger difference (explained by timing evidence, awaiting human confirmation)'; status OPEN; review AWAITING_HUMAN_REVIEW; flag OWN_FUNDS_REQUIRED (negative difference)",
+    "DISC-LOG PASS (DL-0001 logged)",
+    "C11-BATCH-BANK AQ-GBP-20260925 PASS with informational note: booked 2026-09-26, 1 business day(s) after the settlement date (within the allowance)",
+    "CASH-BANK-LINK LE-GBP-0925-0003 PASS; FUND-TOPUP AQ-GBP-20260925 PASS",
+    "C08 2026-09-28 PASS (difference cleared)",
+    "DQ22-CONTINUITY PASS for ST-SGA-GBP-01-20260926-EOD and ST-SGA-GBP-01-20260928-EOD; DQ23 and BC-VS-EOD PASS for 25 and 26 Sep",
+    "C14-COVER unaffected (weekend records are outside recon-day coverage)"
+  ],
+  "notes": [
+    "TIMING_EVIDENCED depends on the 26 Sep IN-08 statement AND IN-07 confirmation both being present (validate.evidence_gap). Without the Saturday confirmation the predicted status is TIMING_UNVERIFIABLE."
+  ]
+}

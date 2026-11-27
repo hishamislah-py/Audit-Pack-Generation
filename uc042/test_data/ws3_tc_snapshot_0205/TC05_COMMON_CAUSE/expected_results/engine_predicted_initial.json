@@ -1,0 +1,57 @@
+{
+  "label": "ENGINE-PREDICTED (source reading of the reference engine; NOT EXECUTED; unverified)",
+  "scenario_id": "TC05",
+  "expected_case_status": "EXCEPTIONS_OPEN",
+  "non_passing_results": [
+    [
+      "C11-BATCH-ARITH",
+      "SB-EUR-20260924",
+      "FAIL"
+    ],
+    [
+      "CBAL-ROLLFWD",
+      "EUR/C0101 2026-09-24",
+      "FAIL"
+    ],
+    [
+      "CBAL-ROLLFWD",
+      "EUR/C0104 2026-09-24",
+      "FAIL"
+    ]
+  ],
+  "exceptions": [
+    {
+      "exception_id": "EXC-TC05-01",
+      "severity": "High",
+      "root_cause": "C11-BATCH-ARITH|SB-EUR-20260924",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC05-02",
+      "severity": "High",
+      "root_cause": "CBAL-ROLLFWD|EUR/C0101 2026-09-24",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC05-03",
+      "severity": "High",
+      "root_cause": "CBAL-ROLLFWD|EUR/C0104 2026-09-24",
+      "affected_results": 1
+    }
+  ],
+  "evidence_statuses": {},
+  "investigation_groups": [],
+  "candidate_relationships": [
+    [
+      "EXC-TC05-01",
+      "EXC-TC05-03"
+    ]
+  ],
+  "must_hold": [
+    "No investigation group",
+    "One UNVERIFIED candidate (line TX-0924-00018 = 222.18 = C0104 roll-forward gap)",
+    "No candidate for C0101: its gap is the SUM of two lines (gap G-16)",
+    "C11-TXN-LINE PASS summary (missing transactions are not iterated)"
+  ],
+  "notes": []
+}

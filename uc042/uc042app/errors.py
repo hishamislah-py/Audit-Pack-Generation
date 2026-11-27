@@ -19,6 +19,11 @@ class NotFound(AppError):
     status, code, title = 404, "NOT_FOUND", "Not found"
 
 
+class Retired(AppError):
+    """A retired entry point (ZIP-only operation): the records stay readable; the action no longer exists."""
+    status, code, title = 410, "LEGACY_WORKFLOW_RETIRED", "Retired"
+
+
 class InvalidInput(AppError):
     status, code, title = 422, "VALIDATION_ERROR", "Invalid request"
 

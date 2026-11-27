@@ -1,0 +1,55 @@
+{
+ "source": "live run evidence/lead/evrel/live_111203 (23 Nov 2026, prompt 1.7 withdrawn draft, gpt-6-luna): TC06 group_assessments exactly as returned (the withdrawn relationship_dispositions are not part of this fixture)",
+ "group_assessments": [
+  {
+   "group_id": "GRP-TC06-01",
+   "exception_ids": [
+    "EXC-TC06-01",
+    "EXC-TC06-03",
+    "EXC-TC06-04"
+   ],
+   "related_exception_ids": [],
+   "relationship_verdict": "EVIDENCE_BACKED",
+   "common_cause_hypothesis": "The 2026-09-17 C0004 snapshot may be the shared originating faulty record connecting these exceptions; why that snapshot is wrong is not established.",
+   "supporting_evidence": [
+    "IN-03:CBS-20260917-C0004-GBP",
+    "IN-03:CBS-20260916-C0004-GBP",
+    "IN-05:IRR-EMONEY-GBP-20260917"
+   ],
+   "contradicting_evidence": [],
+   "missing_evidence": [
+    "The client-balance system record showing how the 2026-09-17 C0004 snapshot was produced, including any adjustment or production log.",
+    "The evidence needed to establish why the snapshot is wrong."
+   ],
+   "analyst_action": "Obtain the C0004 snapshot-generation record and posting-level ledger, then trace the snapshot into the 2026-09-17 GBP requirement and the adjacent-day roll-forward.",
+   "confidence": "HIGH",
+   "rationale": "The confirmed relationship proofs connect EXC-TC06-01 and EXC-TC06-03 through the C0004 snapshot, and connect EXC-TC06-03 and EXC-TC06-04 through that same snapshot. The proof identifies the snapshot as out of line and explains its link to the internal reconciliation difference, while leaving the reason for the faulty record unestablished.",
+   "common_cause_status": "NOT_ESTABLISHED"
+  },
+  {
+   "group_id": "GRP-TC06-02",
+   "exception_ids": [
+    "EXC-TC06-05",
+    "EXC-TC06-06"
+   ],
+   "related_exception_ids": [],
+   "relationship_verdict": "EVIDENCE_BACKED",
+   "common_cause_hypothesis": "TX-0917-00002 may be the shared discrepancy-generating record for these exceptions; why its amount differs from the linked bank entry is not established.",
+   "supporting_evidence": [
+    "IN-11:TX-0917-00002",
+    "IN-09:BE-GBP-0917-L02",
+    "IN-03:CBS-20260916-C0007-GBP",
+    "IN-03:CBS-20260917-C0007-GBP"
+   ],
+   "contradicting_evidence": [],
+   "missing_evidence": [
+    "The corrected transaction amount from the transaction system.",
+    "Evidence establishing why the transaction record differs from the linked bank entry."
+   ],
+   "analyst_action": "Obtain the authoritative transaction-system record and audit trail for TX-0917-00002, then verify its effect on the C0007 roll-forward against the client ledger.",
+   "confidence": "HIGH",
+   "rationale": "The confirmed relationship proof identifies TX-0917-00002 as the record behind both exceptions and shows that its discrepancy matches the C0007 roll-forward difference. The proof does not establish why the transaction record is wrong.",
+   "common_cause_status": "NOT_ESTABLISHED"
+  }
+ ]
+}

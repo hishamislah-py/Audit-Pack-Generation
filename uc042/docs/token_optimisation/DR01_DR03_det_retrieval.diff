@@ -1,0 +1,176 @@
+--- C:\Users\ARTLPT~1\AppData\Local\Temp/claude/bb4d696e268c5499/0d3429e0-ad8c-40f8-b4ae-9c9a2d667fda/scratchpad/dr0103/pre/uc042lib/investigation/det_retrieval.py	2026-11-16 15:37:10.723218900 +0530
++++ uc042lib/investigation/det_retrieval.py	2026-11-16 15:32:09.701257000 +0530
+@@ -13,8 +13,13 @@
+   3. missing bank evidence: for the missing (account, date), one bank search per expected counterparty reference (batch
+      expected references of the day, IN-11 payment references and the own-funds top-up reference); no search repeats a
+      reconciliation probe;
+-  4. de-duplication: a NOT_FOUND search whose normalised query repeats an earlier one is dropped (recorded);
+-  5. record budget: expansions stop at DET_MAX_RECORDS; each skipped step is written to the pruning register. Nothing
++  4. de-duplication (1.3): a NOT_FOUND search is dropped only when an EARLIER NOT_FOUND search has the same COMPLETE
++     normalised query (every key kept; only genuine date / reference synonyms folded; a None filter equals an absent one).
++     A FOUND search never suppresses another search, and FOUND searches are never dropped. Each drop is recorded with the
++     search it duplicates;
++  5. record budget (1.3): an expansion never takes the packet past DET_MAX_RECORDS. Calls are refused once the budget is
++     reached, and inside a call only the records that fit are added. Every record a call returned but did not add (record
++     budget, per-call cap or the investigation-wide MAX_RECORDS) is listed by evidence ID in the pruning register. Nothing
+      already collected is ever removed, and nothing is dropped silently.
+ 
+ Candidate relationships stay in the case exactly as before (hypotheses only); no amount/date rule becomes a join.
+@@ -27,8 +32,10 @@
+ from .packet import canonical, parse_root, retrieve
+ from .routing import root_kind
+ 
+-DET_RULE_VERSION = "uc042-det-retrieval/1.2"  # 1.1: last persistence day, booking-date anchors, cash-book references, unmatched-entry search;
+-# 1.2: related-exception anchors for a different root-cause kind only (bounded large groups)
++DET_RULE_VERSION = "uc042-det-retrieval/1.3"  # 1.1: last persistence day, booking-date anchors, cash-book references, unmatched-entry search;
++# 1.2: related-exception anchors for a different root-cause kind only (bounded large groups);
++# 1.3 (review DR-01 / DR-03): NOT_FOUND de-duplication on the complete query only; record budget enforced inside a call and
++# every record a call did not add registered by evidence ID
+ DET_PACKET_VERSION = "uc042-evidence-packet/2.0-det"
+ DET_SUPPORTED_ROUTES = ("bank_ledger_mismatch", "settlement_discrepancy", "missing_bank_evidence", "customer_balance_discrepancy",
+                         "unmatched_bank_entry", "unverified_relationship")
+@@ -92,6 +99,60 @@
+     return out
+ 
+ 
++class _BudgetedCall(tools.ToolCall):
++    """tools.ToolCall with the deterministic record budget (DR-03). The per-call cap and the investigation-wide
++    MAX_RECORDS behave exactly as in tools mode; in addition a record new to the packet is added only while the packet
++    is below `budget`. Every record the call returned but did not add is kept by reason, for the pruning register. The
++    value returned to the tool function (which becomes a search's `found` list) is exactly the tools-mode value, so a
++    search whose records were cut for budget reasons stays FOUND: the cut never fabricates a NOT_FOUND."""
++
++    def __init__(self, store, collector, name, max_records, budget):
++        super().__init__(store, collector, name, max_records)
++        self.budget, self.cut_per_call, self.cut_budget = budget, [], []
++        self.cut_items = {}  # evidence_id -> record, for every record this call returned but did not add
++
++    def add(self, items, rel_from=None, relationship=None):
++        items = [i for i in items or [] if i]
++        fresh = [i for i in items if i["evidence_id"] not in self.ids]
++        room = self.max_records - len(self.ids)
++        if len(fresh) > room:  # the per-call cap, as in ToolCall.add (which itself keeps no record of the cut IDs)
++            self.truncated = True
++            for i in fresh[max(room, 0):]:
++                if i["evidence_id"] not in self.cut_per_call:
++                    self.cut_per_call.append(i["evidence_id"])
++                    self.cut_items[i["evidence_id"]] = i
++            fresh = fresh[:max(room, 0)]
++        allowed, n = set(), len(self.col.records)
++        for i in fresh:
++            eid = i["evidence_id"]
++            if eid in self.col.records:
++                allowed.add(eid)
++            elif n < self.budget:
++                allowed.add(eid)
++                n += 1
++            elif eid not in self.cut_budget:
++                self.cut_budget.append(eid)
++                self.cut_items[eid] = i
++        super().add([i for i in fresh if i["evidence_id"] in allowed], rel_from, relationship)
++        for i in fresh:  # the investigation-wide MAX_RECORDS cut (ToolCall.not_added): keep the record too
++            if i["evidence_id"] in self.not_added:
++                self.cut_items.setdefault(i["evidence_id"], i)
++        return [i["evidence_id"] for i in fresh]
++
++    def unfollowed(self):
++        """Records the tool never retrieved because the record referencing them was cut: get_settlement_batch follows a
++        settlement line to its transaction only when the line was added (tools.py, `ln["evidence_id"] not in call.ids`),
++        the only traversal in the tool registry that depends on an earlier add. Returned as (evidence_id, via line)."""
++        out = []
++        for eid, it in self.cut_items.items():
++            t = it.get("fields", {}).get("txn_id") if it.get("file_id") == "IN-13" else None
++            tx = f"IN-11:{t}" if t else None
++            if tx and tx not in self.col.records and tx not in self.cut_items and tx not in [x for x, _ in out] \
++                    and self.store.get(tx, "probe"):
++                out.append((tx, eid))
++        return out
++
++
+ def _run(col, store, name, args, register, step):
+     if len(col.records) >= DET_MAX_RECORDS:
+         register.append({"step": step, "tool": name, "arguments": args, "reason": f"record budget {DET_MAX_RECORDS} reached; not fetched"})
+@@ -100,18 +161,60 @@
+     if err:
+         register.append({"step": step, "tool": name, "arguments": args, "reason": f"request rejected: {err}"})
+         return None
++    call = _BudgetedCall(store, col, name, config.TOOL_MAX_RECORDS_PER_CALL, DET_MAX_RECORDS)
+     try:
+-        return tools.execute(name, a, store, col)
++        tools.REGISTRY[name].fn(a, call)  # what tools.execute does, with the budgeted call
+     except tools.ToolInputError as e:
+         register.append({"step": step, "tool": name, "arguments": args, "reason": f"not applicable: {e}"})
+         return None
++    for ids, reason in ((call.cut_budget, f"record budget {DET_MAX_RECORDS} reached during the call; not added"),
++                        (call.cut_per_call, f"per-call cap of {config.TOOL_MAX_RECORDS_PER_CALL} records reached; not added"),
++                        (call.not_added, f"investigation-wide MAX_RECORDS {config.MAX_RECORDS} reached; not added")):
++        if ids:
++            register.append({"step": step, "tool": name, "arguments": args, "reason": reason, "omitted_evidence_ids": list(ids)})
++    unfollowed = call.unfollowed()
++    if unfollowed:
++        register.append({"step": step, "tool": name, "arguments": args, "omitted_evidence_ids": [x for x, _ in unfollowed],
++                         "not_retrieved_via": {x: line for x, line in unfollowed},
++                         "reason": "not retrieved: the settlement line referencing each transaction was not added (see the "
++                                   "entries above), so the tool did not follow it"})
++    return call.result()
++
++
++# Genuine synonyms only: the same filter under another key name in different tools. Every other key is kept as it is.
++_SYNONYMS = {"statement_date": "date", "booking_date": "date", "recon_date": "date", "bank_reference": "reference"}
+ 
+ 
+ def _norm(query):
+-    q = query or {}
+-    return json.dumps({"file": q.get("file"), "account": q.get("account_id"),
+-                       "date": q.get("date") or q.get("statement_date") or q.get("booking_date") or q.get("recon_date"),
+-                       "reference": q.get("reference") or q.get("bank_reference")}, sort_keys=True)
++    """The complete normalised query of a search (1.3). Every key is kept (txn_id, batch_id, client_id, txn_type,
++    payment_reference, window, date_from, date_to, currency, ...); a key whose value is None is no filter and is left out;
++    date and reference synonyms are folded only when that does not conflict with a value already present."""
++    out = {}
++    for k, v in sorted((query or {}).items()):
++        if v is None:
++            continue
++        ck = _SYNONYMS.get(k, k)
++        if ck in out and out[ck] != v:
++            ck = k  # two different values under synonym names: keep both, never merge them
++        out[ck] = v
++    return json.dumps(out, sort_keys=True, ensure_ascii=False)
++
++
++def dedupe_not_found(searches):
++    """(kept, register entries). A NOT_FOUND search is dropped only when an EARLIER NOT_FOUND search has the same complete
++    normalised query; FOUND searches are never dropped and never cause a drop. Order is preserved."""
++    first_nf, kept, register = {}, [], []
++    for s in searches:
++        if s["result"] == "NOT_FOUND":
++            key = _norm(s["query"])
++            if key in first_nf:
++                register.append({"step": "de-duplication", "search_id": s["search_id"], "duplicate_of": first_nf[key],
++                                 "query": s["query"],
++                                 "reason": f"identical NOT_FOUND query already recorded as {first_nf[key]}"})
++                continue
++            first_nf[key] = s["search_id"]
++        kept.append(s)
++    return kept, register
+ 
+ 
+ def expand(col, case, route, store):
+@@ -167,15 +270,8 @@
+                 _run(col, store, "get_cashbook_entries", {"account_id": be["fields"]["account_id"], "date_from": None, "date_to": None,
+                                                           "payment_reference": be["fields"]["bank_reference"]},
+                      register, f"cash book for unmatched bank entry {keys['bank_entry_id']}")
+-    seen, kept = set(), []                                                                # 4
+-    for s in col.searches:
+-        key = _norm(s["query"])
+-        if s["result"] == "NOT_FOUND" and key in seen:
+-            register.append({"step": "de-duplication", "search_id": s["search_id"], "reason": "repeats an earlier NOT_FOUND search"})
+-            continue
+-        seen.add(key)
+-        kept.append(s)
+-    col.searches = kept
++    col.searches, dropped = dedupe_not_found(col.searches)                                # 4
++    register += dropped
+     return register
+ 
+ 

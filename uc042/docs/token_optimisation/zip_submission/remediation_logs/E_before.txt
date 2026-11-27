@@ -1,0 +1,59 @@
+FFEFF
+======================================================================
+ERROR: test_invalid_and_unknown_submission_ids (tests.test_zip_only_workflow.ApiAndStatus.test_invalid_and_unknown_submission_ids)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 405, in test_invalid_and_unknown_submission_ids
+    self.assertEqual((r.status_code, r.json()["code"]), (422, "INVALID_ID"), url)
+                                     ~~~~~~~~^^^^^^^^
+TypeError: list indices must be integers or slices, not str
+
+======================================================================
+FAIL: test_a_failed_resubmission_never_hides_an_earlier_success (tests.test_zip_only_workflow.ApiAndStatus.test_a_failed_resubmission_never_hides_an_earlier_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 435, in test_a_failed_resubmission_never_hides_an_earlier_success
+    self.assertEqual(batch["status"], "PROCESSED")  # derived from every run of the package: one succeeded
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'PROCESSING_FAILED' != 'PROCESSED'
+- PROCESSING_FAILED
++ PROCESSED
+
+
+======================================================================
+FAIL: test_each_submission_checklist_shows_only_its_own_state (tests.test_zip_only_workflow.ApiAndStatus.test_each_submission_checklist_shows_only_its_own_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 450, in test_each_submission_checklist_shows_only_its_own_state
+    self.assertEqual((rows_a[e]["ai_state"], rows_a[e]["disposition"], rows_a[e]["usable_investigations"]),
+AssertionError: Tuples differ: ('READY_FOR_REVIEW', 'ACCEPTED', ['INV-EXC-CASE-01-c927cc288535']) != ('ACCEPTED', 'ACCEPTED', ['INV-EXC-CASE-01-c927cc288535'])
+
+First differing element 0:
+'READY_FOR_REVIEW'
+'ACCEPTED'
+
+- ('READY_FOR_REVIEW', 'ACCEPTED', ['INV-EXC-CASE-01-c927cc288535'])
++ ('ACCEPTED', 'ACCEPTED', ['INV-EXC-CASE-01-c927cc288535'])
+
+======================================================================
+FAIL: test_submission_run_lookup_is_indexed_and_correct (tests.test_zip_only_workflow.ApiAndStatus.test_submission_run_lookup_is_indexed_and_correct)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 419, in test_submission_run_lookup_is_indexed_and_correct
+    self.assertEqual(scans.call_count, 0)  # no scan of every run per lookup
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 4 != 0
+
+======================================================================
+FAIL: test_submissions_response_is_typed (tests.test_zip_only_workflow.ApiAndStatus.test_submissions_response_is_typed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_zip_only_workflow.py", line 392, in test_submissions_response_is_typed
+    self.assertIn("$ref", schema["items"])  # a declared model, not list[dict]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '$ref' not found in {'type': 'object', 'additionalProperties': True}
+
+----------------------------------------------------------------------
+Ran 5 tests in 22.611s
+
+FAILED (failures=4, errors=1)

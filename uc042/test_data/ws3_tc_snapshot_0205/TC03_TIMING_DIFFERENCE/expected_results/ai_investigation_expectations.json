@@ -1,0 +1,28 @@
+{
+  "label": "AI (expectations for the investigation layer; separate from FIN)",
+  "scenario_id": "TC03",
+  "findings": [
+    "The -4,647.75 difference equals the AQ-GBP-20260925 net exactly",
+    "The cash book recorded the credit on 25 Sep 14:00; the bank credited it on 26 Sep 08:00 with the same reference and amount",
+    "The clearing falls within one business day; on 28 Sep bank and ledger agree",
+    "The firm claimed timing and logged DL-0001; the claim is corroborated by the 26 Sep statement, not by the claim itself"
+  ],
+  "evidence": [
+    "IN-10 LE-GBP-0925-0003",
+    "IN-09 BE-GBP-0926-T01",
+    "IN-08 ST-SGA-GBP-01-20260926-EOD",
+    "IN-07 ST-SGA-GBP-01-20260926-1700",
+    "IN-12 AQ-GBP-20260925",
+    "IN-06 ERL-SGA-GBP-01-20260925",
+    "IN-14 DL-0001"
+  ],
+  "missing_evidence": [
+    "acquirer remittance advice explaining the weekend payout (optional)"
+  ],
+  "confidence": "high that this is a timing difference",
+  "must_not": [
+    "mark the exception resolved",
+    "rely on the log's TIMING label or the timing claim as proof"
+  ],
+  "analyst_action": "Confirm the timing item (accept the timing explanation) and record the shortfall at the 25 Sep point; no further action beyond confirming whether an own-funds top-up was required at the 25 Sep point per the firm's policy."
+}

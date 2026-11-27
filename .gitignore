@@ -39,3 +39,10 @@ db_backups/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# ---- Consolidated repo: local runtime created by deploy/ scripts (workspace, auth file, AI key) ----
+.runtime/
+*.url
+auth.json
+auth_*.json
+PAGE_COUNTS.last_run.json

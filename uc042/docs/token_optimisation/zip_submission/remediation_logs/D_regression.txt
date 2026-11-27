@@ -1,0 +1,20 @@
+..................................................................................................................................................................F...EOF marker not found
+....................................................................
+======================================================================
+FAIL: test_processing_produces_a_new_verified_pack_matching_the_engine (tests.test_api_monthly.Processing.test_processing_produces_a_new_verified_pack_matching_the_engine)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_api_monthly.py", line 276, in test_processing_produces_a_new_verified_pack_matching_the_engine
+    self.assertEqual(self.get(f"/api/v1/packs/{pack_id}/reconciliation").json()["internal_by_currency_day"],
+AssertionError: Lists differ: [{'cu[78 chars]e': 'PASS', 'difference_reported': '0.00', 'it[23406 chars]R']}] != [{'cu[78 chars]e': 'NOT_APPLICABLE', 'difference_reported': '[23846 chars]R']}]
+
+First differing element 0:
+{'cur[77 chars]e': 'PASS', 'difference_reported': '0.00', 'it[401 chars]BP']}
+{'cur[77 chars]e': 'NOT_APPLICABLE', 'difference_reported': '[411 chars]BP']}
+
+Diff is 34408 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 234 tests in 122.258s
+
+FAILED (failures=1)

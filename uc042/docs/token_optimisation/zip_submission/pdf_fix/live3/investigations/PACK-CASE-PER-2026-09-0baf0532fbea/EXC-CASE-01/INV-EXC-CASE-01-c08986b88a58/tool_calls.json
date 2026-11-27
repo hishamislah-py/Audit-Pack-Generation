@@ -1,0 +1,80 @@
+{
+ "exception_id": "EXC-CASE-01",
+ "pack_id": "PACK-CASE-PER-2026-09-0baf0532fbea",
+ "summary": {
+  "limits": {
+   "max_input_tokens": 150000,
+   "max_records_per_call": 25,
+   "max_rounds": 4,
+   "max_tool_calls": 8,
+   "max_total_records": 160,
+   "total_timeout": 300.0
+  },
+  "llm_calls": 2,
+  "records_final": 47,
+  "records_initial": 47,
+  "status": "COMPLETED",
+  "stop_reason": "final_answer",
+  "tool_calls_requested": 2,
+  "tool_rounds": 1,
+  "tools_deduplicated": 0,
+  "tools_executed": 2,
+  "tools_refused_budget": 0,
+  "tools_rejected_or_failed": 0,
+  "tools_used": [
+   "get_cashbook_entries",
+   "search_bank_entries"
+  ]
+ },
+ "tool_calls": [
+  {
+   "arguments": {
+    "account_id": "SGA-GBP-01",
+    "date_from": null,
+    "date_to": null,
+    "payment_reference": "SETTLE 0417"
+   },
+   "call_id": "call_MkE7nvM2ELjHy6f0dPvj8OzB",
+   "deduplicated": false,
+   "error": "",
+   "evidence_ids": [],
+   "latency_ms": 0.0,
+   "new_evidence_ids": [],
+   "records_returned": 0,
+   "requested_at": "2026-11-18T03:13:15.249+00:00",
+   "round": 1,
+   "search_ids": [
+    "SEARCH-03"
+   ],
+   "status": "NOT_FOUND",
+   "tool": "get_cashbook_entries",
+   "truncated": false
+  },
+  {
+   "arguments": {
+    "account_id": "SGA-GBP-01",
+    "bank_reference": "SETTLE 0417",
+    "date_from": null,
+    "date_to": null
+   },
+   "call_id": "call_jfoNW1nepLegoQWjt5boKCnZ",
+   "deduplicated": false,
+   "error": "",
+   "evidence_ids": [
+    "IN-09:BE-GBP-0917-X01"
+   ],
+   "latency_ms": 0.0,
+   "new_evidence_ids": [],
+   "records_returned": 1,
+   "requested_at": "2026-11-18T03:13:15.250+00:00",
+   "round": 1,
+   "search_ids": [
+    "SEARCH-04"
+   ],
+   "status": "OK",
+   "tool": "search_bank_entries",
+   "truncated": false
+  }
+ ],
+ "tool_registry_version": "uc042-evidence-tools/1.0"
+}

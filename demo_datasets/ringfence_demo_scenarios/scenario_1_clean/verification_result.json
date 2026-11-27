@@ -1,0 +1,492 @@
+{
+ "scenario": "scenario_1_clean",
+ "customer_name": "Halden Pay Ltd",
+ "reporting_period": "2026-06",
+ "zip_sha256": "aef7e2c7948c40c98cf087c9f3260ebd6c8ccd561300f94a81001dad1cea8a8b",
+ "verdict": "PASS",
+ "checks_passed": 19,
+ "checks_total": 19,
+ "error": null,
+ "seconds": 3.3,
+ "checks": [
+  {
+   "id": "S1.CASE.registered",
+   "check": "case registered WAITING with the ZIP's SHA-256, no run yet",
+   "passed": true,
+   "observed": [
+    "WAITING",
+    "aef7e2c7948c40c98cf087c9f3260ebd6c8ccd561300f94a81001dad1cea8a8b",
+    []
+   ],
+   "expected": [
+    "WAITING",
+    "aef7e2c7948c40c98cf087c9f3260ebd6c8ccd561300f94a81001dad1cea8a8b",
+    []
+   ]
+  },
+  {
+   "id": "S1.RUN.completed",
+   "check": "Smart Parser run COMPLETED",
+   "passed": true,
+   "observed": "COMPLETED",
+   "expected": "COMPLETED"
+  },
+  {
+   "id": "S1.RUN.nothing_missing",
+   "check": "no missing category, no file requiring replacement, no refused upload",
+   "passed": true,
+   "observed": [
+    [],
+    [],
+    []
+   ],
+   "expected": [
+    [],
+    [],
+    []
+   ]
+  },
+  {
+   "id": "S1.REVIEW.none",
+   "check": "no mapping review needed (all CSVs canonical, AI disabled)",
+   "passed": true,
+   "observed": [],
+   "expected": []
+  },
+  {
+   "id": "S1.VAL.passed",
+   "check": "automatic package validation PASSED",
+   "passed": true,
+   "observed": "PASSED",
+   "expected": "PASSED"
+  },
+  {
+   "id": "S1.ACT.enabled",
+   "check": "Activate action enabled",
+   "passed": true,
+   "observed": true,
+   "expected": true
+  },
+  {
+   "id": "S1.ACT.snapshot",
+   "check": "activation created a snapshot",
+   "passed": true,
+   "observed": [
+    true,
+    true
+   ],
+   "expected": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "S1.REC.completed",
+   "check": "reconciliation finished and the case is COMPLETED",
+   "passed": true,
+   "observed": "COMPLETED",
+   "expected": "COMPLETED"
+  },
+  {
+   "id": "S1.KEY.case_status",
+   "check": "case_status equals the frozen key",
+   "passed": true,
+   "observed": [
+    "CLEAN",
+    "CLEAN"
+   ],
+   "expected": [
+    "CLEAN",
+    "CLEAN"
+   ]
+  },
+  {
+   "id": "S1.KEY.counts",
+   "check": "FAIL / INSUFFICIENT_EVIDENCE counts",
+   "passed": true,
+   "observed": {
+    "FAIL": 0,
+    "INSUFFICIENT_EVIDENCE": 0
+   },
+   "expected": {
+    "FAIL": 0,
+    "INSUFFICIENT_EVIDENCE": 0
+   }
+  },
+  {
+   "id": "S1.KEY.non_passing",
+   "check": "non-passing (check_id, scope, outcome) set equals the key",
+   "passed": true,
+   "observed": [],
+   "expected": []
+  },
+  {
+   "id": "S1.KEY.result_root_causes",
+   "check": "root cause of every non-passing result equals the key",
+   "passed": true,
+   "observed": [],
+   "expected": []
+  },
+  {
+   "id": "S1.KEY.evidence_refs",
+   "check": "evidence references (category:file#line) equal the key",
+   "passed": true,
+   "observed": [],
+   "expected": []
+  },
+  {
+   "id": "S1.KEY.exception_count",
+   "check": "exception count",
+   "passed": true,
+   "observed": [
+    0,
+    0
+   ],
+   "expected": [
+    0,
+    0
+   ]
+  },
+  {
+   "id": "S1.KEY.exception_root_causes",
+   "check": "exception root causes",
+   "passed": true,
+   "observed": [],
+   "expected": []
+  },
+  {
+   "id": "S1.KEY.exception_fields",
+   "check": "exception severity / affected results / amount / dates / evidence status",
+   "passed": true,
+   "observed": [],
+   "expected": []
+  },
+  {
+   "id": "S1.KEY.groups",
+   "check": "investigation groups (root-cause sets of multi-exception groups) and their count",
+   "passed": true,
+   "observed": [
+    0,
+    []
+   ],
+   "expected": [
+    0,
+    []
+   ]
+  },
+  {
+   "id": "S1.API.exception_detail",
+   "check": "every exception detail resolves with evidence rows",
+   "passed": true,
+   "observed": true,
+   "expected": true
+  },
+  {
+   "id": "S1.API.actions_after",
+   "check": "completed case offers no enabled action",
+   "passed": true,
+   "observed": [],
+   "expected": []
+  }
+ ],
+ "observed": {
+  "server": {
+   "port": 8791,
+   "root": "C:\\u42v\\rfdata_ws_1",
+   "llm": {
+    "mode": "DISABLED",
+    "label": "AI proposals disabled",
+    "fixtures": []
+   },
+   "engine_configured": true,
+   "reviewer": {
+    "reviewer_id": "analyst-1",
+    "role": "analyst",
+    "kind": "TEST"
+   }
+  },
+  "case_ref": "RF-2026-06-001",
+  "smart_parser_run": {
+   "run_id": "RUN-2026-06-001-01-6503a4",
+   "status": "COMPLETED",
+   "failure": null
+  },
+  "run_stages": [
+   {
+    "key": "init",
+    "status": "completed"
+   },
+   {
+    "key": "read",
+    "status": "completed"
+   },
+   {
+    "key": "identify",
+    "status": "completed"
+   },
+   {
+    "key": "structure",
+    "status": "completed"
+   },
+   {
+    "key": "mapping",
+    "status": "completed"
+   },
+   {
+    "key": "proposals",
+    "status": "not_required"
+   },
+   {
+    "key": "review",
+    "status": "not_required"
+   },
+   {
+    "key": "previews",
+    "status": "completed"
+   },
+   {
+    "key": "validation",
+    "status": "completed"
+   }
+  ],
+  "llm_mode": {
+   "mode": "DISABLED",
+   "label": "AI proposals disabled",
+   "fixtures": []
+  },
+  "outstanding_after_run": {
+   "mapping_decisions": [],
+   "missing_categories": [],
+   "files_requiring_replacement": [],
+   "refused_uploads": [],
+   "other": [
+    {
+     "kind": "ACTIVATE",
+     "detail": "validation passed: the package can be activated"
+    }
+   ]
+  },
+  "slots_after_run": [
+   {
+    "category": "IN-01",
+    "status": "VALIDATED",
+    "file": "hp_recon_days_jun2026.csv"
+   },
+   {
+    "category": "IN-02",
+    "status": "VALIDATED",
+    "file": "hp_safeguarding_accounts.csv"
+   },
+   {
+    "category": "IN-03",
+    "status": "VALIDATED",
+    "file": "hp_client_balances_1700_jun2026.csv"
+   },
+   {
+    "category": "IN-04",
+    "status": "VALIDATED",
+    "file": "hp_unallocated_receipts_jun2026.csv"
+   },
+   {
+    "category": "IN-05",
+    "status": "VALIDATED",
+    "file": "hp_internal_recon_jun2026.csv"
+   },
+   {
+    "category": "IN-06",
+    "status": "VALIDATED",
+    "file": "hp_external_recon_jun2026.csv"
+   },
+   {
+    "category": "IN-07",
+    "status": "VALIDATED",
+    "file": "hp_bank_1700_balances_jun2026.csv"
+   },
+   {
+    "category": "IN-08",
+    "status": "VALIDATED",
+    "file": "hp_bank_eod_statements_jun2026.csv"
+   },
+   {
+    "category": "IN-09",
+    "status": "VALIDATED",
+    "file": "hp_bank_statement_lines_jun2026.csv"
+   },
+   {
+    "category": "IN-10",
+    "status": "VALIDATED",
+    "file": "hp_safeguarding_cashbook_jun2026.csv"
+   },
+   {
+    "category": "IN-11",
+    "status": "VALIDATED",
+    "file": "hp_card_processor_transactions_jun2026.csv"
+   },
+   {
+    "category": "IN-12",
+    "status": "VALIDATED",
+    "file": "hp_settlement_batches_jun2026.csv"
+   },
+   {
+    "category": "IN-13",
+    "status": "VALIDATED",
+    "file": "hp_settlement_lines_jun2026.csv"
+   },
+   {
+    "category": "IN-14",
+    "status": "VALIDATED",
+    "file": "hp_breaks_and_actions_log_jun2026.csv"
+   },
+   {
+    "category": "IN-15",
+    "status": "VALIDATED",
+    "file": "Northbridge_acknowledgement_GBP_5204.pdf"
+   },
+   {
+    "category": "IN-16",
+    "status": "VALIDATED",
+    "file": "Northbridge_acknowledgement_EUR_5297.pdf"
+   },
+   {
+    "category": "IN-17",
+    "status": "VALIDATED",
+    "file": "HaldenPay_safeguarding_recon_policy_v1.2.pdf"
+   },
+   {
+    "category": "IN-18",
+    "status": "VALIDATED",
+    "file": "HaldenPay_governance_register_jun2026.pdf"
+   },
+   {
+    "category": "IN-19",
+    "status": "VALIDATED",
+    "file": "HaldenPay_REP027_receipt_may2026.pdf"
+   }
+  ],
+  "review_steps": [],
+  "validation": {
+   "at": "2026-11-19T12:03:48+00:00",
+   "passed": true,
+   "checks": [
+    {
+     "check_id": "PV-01",
+     "name": "every required evidence category is present",
+     "passed": true,
+     "detail": "17 required categories"
+    },
+    {
+     "check_id": "PV-02",
+     "name": "exactly one selected version per category",
+     "passed": true,
+     "detail": "unselected: []; multiple active: {}"
+    },
+    {
+     "check_id": "PV-03",
+     "name": "no file awaits resubmission",
+     "passed": true,
+     "detail": "awaiting a corrected file: []"
+    },
+    {
+     "check_id": "PV-04",
+     "name": "no selected / required file is under review",
+     "passed": true,
+     "detail": "under review: []"
+    },
+    {
+     "check_id": "PV-05",
+     "name": "every selected file passes its file-level checks (re-run now)",
+     "passed": true,
+     "detail": "{}"
+    },
+    {
+     "check_id": "PV-06",
+     "name": "reporting periods consistent with the package",
+     "passed": true,
+     "detail": "2026-06; inconsistent: []"
+    },
+    {
+     "check_id": "PV-07",
+     "name": "package membership valid (same package, own category slot)",
+     "passed": true,
+     "detail": "[]"
+    },
+    {
+     "check_id": "PV-08",
+     "name": "every selected file has a valid intake and SHA-256 (stored bytes re-hashed)",
+     "passed": true,
+     "detail": "[]"
+    },
+    {
+     "check_id": "PV-09",
+     "name": "the selection references exactly the validated file versions",
+     "passed": true,
+     "detail": "[]"
+    }
+   ]
+  },
+  "snapshot_id": "SNAP-001-bd92b559",
+  "reconciliation": {
+   "run_id": "RECON-20261119T120348Z-bd92b559",
+   "case_status": "CLEAN",
+   "outcomes": {
+    "PASS": 1965
+   },
+   "total_results": 1965,
+   "controls_endpoint_total": 1965,
+   "exception_count": 0,
+   "by_severity": {},
+   "integrity_checks": {
+    "all_selected_categories_accepted_by_engine": true,
+    "engine_received_exact_bytes": true,
+    "engine_category_agrees": true,
+    "no_superseded_version_staged": true
+   },
+   "investigation_groups": {},
+   "investigation_group_ids_total": 0,
+   "exceptions": [],
+   "exception_evidence_rows": {},
+   "non_passing": []
+  }
+ },
+ "post_transcript": [
+  {
+   "method": "POST",
+   "path": "/api/cases",
+   "status": 200,
+   "request": {
+    "customer_name": "Halden Pay Ltd",
+    "reporting_period": "2026-06",
+    "zip_name": "Halden_Pay_Ltd_2026-06.zip"
+   },
+   "error": null
+  },
+  {
+   "method": "POST",
+   "path": "/api/cases/RF-2026-06-001/start",
+   "status": 200,
+   "request": {
+    "expected_revision": 1
+   },
+   "error": null
+  },
+  {
+   "method": "POST",
+   "path": "/api/cases/RF-2026-06-001/activate",
+   "status": 200,
+   "request": {
+    "confirm": true,
+    "expected_revision": 6
+   },
+   "error": null
+  },
+  {
+   "method": "POST",
+   "path": "/api/cases/RF-2026-06-001/reconcile",
+   "status": 200,
+   "request": {
+    "expected_revision": 7
+   },
+   "error": null
+  }
+ ]
+}

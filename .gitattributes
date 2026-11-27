@@ -1,6 +1,10 @@
+# Keep every file byte-for-byte as committed on all platforms (no CRLF/LF conversion). The engine (uc042/) and the
+# application (app/) already use this rule; it matters for hashed evidence files, golden outputs and test data.
+* -text
 
 # Openship deploy files run on Linux: always LF
 Dockerfile text eol=lf
 .dockerignore text eol=lf
 docker-compose.openship.yml text eol=lf
-deploy/** text eol=lf
+deploy/*.sh text eol=lf
+deploy/nginx.conf text eol=lf

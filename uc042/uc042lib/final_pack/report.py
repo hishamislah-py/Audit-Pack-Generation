@@ -8,6 +8,11 @@ widths, code_cols), item (kind, heading, badge, fields), bullets (items), toc (e
 import json
 
 from ..pack.model import canonical
+from .model import OUTCOME_RENDERER_VERSION, RENDERER_VERSION, SPLITTING_RENDERER_VERSION, UNICODE_RENDERER_VERSION
+
+# Renderers whose blocks build_report_v2 produces. FROZEN: build_report_v2 and its section builders below must not change,
+# or published 1.0 / 2.0 / 2.1 packs would no longer re-render byte for byte (verify_final_pack).
+V2_RENDERERS = (RENDERER_VERSION, UNICODE_RENDERER_VERSION, SPLITTING_RENDERER_VERSION)
 
 NOT_SUPPLIED = "Not supplied by this investigation (findings schema {v}); not back-filled."
 SECTIONS = [("overview", "Audit overview"), ("executive", "Executive summary"), ("sources", "Source data inventory"),
@@ -41,6 +46,19 @@ def _dict_table(items, keys):
 
 
 def build_report(final):
+    """The report blocks of a final pack, built by the builder of the renderer the pack declares (metadata.report_renderer;
+    renderer 1.0 when none is declared). A published pack is never rendered with another layout."""
+    renderer = final["metadata"].get("report_renderer") or RENDERER_VERSION
+    if renderer in V2_RENDERERS:
+        return build_report_v2(final)
+    if renderer == OUTCOME_RENDERER_VERSION:
+        from .report_v3 import build_report_v3
+        return build_report_v3(final)
+    raise ValueError(f"unknown report renderer {renderer!r}")
+
+
+def build_report_v2(final):
+    """FROZEN (renderers 1.0, 2.0, 2.1): the original 16-section layout."""
     # Always render the canonical JSON form (sorted keys), so a report rendered from memory and one rendered from the stored
     # final_pack.json are byte-identical (verify_final_pack relies on this).
     final = json.loads(canonical(final))
@@ -80,6 +98,10 @@ def block_texts(blocks):
             out += [b["heading"], b["badge"]] + [x for pair in b["fields"] for x in pair]
         elif t == "bullets":
             out += b["items"]
+        elif t == "outcome":  # renderer 3.0
+            out += [b["badge"], b["label"], b["headline"]] + [x for pair in b["tiles"] for x in pair]
+        elif t == "toc" and b.get("columns") == 1:  # renderer 3.0: entries are visible text
+            out += [title for _, title, _ in b["entries"]]
     return [x for x in out if x]
 
 
@@ -99,7 +121,9 @@ def _s_overview(f):
         ("Source deterministic pack", f"{m['source_pack']['pack_id']} (schema {m['source_pack']['pack_schema_version']})"),
         ("Evidence completeness", c["evidence_completeness"]), ("Engine case status", c["engine_case_status"]),
         ("AI investigation coverage", f"{cov['included']} of {cov['exceptions']} exception(s) included; "
-                                      f"{cov['not_investigated']} not investigated; {cov['excluded_by_analyst']} excluded by the analyst"),
+                                      f"{cov['not_investigated']} not investigated; {cov['excluded_by_analyst']} excluded by the analyst"
+                                      + (f"; analyst review: {cov['accepted_by_analyst']} accepted, {cov['rejected_by_analyst']} rejected "
+                                         "(rejected AI content excluded)" if "accepted_by_analyst" in cov else "")),
         ("Closing summary", c["closing_summary"])]}]
 
 
@@ -112,6 +136,9 @@ def _s_executive(f):
                ("Control results", f"{d['control_outcomes']['total_results']} results: {_v(d['control_outcomes']['by_outcome'])}"),
                ("Exceptions", f"{e['exceptions']['total']} total; {e['exceptions']['unresolved']} UNRESOLVED; by severity {_v(e['exceptions']['by_severity'], 'none')}"),
                ("AI investigations included", f"{e['investigations']['included']} ({_v(e['investigations']['modes'], 'none')})"),
+               *([("Analyst review of AI investigations", f"{f['analyst_reviews']['accepted']} accepted; {f['analyst_reviews']['rejected']} "
+                                                          "rejected (their AI content is excluded; the analyst's reasons are in section 7)")]
+                 if "analyst_reviews" in f else []),
                ("Evidence assessments", _v(e["investigations"]["by_assessment"], "none")),
                ("Outstanding evidence gaps", f"engine missing-evidence items {e['outstanding_evidence_gaps']['engine_missing_items']}; "
                                              f"AI-reported gaps {_v(e['outstanding_evidence_gaps']['by_subtype'])}")]}]
@@ -180,17 +207,27 @@ def _s_exceptions(f):
                                                     "generation resolves an exception."}]
     for e in reg:
         x, i = e["exception"], e["investigation"]
-        inv = (f"{i['investigation_id']} ({i['investigation_mode']}); assessment {i['overall_evidence_assessment']}"
+        review = i.get("analyst_review")  # schema 1.1 only
+        rejected = bool(review) and review["decision"] == "REJECT"
+        inv = (f"{i['investigation_id']} ({i['investigation_mode']}); " +
+               ("AI assessment excluded (rejected by the analyst)" if rejected else f"assessment {i['overall_evidence_assessment']}")
                if i["inclusion"] == "INCLUDED" else f"{i['inclusion']}" + (f": {i['reason']}" if i["reason"] else ""))
         other = i["other_attempts"]
+        fields = [("Dates", f"{x['first_date']} to {x['last_date']}"), ("Account / currency", f"{x['account_id']} / {x['currency']}"),
+                  ("Amount", x["amount"]), ("Severity", x["severity"]), ("Root cause (engine key)", x["root_cause"]),
+                  ("Deterministic status", f"{x['status']}; review {x['review_status']}; evidence {_v(x['evidence_status'], 'n/a')}"),
+                  ("AI investigation", inv)]
+        if review and review.get("disposition") == "REJECTED_BY_ANALYST":
+            fields.append(("Analyst review", f"REJECTED BY ANALYST: {review['reviewer']['display_name']} ({review['reviewer']['user_id']}) "
+                                             f"at {review['decided_at']}; the exact reason for rejection is reported in section 7"))
+        elif review:
+            fields.append(("Analyst review", f"{'REJECTED' if rejected else 'ACCEPTED'} by {review['reviewer']['display_name']} "
+                                             f"({review['reviewer']['user_id']}) at {review['decided_at']}"
+                                             + ("; the reason for rejection is reported in section 7" if rejected else "")))
+        fields.append(("Other investigation attempts", f"ineligible {_v(other['published_ineligible'], 'none')}; eligible not selected "
+                                                       f"{_v(other['published_not_selected'], 'none')}; unpublished {other['not_published']}"))
         out.append({"type": "item", "kind": "unresolved", "heading": f"{x['exception_id']} - {x['category']}",
-                    "badge": e["resolution_status"], "fields": [
-                        ("Dates", f"{x['first_date']} to {x['last_date']}"), ("Account / currency", f"{x['account_id']} / {x['currency']}"),
-                        ("Amount", x["amount"]), ("Severity", x["severity"]), ("Root cause (engine key)", x["root_cause"]),
-                        ("Deterministic status", f"{x['status']}; review {x['review_status']}; evidence {_v(x['evidence_status'], 'n/a')}"),
-                        ("AI investigation", inv),
-                        ("Other investigation attempts", f"ineligible {_v(other['published_ineligible'], 'none')}; eligible not selected "
-                                                         f"{_v(other['published_not_selected'], 'none')}; unpublished {other['not_published']}")]})
+                    "badge": e["resolution_status"], "fields": fields})
     rel = f["relationships"]
     out += [{"type": "sub", "text": "Investigation groups and candidate relationships"},
             _table(["Group", "Exceptions", "Link types", "Links"], [[g["group_id"], g["exception_ids"], g["link_types"], g["links"]]
@@ -223,8 +260,53 @@ def _na(text, inv):
     return text if text is not None else NOT_SUPPLIED.format(v=inv["versions"]["findings_schema"])
 
 
+def _analyst_reviews(f):
+    """Schema 1.1: the analyst's decision on each selected investigation. A rejection shows the analyst's reason exactly as
+    recorded and replaces the investigation's AI content; the review workflow history is application data, not report content."""
+    if "analyst_reviews" not in f:
+        return []
+    out = [{"type": "notice", "cls": "info", "text": f["analyst_reviews"]["notice"]},
+           {"type": "sub", "text": "Analyst review of the AI investigations"}]
+    reviewed = [(e["exception"], e["investigation"]) for e in f["exception_register"] if e["investigation"].get("analyst_review")]
+    for x, i in reviewed:
+        r = i["analyst_review"]
+        common = [("Reviewer", f"{r['reviewer']['display_name']} ({r['reviewer']['user_id']})"), ("Reviewed at", r["decided_at"]),
+                  ("Investigation reviewed", f"{r['investigation_id']} (findings {r['findings_sha256']}; review {r['analyst_review_id']}, "
+                                             f"revision {r['revision']})"),
+                  ("Exception status", "UNRESOLVED - an analyst review of an AI investigation does not resolve the exception")]
+        if r["decision"] == "REJECT" and r.get("disposition") == "REJECTED_BY_ANALYST":
+            # The analyst disposition that replaces the rejected AI content (packs assembled with the explicit disposition;
+            # earlier packs keep the rendering below, byte for byte, so their stored reports still verify).
+            out.append({"type": "item", "kind": "rejected", "heading": f"{x['exception_id']} - REJECTED BY ANALYST",
+                        "badge": "REJECTED BY ANALYST", "fields": [
+                            ("Analyst decision", "REJECTED BY ANALYST"),
+                            ("Reason for rejection (exactly as recorded by the analyst)", r["rejection_reason"]),
+                            ("Analyst comment (optional, separate from the reason)", _v(r.get("comment"), "none")),
+                            ("Rejected investigation (reference kept for traceability)", r["investigation_id"]),
+                            *common,
+                            ("AI content", "Excluded from this report: the AI summary, findings, hypotheses and recommendations of this "
+                                           "investigation are not reported and are not accepted evidence. The original investigation "
+                                           "artefact is kept unchanged in the investigation record.")]})
+        elif r["decision"] == "REJECT":
+            out.append({"type": "item", "kind": "rejected", "heading": f"{x['exception_id']} - AI investigation rejected by the analyst",
+                        "badge": "ANALYST DECISION: REJECTED", "fields": [
+                            ("Analyst decision", "REJECTED"), ("Reason for rejection (as recorded by the analyst)", r["rejection_reason"]),
+                            *common,
+                            ("AI content", "Excluded from this report: the AI summary, conclusions, hypotheses and recommendations of this "
+                                           "investigation are not reported and are not accepted guidance.")]})
+        else:
+            out.append({"type": "item", "kind": "accepted", "heading": f"{x['exception_id']} - AI investigation accepted by the analyst",
+                        "badge": "ANALYST DECISION: ACCEPT", "fields": [
+                            ("Analyst decision", "ACCEPT"), ("Analyst comment", _v(r.get("comment"), "none")), *common]})
+    if not reviewed:
+        out.append({"type": "para", "text": "No AI investigation was selected for review in this pack."})
+    return out
+
+
 def _s_ai_summary(f):
-    out = []
+    out = _analyst_reviews(f)
+    if "analyst_reviews" in f:
+        out.append({"type": "sub", "text": "Accepted AI investigations"})
     if not f["ai_investigations"]:
         out.append({"type": "para", "text": "No AI investigation is included in this pack."})
     for inv in f["ai_investigations"]:

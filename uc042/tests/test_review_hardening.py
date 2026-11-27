@@ -141,8 +141,8 @@ class ContradictionClassification(unittest.TestCase):
         for prompt in (SYSTEM_PROMPT, TOOLS_SYSTEM_PROMPT):
             for phrase in ("Actual contradiction", "Different reconciliation views", "Unexplained difference", "compared_evidence"):
                 self.assertIn(phrase, prompt)
-        self.assertEqual((config.PROMPT_VERSION, config.TOOLS_PROMPT_VERSION),  # 1.2 / 2.2: findings schema 1.4 (approved)
-                         ("uc042-investigator-prompt/1.2", "uc042-investigator-prompt/2.2-tools"))
+        self.assertEqual((config.PROMPT_VERSION, config.TOOLS_PROMPT_VERSION),  # 1.3 / 2.3: 1.2 / 2.2 (schema 1.4, approved) + the full list of refused causal phrases
+                         ("uc042-investigator-prompt/1.12", "uc042-investigator-prompt/2.12-tools"))
 
     def test_rejected_contradiction_is_not_published_through_the_graph(self):
         tmp = Path(tempfile.mkdtemp())

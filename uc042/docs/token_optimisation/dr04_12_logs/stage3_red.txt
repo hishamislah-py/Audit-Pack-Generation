@@ -1,0 +1,179 @@
+test_every_compared_link_is_one_to_one_and_signed (tests.test_stage3_dr04_amounts.RealPackets.test_every_compared_link_is_one_to_one_and_signed) ... FAIL
+test_h202606_split_links_are_not_compared (tests.test_stage3_dr04_amounts.RealPackets.test_h202606_split_links_are_not_compared) ... FAIL
+test_relationship_definitions_unchanged (tests.test_stage3_dr04_amounts.RealPackets.test_relationship_definitions_unchanged) ... ok
+test_column_states_the_rule (tests.test_stage3_dr04_amounts.SignedOneToOne.test_column_states_the_rule) ... FAIL
+test_many_to_one_is_not_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_many_to_one_is_not_compared) ... FAIL
+test_matching_one_to_one_amounts_agree (tests.test_stage3_dr04_amounts.SignedOneToOne.test_matching_one_to_one_amounts_agree) ... 
+  test_matching_one_to_one_amounts_agree (tests.test_stage3_dr04_amounts.SignedOneToOne.test_matching_one_to_one_amounts_agree) [settlement_batch_to_bank_entry] (want=['-100.00', '-100.00', True]) ... FAIL
+  test_matching_one_to_one_amounts_agree (tests.test_stage3_dr04_amounts.SignedOneToOne.test_matching_one_to_one_amounts_agree) [settlement_line_to_transaction] (want=['-9.99', '-9.99', True]) ... FAIL
+test_missing_amounts_or_directions_are_not_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_missing_amounts_or_directions_are_not_compared) ... 
+  test_missing_amounts_or_directions_are_not_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_missing_amounts_or_directions_are_not_compared) [{'batch_id': 'SB-1', 'account_id': 'SGA-GBP-01', 'expected_bank_reference': 'REF-1', 'net_amount_reported': '100.00', 'direction': ''}] ... FAIL
+  test_missing_amounts_or_directions_are_not_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_missing_amounts_or_directions_are_not_compared) [{'batch_id': 'SB-1', 'account_id': 'SGA-GBP-01', 'expected_bank_reference': 'REF-1', 'net_amount_reported': '100.00', 'direction': 'SIDEWAYS'}] ... FAIL
+  test_missing_amounts_or_directions_are_not_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_missing_amounts_or_directions_are_not_compared) [{'batch_id': 'SB-1', 'account_id': 'SGA-GBP-01', 'expected_bank_reference': 'REF-1', 'net_amount_reported': 'abc', 'direction': 'TO_FIRM'}] ... FAIL
+test_one_to_many_is_not_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_one_to_many_is_not_compared)
+The review's H202606 shape: one batch, two bank entries with the same reference. ... FAIL
+test_opposite_signed_amounts_do_not_agree (tests.test_stage3_dr04_amounts.SignedOneToOne.test_opposite_signed_amounts_do_not_agree)
+Equal magnitudes in opposite directions: under 1.1 (absolute values) these 'agreed'. ... 
+  test_opposite_signed_amounts_do_not_agree (tests.test_stage3_dr04_amounts.SignedOneToOne.test_opposite_signed_amounts_do_not_agree) [settlement_batch_to_bank_entry]
+Equal magnitudes in opposite directions: under 1.1 (absolute values) these 'agreed'. ... FAIL
+  test_opposite_signed_amounts_do_not_agree (tests.test_stage3_dr04_amounts.SignedOneToOne.test_opposite_signed_amounts_do_not_agree) [cashbook_to_bank_entry]
+Equal magnitudes in opposite directions: under 1.1 (absolute values) these 'agreed'. ... FAIL
+  test_opposite_signed_amounts_do_not_agree (tests.test_stage3_dr04_amounts.SignedOneToOne.test_opposite_signed_amounts_do_not_agree) [settlement_line_to_transaction]
+Equal magnitudes in opposite directions: under 1.1 (absolute values) these 'agreed'. ... FAIL
+test_part_to_whole_is_never_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_part_to_whole_is_never_compared) ... ok
+
+======================================================================
+FAIL: test_every_compared_link_is_one_to_one_and_signed (tests.test_stage3_dr04_amounts.RealPackets.test_every_compared_link_is_one_to_one_and_signed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage3_dr04_amounts.py", line 122, in test_every_compared_link_is_one_to_one_and_signed
+    self.assertEqual((out_n[(r[0], r[1])], in_n[(r[0], r[2])]), (1, 1), (label, r))
+AssertionError: Tuples differ: (2, 1) != (1, 1)
+
+First differing element 0:
+2
+1
+
+- (2, 1)
+?  ^
+
++ (1, 1)
+?  ^
+ : ('history:H202606/EXC-H202606-01', ['settlement_batch_to_bank_entry', 'IN-12:SB-GBP-20260601', 'IN-09:BE-GBP-0601-SB1', 'SB-GBP-20260601', ['3449.50', '3449.50', True], ['C11-BATCH-BANK|SB-GBP-20260601']])
+
+======================================================================
+FAIL: test_h202606_split_links_are_not_compared (tests.test_stage3_dr04_amounts.RealPackets.test_h202606_split_links_are_not_compared)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage3_dr04_amounts.py", line 109, in test_h202606_split_links_are_not_compared
+    self.assertIsNone(rows[key], key)
+AssertionError: ['3449.50', '3449.50', True] is not None : ('settlement_batch_to_bank_entry', 'IN-12:SB-GBP-20260601', 'IN-09:BE-GBP-0601-SB1')
+
+======================================================================
+FAIL: test_column_states_the_rule (tests.test_stage3_dr04_amounts.SignedOneToOne.test_column_states_the_rule)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage3_dr04_amounts.py", line 96, in test_column_states_the_rule
+    self.assertIn("one-to-one", cols[4])
+AssertionError: 'one-to-one' not found in 'amounts [from, to, agree] (1:1 links only)'
+
+======================================================================
+FAIL: test_many_to_one_is_not_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_many_to_one_is_not_compared)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage3_dr04_amounts.py", line 73, in test_many_to_one_is_not_compared
+    self.assertEqual([r[4] for r in rows], [None, None])
+AssertionError: Lists differ: [['10.00', '10.00', True], ['10.00', '10.00', True]] != [None, None]
+
+First differing element 0:
+['10.00', '10.00', True]
+None
+
+- [['10.00', '10.00', True], ['10.00', '10.00', True]]
++ [None, None]
+
+======================================================================
+FAIL: test_matching_one_to_one_amounts_agree (tests.test_stage3_dr04_amounts.SignedOneToOne.test_matching_one_to_one_amounts_agree) [settlement_batch_to_bank_entry] (want=['-100.00', '-100.00', True])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage3_dr04_amounts.py", line 48, in test_matching_one_to_one_amounts_agree
+    self.assertEqual([r[4] for r in rows_of(p, name)], [want])
+AssertionError: Lists differ: [['100.00', '100.00', True]] != [['-100.00', '-100.00', True]]
+
+First differing element 0:
+['100.00', '100.00', True]
+['-100.00', '-100.00', True]
+
+- [['100.00', '100.00', True]]
++ [['-100.00', '-100.00', True]]
+?    +          +
+
+
+======================================================================
+FAIL: test_matching_one_to_one_amounts_agree (tests.test_stage3_dr04_amounts.SignedOneToOne.test_matching_one_to_one_amounts_agree) [settlement_line_to_transaction] (want=['-9.99', '-9.99', True])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage3_dr04_amounts.py", line 48, in test_matching_one_to_one_amounts_agree
+    self.assertEqual([r[4] for r in rows_of(p, name)], [want])
+AssertionError: Lists differ: [['9.99', '9.99', True]] != [['-9.99', '-9.99', True]]
+
+First differing element 0:
+['9.99', '9.99', True]
+['-9.99', '-9.99', True]
+
+- [['9.99', '9.99', True]]
++ [['-9.99', '-9.99', True]]
+?    +        +
+
+
+======================================================================
+FAIL: test_missing_amounts_or_directions_are_not_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_missing_amounts_or_directions_are_not_compared) [{'batch_id': 'SB-1', 'account_id': 'SGA-GBP-01', 'expected_bank_reference': 'REF-1', 'net_amount_reported': '100.00', 'direction': ''}]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage3_dr04_amounts.py", line 92, in test_missing_amounts_or_directions_are_not_compared
+    self.assertIsNone(row[4])
+AssertionError: ['100.00', '100.00', True] is not None
+
+======================================================================
+FAIL: test_missing_amounts_or_directions_are_not_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_missing_amounts_or_directions_are_not_compared) [{'batch_id': 'SB-1', 'account_id': 'SGA-GBP-01', 'expected_bank_reference': 'REF-1', 'net_amount_reported': '100.00', 'direction': 'SIDEWAYS'}]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage3_dr04_amounts.py", line 92, in test_missing_amounts_or_directions_are_not_compared
+    self.assertIsNone(row[4])
+AssertionError: ['100.00', '100.00', True] is not None
+
+======================================================================
+FAIL: test_missing_amounts_or_directions_are_not_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_missing_amounts_or_directions_are_not_compared) [{'batch_id': 'SB-1', 'account_id': 'SGA-GBP-01', 'expected_bank_reference': 'REF-1', 'net_amount_reported': 'abc', 'direction': 'TO_FIRM'}]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage3_dr04_amounts.py", line 92, in test_missing_amounts_or_directions_are_not_compared
+    self.assertIsNone(row[4])
+AssertionError: ['abc', '100.00', False] is not None
+
+======================================================================
+FAIL: test_one_to_many_is_not_compared (tests.test_stage3_dr04_amounts.SignedOneToOne.test_one_to_many_is_not_compared)
+The review's H202606 shape: one batch, two bank entries with the same reference.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage3_dr04_amounts.py", line 67, in test_one_to_many_is_not_compared
+    self.assertEqual([r[4] for r in rows], [None, None])
+AssertionError: Lists differ: [['3449.50', '3449.50', True], ['3449.50', '2344.78', False]] != [None, None]
+
+First differing element 0:
+['3449.50', '3449.50', True]
+None
+
+- [['3449.50', '3449.50', True], ['3449.50', '2344.78', False]]
++ [None, None]
+
+======================================================================
+FAIL: test_opposite_signed_amounts_do_not_agree (tests.test_stage3_dr04_amounts.SignedOneToOne.test_opposite_signed_amounts_do_not_agree) [settlement_batch_to_bank_entry]
+Equal magnitudes in opposite directions: under 1.1 (absolute values) these 'agreed'.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage3_dr04_amounts.py", line 59, in test_opposite_signed_amounts_do_not_agree
+    self.assertIs(row[4][2], False)
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_opposite_signed_amounts_do_not_agree (tests.test_stage3_dr04_amounts.SignedOneToOne.test_opposite_signed_amounts_do_not_agree) [cashbook_to_bank_entry]
+Equal magnitudes in opposite directions: under 1.1 (absolute values) these 'agreed'.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage3_dr04_amounts.py", line 59, in test_opposite_signed_amounts_do_not_agree
+    self.assertIs(row[4][2], False)
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_opposite_signed_amounts_do_not_agree (tests.test_stage3_dr04_amounts.SignedOneToOne.test_opposite_signed_amounts_do_not_agree) [settlement_line_to_transaction]
+Equal magnitudes in opposite directions: under 1.1 (absolute values) these 'agreed'.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\artlptp263user\p10\uc042_token_optimisation\tests\test_stage3_dr04_amounts.py", line 59, in test_opposite_signed_amounts_do_not_agree
+    self.assertIs(row[4][2], False)
+AssertionError: True is not False
+
+----------------------------------------------------------------------
+Ran 10 tests in 18.954s
+
+FAILED (failures=13)

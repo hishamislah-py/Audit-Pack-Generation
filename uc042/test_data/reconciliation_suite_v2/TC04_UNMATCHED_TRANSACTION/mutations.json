@@ -1,0 +1,72 @@
+{
+  "scenario_id": "TC04",
+  "baseline": "set_01_clean_baseline",
+  "operations": [
+    {
+      "op": "add_record",
+      "file_id": "IN-09",
+      "record": {
+        "bank_entry_id": "BE-EUR-0930-U01",
+        "statement_id": "ST-SGA-EUR-01-20260930-EOD",
+        "account_id": "SGA-EUR-01",
+        "booking_date": "2026-09-30",
+        "booking_ts": "2026-09-30T16:20:00+01:00",
+        "value_date": "2026-09-30",
+        "amount": "650.00",
+        "dc_indicator": "C",
+        "currency": "EUR",
+        "bank_reference": "E2E-EUR-0930-U01",
+        "end_to_end_ref": "E2E-EUR-0930-U01",
+        "counterparty_name": "Synthetic payer (unidentified)",
+        "narrative_text": "INBOUND TRANSFER"
+      },
+      "why": "unidentified inbound credit, not recorded by the firm",
+      "insert_after": "BE-EUR-0930-R01"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-08",
+      "key": "ST-SGA-EUR-01-20260930-EOD",
+      "field": "closing_balance_amount",
+      "old": "118555.00",
+      "new": "119205.00",
+      "why": "statement includes the credit"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-08",
+      "key": "ST-SGA-EUR-01-20260930-EOD",
+      "field": "entry_count",
+      "old": "5",
+      "new": "6",
+      "why": "one more entry"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-07",
+      "key": "ST-SGA-EUR-01-20260930-1700",
+      "field": "balance_amount",
+      "old": "118555.00",
+      "new": "119205.00",
+      "why": "credit booked before 17:00"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-06",
+      "key": "ERL-SGA-EUR-01-20260930",
+      "field": "bank_balance_reported",
+      "old": "118555.00",
+      "new": "119205.00",
+      "why": "firm reports the bank balance"
+    },
+    {
+      "op": "set_field",
+      "file_id": "IN-06",
+      "key": "ERL-SGA-EUR-01-20260930",
+      "field": "difference_reported",
+      "old": "0.00",
+      "new": "650.00",
+      "why": "firm reports the difference, no timing claim"
+    }
+  ]
+}

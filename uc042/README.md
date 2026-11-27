@@ -45,6 +45,13 @@ python -m uc042app.admin import-poc-scenarios           # optional: register the
 python -m uc042app                                      # http://127.0.0.1:8000/docs
 ```
 
+**Published final packs are stored outside the repository.** Set `UC042_FINAL_PACKS_ROOT` to an absolute, backed-up
+directory (default: `%LOCALAPPDATA%\UC042\final_packs`); the backend refuses a location inside the source tree.
+Historical-demo packs stay in `demo_history/final_packs`. Final packs with analyst reviews (schema 1.1) render their PDF
+with the Unicode renderer and the bundled DejaVu fonts (`uc042lib/final_pack/fonts`, licence included); optional fallback
+fonts for other scripts go in `UC042_PDF_FALLBACK_FONTS`. Text no configured font can draw blocks the preview and GENERATE
+instead of being substituted. Earlier packs keep re-rendering, and verifying, with the renderer they were published with.
+
 ## Frontend (React + TypeScript + Vite)
 
 `uc042/frontend/` is the analyst UI. It uses the backend API by default (`VITE_API_BASE_URL`); mock data is available

@@ -1,0 +1,24 @@
+{
+  "label": "AI (expectations for the investigation layer; separate from FIN)",
+  "scenario_id": "TC04",
+  "findings": [
+    "The credit has no counterpart in IN-10, IN-11, IN-04, IN-12 or the top-up reference",
+    "It is a credit of client-payment form (end-to-end reference, INBOUND TRANSFER)",
+    "It probably belongs in the unallocated register as UNIDENTIFIED (HYPOTHESIS)"
+  ],
+  "evidence": [
+    "IN-09 BE-EUR-0930-U01",
+    "IN-07 ST-SGA-EUR-01-20260930-1700",
+    "IN-06 ERL-SGA-EUR-01-20260930",
+    "IN-04 (no entry)",
+    "IN-10 (no entry)"
+  ],
+  "missing_evidence": [
+    "payer details / remittance information"
+  ],
+  "confidence": "high that it is unrecorded; low on its owner",
+  "must_not": [
+    "allocate the receipt to any client"
+  ],
+  "analyst_action": "Require the firm to record the receipt (register and cash book), correct its reconciliations, and resubmit."
+}

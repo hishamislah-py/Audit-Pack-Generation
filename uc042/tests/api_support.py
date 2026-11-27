@@ -161,6 +161,15 @@ class ApiCase(unittest.TestCase):
         self.assertEqual(r.status_code, 202, r.text)
         return self.wait_job(r.json()["job_id"])
 
+    def accept_investigation(self, investigation_id, comment=""):
+        """The analyst's ACCEPT decision in the Exception Workspace: an investigation is reported in a final pack only after
+        it (analyst review of AI investigations; a pending one blocks the preview)."""
+        revision = len(self.get(f"/api/v1/investigations/{investigation_id}/analyst-reviews").json())
+        r = self.post(f"/api/v1/investigations/{investigation_id}/analyst-review",
+                      {"decision": "ACCEPT", "comment": comment, "expected_revision": revision})
+        self.assertEqual(r.status_code, 201, r.text)
+        return r.json()
+
     def preview(self, review_id):
         r = self.post(f"/api/v1/reviews/{review_id}/preview", {"authorization": AI_OK})
         self.assertEqual(r.status_code, 202, r.text)

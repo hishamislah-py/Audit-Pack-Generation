@@ -26,12 +26,13 @@ import json
 import re
 import sys
 from collections import defaultdict
+from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta
 from decimal import Decimal
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from . import schema
+from . import enrichment, relproof, schema
 from .money import batch_net_signed, parse_signed, parse_unsigned, signed
 from .period import MONTH_TOKEN, PeriodConfig, bank_holidays, resolve
 from .period import business_day_after as _business_day_after
@@ -43,6 +44,76 @@ DEFAULT_SET = PROJECT / "uc042_dataset" / "set_01_clean_baseline"
 UK_BANK_HOLIDAYS = bank_holidays(2026)  # England and Wales, computed (uc042lib.period); kept for existing imports
 ZERO = Decimal("0.00")
 PASS, FAIL, INSUF, NA = "PASS", "FAIL", "INSUFFICIENT_EVIDENCE", "NOT_APPLICABLE"
+
+
+@dataclass(frozen=True)
+class EngineRules:
+    """The explicit rule configuration of ONE engine run (passed to Validator; never a mutable module global, so runs with
+    different configurations cannot affect each other).
+
+    zero_difference_outcome: the outcome of a reconciled zero difference in C06-DIFFERENCE / C08-DIFFERENCE. Approved
+    17 Nov 2026: PASS. Packs published before that date were generated with NOT_APPLICABLE; they are immutable, and the
+    reproducibility tests rebuild them under PUBLISHED_RULES_BEFORE_17_NOV_2026."""
+    zero_difference_outcome: str = PASS
+    # Workstream 3 reconciliation enrichment (uc042lib.enrichment): duplicate claims, structured amount comparison and
+    # outlier source, transaction/timing/duplicate/snapshot lineage, line-sum common-cause candidates and a stricter
+    # L3(b). Off by default (owner decision): with it off every output is byte-identical to the approved rules.
+    enrichment_v1: bool = False
+
+    def __post_init__(self):
+        if self.zero_difference_outcome not in (PASS, NA):
+            raise ValueError(f"zero_difference_outcome must be {PASS} or {NA}")
+        if not isinstance(self.enrichment_v1, bool):
+            raise TypeError("enrichment_v1 must be a bool")
+
+    def recorded(self):
+        """The rule configuration as recorded in a pack's configuration_fingerprint: every departure from the behaviour
+        the published (pre-17-Nov-2026) packs were generated with. The published rules record nothing, so those packs'
+        fingerprints stay byte-reproducible; a pack built under the approved rule records it."""
+        out = {} if self.zero_difference_outcome == NA else {"c06_c08_zero_difference": self.zero_difference_outcome}
+        if self.enrichment_v1:
+            out["reconciliation_enrichment"] = "v1"
+        return out
+
+
+APPROVED_RULES = EngineRules()
+PUBLISHED_RULES_BEFORE_17_NOV_2026 = EngineRules(zero_difference_outcome=NA)
+ENRICHED_RULES = EngineRules(enrichment_v1=True)  # approved rules + Workstream 3 enrichment (not yet approved as default)
+_RECORDED_KEYS = {"c06_c08_zero_difference", "reconciliation_enrichment"}
+
+
+def rules_from_recorded(recorded):
+    """The EngineRules whose recorded() is `recorded` (the inverse of EngineRules.recorded()). An empty dict is the
+    published pre-17-Nov-2026 configuration, exactly as recorded() defines it. Unknown keys are refused, never ignored."""
+    recorded = dict(recorded or {})
+    unknown = set(recorded) - _RECORDED_KEYS
+    if unknown:
+        raise ValueError(f"unknown engine rule(s) recorded: {sorted(unknown)}")
+    enr = recorded.get("reconciliation_enrichment")
+    if enr not in (None, "v1"):
+        raise ValueError(f"unknown reconciliation_enrichment version: {enr!r}")
+    rules = EngineRules(zero_difference_outcome=recorded.get("c06_c08_zero_difference", NA), enrichment_v1=enr == "v1")
+    if rules.recorded() != recorded:
+        raise ValueError(f"recorded rules do not round-trip: {recorded}")
+    return rules
+
+
+def enrichment_document(state, rules):
+    """The text of validation/enrichment.json: the enrichment state plus the rules that produced it (I-3)."""
+    return json.dumps(dict(state, engine_rules=rules.recorded()), indent=2, sort_keys=True) + "\n"
+
+
+def rules_of_reconciliation(case_dir):
+    """The rules the case's stored reconciliation outputs (validation/) were produced with, as far as they record it:
+    ENRICHED outputs carry validation/enrichment.json with their engine_rules; outputs without it were produced with
+    enrichment off (approved or published rules, which the outputs do not distinguish). None if no outputs exist."""
+    d = Path(case_dir) / "validation"
+    e = d / "enrichment.json"
+    if e.exists():
+        return rules_from_recorded(json.loads(e.read_text(encoding="utf-8")).get("engine_rules") or {"reconciliation_enrichment": "v1"})
+    if (d / "control_results.csv").exists():
+        return "ENRICHMENT_OFF"
+    return None
 CONTROL_OF = {"C03-POLICY": "C03", "C03-POINT": "C03", "C01-COVER": "C01", "C07-COVER": "C07", "C14-COVER": "C14",
               "DQ23-STATEMENT": "DQ23", "DQ22-CONTINUITY": "DQ22", "BC-VS-EOD": "C07", "CASH-BANK-LINK": "C05/C07",
               "BANK-CASH-LINK": "C05/C07", "C04-REQUIREMENT": "C04", "C05-RESOURCE": "C05", "C06-DIFFERENCE": "C06",
@@ -70,11 +141,15 @@ def fname(fid, period=None):
 
 
 class Validator:
-    def __init__(self, root, period=None):
+    def __init__(self, root, period=None, rules=None):
         """`period`: the reporting period (PeriodConfig or PER-YYYY-MM). Without it, the case must declare exactly one
-        period itself (manifest, canonical file names or calendar): there is no default month (uc042lib.period.resolve)."""
+        period itself (manifest, canonical file names or calendar): there is no default month (uc042lib.period.resolve).
+        `rules`: the run's EngineRules (default: the approved rules)."""
         self.root = Path(root)
         self.period = resolve(self.root, period)
+        self.rules = rules if rules is not None else APPROVED_RULES
+        if not isinstance(self.rules, EngineRules):
+            raise TypeError("rules must be an EngineRules instance")
         self.results = []
         self.data = {}        # file_id -> list of structurally valid row dicts (with _line)
         self.pdf = {}         # file_id -> {label: value}
@@ -84,6 +159,11 @@ class Validator:
         self.exceptions = []
         self.groups = []
         self.candidates = []
+        # Structured correlation links (23 Nov 2026, evidence-bearing relationships): one dict per link that formed an
+        # investigation group, with its relationship type and the proof of its confirmation. In memory only (read by the
+        # pack's relationship register for enriched runs); the group link TEXT, and so every default-rule output, is unchanged.
+        self.relationship_links = []
+        self.enrichment = None  # uc042lib.enrichment state when rules.enrichment_v1 is on
 
     # --- result helpers -------------------------------------------------
     def ref(self, fid, row=None):
@@ -420,7 +500,11 @@ class Validator:
         self.check_designation()
         self.check_discrepancy_log()
         self.check_checklist()
+        if self.rules.enrichment_v1:
+            enrichment.apply_record_checks(self)
         self.group_exceptions()
+        if self.rules.enrichment_v1:
+            enrichment.annotate_exceptions(self)
         self.correlate_exceptions()
         return self.results
 
@@ -738,8 +822,8 @@ class Validator:
                 diff, rep = res - req, parse_signed(run["difference_reported"])
                 if diff != rep:
                     self.add("C06-DIFFERENCE", "C06", scope, FAIL, str(diff), str(rep), ev, "reported difference differs from recomputed")
-                elif diff == ZERO:
-                    self.add("C06-DIFFERENCE", "C06", scope, NA, str(diff), str(rep), ev, "no difference to resolve")
+                elif diff == ZERO:  # approved 17 Nov 2026: a reconciled zero difference is a PASS (was NOT_APPLICABLE)
+                    self.add("C06-DIFFERENCE", "C06", scope, self.rules.zero_difference_outcome, str(diff), str(rep), ev, "no difference to resolve")
                 else:
                     self.add("C06-DIFFERENCE", "C06", scope, FAIL, str(diff), str(rep), ev, "difference requires same-day resolution (CASS 15.8.50R)")
 
@@ -792,8 +876,8 @@ class Validator:
                 self.add("C08-DIFFERENCE", "C08", scope, FAIL, str(diff), str(rep), ev + trefs,
                          "reported difference differs from recomputed" + (f"; {detail}" if detail else ""), evidence_status=status,
                          structured=self.timing_structured(acct, d, diff) if diff != ZERO else None)
-            elif diff == ZERO:
-                self.add("C08-DIFFERENCE", "C08", scope, NA, str(diff), str(rep), ev + [self.ref("IN-07", b)], "bank equals ledger")
+            elif diff == ZERO:  # approved 17 Nov 2026: a reconciled zero difference is a PASS (was NOT_APPLICABLE)
+                self.add("C08-DIFFERENCE", "C08", scope, self.rules.zero_difference_outcome, str(diff), str(rep), ev + [self.ref("IN-07", b)], "bank equals ledger")
             else:
                 status, detail, trefs = self.timing_assessment(acct, d, diff)
                 if status in ("TIMING_EVIDENCED", "TIMING_PARTIAL"):
@@ -990,11 +1074,33 @@ class Validator:
                     conventions.append(f"allocated after the period end ({u['allocated_date']}): a subsequent event; timeliness is "
                                        "assessed from the register and the allocating transaction is not required (convention P1)")
                 else:
-                    alloc = [t for t in self.rows("IN-11") if t["txn_type"] == "LOAD_BANK" and t["payment_reference"] == u["bank_reference"]]
-                    if len(alloc) != 1 or alloc[0]["executed_ts"] != u["allocated_ts"] or alloc[0]["client_id"] != u["client_id"]:
-                        issues.append("allocation transaction missing or inconsistent")
-                        if not alloc:
-                            insuf = insuf or self.tainted("IN-11", ref=u["bank_reference"]) or ""
+                    # Approved 17 Nov 2026: the allocating LOAD_BANK transaction is matched by payment_reference (the primary
+                    # key) and must be for the same client. Its execution time need not equal the register's allocated_ts:
+                    # timing is assessed separately (the allocation deadline above, from allocated_ts).
+                    # Matching is exact and case-sensitive (no normalisation); strip() only decides whether a reference is
+                    # present at all (a whitespace-only reference is no payment reference).
+                    ref = u["bank_reference"]
+                    present = bool((ref or "").strip())
+                    alloc = [t for t in self.rows("IN-11") if t["txn_type"] == "LOAD_BANK" and t["payment_reference"] == ref] if present else []
+                    if not present:
+                        issues.append("allocation transaction missing or inconsistent: the receipt has no payment reference")
+                    elif not alloc:
+                        issues.append("allocation transaction missing or inconsistent: no bank-load transaction carries the payment reference")
+                        insuf = insuf or self.tainted("IN-11", ref=ref) or ""
+                    elif len(alloc) > 1:
+                        issues.append(f"allocation transaction missing or inconsistent: {len(alloc)} bank-load transactions carry the "
+                                      "payment reference (ambiguous)")
+                    elif alloc[0]["client_id"] != u["client_id"]:
+                        issues.append(f"allocation transaction missing or inconsistent: the transaction is for client "
+                                      f"{alloc[0]['client_id']}, the register allocates to {u['client_id']}")
+                    if len(alloc) == 1:
+                        # A single visible match is unambiguous only if no EXCLUDED IN-11 row could carry the same reference
+                        # (a duplicate hidden by a data-quality exclusion): otherwise the evidence is insufficient, never PASS.
+                        hidden = self.tainted("IN-11", ref=ref)
+                        if hidden:
+                            issues.append("allocation transaction possibly ambiguous: an excluded bank-load row may carry the "
+                                          "same payment reference")
+                            insuf = insuf or hidden
                     ev += [self.ref("IN-11", t) for t in alloc]
             if issues and insuf:
                 self.add("C09-ALLOCATION", "C09", u["receipt_id"], INSUF, evidence=ev,
@@ -1267,6 +1373,8 @@ def _group_exceptions(self):
             related = sorted(i for i in unmatched if i in entry and entry[i]["account_id"] == acct and entry[i]["booking_date"] == parts[2])
         if kind in FILE_ROOTS:
             flags.append(f"{parts[1]} {FILE_ROOTS[kind]}: dependent checks were not run on incomplete evidence")
+        if kind in (enrichment.DUP_CASH, enrichment.DUP_TXN):  # only produced with rules.enrichment_v1
+            acct, dates, amount = enrichment.duplicate_exception_scope(self, kind, parts[1]) or (acct, dates, amount)
         if kind == "UNMATCHED_BANK_ENTRY" and parts[1] in entry:
             e = entry[parts[1]]
             acct, dates = e["account_id"], [e["booking_date"]]
@@ -1277,7 +1385,8 @@ def _group_exceptions(self):
                 if x not in evidence:
                     evidence.append(x)
         exceptions.append({
-            "severity": severity, "status": "OPEN", "category": CATEGORY.get(kind, rs[0]["check_id"]), "root_cause": root,
+            "severity": severity, "status": "OPEN", "category": CATEGORY.get(kind, enrichment.CATEGORY.get(kind, rs[0]["check_id"])),
+            "root_cause": root,
             "account_id": acct, "currency": self.ccy_of.get(acct, ""), "first_date": dates[0] if dates else "",
             "last_date": dates[-1] if dates else "", "amount": amount, "affected_results": len(rs),
             "affected": "; ".join(f"{r['check_id']} {r['scope']} [{r['outcome']}]" for r in rs),
@@ -1317,7 +1426,8 @@ def _correlate_exceptions(self):
     Groups never set a cause, change a status, merge exceptions or close anything. Relationships that rest only on
     matching dates and amounts are recorded separately as unverified candidates (D-E2a), never as groups."""
     exc = self.exceptions
-    if len(exc) < 2:
+    enriched = self.rules.enrichment_v1
+    if len(exc) < 2 and not enriched:
         return
     by_root = {x["root_cause"]: x for x in exc}
     rows_of = defaultdict(list)
@@ -1356,11 +1466,18 @@ def _correlate_exceptions(self):
         return keys, ents, cites
 
     info = {x["exception_id"]: refs_and_entries(rows_of[x["exception_id"]]) for x in exc}
+    ctx = enrichment.CorrelationContext(self, exc, rows_of) if enriched else None
     links = []
 
-    def link(a, b, kind, basis, cites):
+    def link(a, b, kind, basis, cites, rtype=None, proof=None, source="correlation"):
         if a != b:
             links.append((min(a, b), max(a, b), kind, basis, cites))
+            # evidence-bearing relationships: the same link as structured data (type + proof); not part of any output text
+            self.relationship_links.append({"exception_ids": [min(a, b), max(a, b)], "link_type": kind, "basis": basis,
+                                            "cites": list(cites), "relationship_type": rtype, "proof": proof, "source": source})
+
+    def first_fail(i, check):
+        return next((r for r in rows_of[i] if r["check_id"] == check and r["outcome"] == FAIL), None)
 
     ids = [x["exception_id"] for x in exc]
     kind_of = {x["exception_id"]: x["root_cause"].split("|")[0] for x in exc}
@@ -1370,7 +1487,14 @@ def _correlate_exceptions(self):
             shared = info[a][0] & info[b][0]
             if shared:
                 acct, rf = sorted(shared)[0]
-                link(a, b, "L1 REFERENCE", f"both involve reference {rf} on {acct}", info[a][2][:1] + info[b][2][:1])
+                cites = info[a][2][:1] + info[b][2][:1]
+                link(a, b, "L1 REFERENCE", f"both involve reference {rf} on {acct}", cites, "SHARED_REFERENCE", relproof.make_proof(
+                    "L1 REFERENCE", "SHARED_REFERENCE", result="SAME_REFERENCE",
+                    calculation=f"the records behind {a} and the records behind {b} carry the same reference {rf} on account {acct}",
+                    established=[f"{a} and {b} involve records with the same reference {rf} on {acct}"],
+                    not_established=["whether the shared reference is the record that is out of line, and what caused either exception"],
+                    limitations=["a shared reference connects the records; it does not reconcile amounts"],
+                    records=info[a][2] + info[b][2]))
     # L2 persistence of internal differences
     internal = sorted(((date.fromisoformat(x["root_cause"].split("|")[1].split("/")[0]), x["root_cause"].split("/")[-1], x["exception_id"])
                        for x in exc if kind_of[x["exception_id"]] == "INTERNAL_DIFFERENCE"))
@@ -1378,8 +1502,25 @@ def _correlate_exceptions(self):
     for (d1, c1, a), (d2, c2, b) in zip(internal, internal[1:]):
         nxt = [x for x in self.recon_days if x > d1][:1]
         if c1 == c2 and nxt == [d2] and value[a] == value[b] and value[a] is not None:
-            link(a, b, "L2 PERSISTENCE", f"same internal difference {value[a]} on consecutive reconciliation days ({c1})",
-                 [rows_of[a][0]["evidence"].split(";")[0], rows_of[b][0]["evidence"].split(";")[0]])
+            ra, rb = first_fail(a, "C06-DIFFERENCE"), first_fail(b, "C06-DIFFERENCE")
+            ev = [rows_of[a][0]["evidence"].split(";")[0], rows_of[b][0]["evidence"].split(";")[0]]
+            link(a, b, "L2 PERSISTENCE", f"same internal difference {value[a]} on consecutive reconciliation days ({c1})", ev,
+                 "PERSISTENCE", relproof.make_proof(
+                     "L2 PERSISTENCE", "PERSISTENCE", result="CONSECUTIVE_EQUAL",
+                     quantities=[(f"internal difference (resource - requirement) {c1} {d1}", value[a], ev[0]),
+                                 (f"internal difference (resource - requirement) {c1} {d2}", value[b], ev[1])]
+                     + ([(f"reported difference {d1}", ra["reported"], ev[0])] if ra else [])
+                     + ([(f"reported difference {d2}", rb["reported"], ev[1])] if rb else []),
+                     calculation=f"recomputed internal difference {d1} = {value[a]}; next reconciliation day {d2} = {value[b]}; "
+                                 "equal (same currency, consecutive reconciliation days)",
+                     chronology=[(d1, f"internal difference {value[a]} {c1} ({a})"), (d2, f"the same difference {value[b]} persists ({b})")],
+                     requirement_effect=f"the {c1} resource differs from the requirement by {value[a]} on both {d1} and {d2}",
+                     established=[f"the internal difference {value[a]} {c1} recurs unchanged from {d1} to {d2}: the second day carries "
+                                  "the first day's unresolved difference forward"],
+                     not_established=["which record or item is behind the difference", "what caused the difference"],
+                     missing_evidence=["the item(s) making up the internal difference on the first day"],
+                     limitations=["persistence connects two days of the same difference; it does not identify the faulty record"],
+                     records=ev))
     # L3 lineage
     for x in exc:
         kind, parts = kind_of[x["exception_id"]], x["root_cause"].split("|")
@@ -1389,9 +1530,30 @@ def _correlate_exceptions(self):
                 for e in info[y["exception_id"]][1].values():
                     if e["account_id"] == acct and date.fromisoformat(e["booking_date"]) == d0 and parse_ts(e["booking_ts"]) <= self.point(d0):
                         b = self.bc_by.get((acct, d0))
+                        cites = [self.ref("IN-09", e)] + ([self.ref("IN-07", b)] if b else [])
+                        effect, diff = signed(e["amount"], e["dc_indicator"], "bank"), Decimal(parts[3])
+                        equal = effect == diff
                         link(x["exception_id"], y["exception_id"], "L3 LINEAGE",
                              f"bank entry {e['bank_entry_id']} is inside the {d0} 17:00 balance of {acct}, where the difference begins",
-                             [self.ref("IN-09", e)] + ([self.ref("IN-07", b)] if b else []))
+                             cites, "BALANCE_LINEAGE", relproof.make_proof(
+                                 "L3 LINEAGE (bank entry in balance)", "BALANCE_LINEAGE",
+                                 faulty_record=cites[0] if equal else "",
+                                 result="EQUAL" if equal else "SHARED_RECORD_AMOUNT_NOT_EQUAL",
+                                 quantities=[(f"bank entry {e['bank_entry_id']} effect on the bank balance", effect, cites[0]),
+                                             (f"bank-ledger difference {acct} {d0} (bank - ledger)", diff, cites[-1])],
+                                 calculation=(f"bank entry {e['bank_entry_id']} booked {e['booking_ts']} (before the {d0} 17:00 point) "
+                                              f"moves the bank balance by {effect}; the bank-ledger difference beginning {d0} is "
+                                              f"{diff}; " + ("equal" if equal else "not equal")),
+                                 chronology=[(e["booking_date"], f"bank entry {e['bank_entry_id']} booked ({y['exception_id']})"),
+                                             (d0, f"bank-ledger difference {diff} on {acct} begins ({x['exception_id']})")],
+                                 established=[f"bank entry {e['bank_entry_id']} (involved in {y['exception_id']}) is inside the {d0} "
+                                              f"17:00 bank balance of {acct} where {x['exception_id']}'s difference begins"]
+                                 + ([f"its amount {effect} equals the whole difference: the entry is the record the ledger "
+                                     "does not reflect"] if equal else []),
+                                 not_established=[] if equal else ["that the entry accounts for the whole difference"],
+                                 missing_evidence=["the ledger posting (or allocation) for the entry"],
+                                 limitations=[] if equal else ["lineage through a shared record only: the amounts do not reconcile"],
+                                 records=cites))
         if kind in ("INTERNAL_DIFFERENCE", "C04-REQUIREMENT"):
             d, ccy = parts[1].split("/")
             for y in exc:
@@ -1400,16 +1562,36 @@ def _correlate_exceptions(self):
                     yccy, rest = sc.split("/")
                     client, yd = rest.split(" ")
                     if yccy == ccy and yd == d:
+                        if ctx is not None and not ctx.allow_snapshot_lineage(x["exception_id"], y["exception_id"]):
+                            continue  # enrichment F: only an evidence-backed snapshot input links (G-18)
                         snap = next((r for r in self.rows("IN-03") if r["recon_date"] == d and r["currency"] == ccy and r["client_id"] == client), None)
+                        # the proof of an evidence-backed snapshot link (G-18) is recorded by the enrichment check that allowed
+                        # it; the default rules link any failing snapshot and keep no quantitative proof (none is claimed)
+                        proof = ctx.snapshot_lineage_proof(x["exception_id"], y["exception_id"]) if ctx is not None else None
                         link(x["exception_id"], y["exception_id"], "L3 LINEAGE",
                              f"snapshot of {client} on {d} fails the roll-forward and is an input to the {ccy} requirement on {d}",
-                             [self.ref("IN-03", snap)] if snap else [])
+                             [self.ref("IN-03", snap)] if snap else [], "CAUSAL_PROPAGATION", proof)
             if kind == "INTERNAL_DIFFERENCE":
                 for y in exc:
                     if y["root_cause"] == f"C04-REQUIREMENT|{d}/{ccy}":
+                        ry, rx = first_fail(y["exception_id"], "C04-REQUIREMENT"), first_fail(x["exception_id"], "C06-DIFFERENCE")
+                        ev = rows_of[y["exception_id"]][0]["evidence"].split(";")[0]
                         link(x["exception_id"], y["exception_id"], "L3 LINEAGE",
-                             f"the internal difference for {d}/{ccy} uses the recomputed requirement for the same scope",
-                             [rows_of[y["exception_id"]][0]["evidence"].split(";")[0]])
+                             f"the internal difference for {d}/{ccy} uses the recomputed requirement for the same scope", [ev],
+                             "SHARED_INPUT", relproof.make_proof(
+                                 "L3 LINEAGE (requirement in difference)", "SHARED_INPUT", result="SHARED_RECORD",
+                                 quantities=([("requirement recomputed", ry["computed"], ev), ("requirement reported", ry["reported"], ev)]
+                                             if ry else []) + ([("internal difference recomputed", rx["computed"], ev)] if rx else []),
+                                 calculation=f"internal difference {d}/{ccy} = resource - recomputed requirement for {d}/{ccy}",
+                                 chronology=[(d, f"requirement failure ({y['exception_id']}) and internal difference ({x['exception_id']})")],
+                                 requirement_effect=f"the recomputed {ccy} requirement for {d} is an input to the internal difference",
+                                 established=[f"{x['exception_id']}'s internal difference is computed from the requirement "
+                                              f"that {y['exception_id']} finds misreported"],
+                                 not_established=["which client balance or receipt makes the requirement differ"],
+                                 records=[ev]))
+    if ctx is not None:  # enrichment C/D: transaction, duplicate, timing and snapshot lineage (CONFIRMED only)
+        for a, b, k, basis, cites in ctx.links():
+            link(a, b, k, basis, cites, source="enrichment")   # structured form (type, proof) is in enrichment relationships
     # connected components (deterministic)
     parent = {i: i for i in ids}
 
@@ -1438,7 +1620,7 @@ def _correlate_exceptions(self):
             "group_id": gid, "exception_ids": "; ".join(m), "primary_exception_id": m[0], "size": len(m),
             "link_types": "; ".join(sorted({t[2] for t in glinks})),
             "links": " | ".join(f"{a}—{b} {k}: {basis} [{', '.join(c)}]" for a, b, k, basis, c in glinks),
-            "status": "OPEN", "review_status": "AWAITING_HUMAN_REVIEW", "cause": "", "correlation_version": "deterministic-v1"})
+            "status": "OPEN", "review_status": "AWAITING_HUMAN_REVIEW", "cause": "", "correlation_version": enrichment.CORRELATION_VERSION if enriched else "deterministic-v1"})
     # D-E2a: unverified candidates (dates and amounts only), never grouped
     txn_ids = {t["txn_id"] for t in self.rows("IN-11")}
     lines = defaultdict(list)
@@ -1469,6 +1651,8 @@ def _correlate_exceptions(self):
                                        "No record links the transaction to this client."),
                             "label": "UNVERIFIED — NOT EVIDENCE-BACKED; not an investigation group",
                             "evidence": f"{self.ref('IN-13', ln)}; {r['evidence'].split(';')[0]}"})
+    if ctx is not None:  # enrichment E/F: line-sum candidates, common causes, rejected coincidences, summaries
+        ctx.finish()
 
 
 def _scenario_id(self):
@@ -1533,7 +1717,8 @@ def compare_answer_key(root, results, exceptions, candidates=None):
 
 
 
-def write_outputs(root, results, exceptions=(), status="", groups=(), candidates=(), documents=None, period=None):
+def write_outputs(root, results, exceptions=(), status="", groups=(), candidates=(), documents=None, period=None, rules=None,
+                  enrichment_state=None):
     root = Path(root)
     period = period or resolve(root)
     (root / "validation").mkdir(exist_ok=True)
@@ -1558,6 +1743,9 @@ def write_outputs(root, results, exceptions=(), status="", groups=(), candidates
             w = csv.DictWriter(f, fieldnames=cols_, lineterminator="\n")
             w.writeheader()
             w.writerows(rows_)
+    if enrichment_state is not None:  # only with rules.enrichment_v1: default outputs are unchanged
+        (root / "validation" / "enrichment.json").write_text(enrichment_document(enrichment_state, rules or APPROVED_RULES),
+                                                             encoding="utf-8")
     summary = defaultdict(lambda: defaultdict(int))
     for r in results:
         summary[r["check_id"]][r["outcome"]] += 1
@@ -1612,6 +1800,8 @@ def write_outputs(root, results, exceptions=(), status="", groups=(), candidates
         lines.append("None.")
     lines += ["", "## Candidate relationships (UNVERIFIED — not evidence-backed; not groups)", ""]
     lines += [f"- {c['candidate_id']}: {c['exception_ids']} — {c['basis']}: {c['detail']} [{c['evidence']}]" for c in candidates] or ["None."]
+    if enrichment_state is not None:
+        lines += enrichment.report_lines(enrichment_state)
     matched, diffs = compare_answer_key(root, results, exceptions, candidates)
     if matched is not None:
         lines += ["", "## Answer key", "", "MATCH: results and exceptions are exactly as expected." if matched else "MISMATCH:"]
@@ -1623,8 +1813,12 @@ def write_outputs(root, results, exceptions=(), status="", groups=(), candidates
               f"- Client balance roll-forward is assessed from the earliest snapshot provided; with the {period.previous_end.day} "
               f"{period.previous_end:%b} opening snapshot (D4), every {period.month_name} day-pair is assessed.",
               "- Reported values (IN-05, IN-06) and source records come from the same synthetic simulation: validation proves mutual consistency, not operational truth.",
-              "- NOT_APPLICABLE is used only for: no difference to resolve (C06, C08); optional evidence not provided (V00-FILE, C16); "
-              "allocation of a receipt received before the period start, whose bank credit is outside the period (RC4, convention P1).",
+              *(["- A zero recomputed difference that equals the reported difference is a PASS (C06, C08).",
+                 "- NOT_APPLICABLE is used only for: optional evidence not provided (V00-FILE, C16); "
+                 "allocation of a receipt received before the period start, whose bank credit is outside the period (RC4, convention P1)."]
+                if (rules or APPROVED_RULES).zero_difference_outcome == PASS else
+                ["- NOT_APPLICABLE is used only for: no difference to resolve (C06, C08); optional evidence not provided (V00-FILE, C16); "
+                 "allocation of a receipt received before the period start, whose bank credit is outside the period (RC4, convention P1)."]),
               "- PDF key details are parsed deterministically from a fixed synthetic layout. Reviewer confirmation (DQ17) is not modelled.",
               "- Not in scope for milestone 1: pack statements (C15), exception workflow, timing-difference evidence (no differences exist).",
               "- Invalid rows are excluded and reported (DQ-FIELD). A scope an excluded row could have affected returns INSUFFICIENT_EVIDENCE; "
@@ -1634,11 +1828,14 @@ def write_outputs(root, results, exceptions=(), status="", groups=(), candidates
 
 
 def main():
-    root = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_SET
-    v = Validator(root, sys.argv[2] if len(sys.argv) > 2 else None)  # optional PER-YYYY-MM
+    args = [a for a in sys.argv[1:] if a != "--enrichment"]  # --enrichment: ENRICHED_RULES (Workstream 3)
+    rules = ENRICHED_RULES if "--enrichment" in sys.argv[1:] else None
+    root = Path(args[0]) if args else DEFAULT_SET
+    v = Validator(root, args[1] if len(args) > 1 else None, rules=rules)  # optional PER-YYYY-MM
     results = v.run()
     status = case_status(v)
-    totals = write_outputs(root, results, v.exceptions, status, v.groups, v.candidates, v.pdf, v.period)
+    totals = write_outputs(root, results, v.exceptions, status, v.groups, v.candidates, v.pdf, v.period, v.rules,
+                           enrichment_state=v.enrichment)
     print(f"{root.name}: {len(results)} check results: " + ", ".join(f"{k} {v_}" for k, v_ in sorted(totals.items())))
     print(f"Case status: {status}")
     for x in v.exceptions:

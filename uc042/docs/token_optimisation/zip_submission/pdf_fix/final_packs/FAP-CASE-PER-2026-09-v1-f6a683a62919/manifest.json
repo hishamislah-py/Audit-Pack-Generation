@@ -1,0 +1,55 @@
+{
+ "files": {
+  "final_pack.json": {
+   "media_type": "application/json",
+   "sha256": "e0e3906a24d024a45f11d047728dab4df200200e12f16cfe3104af31bde2a8bb",
+   "size_bytes": 187945
+  },
+  "report.html": {
+   "media_type": "text/html",
+   "sha256": "cc9625f3b34117a1f24b8fc0cd2939abab05c93f10b429aa7d9fc65650fa399a",
+   "size_bytes": 96344
+  },
+  "report.pdf": {
+   "media_type": "application/pdf",
+   "sha256": "dfa875b9a0907539d3df9c24c9b9b7e14e0387204d0e88158cf40d4daa71012e",
+   "size_bytes": 155656
+  }
+ },
+ "final_content_sha256": "f6a683a62919fa1181ded2cb6b008f95af21feb9686cc6faefa556106125a177",
+ "final_pack_id": "FAP-CASE-PER-2026-09-v1-f6a683a62919",
+ "generation_record": {
+  "generated_at": "2026-11-17T12:25:15+00:00",
+  "review_decision_id": "RD-d056df24e9fc402164cd58ba",
+  "source_pack_id": "PACK-CASE-PER-2026-09-41e5e753c353",
+  "supersedes_final_pack_id": null,
+  "version": 1
+ },
+ "pdf_fonts": [
+  {
+   "file": "DejaVuSans.ttf",
+   "name": "UC042-DejaVuSans",
+   "sha256": "3fdf69cabf06049ea70a00b5919340e2ce1e6d02b0cc3c4b44fb6801bd1e0d22",
+   "source": "bundled"
+  },
+  {
+   "file": "DejaVuSans-Bold.ttf",
+   "name": "UC042-DejaVuSans-Bold",
+   "sha256": "b184b89e3c1075f22f6b71575b6fc20d4972b3cfd3b23322ca6fd596dcaef167",
+   "source": "bundled"
+  },
+  {
+   "file": "DejaVuSans-Oblique.ttf",
+   "name": "UC042-DejaVuSans-Oblique",
+   "sha256": "ccdf74b350f11fd3dd5774de50e5e6346a1a5da1f5b7d5fb83590665e97a5213",
+   "source": "bundled"
+  },
+  {
+   "file": "DejaVuSansMono.ttf",
+   "name": "UC042-DejaVuSansMono",
+   "sha256": "602ec86b8948cfcd956482fe64f94c36c867770149ef2f791d4613f443bcecb3",
+   "source": "bundled"
+  }
+ ],
+ "renderer_version": "uc042-final-report-renderer/2.0-unicode"
+}

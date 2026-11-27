@@ -1,0 +1,211 @@
+{
+  "suite": "UC042_RECONCILIATION_TEST_SUITE_V2",
+  "status": "GENERATED_AND_VALIDATED_OFFLINE",
+  "prepared": "2026-11-23",
+  "datasets_generated": true,
+  "engine_executed": false,
+  "offline_validation": "PASS",
+  "period_id": "PER-2026-09",
+  "baseline": {
+    "path": "shared_baseline",
+    "manifest_sha256": "0360b4055aa6812f063b411c7ceacdb2f4f153df73fd76c2acc7da3df565b69e"
+  },
+  "reference_engine": "C:/u42v/e2e_20261122/engine_base/uc042/uc042lib (read only; schema.py parsed with ast, never executed)",
+  "expectation_labels": [
+    "FIN",
+    "ENGINE-PREDICTED (not executed)",
+    "FUTURE (PROPOSED)",
+    "AI"
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "TC01",
+      "dir": "TC01_DUPLICATE_TRANSACTION",
+      "title": "Duplicate transaction: cash-book interface re-run duplicates bank load E2E-GBP-0928-L01 (1,246.80)",
+      "customer_label": "SYNTHETIC TEST Ashcombe Pay Ltd",
+      "operations": 1,
+      "mutated_files": [
+        "IN-10"
+      ],
+      "upload_zips": {
+        "TC01_corrected_evidence_upload.zip": "47e89ef23e6cfa6db01234533d91b942fbbf19271b9922ea208ad766730108fd",
+        "TC01_initial_evidence_upload.zip": "9d3ea22dbac6d38e57dd98fdf3c523a6464d90c12ecf848d098df2e7077a2e2a"
+      },
+      "offline_validation": {
+        "initial": "PASS",
+        "corrected": "PASS"
+      },
+      "engine_predicted": {
+        "case_status": "EXCEPTIONS_OPEN",
+        "non_passing_results": 13,
+        "exceptions": 10,
+        "groups": 1,
+        "candidates": 0,
+        "evidence_statuses": {
+          "EXC-TC01-01": "NOT_EVIDENCED"
+        }
+      },
+      "correction": true,
+      "engine_predicted_after_correction": "CLEAN",
+      "correction_files": [
+        "sga_cashbook_entries_2026-09.csv"
+      ]
+    },
+    {
+      "scenario_id": "TC02",
+      "dir": "TC02_AMOUNT_MISMATCH",
+      "title": "Amount mismatch: transaction export 3,053.61 vs bank 3,035.61 for E2E-GBP-0908-L02",
+      "customer_label": "SYNTHETIC TEST Brindle Wallet Ltd",
+      "operations": 1,
+      "mutated_files": [
+        "IN-11"
+      ],
+      "upload_zips": {
+        "TC02_initial_evidence_upload.zip": "bafcffad1672aa228911b672e78a7c1c59ed558a59a8fa9270eb0541fd9740de"
+      },
+      "offline_validation": {
+        "initial": "PASS"
+      },
+      "engine_predicted": {
+        "case_status": "EXCEPTIONS_OPEN",
+        "non_passing_results": 2,
+        "exceptions": 2,
+        "groups": 0,
+        "candidates": 0,
+        "evidence_statuses": {}
+      },
+      "correction": false
+    },
+    {
+      "scenario_id": "TC03",
+      "dir": "TC03_TIMING_DIFFERENCE",
+      "title": "Timing difference: acquirer settlement AQ-GBP-20260925 (4,647.75) recorded 25 Sep, credited by the bank 26 Sep",
+      "customer_label": "SYNTHETIC TEST Cresswell Money Ltd",
+      "operations": 11,
+      "mutated_files": [
+        "IN-06",
+        "IN-07",
+        "IN-08",
+        "IN-09",
+        "IN-14"
+      ],
+      "upload_zips": {
+        "TC03_initial_evidence_upload.zip": "fbb372cc0c527fa33aa39901ed5837974ea08cc6550a281481e29979f0f1b029"
+      },
+      "offline_validation": {
+        "initial": "PASS"
+      },
+      "engine_predicted": {
+        "case_status": "EXCEPTIONS_OPEN",
+        "non_passing_results": 1,
+        "exceptions": 1,
+        "groups": 0,
+        "candidates": 0,
+        "evidence_statuses": {
+          "EXC-TC03-01": "TIMING_EVIDENCED"
+        }
+      },
+      "correction": false,
+      "revision": "25/26 Sep design (replaces the approved 30 Sep / 1 Oct design); adds Saturday IN-07/IN-08 records for SGA-GBP-01"
+    },
+    {
+      "scenario_id": "TC04",
+      "dir": "TC04_UNMATCHED_TRANSACTION",
+      "title": "Unmatched transaction: EUR 650.00 bank credit BE-EUR-0930-U01 with no counterpart",
+      "customer_label": "SYNTHETIC TEST Dunmore Payments Ltd",
+      "operations": 6,
+      "mutated_files": [
+        "IN-06",
+        "IN-07",
+        "IN-08",
+        "IN-09"
+      ],
+      "upload_zips": {
+        "TC04_corrected_evidence_upload.zip": "b178619684fed3f60cb21a70c1700f07ab4949da2cb44f47b9298f4025c5c6bb",
+        "TC04_initial_evidence_upload.zip": "e69043a48db448a0c8c00f9e050bf8de2185b306fbc408f0ad8de62f011363af"
+      },
+      "offline_validation": {
+        "initial": "PASS",
+        "corrected": "PASS"
+      },
+      "engine_predicted": {
+        "case_status": "EXCEPTIONS_OPEN",
+        "non_passing_results": 4,
+        "exceptions": 2,
+        "groups": 1,
+        "candidates": 0,
+        "evidence_statuses": {
+          "EXC-TC04-01": "NOT_EVIDENCED"
+        }
+      },
+      "correction": true,
+      "engine_predicted_after_correction": "CLEAN",
+      "correction_files": [
+        "external_recon_records_2026-09.csv",
+        "internal_recon_records_2026-09.csv",
+        "sga_cashbook_entries_2026-09.csv",
+        "unallocated_register_2026-09.csv"
+      ]
+    },
+    {
+      "scenario_id": "TC05",
+      "dir": "TC05_COMMON_CAUSE",
+      "title": "Common possible cause: all three spends of scheme batch SB-EUR-20260924 missing from the transaction export",
+      "customer_label": "SYNTHETIC TEST Elmstead Card Services Ltd",
+      "operations": 3,
+      "mutated_files": [
+        "IN-11"
+      ],
+      "upload_zips": {
+        "TC05_corrected_evidence_upload.zip": "47e89ef23e6cfa6db01234533d91b942fbbf19271b9922ea208ad766730108fd",
+        "TC05_initial_evidence_upload.zip": "8d448174ecf39724d0c4960ea6ded2bd5a4122a2d8fd351fcde2fd049be15f30"
+      },
+      "offline_validation": {
+        "initial": "PASS",
+        "corrected": "PASS"
+      },
+      "engine_predicted": {
+        "case_status": "EXCEPTIONS_OPEN",
+        "non_passing_results": 3,
+        "exceptions": 3,
+        "groups": 0,
+        "candidates": 1,
+        "evidence_statuses": {}
+      },
+      "correction": true,
+      "engine_predicted_after_correction": "CLEAN",
+      "correction_files": [
+        "transactions_2026-09.csv"
+      ]
+    },
+    {
+      "scenario_id": "TC06",
+      "dir": "TC06_INDEPENDENT_CAUSES",
+      "title": "Independent causes: export amount error (A), client snapshot error (B), acquirer line error (C); A and B share date and 90.00",
+      "customer_label": "SYNTHETIC TEST Farrowdale E-Money Ltd",
+      "operations": 5,
+      "mutated_files": [
+        "IN-03",
+        "IN-05",
+        "IN-11",
+        "IN-13"
+      ],
+      "upload_zips": {
+        "TC06_initial_evidence_upload.zip": "169020dc23857b99475dc11e87af58ae28b723d1ce73d08b4b35847a8c32884c"
+      },
+      "offline_validation": {
+        "initial": "PASS"
+      },
+      "engine_predicted": {
+        "case_status": "EXCEPTIONS_OPEN",
+        "non_passing_results": 6,
+        "exceptions": 6,
+        "groups": 1,
+        "candidates": 0,
+        "evidence_statuses": {},
+        "note": "predicted over-grouping (G-18) UNVERIFIED"
+      },
+      "correction": false
+    }
+  ]
+}

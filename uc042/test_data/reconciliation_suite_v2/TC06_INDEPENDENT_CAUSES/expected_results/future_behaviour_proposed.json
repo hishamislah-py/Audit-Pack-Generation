@@ -1,0 +1,16 @@
+{
+  "label": "FUTURE (PROPOSED; not implemented; category names PENDING)",
+  "scenario_id": "TC06",
+  "root": "three independent roots",
+  "gaps": [
+    "G-08",
+    "G-18",
+    "G-19"
+  ],
+  "expected": [
+    "Cluster A {EXC-TC06-06, EXC-TC06-05}: PENDING:AMOUNT_MISMATCH on TX-0917-00002",
+    "Cluster B {EXC-TC06-01, EXC-TC06-03, EXC-TC06-04}: client snapshot error C0004 17 Sep",
+    "Cluster C {EXC-TC06-02}: acquirer report line inconsistency",
+    "A/B coincidence recorded as REJECTED (no shared record or reference)"
+  ]
+}

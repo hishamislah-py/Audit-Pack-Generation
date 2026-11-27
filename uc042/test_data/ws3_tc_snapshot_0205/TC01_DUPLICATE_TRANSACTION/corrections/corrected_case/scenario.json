@@ -1,0 +1,10 @@
+{
+  "scenario_id": "TC01",
+  "name": "Duplicate transaction: cash-book interface re-run duplicates bank load E2E-GBP-0928-L01 (1,246.80)",
+  "customer_label": "SYNTHETIC TEST Ashcombe Pay Ltd",
+  "submission": "corrected",
+  "reporting_period": "PER-2026-09",
+  "derived_from": "set_01_clean_baseline",
+  "baseline_manifest_sha256": "0360b4055aa6812f063b411c7ceacdb2f4f153df73fd76c2acc7da3df565b69e",
+  "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA - UC-042 RECONCILIATION TEST SUITE V2 - NOT REAL FINANCIAL RECORDS. Derived from set_01_clean_baseline; all names, accounts, references and amounts are fictional."
+}

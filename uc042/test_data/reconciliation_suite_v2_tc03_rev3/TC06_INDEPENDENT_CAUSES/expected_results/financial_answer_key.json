@@ -1,0 +1,52 @@
+{
+  "label": "FIN (deterministic; independent of the engine)",
+  "scenario_id": "TC06",
+  "submission": "initial",
+  "expected_anomalies": [
+    "TXN_BANK_AMOUNT TX-0917-00002 ref=E2E-GBP-0917-L02 txn=1480.07 bank=1390.07",
+    "ROLLFWD GBP/C0007 2026-09-17 90.00",
+    "ROLLFWD GBP/C0004 2026-09-17 -90.00",
+    "ROLLFWD GBP/C0004 2026-09-18 90.00",
+    "RR_DIFF 2026-09-17 GBP -90.00",
+    "BATCH_ARITH AQ-EUR-20260922 TXN lines=2069.15 header=2114.15",
+    "BATCH_ARITH AQ-EUR-20260922 NET lines=2059.53 header=2104.53",
+    "LINE_TXN SL-AQ-EUR-20260922-0002 TX-0922-00016 amount line=1238.12 txn=1283.12"
+  ],
+  "figures": {
+    "rollforward|GBP/C0007 2026-09-17": "36731.11",
+    "snapshot|GBP/C0007 2026-09-17": "36641.11",
+    "rollforward|GBP/C0004 2026-09-17": "40592.24",
+    "snapshot|GBP/C0004 2026-09-17": "40682.24",
+    "rollforward|GBP/C0004 2026-09-18": "42175.13",
+    "snapshot|GBP/C0004 2026-09-18": "42085.13",
+    "requirement_1700|2026-09-17/GBP": "341574.46",
+    "resource_1700|2026-09-17/GBP": "341484.46"
+  },
+  "summary": {
+    "A": {
+      "records": [
+        "IN-11 TX-0917-00002",
+        "IN-09 BE-GBP-0917-L02",
+        "IN-10 LE-GBP-0917-0002"
+      ],
+      "difference": "+90.00 transaction minus bank",
+      "outlier": "IN-11"
+    },
+    "B": {
+      "records": [
+        "IN-03 CBS-20260917-C0004-GBP",
+        "IN-05 IRR-EMONEY-GBP-20260917"
+      ],
+      "difference": "snapshot +90.00 (roll-forward 17 Sep -90.00, 18 Sep +90.00); reported shortfall -90.00 not supported by transactions"
+    },
+    "C": {
+      "records": [
+        "IN-13 SL-AQ-EUR-20260922-0002",
+        "IN-12 AQ-EUR-20260922",
+        "IN-11 TX-0922-00016"
+      ],
+      "difference": "-45.00 line vs header and transaction"
+    },
+    "decoy": "A and B: same date 2026-09-17, same currency GBP, same magnitude 90.00; NO shared record, client or reference"
+  }
+}

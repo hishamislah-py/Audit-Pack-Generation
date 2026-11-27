@@ -1,6 +1,7 @@
 """Monthly document management: reconciliation periods, uploads, source documents, processing runs and activity.
 Requires the database (503 DATABASE_REQUIRED otherwise). Responses never contain file-system paths or storage references."""
 import calendar
+from typing import Optional
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, File, Form, Query, Response, UploadFile
@@ -9,10 +10,12 @@ from uc042lib import schema
 
 from ...errors import AppError
 from ...ingest.analysis import evidence_label
-from ...services.monthly import MAX_FILE_BYTES, processing_limitation, processing_supported
+from ...services.monthly import MAX_FILE_BYTES, ZIP_ORIGIN, processing_limitation, processing_supported
+from ...services.packages import PackageService
 from ..deps import services
-from ..schemas import (ActivityEvent, BatchDetail, CreatePeriodRequest, DashboardSummary, DocumentReviewRequest, PackLineage, Period,
-                       PeriodDetail, ProcessingRun, ReassessmentPlan, ReconcileRequest, SourceDocument, UpdatePeriodRequest)
+from ..schemas import (SubmissionPackage, ActivityEvent, BatchDetail, CreatePeriodRequest, DashboardSummary, DocumentReviewRequest, PackLineage, Period,
+                       PeriodDetail, ProcessingRun, ReassessmentPlan, ProcessRequest, ReconcileRequest, SourceDocument, UpdatePeriodRequest,
+                       PackageItem, SubmissionDetail, UpdatePackageRequest)
 
 router = APIRouter(prefix="/api/v1", tags=["monthly documents"])
 
@@ -120,7 +123,11 @@ def period_view(svc, p, finals_by_pack=None):
              "DOCUMENTS_NO_RESULTS" if documents else "AWAITING_UPLOAD")
     published = [f for x in packs for f in finals_by_pack.get(x["pack_id"], [])]
     latest_final = max((f["generated_at"] for f in published), default=None)
-    after = [d for d in documents if latest_final and _after(d["created_at"], latest_final)]
+    # Legacy "evidence received after publication" (pending reassessment): only legacy documents after a LEGACY final pack.
+    # A ZIP submission is an independent audit: its documents and final packs never make the period pending reassessment.
+    legacy_final = max((f["generated_at"] for f in published if not f.get("submission_id")), default=None)
+    zip_batches = {b["batch_id"] for b in batches if b.get("origin") == ZIP_ORIGIN}
+    after = [d for d in documents if legacy_final and d["batch_id"] not in zip_batches and _after(d["created_at"], legacy_final)]
     title, title_source = display_title(p)
     reassessments = [r for r in runs if (r.get("result") or {}).get("purpose") == "REASSESSMENT"]
     return dict(p, title=title, title_source=title_source, storage_profile=p.get("storage_profile") or "",
@@ -164,7 +171,10 @@ def _monthly(svc):
 
 
 def _batch(d):
-    return dict(d, documents=[document_view(x) for x in d["documents"]])
+    batch = d["batch"]
+    if batch.get("origin") == ZIP_ORIGIN:  # the package's display name (stored, or derived from the ZIP file name)
+        batch = dict(batch, display_name=PackageService.display_name(batch)[0])
+    return dict(d, batch=batch, documents=[document_view(x) for x in d["documents"]])
 
 
 @router.get("/periods", response_model=list[Period], summary="Monthly archive: every reconciliation period with its status")
@@ -206,9 +216,78 @@ async def upload(period_id: str, files: list[UploadFile] = File(...), submission
     received = []
     for f in files:
         received.append((f.filename or "unnamed", await f.read(MAX_FILE_BYTES + 1)))
-    finals = _finals_by_pack(svc)
-    published = [f["final_pack_id"] for r in m.repos.periods.packs(period_id) for f in finals.get(r["pack_id"], [])]         if m.repos.periods.get(period_id) else []
+    published = [f["final_pack_id"] for f in m.published_final_packs(period_id)] if m.repos.periods.get(period_id) else []
     return _batch(m.upload(period_id, received, submission_kind, reason, replaces_document_id or None, published))
+
+
+# ---------------------------------------------------------------- independent ZIP submissions (17 Nov 2026)
+@router.post("/periods/{period_id}/packages", response_model=BatchDetail, status_code=201,
+             responses={413: {"description": "PACKAGE_TOO_LARGE"}},
+             summary="Upload ONE ZIP holding one complete, independent document set for the period (multipart field 'file'). "
+                     "It is read safely, mapped through the central UC-042 schema, analysed and checked for completeness; "
+                     "nothing is processed (Submit for Audit is a separate action). A rejected or incomplete package is "
+                     "recorded with its report and can never be submitted.")
+async def upload_package(period_id: str, file: UploadFile = File(...), display_name: str = Form(""), svc=Depends(services)):
+    """display_name (optional form field): the package's name (trimmed, at most 200 characters; empty: not set, a name
+    derived from the ZIP file name is shown). Kept for rejected packages too."""
+    from ...ingest.zip_package import ZipLimits
+    m = _monthly(svc)
+    limits = ZipLimits.from_env()
+    data = await file.read(limits.max_archive_bytes + 1)
+    if len(data) > limits.max_archive_bytes:
+        raise AppError(f"the ZIP exceeds the {limits.max_archive_bytes} byte limit", code="PACKAGE_TOO_LARGE", status=413)
+    return _batch(m.upload_package(period_id, data, file.filename or "package.zip", limits, display_name=display_name))
+
+
+@router.get("/packages", response_model=list[PackageItem],
+            summary="Read-only: every ZIP submission package of every period (newest first) with its completeness gate, its "
+                    "display name and its latest submission's status and stage (legacy uploads and scenario imports excluded)")
+def list_packages(svc=Depends(services)):
+    return svc.packages.list()
+
+
+@router.get("/packages/{batch_id}", response_model=PackageItem, responses={409: {"description": "NOT_A_PACKAGE"}},
+            summary="Read-only: one ZIP submission package (the same item as in GET /packages)")
+def get_package(batch_id: str, svc=Depends(services)):
+    return svc.packages.item(batch_id)
+
+
+@router.patch("/packages/{batch_id}", response_model=PackageItem,
+              responses={404: {"description": "upload batch not found"}, 409: {"description": "NOT_A_PACKAGE"},
+                         422: {"description": "INVALID_DISPLAY_NAME, INVALID_ID"}},
+              summary="Set the display name of a ZIP submission package (empty clears it); records an activity event")
+def rename_package(batch_id: str, body: UpdatePackageRequest, svc=Depends(services)):
+    return svc.packages.rename(batch_id, body.display_name)
+
+
+@router.get("/submissions/{submission_id}", response_model=SubmissionDetail,
+            responses={404: {"description": "submission not found"}, 422: {"description": "INVALID_ID"}},
+            summary="Read-only: one ZIP submission's status (audit run, investigations, decisions, review, final pack, stage) "
+                    "and its package")
+def get_submission(submission_id: str, svc=Depends(services)):
+    return svc.packages.submission(submission_id)
+
+
+@router.post("/uploads/{batch_id}/submit", response_model=ProcessingRun, status_code=202,
+             responses={409: {"description": "PACKAGE_NOT_COMPLETE, RUN_IN_PROGRESS"}},
+             summary="Submit for Audit: a NEW submission ID and a NEW audit run over this package's documents only, every "
+                     "time (an identical package submitted again is a separate submission)")
+def submit_package(batch_id: str, body: Optional[ProcessRequest] = None, svc=Depends(services)):
+    auth = body.ai_authorization.model_dump() if body and body.ai_authorization else None
+    return _monthly(svc).submit_for_audit(batch_id, ai_authorization=auth)
+
+
+@router.get("/periods/{period_id}/submissions", response_model=list[SubmissionPackage],
+            summary="Read-only submission history of the period: every ZIP package (newest first) with its completeness "
+                    "report and its submissions (submission ID, audit run, status, pack, outcome, final packs)")
+def list_submissions(period_id: str, svc=Depends(services)):
+    out = _monthly(svc).submissions(period_id)
+    finals = [f for f in svc.final_packs.list() if f.get("submission_id")]
+    for pkg in out:
+        for s in pkg["submissions"]:
+            s["final_packs"] = sorted(({k: f[k] for k in ("final_pack_id", "generated_at", "final_content_sha256")}
+                                       for f in finals if f["submission_id"] == s["submission_id"]), key=lambda f: f["generated_at"])
+    return out
 
 
 @router.get("/uploads/{batch_id}", response_model=BatchDetail, summary="An upload batch with its documents and runs")
@@ -224,8 +303,9 @@ def confirm(batch_id: str, svc=Depends(services)):
 
 @router.post("/uploads/{batch_id}/process", response_model=ProcessingRun, status_code=202,
              summary="Start a processing run for the period's current document set (a retry is a new run)")
-def process(batch_id: str, svc=Depends(services)):
-    return _monthly(svc).process(batch_id)
+def process(batch_id: str, body: Optional[ProcessRequest] = None, svc=Depends(services)):
+    auth = body.ai_authorization.model_dump() if body and body.ai_authorization else None
+    return _monthly(svc).process(batch_id, ai_authorization=auth)
 
 
 @router.post("/periods/{period_id}/reconciliation", response_model=ProcessingRun, status_code=202,
@@ -236,7 +316,8 @@ def process(batch_id: str, svc=Depends(services)):
 def reconcile(period_id: str, body: ReconcileRequest, svc=Depends(services)):
     m = _monthly(svc)
     pending = period_view(svc, m.period(period_id))["pending_reassessment"]
-    return m.reconcile(period_id, body.purpose, body.reason, pending_reassessment=pending)
+    return m.reconcile(period_id, body.purpose, body.reason, pending_reassessment=pending,
+                       ai_authorization=body.ai_authorization.model_dump() if body.ai_authorization else None)
 
 
 @router.get("/periods/{period_id}/reassessment", response_model=ReassessmentPlan,

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapping Review</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">Smart Parser <span>· Mapping review (POC)</span></div>
+  <div id="identity" class="identity"></div>
+</header>
+<main>
+  <section id="queue-view">
+    <h1>Review queue</h1>
+    <p class="muted">Evidence file versions waiting for an analyst decision. Values come from the package store.</p>
+    <table class="grid" id="queue">
+      <thead><tr><th>Package</th><th>Period</th><th>Category</th><th>File</th><th>Version</th>
+        <th>Columns (in / expected)</th><th>Review</th><th>Reason</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p id="queue-empty" class="muted" hidden>No file is waiting for review.</p>
+  </section>
+
+  <section id="review-view" hidden>
+    <a href="#/" class="back">← Review queue</a>
+    <div class="card info" id="info"></div>
+    <div id="error" class="error" role="alert" hidden></div>
+
+    <h2>Column mapping</h2>
+    <p class="muted">One row per incoming column, by position. Choose an action per column; every decision needs a reason
+      and is validated by the backend (duplicate targets, value rules and deterministic matches are enforced there).</p>
+    <div class="toolbar" id="toolbar">
+      <label>Reason for decisions <input id="default-reason" value="verified against the export specification"></label>
+      <button id="map-all" class="secondary">Map all suggested (undecided)</button>
+    </div>
+    <table class="grid mapping" id="mapping">
+      <thead><tr><th>#</th><th>Incoming column</th><th>Proposed canonical field</th><th>Validation</th>
+        <th>Analyst decision</th><th>Action</th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <h2>Decision summary</h2>
+    <div class="card" id="summary"></div>
+
+    <div class="finalise" id="finalise">
+      <label>Completion basis <input id="basis" value="column review completed"></label>
+      <button id="complete" class="primary">Complete review</button>
+      <label>Rejection reason <input id="reject-reason" placeholder="why the file is rejected"></label>
+      <button id="reject" class="danger">Reject file</button>
+    </div>
+
+    <h2>Outcome</h2>
+    <div class="card" id="outcome"></div>
+  </section>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>

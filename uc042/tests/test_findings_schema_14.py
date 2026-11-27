@@ -48,7 +48,7 @@ class SchemaCompatibility(unittest.TestCase):
             iid = make_investigation("SC5A", "EXC-SC5A-01", tmp)
             d = next(tmp.rglob(iid))
             stored = json.loads((d / "findings.json").read_text())
-            self.assertEqual(stored["model_metadata"]["findings_schema_version"], "uc042-investigation-findings/1.4")
+            self.assertEqual(stored["model_metadata"]["findings_schema_version"], "uc042-investigation-findings/1.5")  # 1.4 fields kept in 1.5
             f = stored["confirmed_findings"][0]
             self.assertTrue(all(isinstance(f[k], str) and f[k] for k in NEW_FINDING_FIELDS))
             self.assertTrue(stored["hypotheses"][0]["rationale"])
@@ -88,10 +88,24 @@ class SchemaCompatibility(unittest.TestCase):
 
     def test_prompts_and_versions(self):
         self.assertEqual((config.PROMPT_VERSION, config.TOOLS_PROMPT_VERSION, config.FINDINGS_SCHEMA_VERSION),
-                         ("uc042-investigator-prompt/1.2", "uc042-investigator-prompt/2.2-tools", "uc042-investigation-findings/1.4"))
+                         ("uc042-investigator-prompt/1.12", "uc042-investigator-prompt/2.12-tools", "uc042-investigation-findings/1.5"))
         for prompt in (SYSTEM_PROMPT, TOOLS_SYSTEM_PROMPT):
             for word in ("audit_relevance", "does_not_establish", "rationale", "title"):
                 self.assertIn(word, prompt)
+
+    def test_prompts_name_every_causal_phrase_the_validation_refuses(self):
+        """The model is told every phrase validation refuses (12 Nov 2026: a live investigation was refused for 'due to',
+        which the 2.2 prompt did not name). The validation itself is unchanged."""
+        import re
+        from uc042lib.investigation.validation import CAUSE_PATTERNS
+        self.assertEqual(CAUSE_PATTERNS, [r"\broot cause\b", r"\bcaused by\b", r"\bthe cause (is|was)\b", r"\bdue to\b", r"\bbecause of\b"])
+        for prompt in (SYSTEM_PROMPT, TOOLS_SYSTEM_PROMPT):
+            rule = next(line for line in prompt.split("\n- ") if line.startswith("Causal wording is refused"))
+            quoted = re.findall(r'"([^"]+)"', rule)
+            for p in CAUSE_PATTERNS:
+                self.assertTrue(any(re.search(p, q, re.I) for q in quoted), f"{p} is not named in the prompt")
+            for field in ("claim", "title", "establishes"):
+                self.assertIn(field, rule)
 
 
 if __name__ == "__main__":

@@ -7,7 +7,8 @@ The investigation runtime reads only two roots: the packs root (one verified pac
     historical-demo  demo_history/packs/, demo_history/datasets/,                    PER-2026-01 .. PER-2026-08
                      demo_history/investigations/ (created only when an investigation is published)
 
-Each profile also names its final-packs root (final_packs/, demo_history/final_packs/). One backend over one database
+Each profile also names its final-packs root: september publishes OUTSIDE the repository (UC042_FINAL_PACKS_ROOT, else
+the per-user data directory; uc042lib.runtime_paths), historical-demo keeps demo_history/final_packs/. One backend over one database
 serves several profiles: profile_for_period / profile_for_pack route a period or pack to its profile (a month outside
 every fixed profile only with an explicit default), and storage_profile returns a profile's validated roots.
 
@@ -21,9 +22,10 @@ Boundary (technical, not a prompt instruction):
     September; September is used only when no root, profile or period is given at all (the existing default).
 """
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
+from ..runtime_paths import default_final_packs_root
 from . import config
 
 PROJECT = config.PROJECT
@@ -43,12 +45,14 @@ class Profile:
     datasets_root: Path
     investigations_root: Path
     periods: frozenset
-    final_packs_root: Path = PROJECT / "final_packs"  # where final audit packs built from this profile's packs are published
+    # Where final audit packs built from this profile's packs are published. Operational (September) packs: outside the
+    # source repository (UC042_FINAL_PACKS_ROOT, else the per-user data directory; uc042lib.runtime_paths).
+    final_packs_root: Path = field(default_factory=default_final_packs_root)
 
 
 PROFILES = {
     "september": Profile("september", config.PACKS_ROOT, config.DATASETS_ROOT, config.INVESTIGATIONS_ROOT,
-                         frozenset({"PER-2026-09"}), PROJECT / "final_packs"),
+                         frozenset({"PER-2026-09"}), default_final_packs_root()),
     "historical-demo": Profile("historical-demo", PROJECT / "demo_history" / "packs", PROJECT / "demo_history" / "datasets",
                                PROJECT / "demo_history" / "investigations",
                                frozenset(f"PER-2026-{m:02d}" for m in range(1, 9)), PROJECT / "demo_history" / "final_packs"),

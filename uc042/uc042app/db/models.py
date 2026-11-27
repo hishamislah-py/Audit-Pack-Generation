@@ -15,7 +15,7 @@ What does NOT live here (authoritative elsewhere, referenced by ID only):
 """
 from datetime import datetime
 
-from sqlalchemy import JSON, BigInteger, DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint
+from sqlalchemy import JSON, BigInteger, CheckConstraint, DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -230,6 +230,43 @@ class AiExecutionAuthorizationRow(Base):
     authorized_by: Mapped[str] = mapped_column(String(64))
     authorized_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     details: Mapped[dict] = mapped_column(JsonType, default=dict)
+
+
+class InvestigationReviewRow(Base):
+    """Append-only, immutable (migration 0005; on PostgreSQL a trigger refuses UPDATE and DELETE): the analyst's ACCEPT /
+    REJECT decision on one published AI investigation, for the exact findings it holds. A changed decision is a new row with
+    the next revision (unique per investigation: concurrent decisions on the same revision cannot both be stored); the latest
+    revision is the active decision. A decision never changes the investigation, the pack or the exception's status.
+
+    Migration 0006 (17 Nov 2026): decisions made in the review of an independent ZIP submission carry its submission_id and
+    count only for that submission (revisions numbered per investigation AND submission); legacy decisions keep
+    submission_id NULL and their (investigation_id, revision) uniqueness, so existing rows are unchanged."""
+    __tablename__ = "investigation_reviews"
+    __table_args__ = (Index("uq_investigation_reviews_revision", "investigation_id", "revision", unique=True,
+                            postgresql_where=text("submission_id IS NULL"), sqlite_where=text("submission_id IS NULL")),
+                      Index("uq_investigation_reviews_submission_revision", "investigation_id", "submission_id", "revision",
+                            unique=True, postgresql_where=text("submission_id IS NOT NULL"),
+                            sqlite_where=text("submission_id IS NOT NULL")),
+                      CheckConstraint("decision IN ('ACCEPT', 'REJECT')", name="ck_investigation_reviews_decision"),
+                      CheckConstraint("decision <> 'REJECT' OR length(trim(rejection_reason)) > 0", name="ck_investigation_reviews_reason"),
+                      {"schema": AUDIT})
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    analyst_review_id: Mapped[str] = mapped_column(String(40), unique=True)  # AR-<hex>
+    period_id: Mapped[str] = mapped_column(String(16), index=True)
+    pack_id: Mapped[str] = mapped_column(String(64), index=True)
+    exception_id: Mapped[str] = mapped_column(String(48))
+    investigation_id: Mapped[str] = mapped_column(String(48), index=True)
+    findings_sha256: Mapped[str] = mapped_column(String(64))
+    findings_schema_version: Mapped[str] = mapped_column(String(64))
+    decision: Mapped[str] = mapped_column(String(8))  # ACCEPT | REJECT
+    comment: Mapped[str] = mapped_column(Text)  # ACCEPT: optional analyst comment
+    rejection_reason: Mapped[str] = mapped_column(Text)  # REJECT: the analyst's exact wording (never trimmed or rewritten)
+    reviewer_id: Mapped[str] = mapped_column(String(64))
+    reviewer_name: Mapped[str] = mapped_column(String(128))
+    decided_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    revision: Mapped[int] = mapped_column(Integer)
+    supersedes_review_id: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    submission_id: Mapped[str | None] = mapped_column(String(40), nullable=True, index=True)  # migration 0006
 
 
 class PackLineageRow(Base):

@@ -1,3 +1,5 @@
+> **LEGACY (26 Nov 2026).** This is the earlier analyst UI for the FastAPI backend (`uc042/uc042app`). It is kept for reference and is **not** part of the current analyst demo, which is `app/` (Smart Parser + analyst web application). It was last aligned with the Phase 8/9 backend; the backend has changed since (ZIP packages, analyst reviews, migrations 0005-0006), so it is not validated against the current `uc042app`.
+
 # UC-042 frontend: Enterprise Audit Platform (Variation A)
 
 React + TypeScript + Vite analyst UI for the local UC-042 backend.

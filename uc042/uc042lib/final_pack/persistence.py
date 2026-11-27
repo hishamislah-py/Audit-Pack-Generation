@@ -17,10 +17,11 @@ import tempfile
 from pathlib import Path
 
 from ..pack.model import canonical
+from ..runtime_paths import default_final_packs_root
 from .assemble import content_sha256
-from .model import FINAL_PACK_ID_RE, FINAL_PACKS_ROOT, RENDERER_VERSION
+from .model import FINAL_PACK_ID_RE, RENDERER_VERSION
 from .render_html import render_html
-from .render_pdf import render_pdf
+from .render_pdf import PdfFontError, PdfGlyphError, pdf_fonts, render_pdf, renderer_of
 
 MEDIA = {"final_pack.json": "application/json", "report.html": "text/html", "report.pdf": "application/pdf"}
 
@@ -34,7 +35,8 @@ class FinalPackPublicationError(Exception):
 
 
 def _root(root):
-    return Path(root or FINAL_PACKS_ROOT)
+    """The given root, else the configured primary location outside the repository (uc042lib.runtime_paths)."""
+    return Path(root) if root else default_final_packs_root()
 
 
 def list_final_packs(root=None, pack_id=None):
@@ -90,10 +92,12 @@ def publish_final_pack(final, root=None, expected=None):
         raise FinalPackExistsError(f"{target} already exists; final packs are never overwritten")
     files = _files(final)  # rendered before anything is written: a render failure leaves nothing behind
     manifest = {"final_pack_id": m["final_pack_id"], "final_content_sha256": final["final_content_sha256"],
-                "renderer_version": RENDERER_VERSION,
+                "renderer_version": renderer_of(final),
                 "files": {n: {"sha256": hashlib.sha256(b).hexdigest(), "size_bytes": len(b), "media_type": MEDIA[n]} for n, b in files.items()},
                 "generation_record": {"source_pack_id": pack_id, "version": m["version"], "supersedes_final_pack_id": m["supersedes_final_pack_id"],
                                       "review_decision_id": decision, "generated_at": m["generated_at"]}}
+    if renderer_of(final) != RENDERER_VERSION:  # Unicode renderer: the exact fonts (SHA-256) the PDF was drawn with
+        manifest["pdf_fonts"] = pdf_fonts(final)
     files["manifest.json"] = canonical(manifest).encode("utf-8")
     root.mkdir(parents=True, exist_ok=True)
     tmp = Path(tempfile.mkdtemp(prefix=".tmp-", dir=root))
@@ -124,8 +128,13 @@ def verify_final_pack(path):
         problems.append("final_content_sha256 does not match the content")
     if final["metadata"]["final_pack_id"] != d.name or manifest["final_pack_id"] != d.name:
         problems.append("final_pack_id does not match the directory")
-    if not problems:
-        rendered = _files(final)
+    if manifest.get("renderer_version", RENDERER_VERSION) != renderer_of(final):
+        problems.append(f"manifest renderer {manifest.get('renderer_version')} differs from the renderer the pack declares")
+    if not problems:  # re-rendered with the renderer the pack declares (a published pack renders as published)
+        try:
+            rendered = _files(final)
+        except (PdfGlyphError, PdfFontError) as e:
+            return problems + [f"report.pdf cannot be re-rendered here: {e}"]
         for name in ("report.html", "report.pdf"):
             if hashlib.sha256(rendered[name]).hexdigest() != manifest["files"][name]["sha256"]:
                 problems.append(f"{name} is not the rendering of final_pack.json")

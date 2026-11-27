@@ -1,0 +1,15 @@
+{
+  "scenario_id": "TC02",
+  "baseline": "set_01_clean_baseline",
+  "operations": [
+    {
+      "op": "set_field",
+      "file_id": "IN-11",
+      "key": "TX-0908-00002",
+      "field": "amount",
+      "old": "3035.61",
+      "new": "3053.61",
+      "why": "transposition in the platform transaction export"
+    }
+  ]
+}

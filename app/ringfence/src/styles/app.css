@@ -1,0 +1,72 @@
+/* Ringfence app additions (token-based). The design system's component CSS is bundle.css. */
+.rf-scrim--fixed { position: fixed; }
+.rf-topbar .rf-llm { font-size: 12px; color: var(--on-inverse-muted); }
+.rf-queue-progress { margin: 0; padding-left: 16px; font-size: 12px; line-height: 16px; color: var(--ink-secondary); }
+.rf-queue-progress li { margin: 0; }
+.rf-filterbar { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.rf-filter { border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius-md); padding: 4px 10px; font-size: 13px; cursor: pointer; }
+.rf-filter.is-active { background: var(--surface-selected); border-color: var(--brand-600); color: var(--brand-700); font-weight: 500; }
+.rf-filter__n { margin-left: 6px; color: var(--ink-muted); }
+.rf-casebar { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: flex-start; }
+.rf-tabbar { display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin-top: var(--space-3); }
+.rf-tabbar a { padding: 8px 12px; font-size: 13px; color: var(--ink-secondary); border-bottom: 2px solid transparent; }
+.rf-tabbar a.is-active { color: var(--ink); font-weight: 600; border-bottom-color: var(--brand-600); }
+.rf-tabbar a:hover { text-decoration: none; background: var(--surface-hover); }
+.rf-tabbar__n { margin-left: 6px; font-size: 11px; color: var(--attention-fg); }
+.rf-summary { margin: 0; padding-left: 18px; }
+.rf-summary li { margin: 2px 0; }
+.rf-samples-inline { display: flex; flex-wrap: wrap; gap: 4px; }
+.rf-samples-inline code { font-size: 12px; background: var(--surface-muted); border: 1px solid var(--line-subtle); border-radius: var(--radius-sm); padding: 0 4px; }
+.rf-decide { display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
+.rf-decide select { height: var(--control-sm); border: 1px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface); padding: 0 6px; }
+tr.is-decided td { background: var(--surface-muted); }
+.rf-trace { max-height: 220px; overflow: auto; white-space: pre-wrap; font-family: var(--font-mono); font-size: 12px; background: var(--surface-muted); border: 1px solid var(--line-subtle); padding: 8px; border-radius: var(--radius-md); }
+.rf-form { display: grid; gap: var(--space-4); }
+.rf-form .rf-input { width: 100%; }
+.rf-toast { position: fixed; right: 24px; bottom: 24px; z-index: 60; max-width: 420px; }
+.rf-mt { margin-top: var(--space-3); }
+.rf-gap { display: flex; gap: var(--space-2); flex-wrap: wrap; align-items: center; }
+.rf-small { font-size: 12px; line-height: 16px; }
+
+/* ---------- Vite app additions ---------- */
+.rf-slot { display: flex; align-items: center; gap: var(--space-2); font-size: 12px; color: var(--on-inverse-muted); }
+.rf-slot a { color: var(--on-inverse); font-weight: 500; }
+.rf-steps { display: flex; gap: var(--space-3); list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+.rf-steps--compact { gap: 4px; }
+.rf-step { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ink-secondary); }
+.rf-step.is-todo { color: var(--ink-muted); }
+.rf-active-panel { border-left: 3px solid var(--brand-600); }
+.rf-scrim--drawer { padding: 0; justify-content: flex-end; align-items: stretch; }
+.rf-drawer--fixed { position: relative; width: var(--drawer-width); max-width: 100%; height: 100%; background: var(--surface);
+  box-shadow: var(--shadow-drawer); display: flex; flex-direction: column; }
+.rf-drawer__head { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--line-subtle); }
+.rf-drawer__body { padding: var(--space-4) var(--space-5); overflow: auto; display: flex; flex-direction: column; gap: var(--space-4); }
+.rf-tasklist { margin: 0; padding-left: 18px; }
+.rf-tasklist li { margin: 2px 0; }
+.rf-clickable { cursor: pointer; }
+.rf-clickable:hover td { background: var(--surface-hover); }
+.rf-codeblock { white-space: pre-wrap; font-family: var(--font-mono); font-size: 12px; background: var(--surface-muted);
+  border: 1px solid var(--line-subtle); border-radius: var(--radius-md); padding: var(--space-2); max-height: 280px; overflow: auto; }
+.rf-figures { display: flex; gap: var(--space-5); flex-wrap: wrap; }
+.rf-figure { display: flex; flex-direction: column; }
+.rf-figure b { font-size: 20px; line-height: 28px; }
+.rf-figure span { font-size: 12px; color: var(--ink-muted); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1100px) {
+  .rf-grid-2, .rf-grid-3 { grid-template-columns: minmax(0, 1fr); }
+  .rf-split, .rf-split--aside-lg { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .rf-page { padding: var(--space-4) var(--space-4) var(--space-6); }
+  .rf-topbar { flex-wrap: wrap; height: auto; padding: var(--space-2) var(--space-4); gap: var(--space-2); }
+  .rf-brand__ctx, .rf-env { display: none; }
+  .rf-casehead__top { flex-direction: column; }
+  .rf-tabbar { overflow-x: auto; }
+  .rf-table-wrap { overflow-x: auto; }
+  .rf-dialog { width: 100%; }
+}
+.rf-evlist { list-style: none; margin: 0; padding: 0; }
+.rf-evitem { padding: var(--space-2) var(--space-4); border-bottom: 1px solid var(--line-subtle); display: flex; flex-direction: column; gap: 2px; }
+.rf-wrap { overflow-wrap: anywhere; word-break: break-word; }

@@ -1,0 +1,36 @@
+{
+  "label": "FIN (deterministic; independent of the engine)",
+  "scenario_id": "TC03",
+  "submission": "initial",
+  "expected_anomalies": [
+    "BL_DIFF 2026-09-25 SGA-GBP-01 -4647.75",
+    "BL_DIFF_LOGGED 2026-09-25 SGA-GBP-01 DL-0001",
+    "TIMING LE-GBP-0925-0003/BE-GBP-0926-T01 ref=AQ-GBP-20260925 recorded=2026-09-25 bank=2026-09-26 amount=4647.75",
+    "BATCH_LAG AQ-GBP-20260925 settlement=2026-09-25 booked=2026-09-26",
+    "NON_RECON_DAY_RECORD IN-07 ST-SGA-GBP-01-20260926-1700 2026-09-26",
+    "NON_RECON_DAY_RECORD IN-08 ST-SGA-GBP-01-20260926-EOD 2026-09-26",
+    "NON_RECON_DAY_RECORD IN-09 BE-GBP-0926-T01 2026-09-26"
+  ],
+  "figures": {
+    "bank_1700|2026-09-25/SGA-GBP-01": "370813.71",
+    "ledger_1700|2026-09-25/SGA-GBP-01": "375461.46",
+    "bank_1700|2026-09-26/SGA-GBP-01": "375461.46",
+    "ledger_1700|2026-09-26/SGA-GBP-01": "375461.46",
+    "bank_1700|2026-09-28/SGA-GBP-01": "378706.65",
+    "ledger_1700|2026-09-28/SGA-GBP-01": "378706.65",
+    "requirement_1700|2026-09-25/GBP": "375461.46",
+    "resource_1700|2026-09-25/GBP": "375461.46"
+  },
+  "summary": {
+    "transaction_dates": "card loads of AQ-GBP-20260925 authorised and executed 25 Sep (IN-11)",
+    "processing_date": "cash book LE-GBP-0925-0003 posted 2026-09-25T14:00 (ledger D, +4,647.75)",
+    "settlement_date": "2026-09-25 (IN-12 cycle_date and settlement_date)",
+    "bank_clearing": "BE-GBP-0926-T01 booked 2026-09-26T08:00 (Saturday), value date 2026-09-26",
+    "reconciliation_cut_off": "2026-09-25 17:00 Europe/London",
+    "difference_at_cut_off": "bank minus ledger = -4,647.75 (reported correctly by the firm)",
+    "clearing_window": "existing rule D1: cleared no later than the next business day after 25 Sep (Mon 28 Sep); 26 Sep is inside it",
+    "next_reconciliation_day": "28 Sep: bank 378,706.65 = ledger 378,706.65",
+    "expected_treatment": "explainable timing item, evidenced by the 26 Sep clearing; under existing rules the difference is still reported as an exception (FAIL) that stays OPEN awaiting human confirmation; it is never auto-resolved",
+    "weekend_note": "26 Sep 2026 is a Saturday (IN-01 WEEKEND). The clearing evidence therefore requires a Saturday IN-08 statement and IN-07 17:00 confirmation; the baseline otherwise has no weekend bank records."
+  }
+}

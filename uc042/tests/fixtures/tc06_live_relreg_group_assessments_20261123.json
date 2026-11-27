@@ -1,0 +1,69 @@
+{
+ "source": "live run live_093811 (23 Nov 2026, prompt 1.6, gpt-6-luna), response resp_0f21819eab0a3ddc016b03bdb566dc87d0a9f74448b6e15560: group_assessments exactly as returned; copied from evidence/lead/relreg/forensic/8_9_model_output_and_metadata.json",
+ "group_assessments": [
+  {
+   "group_id": "GRP-TC06-01",
+   "exception_ids": [
+    "EXC-TC06-01"
+   ],
+   "related_exception_ids": [
+    "EXC-TC06-03"
+   ],
+   "relationship_verdict": "COINCIDENCE_REJECTED",
+   "common_cause_hypothesis": "The evidence does not support a common originating cause for the internal reconciliation exception and the C0004 roll-forward exception; the shared snapshot lineage may explain why they were grouped for review, but does not establish a shared cause.",
+   "supporting_evidence": [],
+   "contradicting_evidence": [
+    "IN-05:IRR-EMONEY-GBP-20260917",
+    "IN-03:CBS-20260917-C0004-GBP"
+   ],
+   "missing_evidence": [
+    "Evidence linking the internal reconciliation's underlying requirement or resource figures to the C0004 snapshot or roll-forward is not established by the supplied records."
+   ],
+   "analyst_action": "Obtain and compare the internal reconciliation workings and source extracts with the C0004 client-ledger and snapshot inputs before drawing any connection.",
+   "confidence": "MEDIUM",
+   "rationale": "The internal reconciliation record is the originating evidence for EXC-TC06-01, while the C0004 snapshot is the input involved in EXC-TC06-03. The shared snapshot lineage does not show that the internal reconciliation difference originated in that snapshot."
+  },
+  {
+   "group_id": "GRP-TC06-01",
+   "exception_ids": [
+    "EXC-TC06-03",
+    "EXC-TC06-04"
+   ],
+   "related_exception_ids": [],
+   "relationship_verdict": "EVIDENCE_BACKED",
+   "common_cause_hypothesis": "The shared C0004 snapshot may link the two adjacent-day roll-forward comparisons, but the records do not establish why either comparison differs from its snapshot.",
+   "supporting_evidence": [
+    "IN-03:CBS-20260917-C0004-GBP"
+   ],
+   "contradicting_evidence": [],
+   "missing_evidence": [
+    "Posting-level C0004 ledger records and the source inputs used to generate both roll-forward checks are needed to determine the reasons for the reported differences."
+   ],
+   "analyst_action": "Obtain the complete C0004 ledger and source support for the 2026-09-17 and 2026-09-18 snapshots and roll-forward inputs, then trace the shared snapshot across both checks.",
+   "confidence": "MEDIUM",
+   "rationale": "The same C0004 snapshot record closes the 2026-09-17 roll-forward comparison and opens the 2026-09-18 comparison, establishing a shared-record link between EXC-TC06-03 and EXC-TC06-04. That link does not establish the underlying cause."
+  },
+  {
+   "group_id": "GRP-TC06-02",
+   "exception_ids": [
+    "EXC-TC06-05",
+    "EXC-TC06-06"
+   ],
+   "related_exception_ids": [],
+   "relationship_verdict": "EVIDENCE_BACKED",
+   "common_cause_hypothesis": "The transaction-to-bank amount discrepancy may contribute to the C0007 roll-forward failure because the transaction is included in that roll-forward, but the records do not establish which amount is correct or why the amounts differ.",
+   "supporting_evidence": [
+    "IN-11:TX-0917-00002",
+    "IN-03:CBS-20260916-C0007-GBP",
+    "IN-03:CBS-20260917-C0007-GBP"
+   ],
+   "contradicting_evidence": [],
+   "missing_evidence": [
+    "The underlying payment instruction, processing records, bank-entry support, and C0007 posting-level ledger are needed to establish the correct amount and the effect on the roll-forward."
+   ],
+   "analyst_action": "Trace TX-0917-00002 from the underlying payment instruction through the bank entry and C0007 ledger, and verify how it was included in the roll-forward.",
+   "confidence": "MEDIUM",
+   "rationale": "The transaction record is the out-of-line item in the direct transaction-to-bank comparison and is included in the C0007 roll-forward. The cited transaction and snapshot records support a link between the two exceptions, while the cause and correct amount remain unestablished."
+  }
+ ]
+}

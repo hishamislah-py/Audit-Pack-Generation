@@ -181,6 +181,18 @@ class AiAuthorizationRepository(ABC):
     def list(self, pack_id=None, exception_id=None, review_id=None, job_id=None, period_id=None): """Oldest first."""
 
 
+class InvestigationReviewRepository(ABC):
+    """The analyst's ACCEPT / REJECT decisions on published investigations: append-only and immutable. Each investigation's
+    decisions are numbered by revision 1, 2, ...; the latest is the active decision."""
+    @abstractmethod
+    def append(self, rec, expected_revision):
+        """Store rec as revision expected_revision + 1, only if the investigation's latest stored revision is
+        expected_revision (0 = no decision yet); ConcurrentUpdate otherwise. Returns the stored record."""
+
+    @abstractmethod
+    def list(self, pack_id=None, exception_id=None, investigation_id=None): """Oldest first."""
+
+
 class LineageRepository(ABC):
     """Reassessment lineage of deterministic packs (one row per reassessed pack; written once)."""
     @abstractmethod

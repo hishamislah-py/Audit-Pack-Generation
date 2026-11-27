@@ -1,0 +1,1308 @@
+{
+ "source": "C:\\u42v\\e2e_20261122\\engine_base\\uc042\\uc042lib\\schema.py",
+ "source_sha256": "03f76843a27d0de1da7a5f4602e0e6c9071e4f396e8786f5e8000a2b67b9690d",
+ "csv_files": {
+  "IN-01": {
+   "filename": "recon_calendar_2026-09.csv",
+   "title": "Reconciliation-day calendar",
+   "columns": [
+    [
+     "calendar_date",
+     "date",
+     "M",
+     "Every calendar date in the period (primary key)"
+    ],
+    [
+     "period_id",
+     "id",
+     "M",
+     "Reporting period"
+    ],
+    [
+     "is_recon_day",
+     "bool",
+     "M",
+     "true if reconciliation is required"
+    ],
+    [
+     "non_recon_reason",
+     "enum",
+     "C",
+     "WEEKEND / UK_BANK_HOLIDAY / FOREIGN_MARKET_CLOSED; required when false"
+    ],
+    [
+     "calendar_basis",
+     "str",
+     "M",
+     "Synthetic basis statement"
+    ]
+   ]
+  },
+  "IN-02": {
+   "filename": "account_inventory.csv",
+   "title": "Institution and account inventory",
+   "columns": [
+    [
+     "account_id",
+     "id",
+     "M",
+     "Account key"
+    ],
+    [
+     "account_class",
+     "enum",
+     "M",
+     "RELEVANT_FUNDS_BANK or OWN_FUNDS"
+    ],
+    [
+     "currency",
+     "ccy",
+     "M",
+     "Account currency"
+    ],
+    [
+     "asset_pool_id",
+     "id",
+     "C",
+     "Required for RELEVANT_FUNDS_BANK"
+    ],
+    [
+     "account_number_masked",
+     "str",
+     "M",
+     "Masked synthetic number"
+    ],
+    [
+     "designation_name",
+     "str",
+     "C",
+     "Account name as designated; required for safeguarding accounts"
+    ],
+    [
+     "acknowledgement_letter_ref",
+     "str",
+     "C",
+     "Reference printed on the acknowledgement letter PDF"
+    ],
+    [
+     "institution_id",
+     "id",
+     "M",
+     "Institution key"
+    ],
+    [
+     "institution_full_name",
+     "str",
+     "M",
+     "Fictional institution name"
+    ],
+    [
+     "institution_postal_address",
+     "str",
+     "M",
+     "Fictional address"
+    ],
+    [
+     "institution_email",
+     "str",
+     "M",
+     "Fictional email"
+    ],
+    [
+     "institution_phone",
+     "str",
+     "M",
+     "Fictional phone"
+    ],
+    [
+     "institution_role",
+     "enum",
+     "M",
+     "RELEVANT_FUNDS_BANK"
+    ],
+    [
+     "open_date",
+     "date",
+     "M",
+     "Account opening date"
+    ],
+    [
+     "close_date",
+     "date",
+     "O",
+     "Blank if open"
+    ]
+   ]
+  },
+  "IN-03": {
+   "filename": "client_balance_snapshots_2026-09.csv",
+   "title": "Client balance snapshots at each 17:00 point",
+   "columns": [
+    [
+     "snapshot_id",
+     "id",
+     "M",
+     "Key"
+    ],
+    [
+     "recon_date",
+     "date",
+     "M",
+     "Reconciliation day"
+    ],
+    [
+     "as_at_ts",
+     "ts",
+     "M",
+     "Snapshot time; must equal the reconciliation point"
+    ],
+    [
+     "client_id",
+     "id",
+     "M",
+     "Client"
+    ],
+    [
+     "asset_pool_id",
+     "id",
+     "M",
+     "Pool"
+    ],
+    [
+     "currency",
+     "ccy",
+     "M",
+     "Currency"
+    ],
+    [
+     "balance",
+     "signed",
+     "M",
+     "Individual safeguarding balance as per client ledger"
+    ]
+   ]
+  },
+  "IN-04": {
+   "filename": "unallocated_register_2026-09.csv",
+   "title": "Unallocated receipts register",
+   "columns": [
+    [
+     "receipt_id",
+     "id",
+     "M",
+     "Key"
+    ],
+    [
+     "bank_reference",
+     "str",
+     "M",
+     "end_to_end_ref of the bank credit"
+    ],
+    [
+     "receipt_date",
+     "date",
+     "M",
+     "Day received"
+    ],
+    [
+     "receipt_ts",
+     "ts",
+     "M",
+     "Time received"
+    ],
+    [
+     "amount",
+     "amount",
+     "M",
+     "Amount received"
+    ],
+    [
+     "currency",
+     "ccy",
+     "M",
+     "Currency"
+    ],
+    [
+     "classification",
+     "enum",
+     "M",
+     "UNALLOCATED or UNIDENTIFIED"
+    ],
+    [
+     "identified_date",
+     "date",
+     "C",
+     "If first unidentified"
+    ],
+    [
+     "allocated_date",
+     "date",
+     "C",
+     "Blank while open"
+    ],
+    [
+     "allocated_ts",
+     "ts",
+     "C",
+     "Blank while open"
+    ],
+    [
+     "client_id",
+     "id",
+     "C",
+     "Client once allocated"
+    ]
+   ]
+  },
+  "IN-05": {
+   "filename": "internal_recon_records_2026-09.csv",
+   "title": "Internal reconciliation records (as reported by the firm)",
+   "columns": [
+    [
+     "recon_run_id",
+     "id",
+     "M",
+     "Key"
+    ],
+    [
+     "recon_date",
+     "date",
+     "M",
+     "Reconciliation day"
+    ],
+    [
+     "reconciliation_point_ts",
+     "ts",
+     "M",
+     "Point the records were taken at"
+    ],
+    [
+     "performed_at_ts",
+     "ts",
+     "M",
+     "When the reconciliation was carried out"
+    ],
+    [
+     "asset_pool_id",
+     "id",
+     "M",
+     "Pool"
+    ],
+    [
+     "currency",
+     "ccy",
+     "M",
+     "Currency (per-currency convention)"
+    ],
+    [
+     "method",
+     "enum",
+     "M",
+     "STANDARD"
+    ],
+    [
+     "requirement_reported",
+     "signed",
+     "M",
+     "Reported safeguarding requirement"
+    ],
+    [
+     "resource_reported",
+     "signed",
+     "M",
+     "Reported safeguarding resource"
+    ],
+    [
+     "item_a",
+     "signed",
+     "M",
+     "Reported item A (relevant funds bank accounts, ledger values)"
+    ],
+    [
+     "item_b",
+     "signed",
+     "M",
+     "Reported item B"
+    ],
+    [
+     "item_c",
+     "signed",
+     "M",
+     "Reported item C"
+    ],
+    [
+     "item_d",
+     "signed",
+     "M",
+     "Reported item D"
+    ],
+    [
+     "difference_reported",
+     "signed",
+     "M",
+     "Reported resource minus requirement"
+    ],
+    [
+     "d1_requirement",
+     "signed",
+     "C",
+     "Blank: D+1 comparison excluded (CASS 15.8.13R basis, see gaps G-R05)"
+    ],
+    [
+     "d1_resource",
+     "signed",
+     "C",
+     "Blank, as above"
+    ],
+    [
+     "actions_taken_text",
+     "str",
+     "M",
+     "Actions taken"
+    ],
+    [
+     "preparer_id",
+     "id",
+     "M",
+     "Preparer"
+    ],
+    [
+     "reviewer_id",
+     "id",
+     "O",
+     "Reviewer"
+    ]
+   ]
+  },
+  "IN-06": {
+   "filename": "external_recon_records_2026-09.csv",
+   "title": "External reconciliation records (as reported by the firm)",
+   "columns": [
+    [
+     "ext_recon_id",
+     "id",
+     "M",
+     "Key"
+    ],
+    [
+     "recon_date",
+     "date",
+     "M",
+     "Reconciliation day"
+    ],
+    [
+     "performed_at_ts",
+     "ts",
+     "M",
+     "When carried out"
+    ],
+    [
+     "account_id",
+     "id",
+     "M",
+     "Safeguarding account"
+    ],
+    [
+     "currency",
+     "ccy",
+     "M",
+     "Currency"
+    ],
+    [
+     "ledger_balance_reported",
+     "signed",
+     "M",
+     "Firm's ledger balance as reported"
+    ],
+    [
+     "bank_statement_id",
+     "id",
+     "M",
+     "Statement the firm says it used (IN-07)"
+    ],
+    [
+     "bank_balance_reported",
+     "signed",
+     "M",
+     "Bank balance as reported"
+    ],
+    [
+     "difference_reported",
+     "signed",
+     "M",
+     "Bank minus ledger as reported"
+    ],
+    [
+     "timing_difference_claimed",
+     "bool",
+     "M",
+     "Preparer's claim"
+    ],
+    [
+     "preparer_id",
+     "id",
+     "M",
+     "Preparer"
+    ]
+   ]
+  },
+  "IN-07": {
+   "filename": "bank_balance_confirmations_2026-09.csv",
+   "title": "Bank balance confirmations at 17:00",
+   "columns": [
+    [
+     "statement_id",
+     "id",
+     "M",
+     "Key"
+    ],
+    [
+     "account_id",
+     "id",
+     "M",
+     "Safeguarding account"
+    ],
+    [
+     "as_at_ts",
+     "ts",
+     "M",
+     "17:00 point"
+    ],
+    [
+     "currency",
+     "ccy",
+     "M",
+     "Currency"
+    ],
+    [
+     "balance_amount",
+     "amount",
+     "M",
+     "Balance as stated by the bank (unsigned)"
+    ],
+    [
+     "balance_dc_indicator",
+     "enum",
+     "M",
+     "C = in credit to account holder (bank perspective)"
+    ],
+    [
+     "bank_statement_ref",
+     "str",
+     "O",
+     "Bank's reference"
+    ]
+   ]
+  },
+  "IN-08": {
+   "filename": "bank_statements_eod_2026-09.csv",
+   "title": "End-of-day bank statement headers",
+   "columns": [
+    [
+     "statement_id",
+     "id",
+     "M",
+     "Key"
+    ],
+    [
+     "account_id",
+     "id",
+     "M",
+     "Account"
+    ],
+    [
+     "statement_date",
+     "date",
+     "M",
+     "Statement date"
+    ],
+    [
+     "as_at_ts",
+     "ts",
+     "M",
+     "End of day"
+    ],
+    [
+     "currency",
+     "ccy",
+     "M",
+     "Currency"
+    ],
+    [
+     "opening_balance_amount",
+     "amount",
+     "M",
+     "Opening balance (unsigned)"
+    ],
+    [
+     "opening_balance_dc",
+     "enum",
+     "M",
+     "C / D, bank perspective"
+    ],
+    [
+     "closing_balance_amount",
+     "amount",
+     "M",
+     "Closing balance (unsigned)"
+    ],
+    [
+     "closing_balance_dc",
+     "enum",
+     "M",
+     "C / D, bank perspective"
+    ],
+    [
+     "entry_count",
+     "int",
+     "M",
+     "Number of entries in IN-09 for this statement"
+    ],
+    [
+     "bank_statement_ref",
+     "str",
+     "O",
+     "Bank's reference"
+    ]
+   ]
+  },
+  "IN-09": {
+   "filename": "bank_statement_entries_2026-09.csv",
+   "title": "Bank statement entries",
+   "columns": [
+    [
+     "bank_entry_id",
+     "id",
+     "M",
+     "Key"
+    ],
+    [
+     "statement_id",
+     "id",
+     "M",
+     "Parent EOD statement"
+    ],
+    [
+     "account_id",
+     "id",
+     "M",
+     "Account"
+    ],
+    [
+     "booking_date",
+     "date",
+     "M",
+     "Booking date"
+    ],
+    [
+     "booking_ts",
+     "ts",
+     "M",
+     "Booking time"
+    ],
+    [
+     "value_date",
+     "date",
+     "M",
+     "Value date"
+    ],
+    [
+     "amount",
+     "amount",
+     "M",
+     "Unsigned amount"
+    ],
+    [
+     "dc_indicator",
+     "enum",
+     "M",
+     "C = money in, D = money out (bank perspective)"
+    ],
+    [
+     "currency",
+     "ccy",
+     "M",
+     "Currency"
+    ],
+    [
+     "bank_reference",
+     "str",
+     "M",
+     "Reference carried by the bank"
+    ],
+    [
+     "end_to_end_ref",
+     "str",
+     "C",
+     "Required for bank loads and redemptions"
+    ],
+    [
+     "counterparty_name",
+     "str",
+     "O",
+     "Fictional"
+    ],
+    [
+     "narrative_text",
+     "str",
+     "O",
+     "Free text, never authoritative"
+    ]
+   ]
+  },
+  "IN-10": {
+   "filename": "sga_cashbook_entries_2026-09.csv",
+   "title": "Safeguarding-account cash book (firm ledger)",
+   "columns": [
+    [
+     "ledger_entry_id",
+     "id",
+     "M",
+     "Key"
+    ],
+    [
+     "account_id",
+     "id",
+     "M",
+     "Safeguarding account"
+    ],
+    [
+     "posted_ts",
+     "ts",
+     "M",
+     "Posting time; entries at or before 17:00 count for that day"
+    ],
+    [
+     "entry_type",
+     "enum",
+     "M",
+     "OPENING_BALANCE / BANK_LOAD / UNALLOCATED_RECEIPT / ACQUIRER_SETTLEMENT / OWN_FUNDS_TOPUP / SCHEME_SETTLEMENT / REDEMPTION"
+    ],
+    [
+     "amount",
+     "amount",
+     "M",
+     "Unsigned amount"
+    ],
+    [
+     "dc_indicator",
+     "enum",
+     "M",
+     "D = money in, C = money out (firm asset-ledger perspective)"
+    ],
+    [
+     "currency",
+     "ccy",
+     "M",
+     "Currency"
+    ],
+    [
+     "payment_reference",
+     "str",
+     "M",
+     "Equals the bank entry's bank_reference or end_to_end_ref; OPENING for opening rows"
+    ]
+   ]
+  },
+  "IN-11": {
+   "filename": "transactions_2026-09.csv",
+   "title": "Client transactions",
+   "columns": [
+    [
+     "txn_id",
+     "id",
+     "M",
+     "Key"
+    ],
+    [
+     "client_id",
+     "id",
+     "M",
+     "Client"
+    ],
+    [
+     "txn_type",
+     "enum",
+     "M",
+     "LOAD_BANK / LOAD_CARD / SPEND / REDEMPTION / REFUND"
+    ],
+    [
+     "status",
+     "enum",
+     "M",
+     "SETTLED / EXECUTED"
+    ],
+    [
+     "auth_ts",
+     "ts",
+     "C",
+     "Card authorisation time"
+    ],
+    [
+     "clearing_date",
+     "date",
+     "C",
+     "Card clearing date"
+    ],
+    [
+     "executed_ts",
+     "ts",
+     "M",
+     "When the client balance changed (convention D8)"
+    ],
+    [
+     "amount",
+     "amount",
+     "M",
+     "Unsigned amount"
+    ],
+    [
+     "direction",
+     "enum",
+     "M",
+     "CR increases client balance, DR decreases"
+    ],
+    [
+     "currency",
+     "ccy",
+     "M",
+     "Currency"
+    ],
+    [
+     "settlement_batch_id",
+     "id",
+     "C",
+     "Required for LOAD_CARD, SPEND, REFUND"
+    ],
+    [
+     "payment_reference",
+     "str",
+     "C",
+     "Required for LOAD_BANK and REDEMPTION; equals bank end_to_end_ref"
+    ],
+    [
+     "original_txn_id",
+     "id",
+     "C",
+     "Required for REFUND"
+    ]
+   ]
+  },
+  "IN-12": {
+   "filename": "settlement_batches_2026-09.csv",
+   "title": "Settlement batch headers (generic synthetic format)",
+   "columns": [
+    [
+     "batch_id",
+     "id",
+     "M",
+     "Key"
+    ],
+    [
+     "counterparty_type",
+     "enum",
+     "M",
+     "SCHEME or ACQUIRER"
+    ],
+    [
+     "cycle_date",
+     "date",
+     "M",
+     "Cycle date per report"
+    ],
+    [
+     "settlement_date",
+     "date",
+     "M",
+     "Settlement date per report"
+    ],
+    [
+     "account_id",
+     "id",
+     "M",
+     "Settlement account"
+    ],
+    [
+     "currency",
+     "ccy",
+     "M",
+     "Currency"
+    ],
+    [
+     "direction",
+     "enum",
+     "M",
+     "TO_FIRM or FROM_FIRM"
+    ],
+    [
+     "gross_amount",
+     "amount",
+     "M",
+     "Reported gross (unsigned)"
+    ],
+    [
+     "total_fees",
+     "amount",
+     "M",
+     "Reported fees (unsigned)"
+    ],
+    [
+     "total_adjustments",
+     "amount",
+     "M",
+     "Reported refunds/adjustments (unsigned)"
+    ],
+    [
+     "net_amount_reported",
+     "amount",
+     "M",
+     "Reported net (unsigned)"
+    ],
+    [
+     "expected_bank_reference",
+     "str",
+     "M",
+     "Reference the bank entry should carry"
+    ]
+   ]
+  },
+  "IN-13": {
+   "filename": "settlement_lines_2026-09.csv",
+   "title": "Settlement batch lines",
+   "columns": [
+    [
+     "line_id",
+     "id",
+     "M",
+     "Key"
+    ],
+    [
+     "batch_id",
+     "id",
+     "M",
+     "Parent batch"
+    ],
+    [
+     "line_type",
+     "enum",
+     "M",
+     "TXN / FEE / REFUND"
+    ],
+    [
+     "txn_id",
+     "id",
+     "C",
+     "Required for TXN and REFUND"
+    ],
+    [
+     "fee_code",
+     "str",
+     "C",
+     "Required for FEE: ACQ_FEE or SCHEME_FEE"
+    ],
+    [
+     "amount",
+     "amount",
+     "M",
+     "Unsigned amount"
+    ],
+    [
+     "dc_indicator",
+     "enum",
+     "M",
+     "C = money to the firm, D = money from the firm"
+    ],
+    [
+     "currency",
+     "ccy",
+     "M",
+     "Currency"
+    ]
+   ]
+  },
+  "IN-14": {
+   "filename": "discrepancy_log_2026-09.csv",
+   "title": "Discrepancy and corrective-action log",
+   "columns": [
+    [
+     "discrepancy_id",
+     "id",
+     "M",
+     "Key"
+    ],
+    [
+     "logged_ts",
+     "ts",
+     "M",
+     "When logged"
+    ],
+    [
+     "recon_ref",
+     "id",
+     "M",
+     "IN-05 or IN-06 record"
+    ],
+    [
+     "account_id",
+     "id",
+     "M",
+     "Account"
+    ],
+    [
+     "currency",
+     "ccy",
+     "M",
+     "Currency"
+    ],
+    [
+     "amount",
+     "signed",
+     "M",
+     "Difference amount"
+    ],
+    [
+     "description",
+     "str",
+     "M",
+     "Description"
+    ],
+    [
+     "cause_category",
+     "enum",
+     "O",
+     "Cause, if evidenced"
+    ],
+    [
+     "cause_evidence_ref",
+     "str",
+     "O",
+     "Evidence for the cause"
+    ],
+    [
+     "funding_reference",
+     "str",
+     "O",
+     "Own-funds transfer reference"
+    ],
+    [
+     "status",
+     "enum",
+     "M",
+     "OPEN / RESOLVED"
+    ],
+    [
+     "resolved_ts",
+     "ts",
+     "O",
+     "When resolved"
+    ],
+    [
+     "approver_id",
+     "id",
+     "O",
+     "Approver"
+    ]
+   ]
+  }
+ },
+ "pdf_files": {
+  "IN-15": {
+   "filename": "ack_letter_SGA-GBP-01.pdf",
+   "title": "Acknowledgement letter, SGA-GBP-01",
+   "requirement": "REQUIRED",
+   "labels": [
+    "Letter reference",
+    "Institution",
+    "Account name",
+    "Account number",
+    "Currency",
+    "Letter date"
+   ]
+  },
+  "IN-16": {
+   "filename": "ack_letter_SGA-EUR-01.pdf",
+   "title": "Acknowledgement letter, SGA-EUR-01",
+   "requirement": "REQUIRED",
+   "labels": [
+    "Letter reference",
+    "Institution",
+    "Account name",
+    "Account number",
+    "Currency",
+    "Letter date"
+   ]
+  },
+  "IN-17": {
+   "filename": "safeguarding_reconciliation_policy_v1.2.pdf",
+   "title": "Safeguarding reconciliation policy v1.2",
+   "requirement": "REQUIRED",
+   "labels": [
+    "Document version",
+    "Effective date",
+    "Safeguarding method",
+    "Reconciliation method",
+    "Reconciliation point",
+    "Frequency",
+    "Internal reconciliation basis"
+   ]
+  },
+  "IN-18": {
+   "filename": "governance_register_2026-09.pdf",
+   "title": "Governance register",
+   "requirement": "OPTIONAL",
+   "labels": [
+    "Accountable person",
+    "Role",
+    "Allocated from"
+   ]
+  },
+  "IN-19": {
+   "filename": "rep027_submission_receipt_2026-08.pdf",
+   "title": "Monthly safeguarding return receipt (August)",
+   "requirement": "OPTIONAL",
+   "labels": [
+    "Return",
+    "Period",
+    "Due date",
+    "Submitted at",
+    "Submission reference"
+   ]
+  }
+ },
+ "enums": [
+  [
+   "IN-01",
+   "non_recon_reason",
+   [
+    "FOREIGN_MARKET_CLOSED",
+    "UK_BANK_HOLIDAY",
+    "WEEKEND"
+   ]
+  ],
+  [
+   "IN-02",
+   "account_class",
+   [
+    "OWN_FUNDS",
+    "RELEVANT_FUNDS_BANK"
+   ]
+  ],
+  [
+   "IN-02",
+   "institution_role",
+   [
+    "RELEVANT_FUNDS_BANK"
+   ]
+  ],
+  [
+   "IN-04",
+   "classification",
+   [
+    "UNALLOCATED",
+    "UNIDENTIFIED"
+   ]
+  ],
+  [
+   "IN-05",
+   "method",
+   [
+    "NON_STANDARD",
+    "STANDARD"
+   ]
+  ],
+  [
+   "IN-07",
+   "balance_dc_indicator",
+   [
+    "C",
+    "D"
+   ]
+  ],
+  [
+   "IN-08",
+   "opening_balance_dc",
+   [
+    "C",
+    "D"
+   ]
+  ],
+  [
+   "IN-08",
+   "closing_balance_dc",
+   [
+    "C",
+    "D"
+   ]
+  ],
+  [
+   "IN-09",
+   "dc_indicator",
+   [
+    "C",
+    "D"
+   ]
+  ],
+  [
+   "IN-10",
+   "entry_type",
+   [
+    "ACQUIRER_SETTLEMENT",
+    "BANK_LOAD",
+    "OPENING_BALANCE",
+    "OWN_FUNDS_TOPUP",
+    "REDEMPTION",
+    "SCHEME_SETTLEMENT",
+    "UNALLOCATED_RECEIPT"
+   ]
+  ],
+  [
+   "IN-10",
+   "dc_indicator",
+   [
+    "C",
+    "D"
+   ]
+  ],
+  [
+   "IN-11",
+   "txn_type",
+   [
+    "LOAD_BANK",
+    "LOAD_CARD",
+    "REDEMPTION",
+    "REFUND",
+    "SPEND"
+   ]
+  ],
+  [
+   "IN-11",
+   "status",
+   [
+    "EXECUTED",
+    "SETTLED"
+   ]
+  ],
+  [
+   "IN-11",
+   "direction",
+   [
+    "CR",
+    "DR"
+   ]
+  ],
+  [
+   "IN-12",
+   "counterparty_type",
+   [
+    "ACQUIRER",
+    "SCHEME"
+   ]
+  ],
+  [
+   "IN-12",
+   "direction",
+   [
+    "FROM_FIRM",
+    "TO_FIRM"
+   ]
+  ],
+  [
+   "IN-13",
+   "line_type",
+   [
+    "FEE",
+    "REFUND",
+    "TXN"
+   ]
+  ],
+  [
+   "IN-13",
+   "dc_indicator",
+   [
+    "C",
+    "D"
+   ]
+  ],
+  [
+   "IN-13",
+   "fee_code",
+   [
+    "ACQ_FEE",
+    "SCHEME_FEE"
+   ]
+  ],
+  [
+   "IN-14",
+   "status",
+   [
+    "OPEN",
+    "RESOLVED"
+   ]
+  ]
+ ],
+ "empty_allowed": [
+  "IN-04",
+  "IN-14"
+ ],
+ "scope_files": [
+  "IN-01",
+  "IN-02"
+ ],
+ "conditional_transcribed": [
+  [
+   "IN-01",
+   "non_recon_reason",
+   "required when is_recon_day is false"
+  ],
+  [
+   "IN-02",
+   "asset_pool_id",
+   "required for safeguarding accounts"
+  ],
+  [
+   "IN-02",
+   "designation_name",
+   "required for safeguarding accounts"
+  ],
+  [
+   "IN-02",
+   "acknowledgement_letter_ref",
+   "required for safeguarding accounts"
+  ],
+  [
+   "IN-04",
+   "allocated_ts",
+   "required when allocated_date is set"
+  ],
+  [
+   "IN-04",
+   "client_id",
+   "required when allocated_date is set"
+  ],
+  [
+   "IN-11",
+   "settlement_batch_id",
+   "required for card transactions"
+  ],
+  [
+   "IN-11",
+   "payment_reference",
+   "required for bank loads and redemptions"
+  ],
+  [
+   "IN-11",
+   "original_txn_id",
+   "required for refunds"
+  ],
+  [
+   "IN-13",
+   "txn_id",
+   "required for TXN and REFUND lines"
+  ],
+  [
+   "IN-13",
+   "fee_code",
+   "required for FEE lines"
+  ]
+ ]
+}

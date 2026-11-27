@@ -1,0 +1,163 @@
+{
+ "schema": "ringfence-provenance/1.0",
+ "final_pack_id": "FAP-CASE-PER-2026-06-v1-26596c6743aa",
+ "case_ref": "RF-2026-06-001",
+ "recon_run_id": "RECON-20261119T125332Z-d067a482",
+ "snapshot_id": "SNAP-001-d067a482",
+ "package_id": "PKG-2026-06-5bc919",
+ "pack_id": "PACK-CASE-PER-2026-06-11623afce880",
+ "period": "PER-2026-06",
+ "zip": {
+  "filename": "Halden_Pay_Ltd_2026-06.zip",
+  "sha256": "aef7e2c7948c40c98cf087c9f3260ebd6c8ccd561300f94a81001dad1cea8a8b"
+ },
+ "authorised_by": "analyst@ringfence.demo",
+ "system_reviewer_id": "analyst@ringfence.demo",
+ "generated_at": "2026-11-20T11:20:05+00:00",
+ "review_id": "RS-8EFDD0A9D548",
+ "review_decision_id": "RD-24BC8AA5768C",
+ "final_content_sha256": "26596c6743aa4b06f9f723533cf3a3641e5c9aec6cad0f89f65a53f79abfc2f7",
+ "source_files": [
+  {
+   "evidence_category": "IN-01",
+   "canonical_name": "recon_calendar_2026-06.csv",
+   "original_filename": "hp_recon_days_jun2026.csv",
+   "file_version_id": "FV-469c9e2b03",
+   "source_sha256": "93d897febf14bb273313b5327f33266e475dc190bb444f54cfb186ecf0cd1905"
+  },
+  {
+   "evidence_category": "IN-02",
+   "canonical_name": "account_inventory.csv",
+   "original_filename": "hp_safeguarding_accounts.csv",
+   "file_version_id": "FV-938b047e21",
+   "source_sha256": "64873133e3b98e24228845f929d6b8e69a21f9a6752e90d34b9433918d22a09c"
+  },
+  {
+   "evidence_category": "IN-03",
+   "canonical_name": "client_balance_snapshots_2026-06.csv",
+   "original_filename": "hp_client_balances_1700_jun2026.csv",
+   "file_version_id": "FV-113ad9a364",
+   "source_sha256": "7161b9fe6f338e48facf7f24cfe8274359c2a950d6ae0fffa5c3f074aecaf520"
+  },
+  {
+   "evidence_category": "IN-04",
+   "canonical_name": "unallocated_register_2026-06.csv",
+   "original_filename": "hp_unallocated_receipts_jun2026.csv",
+   "file_version_id": "FV-f1c6c91093",
+   "source_sha256": "7a1b7c3a121df65746d51baca74038205a06142e6f0266c9b935b086e733c053"
+  },
+  {
+   "evidence_category": "IN-05",
+   "canonical_name": "internal_recon_records_2026-06.csv",
+   "original_filename": "hp_internal_recon_jun2026.csv",
+   "file_version_id": "FV-a9909f4f37",
+   "source_sha256": "886b5fdbb9d7752146458d2cc3913e819a37865fd394504a7ff21ce1e668d901"
+  },
+  {
+   "evidence_category": "IN-06",
+   "canonical_name": "external_recon_records_2026-06.csv",
+   "original_filename": "hp_external_recon_jun2026.csv",
+   "file_version_id": "FV-2194d6981c",
+   "source_sha256": "4c953450543c1138dc44090ebe3d8ad93c8aaf7428fb47eef7f3e85e1262a15d"
+  },
+  {
+   "evidence_category": "IN-07",
+   "canonical_name": "bank_balance_confirmations_2026-06.csv",
+   "original_filename": "hp_bank_1700_balances_jun2026.csv",
+   "file_version_id": "FV-79d731fde0",
+   "source_sha256": "f0261de27fe965a8bd9186b920ea5b740a0c3ad7745c32ea1d33231c275d5697"
+  },
+  {
+   "evidence_category": "IN-08",
+   "canonical_name": "bank_statements_eod_2026-06.csv",
+   "original_filename": "hp_bank_eod_statements_jun2026.csv",
+   "file_version_id": "FV-dd3828ceb0",
+   "source_sha256": "57e2050defc8ae74e845471adfa21e817e1412f2bf8605752785c46bfdfc848e"
+  },
+  {
+   "evidence_category": "IN-09",
+   "canonical_name": "bank_statement_entries_2026-06.csv",
+   "original_filename": "hp_bank_statement_lines_jun2026.csv",
+   "file_version_id": "FV-3580c15d9f",
+   "source_sha256": "421c2a7974c65240f729419220c6054e69dea1b5f21e97d6f6fde28a9045b5b2"
+  },
+  {
+   "evidence_category": "IN-10",
+   "canonical_name": "sga_cashbook_entries_2026-06.csv",
+   "original_filename": "hp_safeguarding_cashbook_jun2026.csv",
+   "file_version_id": "FV-e3564028f1",
+   "source_sha256": "039865edb8860d5520b5759ebbcd6d9cc56816fe84ffd21a8f8378f84f27442c"
+  },
+  {
+   "evidence_category": "IN-11",
+   "canonical_name": "transactions_2026-06.csv",
+   "original_filename": "hp_card_processor_transactions_jun2026.csv",
+   "file_version_id": "FV-96d9591a44",
+   "source_sha256": "8f1b011c10949296e3b9ba64f5d73527b4086ff67d005dfa52a1baf641910011"
+  },
+  {
+   "evidence_category": "IN-12",
+   "canonical_name": "settlement_batches_2026-06.csv",
+   "original_filename": "hp_settlement_batches_jun2026.csv",
+   "file_version_id": "FV-0bce9e42f2",
+   "source_sha256": "4eae4862e183fc6e71dcc6b2cbb608b68384fc34719afa981e38811b3b45385b"
+  },
+  {
+   "evidence_category": "IN-13",
+   "canonical_name": "settlement_lines_2026-06.csv",
+   "original_filename": "hp_settlement_lines_jun2026.csv",
+   "file_version_id": "FV-b65216afe0",
+   "source_sha256": "67cea1f18159748c1d2c73480ac6142f778093544c3cdf3c7d0688349767901a"
+  },
+  {
+   "evidence_category": "IN-14",
+   "canonical_name": "discrepancy_log_2026-06.csv",
+   "original_filename": "hp_breaks_and_actions_log_jun2026.csv",
+   "file_version_id": "FV-fd6b128c1e",
+   "source_sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06"
+  },
+  {
+   "evidence_category": "IN-15",
+   "canonical_name": "ack_letter_SGA-GBP-01.pdf",
+   "original_filename": "Northbridge_acknowledgement_GBP_5204.pdf",
+   "file_version_id": "FV-d8015f9ec8",
+   "source_sha256": "330706a9cea95decc129e9196880ff6f1e5af332ec59e5808141af7206037f24"
+  },
+  {
+   "evidence_category": "IN-16",
+   "canonical_name": "ack_letter_SGA-EUR-01.pdf",
+   "original_filename": "Northbridge_acknowledgement_EUR_5297.pdf",
+   "file_version_id": "FV-8aba99560c",
+   "source_sha256": "8db25578d771be77cd10d5150d7d3ccc412407ca033c928abba69a4c72132c54"
+  },
+  {
+   "evidence_category": "IN-17",
+   "canonical_name": "safeguarding_reconciliation_policy_v1.2.pdf",
+   "original_filename": "HaldenPay_safeguarding_recon_policy_v1.2.pdf",
+   "file_version_id": "FV-ec80e20fea",
+   "source_sha256": "6f56d1be67b26451a0c6354b4ca7a948c8ee1be50b0c83dda17d54bbab48056d"
+  },
+  {
+   "evidence_category": "IN-18",
+   "canonical_name": "governance_register_2026-06.pdf",
+   "original_filename": "HaldenPay_governance_register_jun2026.pdf",
+   "file_version_id": "FV-76baa1af1c",
+   "source_sha256": "b5648532f817bd458446f566d18c318b6d2e9b8f5a6457c3bee40041c145c9b1"
+  },
+  {
+   "evidence_category": "IN-19",
+   "canonical_name": "rep027_submission_receipt_2026-05.pdf",
+   "original_filename": "HaldenPay_REP027_receipt_may2026.pdf",
+   "file_version_id": "FV-7d483a1bd7",
+   "source_sha256": "0ef58bb4aa75c48c736ff8356c2aa96c75a2941dac0e799dd2c83eb1ebc56882"
+  }
+ ],
+ "decisions": [
+  {
+   "at": "2026-11-20T11:20:04+00:00",
+   "what": "closing review GENERATE (RD-24BC8AA5768C)",
+   "by": "analyst@ringfence.demo"
+  }
+ ],
+ "statement": "System-generated Ringfence provenance supplement (write-once). It maps the engine's canonical evidence files back to the customer's uploaded files and records who took each closure decision. It is not part of the library's final pack and does not change it."
+}

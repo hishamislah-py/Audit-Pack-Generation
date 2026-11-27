@@ -2,9 +2,11 @@
 InvestigationResult with identity, provenance and validation fields that the model cannot set."""
 from typing import Annotated, Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, Field, WithJsonSchema
+from pydantic import BaseModel, ConfigDict, Field, WithJsonSchema, model_serializer
 
 EvidenceAssessment = Literal["EVIDENCE_SUFFICIENT", "PARTIALLY_SUFFICIENT", "INSUFFICIENT_EVIDENCE", "CONFLICTING_EVIDENCE"]
+EVIDENCE_BASES = ("SOURCE_EVIDENCE", "CONTROL_RESULT", "EVIDENCE_ABSENCE")
+EvidenceBasis = Literal["SOURCE_EVIDENCE", "CONTROL_RESULT", "EVIDENCE_ABSENCE"]
 
 
 class _Strict(BaseModel):
@@ -31,6 +33,23 @@ class ConfirmedFinding(_Strict):
     audit_relevance: _explanation("Why this observation matters to the discrepancy") = Field(default=None, min_length=10)
     establishes: _explanation("What the cited evidence establishes, and nothing more") = Field(default=None, min_length=10)
     does_not_establish: _explanation("What the evidence does not establish (for example the cause)") = Field(default=None, min_length=10)
+    # Findings schema 1.5: what kind of evidence the finding rests on. Required (enum) in model output; None means 'not
+    # supplied' (artefacts written under schema 1.4 or earlier, offline/scripted adapters) and is then omitted when
+    # serialised, so those findings keep their exact bytes and investigation IDs. validation.py checks the declared basis
+    # against what is actually cited; a declaration never makes a citation acceptable on its own.
+    evidence_basis: Annotated[Optional[EvidenceBasis], WithJsonSchema({
+        "type": "string", "enum": list(EVIDENCE_BASES),
+        "description": "SOURCE_EVIDENCE: what recorded activity shows (cite source records). CONTROL_RESULT: what the "
+                       "engine's control outcomes show (cite control results). EVIDENCE_ABSENCE: that expected evidence "
+                       "is not available or could not be assessed (cite NOT_FOUND searches, INSUFFICIENT_EVIDENCE control "
+                       "results and the MISS- completeness item)."})] = None
+
+    @model_serializer(mode="wrap")
+    def _omit_unsupplied_basis(self, handler):
+        data = handler(self)
+        if isinstance(data, dict) and data.get("evidence_basis") is None:
+            data.pop("evidence_basis", None)
+        return data
 
 
 class Hypothesis(_Strict):
@@ -96,6 +115,11 @@ class ModelMetadata(BaseModel):
     provider_response: dict = Field(default_factory=dict, description="Provider response/request IDs, resolved model, status")
     investigation_mode: str = ""
     tool_registry_version: str = ""
+    # phase 4: what the model saw. The view is a pure function of the stored packet and this version, so an auditor can
+    # regenerate it byte for byte; both are part of the investigation identity (empty for adapters that send no view).
+    model_view_version: str = ""
+    model_view_sha256: str = ""
+    retrieval_rule_version: str = ""  # phase 6: deterministic retrieval rules (empty for fixed / tools mode)
 
 
 class InvestigationResult(BaseModel):
@@ -121,7 +145,7 @@ class InvestigationResult(BaseModel):
     overall_evidence_assessment: EvidenceAssessment | None = None
     evidence_references: list[str] = Field(default_factory=list)
     evidence_packet_sha256: str = ""
-    investigation_mode: Literal["fixed", "tools"] = "fixed"
+    investigation_mode: Literal["fixed", "tools", "deterministic"] = "fixed"
     evidence_ledger_sha256: str = Field("", description="tools mode: hash of the accumulated evidence ledger (initial packet + tool results)")
     tool_summary: dict = Field(default_factory=dict, description="tools mode: calls, rounds, stop reason, tools used")
     classification_summary: dict = Field(default_factory=dict, description="Python-derived: findings by class and the kinds of evidence gap")
@@ -132,3 +156,16 @@ class InvestigationResult(BaseModel):
     investigated_at: str = ""
     statement: str = ("AI investigation findings are an aid to human review. They do not change any deterministic control "
                       "outcome, do not resolve or close any exception, and are not a compliance opinion.")
+    # The audit-run execution that produced this result (independent ZIP submissions, 17 Nov 2026): submission_id, run_id,
+    # authorization_id and job_id. It is part of the stored findings and therefore of the investigation identity, so every
+    # execution is its own artefact: an identical result from another submission, run or job never shares (or is compared
+    # with) this one. Empty for investigations outside a submission run; it is then omitted from the stored findings, which
+    # keeps their bytes and identity exactly as before.
+    execution: dict = Field(default_factory=dict)
+
+    @model_serializer(mode="wrap")
+    def _omit_empty_execution(self, handler):
+        data = handler(self)
+        if isinstance(data, dict) and not data.get("execution"):
+            data.pop("execution", None)
+        return data

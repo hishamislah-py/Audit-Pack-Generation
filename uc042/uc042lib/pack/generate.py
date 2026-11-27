@@ -34,11 +34,13 @@ class ImmutabilityError(Exception):
     pass
 
 
-def build(case_dir, period=None):
+def build(case_dir, period=None, rules=None):
     """Pure generation for one reporting period (PeriodConfig or PER-YYYY-MM; without it, the period the case declares):
-    returns (status, pack, html, outputs, findings). Nothing is written."""
+    returns (status, pack, html, outputs, findings). Nothing is written. rules: the engine's EngineRules (default: the
+    approved rules; the reproducibility tests pass the rules a stored pack was published with)."""
     try:
-        pack, v = assemble(case_dir, period=period)
+        check_rules_consistency(case_dir, rules)
+        pack, v = assemble(case_dir, period=period, rules=rules)
         outputs = processing_outputs(v)
         pack = finalise(pack, outputs)
         rows, _, _ = load_sources(case_dir, v.period)
@@ -58,11 +60,26 @@ def _record(status, case_dir, pack, findings, outcome):
             "validation_findings": findings, "python": platform.python_version()}
 
 
-def generate(case_dir, packs_root=DEFAULT_ROOT, period=None):
-    """Generate and publish. Returns the generation record. Existing packs are never modified."""
+def check_rules_consistency(case_dir, rules):
+    """I-3: a pack is built with the same enrichment setting as the case's stored reconciliation outputs (validation/),
+    when they exist, so reconciliation, pack and closure never mix rule sets. Raises PackError on a mismatch."""
+    from ..validate import rules_of_reconciliation
+    stored = rules_of_reconciliation(case_dir)
+    if stored is None:
+        return
+    stored_on = stored != "ENRICHMENT_OFF" and stored.enrichment_v1
+    if stored_on != bool(getattr(rules, "enrichment_v1", False)):
+        raise PackError(f"rules mismatch: the case's reconciliation outputs were produced with enrichment "
+                        f"{'ON' if stored_on else 'OFF'}, but the pack was requested with enrichment "
+                        f"{'ON' if not stored_on else 'OFF'}; pass the reconciliation's rules (validate.rules_of_reconciliation)")
+
+
+def generate(case_dir, packs_root=DEFAULT_ROOT, period=None, rules=None):
+    """Generate and publish. Returns the generation record. Existing packs are never modified. rules: the engine's
+    EngineRules (default: the approved rules); forwarded to build (I-1)."""
     packs_root = Path(packs_root)
     packs_root.mkdir(parents=True, exist_ok=True)
-    status, pack, html, outputs, findings = build(case_dir, period)
+    status, pack, html, outputs, findings = build(case_dir, period, rules=rules)
     if status == "FAILED":
         rec = _record("FAILED", case_dir, pack, findings, "NOT_PUBLISHED")
         d = packs_root / "_failed" / (pack["metadata"]["processing_run_id"] if pack else "no-run")

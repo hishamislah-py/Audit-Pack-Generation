@@ -1,0 +1,367 @@
+{
+ "scenario_id": "RF-DEMO-02",
+ "source_scenario": "scenario_02_rejection_correction",
+ "customer_name": "Marlow Street Payments Ltd",
+ "reporting_period": "2026-07",
+ "synthetic_notice": "ILLUSTRATIVE SYNTHETIC DATA - UC-042 RINGFENCE DEMONSTRATION - NOT REAL FINANCIAL RECORDS",
+ "zip": {
+  "file": "Marlow_Street_Payments_Ltd_2026-07.zip",
+  "sha256": "52efcab2b1dde2c8236a4853e3be2a0987aba46ef118c07227b00f166d9b85b3",
+  "bytes": 44241,
+  "entries": [
+   {
+    "entry": "MSP_Jul26_01_calendar.csv",
+    "bytes": 3915,
+    "sha256": "db27122a6a6a3085ce328c170f57acbf1b36635b890e5138fd9887b31d97e442",
+    "category": "IN-01",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Jul26_02_account_register.csv",
+    "bytes": 1232,
+    "sha256": "c854314de4f87892703efc6af8a069d2f1dce04636dd89176dbf1e55bf7a8025",
+    "category": "IN-02",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Jul26_03_client_positions.csv",
+    "bytes": 26281,
+    "sha256": "792531017c9cfc6f0d9fa81fd9faade47c0b4218d642fa8b0b07753584f22609",
+    "category": "IN-03",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Jul26_04_suspense_receipts.csv",
+    "bytes": 270,
+    "sha256": "d753238c11e85296ab4b789405820c5939aa6243c01b851945abb88e7939dbfb",
+    "category": "IN-04",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Jul26_05_internal_reconciliations.csv",
+    "bytes": 16512,
+    "sha256": "714a221fd14b71d04c7310942d67a22f228cdce3afad64980c34633c42c0c902",
+    "category": "IN-05",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Jul26_06_external_reconciliations.csv",
+    "bytes": 6588,
+    "sha256": "af89b9174c7dc07d18cd84c290096a2e9130aefb0f9cb8dc16f20b4721790384",
+    "category": "IN-06",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Jul26_07_bank_balance_confirmations_1700.csv",
+    "bytes": 4858,
+    "sha256": "1f576c267ad6c121b2ef8ee30f835a7be220e40c8b2c99ae52c49b9b0ab8f405",
+    "category": "IN-07",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Jul26_08_bank_eod_statements.csv",
+    "bytes": 11994,
+    "sha256": "f7ceca2fbecefc6c14c43e9e14bae8fe30a0f55b42337ef8addbf81bb46c0f4c",
+    "category": "IN-08",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Jul26_09_bank_statement_entries.csv",
+    "bytes": 60412,
+    "sha256": "e033b3b47b037133b341ad4e4e17b05b5541e1bf5c32e33281fd6ee83bc4b499",
+    "category": "IN-09",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Jul26_10_cashbook.csv",
+    "bytes": 27906,
+    "sha256": "5bf19c0080c84293fffd6655a80272dca92ca381df7c6b8e49b6377e27125306",
+    "category": "IN-10",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Jul26_11_customer_transactions.csv",
+    "bytes": 59880,
+    "sha256": "3e1899d9fe6b250517a5a79d2cee7232b5728ffdda5f32338bc75a554bbdd7fa",
+    "category": "IN-11",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Jul26_12_settlement_batches.csv",
+    "bytes": 10467,
+    "sha256": "5f19930202d87256a217108008b603c9420725b2bd781f5d914f9b7a46fa0911",
+    "category": "IN-12",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Jul26_13_settlement_batch_lines.csv",
+    "bytes": 31175,
+    "sha256": "e1809f744d55ea47c6460d32affb5d014807b4eb2a0e2cb2208d972797260182",
+    "category": "IN-13",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Jul26_14_discrepancy_register.csv",
+    "bytes": 157,
+    "sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "category": "IN-14",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Calder_safeguarding_letter_GBP.pdf",
+    "bytes": 2259,
+    "sha256": "7247ae702ad0802e4da57bde4017092d813cefa898d784e08544fd84294f8ec1",
+    "category": "IN-15",
+    "readable": true
+   },
+   {
+    "entry": "MSP_Calder_safeguarding_letter_EUR.pdf",
+    "bytes": 2260,
+    "sha256": "fc9c66300e0add1a1cea0245f3ada0ed98a22d5a5a69c9775f68482e5f9fd9df",
+    "category": "IN-16",
+    "readable": true
+   },
+   {
+    "entry": "MSP_reconciliation_policy_v1.2.pdf",
+    "bytes": 2345,
+    "sha256": "dab81aa65ec1253b520cf6fed35239102af5921c29b92a4b7954c063837f9cfa",
+    "category": "IN-17",
+    "readable": true
+   },
+   {
+    "entry": "MSP_governance_register_2026-07.pdf",
+    "bytes": 2088,
+    "sha256": "06a51365372489980c3b85c92dbd8948f5af31456b92727786f8342552ed7bc8",
+    "category": "IN-18",
+    "readable": true
+   },
+   {
+    "entry": "MSP_REP027_submission_receipt_2026-06.pdf",
+    "bytes": 2125,
+    "sha256": "7c0d078a402c0514e0417a3e7a99313037438f53e52427f7e8452e6e9ff96d1d",
+    "category": "IN-19",
+    "readable": true
+   }
+  ]
+ },
+ "source_seed": 2026071902,
+ "generator": "build_scenarios.Gen (original bundle, imported read-only) via tools/build_demo_zips.py",
+ "record_counts": {
+  "IN-01": 31,
+  "IN-02": 4,
+  "IN-03": 288,
+  "IN-04": 1,
+  "IN-05": 46,
+  "IN-06": 46,
+  "IN-07": 46,
+  "IN-08": 92,
+  "IN-09": 328,
+  "IN-10": 282,
+  "IN-11": 489,
+  "IN-12": 92,
+  "IN-13": 439,
+  "IN-14": 0
+ },
+ "all_csv_canonical_layout": true,
+ "planted_discrepancies": [
+  {
+   "kind": "UNEXPLAINED_GBP_DIFFERENCE",
+   "account": "SGA-GBP-01",
+   "amount": "-1284.60",
+   "bank_reference": "CHG 77215",
+   "debit_entry": "BE-GBP-0717-X01",
+   "return_entry": "BE-GBP-0722-X02",
+   "difference_days": [
+    "2026-07-17",
+    "2026-07-20",
+    "2026-07-21"
+   ],
+   "financial_impact": "bank balance 1284.60 GBP below the ledger from 2026-07-17 15:20 until the return on 2026-07-22 10:05; nil at month end; no cause is recorded anywhere in the evidence"
+  },
+  {
+   "kind": "INCONSISTENT_SETTLEMENT_REFERENCE",
+   "account": "SGA-GBP-01",
+   "bank_entry": "BE-GBP-0710-SB1",
+   "reference_written": "SB-GBP-20260701",
+   "batch_without_bank_entry": "SB-GBP-20260710",
+   "batch_with_two_bank_entries": "SB-GBP-20260701",
+   "financial_impact": "none on balances: amount unchanged; the bank entry carries the wrong batch reference, so the batch, bank and cash-book links break (no amount-only matching)"
+  }
+ ],
+ "mutation_operations": 20,
+ "expected_outcome": {
+  "case_status": "EXCEPTIONS_OPEN",
+  "fail": 12,
+  "insufficient_evidence": 0,
+  "exceptions": 7,
+  "investigation_groups": 3
+ },
+ "byte_comparison_with_original": {
+  "members": [
+   {
+    "entry": "MSP_Jul26_01_calendar.csv",
+    "category": "IN-01",
+    "identical_to_original_member": true,
+    "original_sha256": "db27122a6a6a3085ce328c170f57acbf1b36635b890e5138fd9887b31d97e442",
+    "new_sha256": "db27122a6a6a3085ce328c170f57acbf1b36635b890e5138fd9887b31d97e442",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Jul26_02_account_register.csv",
+    "category": "IN-02",
+    "identical_to_original_member": true,
+    "original_sha256": "c854314de4f87892703efc6af8a069d2f1dce04636dd89176dbf1e55bf7a8025",
+    "new_sha256": "c854314de4f87892703efc6af8a069d2f1dce04636dd89176dbf1e55bf7a8025",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Jul26_03_client_positions.csv",
+    "category": "IN-03",
+    "identical_to_original_member": true,
+    "original_sha256": "792531017c9cfc6f0d9fa81fd9faade47c0b4218d642fa8b0b07753584f22609",
+    "new_sha256": "792531017c9cfc6f0d9fa81fd9faade47c0b4218d642fa8b0b07753584f22609",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Jul26_04_suspense_receipts.csv",
+    "category": "IN-04",
+    "identical_to_original_member": true,
+    "original_sha256": "d753238c11e85296ab4b789405820c5939aa6243c01b851945abb88e7939dbfb",
+    "new_sha256": "d753238c11e85296ab4b789405820c5939aa6243c01b851945abb88e7939dbfb",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Jul26_05_internal_reconciliations.csv",
+    "category": "IN-05",
+    "identical_to_original_member": true,
+    "original_sha256": "714a221fd14b71d04c7310942d67a22f228cdce3afad64980c34633c42c0c902",
+    "new_sha256": "714a221fd14b71d04c7310942d67a22f228cdce3afad64980c34633c42c0c902",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Jul26_06_external_reconciliations.csv",
+    "category": "IN-06",
+    "identical_to_original_member": true,
+    "original_sha256": "af89b9174c7dc07d18cd84c290096a2e9130aefb0f9cb8dc16f20b4721790384",
+    "new_sha256": "af89b9174c7dc07d18cd84c290096a2e9130aefb0f9cb8dc16f20b4721790384",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Jul26_07_bank_balance_confirmations_1700.csv",
+    "category": "IN-07",
+    "identical_to_original_member": true,
+    "original_sha256": "1f576c267ad6c121b2ef8ee30f835a7be220e40c8b2c99ae52c49b9b0ab8f405",
+    "new_sha256": "1f576c267ad6c121b2ef8ee30f835a7be220e40c8b2c99ae52c49b9b0ab8f405",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Jul26_08_bank_eod_statements.csv",
+    "category": "IN-08",
+    "identical_to_original_member": false,
+    "original_sha256": "1573f70769e4bafbd614004d07644982991bc919879d4f66b2c896d0c7edd6c5",
+    "new_sha256": "f7ceca2fbecefc6c14c43e9e14bae8fe30a0f55b42337ef8addbf81bb46c0f4c",
+    "note": "layout changed to canonical (expected difference)"
+   },
+   {
+    "entry": "MSP_Jul26_09_bank_statement_entries.csv",
+    "category": "IN-09",
+    "identical_to_original_member": true,
+    "original_sha256": "e033b3b47b037133b341ad4e4e17b05b5541e1bf5c32e33281fd6ee83bc4b499",
+    "new_sha256": "e033b3b47b037133b341ad4e4e17b05b5541e1bf5c32e33281fd6ee83bc4b499",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Jul26_10_cashbook.csv",
+    "category": "IN-10",
+    "identical_to_original_member": true,
+    "original_sha256": "5bf19c0080c84293fffd6655a80272dca92ca381df7c6b8e49b6377e27125306",
+    "new_sha256": "5bf19c0080c84293fffd6655a80272dca92ca381df7c6b8e49b6377e27125306",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Jul26_11_customer_transactions.csv",
+    "category": "IN-11",
+    "identical_to_original_member": true,
+    "original_sha256": "3e1899d9fe6b250517a5a79d2cee7232b5728ffdda5f32338bc75a554bbdd7fa",
+    "new_sha256": "3e1899d9fe6b250517a5a79d2cee7232b5728ffdda5f32338bc75a554bbdd7fa",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Jul26_12_settlement_batches.csv",
+    "category": "IN-12",
+    "identical_to_original_member": true,
+    "original_sha256": "5f19930202d87256a217108008b603c9420725b2bd781f5d914f9b7a46fa0911",
+    "new_sha256": "5f19930202d87256a217108008b603c9420725b2bd781f5d914f9b7a46fa0911",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Jul26_13_settlement_batch_lines.csv",
+    "category": "IN-13",
+    "identical_to_original_member": true,
+    "original_sha256": "e1809f744d55ea47c6460d32affb5d014807b4eb2a0e2cb2208d972797260182",
+    "new_sha256": "e1809f744d55ea47c6460d32affb5d014807b4eb2a0e2cb2208d972797260182",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Jul26_14_discrepancy_register.csv",
+    "category": "IN-14",
+    "identical_to_original_member": true,
+    "original_sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "new_sha256": "8312da6dd908f173ca74a1cf2b34ee96eeeb1abbdb20213906cf949fcc99bc06",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Calder_safeguarding_letter_GBP.pdf",
+    "category": "IN-15",
+    "identical_to_original_member": true,
+    "original_sha256": "7247ae702ad0802e4da57bde4017092d813cefa898d784e08544fd84294f8ec1",
+    "new_sha256": "7247ae702ad0802e4da57bde4017092d813cefa898d784e08544fd84294f8ec1",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Calder_safeguarding_letter_EUR.pdf",
+    "category": "IN-16",
+    "identical_to_original_member": true,
+    "original_sha256": "fc9c66300e0add1a1cea0245f3ada0ed98a22d5a5a69c9775f68482e5f9fd9df",
+    "new_sha256": "fc9c66300e0add1a1cea0245f3ada0ed98a22d5a5a69c9775f68482e5f9fd9df",
+    "note": ""
+   },
+   {
+    "entry": "MSP_reconciliation_policy_v1.2.pdf",
+    "category": "IN-17",
+    "identical_to_original_member": true,
+    "original_sha256": "dab81aa65ec1253b520cf6fed35239102af5921c29b92a4b7954c063837f9cfa",
+    "new_sha256": "dab81aa65ec1253b520cf6fed35239102af5921c29b92a4b7954c063837f9cfa",
+    "note": ""
+   },
+   {
+    "entry": "MSP_governance_register_2026-07.pdf",
+    "category": "IN-18",
+    "identical_to_original_member": true,
+    "original_sha256": "06a51365372489980c3b85c92dbd8948f5af31456b92727786f8342552ed7bc8",
+    "new_sha256": "06a51365372489980c3b85c92dbd8948f5af31456b92727786f8342552ed7bc8",
+    "note": ""
+   },
+   {
+    "entry": "MSP_REP027_submission_receipt_2026-06.pdf",
+    "category": "IN-19",
+    "identical_to_original_member": true,
+    "original_sha256": "7c0d078a402c0514e0417a3e7a99313037438f53e52427f7e8452e6e9ff96d1d",
+    "new_sha256": "7c0d078a402c0514e0417a3e7a99313037438f53e52427f7e8452e6e9ff96d1d",
+    "note": ""
+   },
+   {
+    "entry": "MSP_Jul26_08_bank_eod_statements_CORRECTED.csv",
+    "category": "IN-08",
+    "data_rows_identical_to_corrected_file": true,
+    "header_identical_ignoring_case": true,
+    "note": "the corrected file uses UPPER-CASE headers; the demo ZIP uses the canonical header"
+   }
+  ],
+  "unchanged_members": 18,
+  "unchanged_byte_identical": 18,
+  "all_unchanged_identical": true,
+  "original_members_not_in_demo_zip": []
+ },
+ "technical_corruption": null
+}

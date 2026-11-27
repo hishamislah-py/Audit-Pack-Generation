@@ -1,0 +1,49 @@
+test_approved_case_matches_by_equivalence_not_exactly (tests.test_stage1_parity_equivalence.Stage1Equivalence.test_approved_case_matches_by_equivalence_not_exactly) ... ok
+test_deterministic_result_found_does_not_match (tests.test_stage1_parity_equivalence.Stage1Equivalence.test_deterministic_result_found_does_not_match) ... ok
+test_extra_or_missing_query_keys_do_not_match (tests.test_stage1_parity_equivalence.Stage1Equivalence.test_extra_or_missing_query_keys_do_not_match) ... ok
+test_file_differs (tests.test_stage1_parity_equivalence.Stage1Equivalence.test_file_differs) ... ok
+test_line_missing_from_the_deterministic_packet_does_not_match (tests.test_stage1_parity_equivalence.Stage1Equivalence.test_line_missing_from_the_deterministic_packet_does_not_match) ... ok
+test_partial_identifier_does_not_match (tests.test_stage1_parity_equivalence.Stage1Equivalence.test_partial_identifier_does_not_match) ... ok
+test_relationship_type_differs (tests.test_stage1_parity_equivalence.Stage1Equivalence.test_relationship_type_differs) ... ok
+test_settlement_line_differs (tests.test_stage1_parity_equivalence.Stage1Equivalence.test_settlement_line_differs) ... ok
+test_source_data_establishes_the_equivalence (tests.test_stage1_parity_equivalence.Stage1Equivalence.test_source_data_establishes_the_equivalence) ... ok
+test_transaction_id_alone_never_matches (tests.test_stage1_parity_equivalence.Stage1Equivalence.test_transaction_id_alone_never_matches)
+A search for the same txn_id is not enough: the line, relationship and file must all agree. ... ok
+test_transaction_id_differs (tests.test_stage1_parity_equivalence.Stage1Equivalence.test_transaction_id_differs) ... ok
+test_96_of_96_with_one_separately_reported_semantic_match (tests.test_stage1_parity_equivalence.Stage1ParitySummary.test_96_of_96_with_one_separately_reported_semantic_match) ... ok
+test_different_queries_with_the_same_old_partial_key_are_both_kept (tests.test_dr01_dr03_remediation.DR01Dedup.test_different_queries_with_the_same_old_partial_key_are_both_kept) ... ok
+test_found_searches_are_never_dropped (tests.test_dr01_dr03_remediation.DR01Dedup.test_found_searches_are_never_dropped) ... ok
+test_found_then_not_found_with_the_same_query_keeps_both (tests.test_dr01_dr03_remediation.DR01Dedup.test_found_then_not_found_with_the_same_query_keeps_both) ... ok
+test_genuine_date_and_reference_synonyms_are_normalised (tests.test_dr01_dr03_remediation.DR01Dedup.test_genuine_date_and_reference_synonyms_are_normalised) ... ok
+test_not_found_then_found_keeps_both (tests.test_dr01_dr03_remediation.DR01Dedup.test_not_found_then_found_keeps_both) ... ok
+test_truly_identical_not_found_searches_are_deduplicated_and_recorded (tests.test_dr01_dr03_remediation.DR01Dedup.test_truly_identical_not_found_searches_are_deduplicated_and_recorded) ... ok
+test_every_base_not_found_search_survives (tests.test_dr01_dr03_remediation.DR01RealScenarios.test_every_base_not_found_search_survives)
+No NOT_FOUND search of the tools-mode base packet ever disappears from the deterministic packet. ... ok
+test_rule_version_is_1_3 (tests.test_dr01_dr03_remediation.DR01RealScenarios.test_rule_version_is_1_3) ... ok
+test_sc5a_02_missing_transaction_search_is_kept (tests.test_dr01_dr03_remediation.DR01RealScenarios.test_sc5a_02_missing_transaction_search_is_kept)
+SEARCH-04 {IN-11, txn_id TX-0915-00009} NOT_FOUND was dropped as a 'repeat' of the FOUND client-window search. ... ok
+test_sc5d_01_refund_search_is_kept (tests.test_dr01_dr03_remediation.DR01RealScenarios.test_sc5d_01_refund_search_is_kept)
+SEARCH-02 {IN-11, client C0003, REFUND} NOT_FOUND was dropped because of the FOUND C0003 window search. ... ok
+test_full_query_and_not_found_result_are_both_required (tests.test_dr01_dr03_remediation.DR02StrictParity.test_full_query_and_not_found_result_are_both_required) ... ok
+test_strict_parity_reports_status_categories_and_fixed_mode_records (tests.test_dr01_dr03_remediation.DR02StrictParity.test_strict_parity_reports_status_categories_and_fixed_mode_records) ... ok
+test_boundary_51_to_55_with_a_budget_of_52 (tests.test_dr01_dr03_remediation.DR03Budget.test_boundary_51_to_55_with_a_budget_of_52)
+Review reproduction: S05 EXC-01 at 51 records; get_settlement_batch went to 55 against a budget of 52 and its six ... ok
+test_budget_is_never_exceeded_by_an_expansion (tests.test_dr01_dr03_remediation.DR03Budget.test_budget_is_never_exceeded_by_an_expansion) ... ok
+test_found_status_is_not_changed_by_budget_cuts (tests.test_dr01_dr03_remediation.DR03Budget.test_found_status_is_not_changed_by_budget_cuts)
+A search whose records were cut for budget reasons is still FOUND (the data exists); never a fabricated NOT_FOUND. ... ok
+test_production_values_omit_nothing (tests.test_dr01_dr03_remediation.DR03Budget.test_production_values_omit_nothing) ... ok
+test_records_cut_by_the_investigation_wide_max_records_are_registered (tests.test_dr01_dr03_remediation.DR03Budget.test_records_cut_by_the_investigation_wide_max_records_are_registered) ... ok
+test_records_cut_by_the_per_call_cap_are_registered (tests.test_dr01_dr03_remediation.DR03Budget.test_records_cut_by_the_per_call_cap_are_registered) ... ok
+test_the_app_still_runs_tools_mode (tests.test_phase6_deterministic.ApplicationDefaultUnchanged.test_the_app_still_runs_tools_mode) ... ok
+test_single_request_on_the_extended_packet (tests.test_phase6_deterministic.DeterministicMode.test_single_request_on_the_extended_packet) ... ok
+test_size_guard_sends_nothing (tests.test_phase6_deterministic.DeterministicMode.test_size_guard_sends_nothing) ... ok
+test_uncovered_route_falls_back_to_tools_and_says_so (tests.test_phase6_deterministic.DeterministicMode.test_uncovered_route_falls_back_to_tools_and_says_so) ... ok
+test_every_previously_cited_model_fetched_record_is_supplied (tests.test_phase6_deterministic.Parity.test_every_previously_cited_model_fetched_record_is_supplied) ... ok
+test_candidates_stay_hypotheses_only (tests.test_phase6_deterministic.Policy.test_candidates_stay_hypotheses_only) ... ok
+test_no_duplicate_not_found_searches_and_view_lossless (tests.test_phase6_deterministic.Policy.test_no_duplicate_not_found_searches_and_view_lossless) ... ok
+test_no_silent_pruning_under_a_tight_budget (tests.test_phase6_deterministic.Policy.test_no_silent_pruning_under_a_tight_budget) ... ok
+
+----------------------------------------------------------------------
+Ran 38 tests in 101.659s
+
+OK

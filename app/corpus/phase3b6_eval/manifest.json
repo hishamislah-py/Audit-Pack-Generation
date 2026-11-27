@@ -1,0 +1,1495 @@
+{
+ "dataset": "UC-042 Smart Parser Phase 3B-6 orchestration evaluation (synthetic; recorded responses)",
+ "extends": "tools/eval_3b5.py",
+ "cases": [
+  {
+   "case_id": "IN-02_canonical",
+   "case_type": "canonical",
+   "data_file": "data/IN-02_canonical.csv",
+   "data_sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d",
+   "input_category": null,
+   "truth_category": "IN-02",
+   "incoming_headers": [
+    "account_id",
+    "account_class",
+    "currency",
+    "asset_pool_id",
+    "account_number_masked",
+    "designation_name",
+    "acknowledgement_letter_ref",
+    "institution_id",
+    "institution_full_name",
+    "institution_postal_address",
+    "institution_email",
+    "institution_phone",
+    "institution_role",
+    "open_date",
+    "close_date"
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "account_id": "account_id",
+     "account_class": "account_class",
+     "currency": "currency",
+     "asset_pool_id": "asset_pool_id",
+     "account_number_masked": "account_number_masked",
+     "designation_name": "designation_name",
+     "acknowledgement_letter_ref": "acknowledgement_letter_ref",
+     "institution_id": "institution_id",
+     "institution_full_name": "institution_full_name",
+     "institution_postal_address": "institution_postal_address",
+     "institution_email": "institution_email",
+     "institution_phone": "institution_phone",
+     "institution_role": "institution_role",
+     "open_date": "open_date",
+     "close_date": "close_date"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "DETERMINISTIC",
+    "canonical_output_sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d"
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "IN-02_reordered",
+   "case_type": "reordered",
+   "data_file": "data/IN-02_reordered.csv",
+   "data_sha256": "e74331cf8ce766a0f0a20abcbd1daaea7c4c4b9a70caaa46cbb564d4abaff42b",
+   "input_category": null,
+   "truth_category": "IN-02",
+   "incoming_headers": [
+    "close_date",
+    "open_date",
+    "institution_role",
+    "institution_phone",
+    "institution_email",
+    "institution_postal_address",
+    "institution_full_name",
+    "institution_id",
+    "acknowledgement_letter_ref",
+    "designation_name",
+    "account_number_masked",
+    "asset_pool_id",
+    "currency",
+    "account_class",
+    "account_id"
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "account_id": "account_id",
+     "account_class": "account_class",
+     "currency": "currency",
+     "asset_pool_id": "asset_pool_id",
+     "account_number_masked": "account_number_masked",
+     "designation_name": "designation_name",
+     "acknowledgement_letter_ref": "acknowledgement_letter_ref",
+     "institution_id": "institution_id",
+     "institution_full_name": "institution_full_name",
+     "institution_postal_address": "institution_postal_address",
+     "institution_email": "institution_email",
+     "institution_phone": "institution_phone",
+     "institution_role": "institution_role",
+     "open_date": "open_date",
+     "close_date": "close_date"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "DETERMINISTIC",
+    "canonical_output_sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d"
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "IN-02_case_ws",
+   "case_type": "case_whitespace",
+   "data_file": "data/IN-02_case_ws.csv",
+   "data_sha256": "b2644ca00e2e571ffad1ece3e794c6daa82227e3da6b42455b17d02d874cb6e9",
+   "input_category": null,
+   "truth_category": "IN-02",
+   "incoming_headers": [
+    " ACCOUNT_ID ",
+    " ACCOUNT_CLASS ",
+    " CURRENCY ",
+    " ASSET_POOL_ID ",
+    " ACCOUNT_NUMBER_MASKED ",
+    " DESIGNATION_NAME ",
+    " ACKNOWLEDGEMENT_LETTER_REF ",
+    " INSTITUTION_ID ",
+    " INSTITUTION_FULL_NAME ",
+    " INSTITUTION_POSTAL_ADDRESS ",
+    " INSTITUTION_EMAIL ",
+    " INSTITUTION_PHONE ",
+    " INSTITUTION_ROLE ",
+    " OPEN_DATE ",
+    " CLOSE_DATE "
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     " ACCOUNT_ID ": "account_id",
+     " ACCOUNT_CLASS ": "account_class",
+     " CURRENCY ": "currency",
+     " ASSET_POOL_ID ": "asset_pool_id",
+     " ACCOUNT_NUMBER_MASKED ": "account_number_masked",
+     " DESIGNATION_NAME ": "designation_name",
+     " ACKNOWLEDGEMENT_LETTER_REF ": "acknowledgement_letter_ref",
+     " INSTITUTION_ID ": "institution_id",
+     " INSTITUTION_FULL_NAME ": "institution_full_name",
+     " INSTITUTION_POSTAL_ADDRESS ": "institution_postal_address",
+     " INSTITUTION_EMAIL ": "institution_email",
+     " INSTITUTION_PHONE ": "institution_phone",
+     " INSTITUTION_ROLE ": "institution_role",
+     " OPEN_DATE ": "open_date",
+     " CLOSE_DATE ": "close_date"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": "owner decision O2 (approved 19 Nov 2026): a case/whitespace variant or an alias is never recognised automatically at intake; the category is still established deterministically and the file goes to a HEADER_VARIANT column review (no LLM call, no preview until the analyst confirms)"
+  },
+  {
+   "case_id": "IN-07_canonical",
+   "case_type": "canonical",
+   "data_file": "data/IN-07_canonical.csv",
+   "data_sha256": "1d9e3ba50d2ec73d0925e7d045466cd24b04b00a075f9c0c6409deec3c60f73c",
+   "input_category": null,
+   "truth_category": "IN-07",
+   "incoming_headers": [
+    "statement_id",
+    "account_id",
+    "as_at_ts",
+    "currency",
+    "balance_amount",
+    "balance_dc_indicator",
+    "bank_statement_ref"
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "statement_id": "statement_id",
+     "account_id": "account_id",
+     "as_at_ts": "as_at_ts",
+     "currency": "currency",
+     "balance_amount": "balance_amount",
+     "balance_dc_indicator": "balance_dc_indicator",
+     "bank_statement_ref": "bank_statement_ref"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "DETERMINISTIC",
+    "canonical_output_sha256": "1d9e3ba50d2ec73d0925e7d045466cd24b04b00a075f9c0c6409deec3c60f73c"
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "IN-07_reordered",
+   "case_type": "reordered",
+   "data_file": "data/IN-07_reordered.csv",
+   "data_sha256": "5c1d4556e5afb7b22430035bb9f9cf53559d1e9501e34748855b84dde20e909c",
+   "input_category": null,
+   "truth_category": "IN-07",
+   "incoming_headers": [
+    "bank_statement_ref",
+    "balance_dc_indicator",
+    "balance_amount",
+    "currency",
+    "as_at_ts",
+    "account_id",
+    "statement_id"
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "statement_id": "statement_id",
+     "account_id": "account_id",
+     "as_at_ts": "as_at_ts",
+     "currency": "currency",
+     "balance_amount": "balance_amount",
+     "balance_dc_indicator": "balance_dc_indicator",
+     "bank_statement_ref": "bank_statement_ref"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "DETERMINISTIC",
+    "canonical_output_sha256": "1d9e3ba50d2ec73d0925e7d045466cd24b04b00a075f9c0c6409deec3c60f73c"
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "IN-07_case_ws",
+   "case_type": "case_whitespace",
+   "data_file": "data/IN-07_case_ws.csv",
+   "data_sha256": "270dd6303a32863f41a9cd369b0059b800323a17a307b013677060c7dd1c84b0",
+   "input_category": null,
+   "truth_category": "IN-07",
+   "incoming_headers": [
+    " STATEMENT_ID ",
+    " ACCOUNT_ID ",
+    " AS_AT_TS ",
+    " CURRENCY ",
+    " BALANCE_AMOUNT ",
+    " BALANCE_DC_INDICATOR ",
+    " BANK_STATEMENT_REF "
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     " STATEMENT_ID ": "statement_id",
+     " ACCOUNT_ID ": "account_id",
+     " AS_AT_TS ": "as_at_ts",
+     " CURRENCY ": "currency",
+     " BALANCE_AMOUNT ": "balance_amount",
+     " BALANCE_DC_INDICATOR ": "balance_dc_indicator",
+     " BANK_STATEMENT_REF ": "bank_statement_ref"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": "owner decision O2 (approved 19 Nov 2026): a case/whitespace variant or an alias is never recognised automatically at intake; the category is still established deterministically and the file goes to a HEADER_VARIANT column review (no LLM call, no preview until the analyst confirms)"
+  },
+  {
+   "case_id": "IN-09_canonical",
+   "case_type": "canonical",
+   "data_file": "data/IN-09_canonical.csv",
+   "data_sha256": "28df3e2a115a2d8b88115cd8c6dae39c8a3d71124b99641ee4846a68c18f54b0",
+   "input_category": null,
+   "truth_category": "IN-09",
+   "incoming_headers": [
+    "bank_entry_id",
+    "statement_id",
+    "account_id",
+    "booking_date",
+    "booking_ts",
+    "value_date",
+    "amount",
+    "dc_indicator",
+    "currency",
+    "bank_reference",
+    "end_to_end_ref",
+    "counterparty_name",
+    "narrative_text"
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "bank_entry_id": "bank_entry_id",
+     "statement_id": "statement_id",
+     "account_id": "account_id",
+     "booking_date": "booking_date",
+     "booking_ts": "booking_ts",
+     "value_date": "value_date",
+     "amount": "amount",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "bank_reference": "bank_reference",
+     "end_to_end_ref": "end_to_end_ref",
+     "counterparty_name": "counterparty_name",
+     "narrative_text": "narrative_text"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "DETERMINISTIC",
+    "canonical_output_sha256": "28df3e2a115a2d8b88115cd8c6dae39c8a3d71124b99641ee4846a68c18f54b0"
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "IN-09_reordered",
+   "case_type": "reordered",
+   "data_file": "data/IN-09_reordered.csv",
+   "data_sha256": "4ed830883a3942992d40d33bef815c9b50f63f7af0d7962488ea39bc32f7022e",
+   "input_category": null,
+   "truth_category": "IN-09",
+   "incoming_headers": [
+    "narrative_text",
+    "counterparty_name",
+    "end_to_end_ref",
+    "bank_reference",
+    "currency",
+    "dc_indicator",
+    "amount",
+    "value_date",
+    "booking_ts",
+    "booking_date",
+    "account_id",
+    "statement_id",
+    "bank_entry_id"
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "bank_entry_id": "bank_entry_id",
+     "statement_id": "statement_id",
+     "account_id": "account_id",
+     "booking_date": "booking_date",
+     "booking_ts": "booking_ts",
+     "value_date": "value_date",
+     "amount": "amount",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "bank_reference": "bank_reference",
+     "end_to_end_ref": "end_to_end_ref",
+     "counterparty_name": "counterparty_name",
+     "narrative_text": "narrative_text"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "DETERMINISTIC",
+    "canonical_output_sha256": "28df3e2a115a2d8b88115cd8c6dae39c8a3d71124b99641ee4846a68c18f54b0"
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "IN-09_case_ws",
+   "case_type": "case_whitespace",
+   "data_file": "data/IN-09_case_ws.csv",
+   "data_sha256": "3a834bfdb5fd796ca1c841d39dc1f85506289c258a66d2e4efe6fc89e809e7cf",
+   "input_category": null,
+   "truth_category": "IN-09",
+   "incoming_headers": [
+    " BANK_ENTRY_ID ",
+    " STATEMENT_ID ",
+    " ACCOUNT_ID ",
+    " BOOKING_DATE ",
+    " BOOKING_TS ",
+    " VALUE_DATE ",
+    " AMOUNT ",
+    " DC_INDICATOR ",
+    " CURRENCY ",
+    " BANK_REFERENCE ",
+    " END_TO_END_REF ",
+    " COUNTERPARTY_NAME ",
+    " NARRATIVE_TEXT "
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     " BANK_ENTRY_ID ": "bank_entry_id",
+     " STATEMENT_ID ": "statement_id",
+     " ACCOUNT_ID ": "account_id",
+     " BOOKING_DATE ": "booking_date",
+     " BOOKING_TS ": "booking_ts",
+     " VALUE_DATE ": "value_date",
+     " AMOUNT ": "amount",
+     " DC_INDICATOR ": "dc_indicator",
+     " CURRENCY ": "currency",
+     " BANK_REFERENCE ": "bank_reference",
+     " END_TO_END_REF ": "end_to_end_ref",
+     " COUNTERPARTY_NAME ": "counterparty_name",
+     " NARRATIVE_TEXT ": "narrative_text"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": "owner decision O2 (approved 19 Nov 2026): a case/whitespace variant or an alias is never recognised automatically at intake; the category is still established deterministically and the file goes to a HEADER_VARIANT column review (no LLM call, no preview until the analyst confirms)"
+  },
+  {
+   "case_id": "IN-10_canonical",
+   "case_type": "canonical",
+   "data_file": "data/IN-10_canonical.csv",
+   "data_sha256": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7",
+   "input_category": null,
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "ledger_entry_id",
+    "account_id",
+    "posted_ts",
+    "entry_type",
+    "amount",
+    "dc_indicator",
+    "currency",
+    "payment_reference"
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "ledger_entry_id": "ledger_entry_id",
+     "account_id": "account_id",
+     "posted_ts": "posted_ts",
+     "entry_type": "entry_type",
+     "amount": "amount",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "payment_reference": "payment_reference"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "DETERMINISTIC",
+    "canonical_output_sha256": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7"
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "IN-10_reordered",
+   "case_type": "reordered",
+   "data_file": "data/IN-10_reordered.csv",
+   "data_sha256": "6c77fa569f42d0e3f390438c890f30024ff9a74524247ddb609d2ac9d478dc45",
+   "input_category": null,
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "payment_reference",
+    "currency",
+    "dc_indicator",
+    "amount",
+    "entry_type",
+    "posted_ts",
+    "account_id",
+    "ledger_entry_id"
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "ledger_entry_id": "ledger_entry_id",
+     "account_id": "account_id",
+     "posted_ts": "posted_ts",
+     "entry_type": "entry_type",
+     "amount": "amount",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "payment_reference": "payment_reference"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "DETERMINISTIC",
+    "canonical_output_sha256": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7"
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "IN-10_case_ws",
+   "case_type": "case_whitespace",
+   "data_file": "data/IN-10_case_ws.csv",
+   "data_sha256": "18a27af78edbba433af4ff9ad3c6f6ea40b28d947605d2d0ca91047953a0c1e9",
+   "input_category": null,
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    " LEDGER_ENTRY_ID ",
+    " ACCOUNT_ID ",
+    " POSTED_TS ",
+    " ENTRY_TYPE ",
+    " AMOUNT ",
+    " DC_INDICATOR ",
+    " CURRENCY ",
+    " PAYMENT_REFERENCE "
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     " LEDGER_ENTRY_ID ": "ledger_entry_id",
+     " ACCOUNT_ID ": "account_id",
+     " POSTED_TS ": "posted_ts",
+     " ENTRY_TYPE ": "entry_type",
+     " AMOUNT ": "amount",
+     " DC_INDICATOR ": "dc_indicator",
+     " CURRENCY ": "currency",
+     " PAYMENT_REFERENCE ": "payment_reference"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": "owner decision O2 (approved 19 Nov 2026): a case/whitespace variant or an alias is never recognised automatically at intake; the category is still established deterministically and the file goes to a HEADER_VARIANT column review (no LLM call, no preview until the analyst confirms)"
+  },
+  {
+   "case_id": "IN-13_canonical",
+   "case_type": "canonical",
+   "data_file": "data/IN-13_canonical.csv",
+   "data_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b",
+   "input_category": null,
+   "truth_category": "IN-13",
+   "incoming_headers": [
+    "line_id",
+    "batch_id",
+    "line_type",
+    "txn_id",
+    "fee_code",
+    "amount",
+    "dc_indicator",
+    "currency"
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "line_id": "line_id",
+     "batch_id": "batch_id",
+     "line_type": "line_type",
+     "txn_id": "txn_id",
+     "fee_code": "fee_code",
+     "amount": "amount",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "DETERMINISTIC",
+    "canonical_output_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b"
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "IN-13_reordered",
+   "case_type": "reordered",
+   "data_file": "data/IN-13_reordered.csv",
+   "data_sha256": "00cb0975278623390430356b0a213b315b262356baca4c8181bae50d931f69c9",
+   "input_category": null,
+   "truth_category": "IN-13",
+   "incoming_headers": [
+    "currency",
+    "dc_indicator",
+    "amount",
+    "fee_code",
+    "txn_id",
+    "line_type",
+    "batch_id",
+    "line_id"
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "line_id": "line_id",
+     "batch_id": "batch_id",
+     "line_type": "line_type",
+     "txn_id": "txn_id",
+     "fee_code": "fee_code",
+     "amount": "amount",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "DETERMINISTIC",
+    "canonical_output_sha256": "3acd4589904d9f25f4fb638b00bff1862b92811f152974106b38aa59d708ba1b"
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "IN-13_case_ws",
+   "case_type": "case_whitespace",
+   "data_file": "data/IN-13_case_ws.csv",
+   "data_sha256": "2a1cc826fdcdea3236af805143fd6ff20392f911d8052268268ac67e3fb1969d",
+   "input_category": null,
+   "truth_category": "IN-13",
+   "incoming_headers": [
+    " LINE_ID ",
+    " BATCH_ID ",
+    " LINE_TYPE ",
+    " TXN_ID ",
+    " FEE_CODE ",
+    " AMOUNT ",
+    " DC_INDICATOR ",
+    " CURRENCY "
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     " LINE_ID ": "line_id",
+     " BATCH_ID ": "batch_id",
+     " LINE_TYPE ": "line_type",
+     " TXN_ID ": "txn_id",
+     " FEE_CODE ": "fee_code",
+     " AMOUNT ": "amount",
+     " DC_INDICATOR ": "dc_indicator",
+     " CURRENCY ": "currency"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": "owner decision O2 (approved 19 Nov 2026): a case/whitespace variant or an alias is never recognised automatically at intake; the category is still established deterministically and the file goes to a HEADER_VARIANT column review (no LLM call, no preview until the analyst confirms)"
+  },
+  {
+   "case_id": "alias_approved",
+   "case_type": "approved_alias",
+   "data_file": "data/alias_approved.csv",
+   "data_sha256": "c3d4b2ad38567d4cd4cbf3304cda6f9162b22613cfbcb8c2e8a65f984ea42713",
+   "input_category": null,
+   "truth_category": "IN-11",
+   "incoming_headers": [
+    "Txn ID",
+    "client_id",
+    "txn_type",
+    "status",
+    "auth_ts",
+    "clearing_date",
+    "executed_ts",
+    "amount",
+    "direction",
+    "currency",
+    "settlement_batch_id",
+    "payment_reference",
+    "original_txn_id"
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {
+    "approve_alias": [
+     "IN-11",
+     "Txn ID",
+     "txn_id"
+    ]
+   },
+   "expected": {
+    "deterministic_mappings": {
+     "Txn ID": "txn_id"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": "owner decision O2 (approved 19 Nov 2026): a case/whitespace variant or an alias is never recognised automatically at intake; the category is still established deterministically and the file goes to a HEADER_VARIANT column review (no LLM call, no preview until the analyst confirms)"
+  },
+  {
+   "case_id": "IN-10_unfamiliar_clear",
+   "case_type": "unfamiliar_clear",
+   "data_file": "data/IN-10_unfamiliar_clear.csv",
+   "data_sha256": "626030c7b1cab1d94acdac30bc5ffc414c028467715019ae1df36487c5562768",
+   "input_category": "IN-10",
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "entry_ref",
+    "acct_no",
+    "posting_dt",
+    "entry_type",
+    "amount",
+    "dc_indicator",
+    "currency",
+    "payment_reference"
+   ],
+   "recorded_response": "IN-10_unfamiliar_clear.json",
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "entry_type": "entry_type",
+     "amount": "amount",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "payment_reference": "payment_reference"
+    },
+    "unresolved": [
+     "entry_ref",
+     "acct_no",
+     "posting_dt"
+    ],
+    "classes": {
+     "entry_ref": "CLEAR",
+     "acct_no": "CLEAR",
+     "posting_dt": "CLEAR"
+    },
+    "decision": "AUTO_ACCEPT",
+    "canonical_output_sha256": "b1a831a2c98789df08e8e7c35d076753bf46da30c7571bb4e47cc1c315b565a7"
+   },
+   "truth_mapping": {
+    "entry_ref": "ledger_entry_id",
+    "acct_no": "account_id",
+    "posting_dt": "posted_ts"
+   },
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "IN-02_unfamiliar_clear",
+   "case_type": "unfamiliar_clear",
+   "data_file": "data/IN-02_unfamiliar_clear.csv",
+   "data_sha256": "9bc6067d863118a1970ae8b5ec1c05c9af51acf00955e1a7eef286475086cb4b",
+   "input_category": "IN-02",
+   "truth_category": "IN-02",
+   "incoming_headers": [
+    "acct_id",
+    "account_class",
+    "currency",
+    "asset_pool_id",
+    "account_number_masked",
+    "designation_name",
+    "acknowledgement_letter_ref",
+    "institution_id",
+    "bank_name",
+    "institution_postal_address",
+    "institution_email",
+    "institution_phone",
+    "institution_role",
+    "open_date",
+    "close_date"
+   ],
+   "recorded_response": "IN-02_unfamiliar_clear.json",
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "account_class": "account_class",
+     "currency": "currency",
+     "asset_pool_id": "asset_pool_id",
+     "account_number_masked": "account_number_masked",
+     "designation_name": "designation_name",
+     "acknowledgement_letter_ref": "acknowledgement_letter_ref",
+     "institution_id": "institution_id",
+     "institution_postal_address": "institution_postal_address",
+     "institution_email": "institution_email",
+     "institution_phone": "institution_phone",
+     "institution_role": "institution_role",
+     "open_date": "open_date",
+     "close_date": "close_date"
+    },
+    "unresolved": [
+     "acct_id",
+     "bank_name"
+    ],
+    "classes": {
+     "acct_id": "CLEAR",
+     "bank_name": "CLEAR"
+    },
+    "decision": "AUTO_ACCEPT",
+    "canonical_output_sha256": "64876e793f853377443d02b3fa935890f79f13deb9f85d3bf38cb17732d6129d"
+   },
+   "truth_mapping": {
+    "acct_id": "account_id",
+    "bank_name": "institution_full_name"
+   },
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "ambiguous_headers",
+   "case_type": "ambiguous",
+   "data_file": "data/ambiguous_headers.csv",
+   "data_sha256": "9dfe5667d0915723358af41ab8e582c4af23bca92d34443e99860b570b068adb",
+   "input_category": "IN-10",
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "entry_ref",
+    "acct_no",
+    "posting_dt",
+    "entry_type",
+    "txn_amt",
+    "dc_indicator",
+    "currency",
+    "payment_reference"
+   ],
+   "recorded_response": "ambiguous_headers.json",
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "entry_type": "entry_type",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "payment_reference": "payment_reference"
+    },
+    "unresolved": [
+     "entry_ref",
+     "acct_no",
+     "posting_dt",
+     "txn_amt"
+    ],
+    "classes": {
+     "entry_ref": "AMBIGUOUS",
+     "txn_amt": "AMBIGUOUS"
+    },
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {
+    "entry_ref": "ledger_entry_id",
+    "acct_no": "account_id",
+    "posting_dt": "posted_ts",
+    "txn_amt": "amount"
+   },
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "sign_sensitive",
+   "case_type": "sign_sensitive",
+   "data_file": "data/sign_sensitive.csv",
+   "data_sha256": "ff9bfae7097e71436924d7cc1a29287552335b351f7f029053c2a6245379f2c4",
+   "input_category": "IN-10",
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "ledger_entry_id",
+    "account_id",
+    "posted_ts",
+    "entry_type",
+    "txn_amt",
+    "dc_indicator",
+    "currency",
+    "payment_reference"
+   ],
+   "recorded_response": "sign_sensitive.json",
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "ledger_entry_id": "ledger_entry_id",
+     "account_id": "account_id",
+     "posted_ts": "posted_ts",
+     "entry_type": "entry_type",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "payment_reference": "payment_reference"
+    },
+    "unresolved": [
+     "txn_amt"
+    ],
+    "classes": {
+     "txn_amt": "AMBIGUOUS"
+    },
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {
+    "txn_amt": "amount"
+   },
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": "proposer says CLEAR; money field stays AMBIGUOUS"
+  },
+  {
+   "case_id": "partial_plausible",
+   "case_type": "partial_success",
+   "data_file": "data/partial_plausible.csv",
+   "data_sha256": "626030c7b1cab1d94acdac30bc5ffc414c028467715019ae1df36487c5562768",
+   "input_category": "IN-10",
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "entry_ref",
+    "acct_no",
+    "posting_dt",
+    "entry_type",
+    "amount",
+    "dc_indicator",
+    "currency",
+    "payment_reference"
+   ],
+   "recorded_response": "partial_plausible.json",
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "entry_type": "entry_type",
+     "amount": "amount",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "payment_reference": "payment_reference"
+    },
+    "unresolved": [
+     "entry_ref",
+     "acct_no",
+     "posting_dt"
+    ],
+    "classes": {
+     "entry_ref": "CLEAR",
+     "acct_no": "CLEAR",
+     "posting_dt": "PLAUSIBLE"
+    },
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {
+    "entry_ref": "ledger_entry_id",
+    "acct_no": "account_id",
+    "posting_dt": "posted_ts"
+   },
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "duplicate_target",
+   "case_type": "duplicate_target",
+   "data_file": "data/duplicate_target.csv",
+   "data_sha256": "9dfe5667d0915723358af41ab8e582c4af23bca92d34443e99860b570b068adb",
+   "input_category": "IN-10",
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "entry_ref",
+    "acct_no",
+    "posting_dt",
+    "entry_type",
+    "txn_amt",
+    "dc_indicator",
+    "currency",
+    "payment_reference"
+   ],
+   "recorded_response": "duplicate_target.json",
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "entry_type": "entry_type",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "payment_reference": "payment_reference"
+    },
+    "unresolved": [
+     "entry_ref",
+     "acct_no",
+     "posting_dt",
+     "txn_amt"
+    ],
+    "classes": {
+     "entry_ref": "CONFLICT_INCOMPLETE",
+     "acct_no": "CONFLICT_INCOMPLETE"
+    },
+    "decision": "REJECT_OR_HOLD",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {
+    "entry_ref": "ledger_entry_id",
+    "acct_no": "account_id",
+    "posting_dt": "posted_ts",
+    "txn_amt": "amount"
+   },
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "invented_field",
+   "case_type": "unknown_canonical_field",
+   "data_file": "data/invented_field.csv",
+   "data_sha256": "626030c7b1cab1d94acdac30bc5ffc414c028467715019ae1df36487c5562768",
+   "input_category": "IN-10",
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "entry_ref",
+    "acct_no",
+    "posting_dt",
+    "entry_type",
+    "amount",
+    "dc_indicator",
+    "currency",
+    "payment_reference"
+   ],
+   "recorded_response": "invented_field.json",
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "entry_type": "entry_type",
+     "amount": "amount",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "payment_reference": "payment_reference"
+    },
+    "unresolved": [
+     "entry_ref",
+     "acct_no",
+     "posting_dt"
+    ],
+    "classes": {
+     "entry_ref": "NO_MATCH"
+    },
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {
+    "entry_ref": "ledger_entry_id",
+    "acct_no": "account_id",
+    "posting_dt": "posted_ts"
+   },
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "missing_required",
+   "case_type": "missing_required",
+   "data_file": "data/missing_required.csv",
+   "data_sha256": "d5b6b3594cc116d1a5d8f1427ef47233793e50654a3efba0df867342e5899c9e",
+   "input_category": "IN-10",
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "entry_ref",
+    "posting_dt",
+    "acct_no",
+    "txn_amt"
+   ],
+   "recorded_response": "missing_required.json",
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {},
+    "unresolved": [],
+    "classes": {},
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {
+    "entry_ref": "ledger_entry_id",
+    "posting_dt": "posted_ts",
+    "acct_no": "account_id",
+    "txn_amt": "amount"
+   },
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "malformed_response",
+   "case_type": "malformed_response",
+   "data_file": "data/malformed_response.csv",
+   "data_sha256": "9dfe5667d0915723358af41ab8e582c4af23bca92d34443e99860b570b068adb",
+   "input_category": "IN-10",
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "entry_ref",
+    "acct_no",
+    "posting_dt",
+    "entry_type",
+    "txn_amt",
+    "dc_indicator",
+    "currency",
+    "payment_reference"
+   ],
+   "recorded_response": "malformed_response.json",
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "entry_type": "entry_type",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "payment_reference": "payment_reference"
+    },
+    "unresolved": [
+     "entry_ref",
+     "acct_no",
+     "posting_dt",
+     "txn_amt"
+    ],
+    "classes": {},
+    "decision": "REJECT_OR_HOLD",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "unmappable_A",
+   "case_type": "explicit_unmappable",
+   "data_file": "data/unmappable_A.csv",
+   "data_sha256": "9dfe5667d0915723358af41ab8e582c4af23bca92d34443e99860b570b068adb",
+   "input_category": "IN-10",
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "entry_ref",
+    "acct_no",
+    "posting_dt",
+    "entry_type",
+    "txn_amt",
+    "dc_indicator",
+    "currency",
+    "payment_reference"
+   ],
+   "recorded_response": "unmappable_A.json",
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "entry_type": "entry_type",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "payment_reference": "payment_reference"
+    },
+    "unresolved": [
+     "entry_ref",
+     "acct_no",
+     "posting_dt",
+     "txn_amt"
+    ],
+    "classes": {
+     "txn_amt": "NO_MATCH"
+    },
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {
+    "entry_ref": "ledger_entry_id",
+    "acct_no": "account_id",
+    "posting_dt": "posted_ts",
+    "txn_amt": "amount"
+   },
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "unmappable_B",
+   "case_type": "explicit_unmappable",
+   "data_file": "data/unmappable_B.csv",
+   "data_sha256": "9dfe5667d0915723358af41ab8e582c4af23bca92d34443e99860b570b068adb",
+   "input_category": "IN-10",
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "entry_ref",
+    "acct_no",
+    "posting_dt",
+    "entry_type",
+    "txn_amt",
+    "dc_indicator",
+    "currency",
+    "payment_reference"
+   ],
+   "recorded_response": "unmappable_B.json",
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "entry_type": "entry_type",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "payment_reference": "payment_reference"
+    },
+    "unresolved": [
+     "entry_ref",
+     "acct_no",
+     "posting_dt",
+     "txn_amt"
+    ],
+    "classes": {
+     "txn_amt": "NO_MATCH"
+    },
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {
+    "entry_ref": "ledger_entry_id",
+    "acct_no": "account_id",
+    "posting_dt": "posted_ts",
+    "txn_amt": "amount"
+   },
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "unmappable_C",
+   "case_type": "explicit_unmappable",
+   "data_file": "data/unmappable_C.csv",
+   "data_sha256": "9dfe5667d0915723358af41ab8e582c4af23bca92d34443e99860b570b068adb",
+   "input_category": "IN-10",
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "entry_ref",
+    "acct_no",
+    "posting_dt",
+    "entry_type",
+    "txn_amt",
+    "dc_indicator",
+    "currency",
+    "payment_reference"
+   ],
+   "recorded_response": "unmappable_C.json",
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "entry_type": "entry_type",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "payment_reference": "payment_reference"
+    },
+    "unresolved": [
+     "entry_ref",
+     "acct_no",
+     "posting_dt",
+     "txn_amt"
+    ],
+    "classes": {
+     "txn_amt": "NO_MATCH"
+    },
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {
+    "entry_ref": "ledger_entry_id",
+    "acct_no": "account_id",
+    "posting_dt": "posted_ts",
+    "txn_amt": "amount"
+   },
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "provider_disabled",
+   "case_type": "provider_disabled",
+   "data_file": "data/provider_disabled.csv",
+   "data_sha256": "626030c7b1cab1d94acdac30bc5ffc414c028467715019ae1df36487c5562768",
+   "input_category": "IN-10",
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "entry_ref",
+    "acct_no",
+    "posting_dt",
+    "entry_type",
+    "amount",
+    "dc_indicator",
+    "currency",
+    "payment_reference"
+   ],
+   "recorded_response": "provider_disabled.json",
+   "ai": "disabled",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "entry_type": "entry_type",
+     "amount": "amount",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "payment_reference": "payment_reference"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "REJECT_OR_HOLD",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "budget_refused",
+   "case_type": "budget_refused",
+   "data_file": "data/budget_refused.csv",
+   "data_sha256": "626030c7b1cab1d94acdac30bc5ffc414c028467715019ae1df36487c5562768",
+   "input_category": "IN-10",
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "entry_ref",
+    "acct_no",
+    "posting_dt",
+    "entry_type",
+    "amount",
+    "dc_indicator",
+    "currency",
+    "payment_reference"
+   ],
+   "recorded_response": "budget_refused.json",
+   "ai": "budget_used",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {
+     "entry_type": "entry_type",
+     "amount": "amount",
+     "dc_indicator": "dc_indicator",
+     "currency": "currency",
+     "payment_reference": "payment_reference"
+    },
+    "unresolved": [],
+    "classes": {},
+    "decision": "REJECT_OR_HOLD",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "mismatch_IN-09_as_IN-10",
+   "case_type": "category_mismatch",
+   "data_file": "data/mismatch_IN-09_as_IN-10.csv",
+   "data_sha256": "28df3e2a115a2d8b88115cd8c6dae39c8a3d71124b99641ee4846a68c18f54b0",
+   "input_category": "IN-10",
+   "truth_category": "IN-09",
+   "incoming_headers": [
+    "bank_entry_id",
+    "statement_id",
+    "account_id",
+    "booking_date",
+    "booking_ts",
+    "value_date",
+    "amount",
+    "dc_indicator",
+    "currency",
+    "bank_reference",
+    "end_to_end_ref",
+    "counterparty_name",
+    "narrative_text"
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {},
+    "unresolved": [],
+    "classes": {},
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "mismatch_IN-07_as_IN-08",
+   "case_type": "category_mismatch",
+   "data_file": "data/mismatch_IN-07_as_IN-08.csv",
+   "data_sha256": "1d9e3ba50d2ec73d0925e7d045466cd24b04b00a075f9c0c6409deec3c60f73c",
+   "input_category": "IN-08",
+   "truth_category": "IN-07",
+   "incoming_headers": [
+    "statement_id",
+    "account_id",
+    "as_at_ts",
+    "currency",
+    "balance_amount",
+    "balance_dc_indicator",
+    "bank_statement_ref"
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {},
+    "unresolved": [],
+    "classes": {},
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "mismatch_IN-05_as_IN-06",
+   "case_type": "category_mismatch",
+   "data_file": "data/mismatch_IN-05_as_IN-06.csv",
+   "data_sha256": "450d8977bcda98ee2a233dcc207ebeb0426a9e70d7d1b1d0bd8094176dd9d617",
+   "input_category": "IN-06",
+   "truth_category": "IN-05",
+   "incoming_headers": [
+    "recon_run_id",
+    "recon_date",
+    "reconciliation_point_ts",
+    "performed_at_ts",
+    "asset_pool_id",
+    "currency",
+    "method",
+    "requirement_reported",
+    "resource_reported",
+    "item_a",
+    "item_b",
+    "item_c",
+    "item_d",
+    "difference_reported",
+    "d1_requirement",
+    "d1_resource",
+    "actions_taken_text",
+    "preparer_id",
+    "reviewer_id"
+   ],
+   "recorded_response": null,
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {},
+    "unresolved": [],
+    "classes": {},
+    "decision": "HUMAN_REVIEW",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  },
+  {
+   "case_id": "no_category",
+   "case_type": "no_category",
+   "data_file": "data/no_category.csv",
+   "data_sha256": "626030c7b1cab1d94acdac30bc5ffc414c028467715019ae1df36487c5562768",
+   "input_category": null,
+   "truth_category": "IN-10",
+   "incoming_headers": [
+    "entry_ref",
+    "acct_no",
+    "posting_dt",
+    "entry_type",
+    "amount",
+    "dc_indicator",
+    "currency",
+    "payment_reference"
+   ],
+   "recorded_response": "no_category.json",
+   "ai": "stub",
+   "setup": {},
+   "expected": {
+    "deterministic_mappings": {},
+    "unresolved": [],
+    "classes": {},
+    "decision": "REJECT_OR_HOLD",
+    "canonical_output_sha256": null
+   },
+   "truth_mapping": {},
+   "ground_truth_source": "by construction from tests/fixtures/uc042_canonical/PER-2026-09_set_01_clean_baseline (UC-042 set_01 copy)",
+   "note": ""
+  }
+ ]
+}

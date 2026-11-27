@@ -1,0 +1,41 @@
+{
+  "label": "ENGINE-PREDICTED (source reading of the reference engine; NOT EXECUTED; unverified)",
+  "scenario_id": "TC02",
+  "expected_case_status": "EXCEPTIONS_OPEN",
+  "non_passing_results": [
+    [
+      "CBAL-ROLLFWD",
+      "GBP/C0006 2026-09-08",
+      "FAIL"
+    ],
+    [
+      "RC4-DIRECT",
+      "TX-0908-00002",
+      "FAIL"
+    ]
+  ],
+  "exceptions": [
+    {
+      "exception_id": "EXC-TC02-01",
+      "severity": "High",
+      "root_cause": "CBAL-ROLLFWD|GBP/C0006 2026-09-08",
+      "affected_results": 1
+    },
+    {
+      "exception_id": "EXC-TC02-02",
+      "severity": "High",
+      "root_cause": "RC4-DIRECT|TX-0908-00002",
+      "affected_results": 1
+    }
+  ],
+  "evidence_statuses": {},
+  "investigation_groups": [],
+  "candidate_relationships": [],
+  "must_hold": [
+    "CASH-BANK-LINK LE-GBP-0908-0002 PASS",
+    "C08 and C06 for 8 Sep PASS",
+    "CBAL-ROLLFWD GBP/C0006 2026-09-09 PASS",
+    "no investigation group (gap G-08)"
+  ],
+  "notes": []
+}

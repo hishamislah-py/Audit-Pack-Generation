@@ -1,0 +1,8 @@
+{
+  "policy_id": "uc042-poc-auto-accept/shipped-disabled",
+  "status": "DISABLED",
+  "note": "Phase 3B-6 POC auto-accept policy. Shipped DISABLED: every proposal goes to human review or is held. Enabling it is an explicit configuration decision. An auto-acceptance only ever creates a FILE-SPECIFIC mapping for one upload (approval kind POC_AUTO, never TEST or BUSINESS) and never a reusable alias or layout.",
+  "enabled": false,
+  "accept_plausible": false,
+  "accept_supplied_category": false
+}

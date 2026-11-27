@@ -55,9 +55,11 @@ def result_id(r):
     return f"{r['check_id']}|{r['scope']}"
 
 
-def engine_fingerprint():
+def engine_fingerprint(rules=None):
+    """Hash of the engine modules that define the run's processing. rules: the run's EngineRules; with enrichment_v1 the
+    enrichment module is included (I-2). Without it the value is exactly the historical one."""
     h = hashlib.sha256()
-    for name in config.ENGINE_MODULES:
+    for name in config.ENGINE_MODULES + (config.ENRICHMENT_MODULES if getattr(rules, "enrichment_v1", False) else []):
         h.update(name.encode())
         h.update((ENGINE_DIR / name).read_bytes())
     return h.hexdigest()
@@ -72,10 +74,15 @@ def pack_layer_fingerprint():
     return h.hexdigest()
 
 
-def configuration_fingerprint(registry_controls):
+def configuration_fingerprint(registry_controls, engine_rules=None):
+    """engine_rules: the run's EngineRules.recorded() (only departures from the published pre-17-Nov-2026 behaviour, so the
+    fingerprints of packs built under the published rules are unchanged and every pack built under the approved rule
+    records it)."""
     cfg = {"pack_schema_version": config.PACK_SCHEMA_VERSION, "entity_id": config.ENTITY_ID,
            "control_registry": registry_controls, "not_available": config.NOT_AVAILABLE,
            "limitations": config.LIMITATIONS}
+    if engine_rules:
+        cfg["engine_rules"] = engine_rules
     return sha256_text(canonical(cfg))
 
 

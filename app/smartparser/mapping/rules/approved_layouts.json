@@ -1,0 +1,5 @@
+{
+  "rules": "UC-042 Smart Parser ACTIVE source-system layouts (governed; Phase 3B-2)",
+  "note": "Production: no layout has been approved. Layouts are created only through an authorised approval (review.approvals.approve_layout) into a writable rule store; this packaged file is never written at runtime.",
+  "layouts": []
+}

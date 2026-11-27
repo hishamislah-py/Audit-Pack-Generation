@@ -1,0 +1,69 @@
+{
+  "scenario_id": "TC05",
+  "applies_to": "initial_submission",
+  "operations": [
+    {
+      "op": "add_record",
+      "file_id": "IN-11",
+      "record": {
+        "txn_id": "TX-0924-00018",
+        "client_id": "C0104",
+        "txn_type": "SPEND",
+        "status": "SETTLED",
+        "auth_ts": "2026-09-24T07:15:00+01:00",
+        "clearing_date": "2026-09-24",
+        "executed_ts": "2026-09-24T15:00:00+01:00",
+        "amount": "222.18",
+        "direction": "DR",
+        "currency": "EUR",
+        "settlement_batch_id": "SB-EUR-20260924",
+        "payment_reference": "",
+        "original_txn_id": ""
+      },
+      "insert_after": "TX-0924-00012",
+      "why": "restored from the complete source export"
+    },
+    {
+      "op": "add_record",
+      "file_id": "IN-11",
+      "record": {
+        "txn_id": "TX-0924-00019",
+        "client_id": "C0101",
+        "txn_type": "SPEND",
+        "status": "SETTLED",
+        "auth_ts": "2026-09-24T08:15:00+01:00",
+        "clearing_date": "2026-09-24",
+        "executed_ts": "2026-09-24T15:00:00+01:00",
+        "amount": "431.57",
+        "direction": "DR",
+        "currency": "EUR",
+        "settlement_batch_id": "SB-EUR-20260924",
+        "payment_reference": "",
+        "original_txn_id": ""
+      },
+      "insert_after": "TX-0924-00018",
+      "why": "restored from the complete source export"
+    },
+    {
+      "op": "add_record",
+      "file_id": "IN-11",
+      "record": {
+        "txn_id": "TX-0924-00020",
+        "client_id": "C0101",
+        "txn_type": "SPEND",
+        "status": "SETTLED",
+        "auth_ts": "2026-09-24T09:15:00+01:00",
+        "clearing_date": "2026-09-24",
+        "executed_ts": "2026-09-24T15:00:00+01:00",
+        "amount": "193.70",
+        "direction": "DR",
+        "currency": "EUR",
+        "settlement_batch_id": "SB-EUR-20260924",
+        "payment_reference": "",
+        "original_txn_id": ""
+      },
+      "insert_after": "TX-0924-00019",
+      "why": "restored from the complete source export"
+    }
+  ]
+}
